@@ -1,0 +1,6 @@
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\bin\WebSocketDemo.dll.config
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\bin\WebSocketDemo.dll
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\bin\WebSocketDemo.pdb
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Release\WebSockets.csproj.CoreCompileInputs.cache
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Release\WebSocketDemo.dll
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Release\WebSocketDemo.pdb

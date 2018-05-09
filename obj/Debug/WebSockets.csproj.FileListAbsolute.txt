@@ -1,0 +1,18 @@
+C:\Bipin\HTML5 Programming\9781430247197_Ch11\WebSockets\obj\Debug\WebSockets.csprojResolveAssemblyReference.cache
+C:\Bipin\HTML5 Programming\9781430247197_Ch11\WebSockets\bin\WebSocketDemo.dll
+C:\Bipin\HTML5 Programming\9781430247197_Ch11\WebSockets\bin\WebSocketDemo.pdb
+C:\Bipin\HTML5 Programming\9781430247197_Ch11\WebSockets\bin\Microsoft.WebSockets.dll
+C:\Bipin\HTML5 Programming\9781430247197_Ch11\WebSockets\obj\Debug\WebSocketDemo.dll
+C:\Bipin\HTML5 Programming\9781430247197_Ch11\WebSockets\obj\Debug\WebSocketDemo.pdb
+C:\Bipin\WebSockets\obj\Debug\WebSockets.csprojResolveAssemblyReference.cache
+C:\Bipin\WebSockets\obj\Debug\WebSocketDemo.dll
+C:\Bipin\WebSockets\obj\Debug\WebSocketDemo.pdb
+C:\Bipin\WebSockets\bin\WebSocketDemo.dll
+C:\Bipin\WebSockets\bin\WebSocketDemo.pdb
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\bin\WebSocketDemo.dll.config
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\bin\WebSocketDemo.dll
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\bin\WebSocketDemo.pdb
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Debug\WebSockets.csprojResolveAssemblyReference.cache
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Debug\WebSockets.csproj.CoreCompileInputs.cache
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Debug\WebSocketDemo.dll
+D:\eclipse\workspace\Mabinogi\push.mabinogi.nexon.com\obj\Debug\WebSocketDemo.pdb
