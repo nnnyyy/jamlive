@@ -1,8 +1,6 @@
 var express = require('express');
-var Auth = require('./Auth');
+var JamLive = require('./jamlive');
 var Log = require('./Log');
-var Admin = require('./admin');
-var async = require('async');
 var router = express.Router();
 
 /* GET home page. */
@@ -10,5 +8,5 @@ router.use( Log.logging );
 router.get('/', function(req, res, next) {
   res.render('index');
 });
-
+router.post('/vote', JamLive.clickevent );
 module.exports = router;
