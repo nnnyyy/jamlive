@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+이 파일은 웹 프로젝트의 게시/패키지 프로세스에서 사용됩니다. 이 MSBuild 파일을 편집하여 이 프로세스의 동작을
+사용자 지정할 수 있습니다. 이에 대한 자세한 내용은 https://go.microsoft.com/fwlink/?LinkID=208121을 참조하세요. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAXJsyeVsOrUiJ6R0jc+YTpQAAAAACAAAAAAADZgAAwAAAABAAAAAdx15VQDZo9wAfmZ/ZVJ3IAAAAAASAAACgAAAAEAAAANpaMjMAhPTKsUvYw+wVNm0YAAAAkgH6sDQnoJKT4s1ZFOdlyz0SJrX9b5A7FAAAAEHsB5DAPqY5r73DLK7/ITSDGI3o</EncryptedPassword>
+    <_PublishTargetUrl>C:\Users\sono\Desktop\web_deploy</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Microsoft.WebSockets.dll">
+      <publishTime>07/21/2012 09:17:26</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>01/28/2016 14:22:24</publishTime>
+    </File>
+    <File Include="bin/WebSocketDemo.dll">
+      <publishTime>05/10/2018 15:18:06</publishTime>
+    </File>
+    <File Include="bin/WebSocketDemo.pdb">
+      <publishTime>05/10/2018 15:18:06</publishTime>
+    </File>
+    <File Include="Default.aspx">
+      <publishTime>02/05/2018 12:47:41</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>07/21/2012 09:17:26</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.7.2.min.js">
+      <publishTime>07/21/2012 09:50:32</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.5.3.js">
+      <publishTime>07/21/2012 09:50:32</publishTime>
+    </File>
+    <File Include="View.aspx">
+      <publishTime>05/10/2018 15:16:06</publishTime>
+    </File>
+    <File Include="View.html">
+      <publishTime>05/10/2018 15:08:43</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>05/10/2018 15:10:13</publishTime>
+    </File>
+    <File Include="WebSocketHandler.ashx">
+      <publishTime>05/10/2018 15:12:34</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
