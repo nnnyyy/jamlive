@@ -11,14 +11,14 @@ using Newtonsoft.Json;
 
 namespace WebSocketDemo
 {
+    internal class ClickCountMessage
+    {
+        public long Time { get; set; }
+        public Dictionary<string, int> Count { get; set; }
+    }
+
     public class WebSocketHandler : HttpTaskAsyncHandler
     {
-        private class ClickCountMessage
-        {
-            public long Time { get; set; }
-            public Dictionary<string, int> Count { get; set; }
-        }
-
         static readonly int AccumlativeSec = 10;
         static readonly int CooldownSec = 1;
 
@@ -50,52 +50,57 @@ namespace WebSocketDemo
             var webSocket = aspNetWebSocketContext.WebSocket;
             var webSocketKey = webSocket.GetHashCode();
 
-            while (webSocket != null && webSocket.State == WebSocketState.Open)
+            while (webSocket.State != WebSocketState.Closed)
             {
                 WebSocketDic[webSocketKey] = webSocket;
 
-                var cancellationToken = new CancellationToken();
                 ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-                WebSocketReceiveResult webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, cancellationToken);
+                WebSocketReceiveResult webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
 
                 if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
                 {
                     WebSocketDic.Remove(webSocketKey);
-                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationToken);
+
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, CancellationToken.None);
                 }
-                else
+                else if (webSocketReceiveResult.MessageType == WebSocketMessageType.Text)
                 {
-                    var payloadData = buffer.Array.Where(x => x != 0).ToArray();
-                    var message = Encoding.UTF8.GetString(payloadData, 0, payloadData.Length);
-                    OnMessageReceived(webSocket, message);
+                    ProcessMessage(webSocket, Encoding.UTF8.GetString(buffer.Array, 0, webSocketReceiveResult.Count));
                 }
             }
         }
 
-        void OnMessageReceived(WebSocket webSocket, string message)
+        protected void ProcessMessage(WebSocket webSocket, string message)
         {
-            var webSocketKey = webSocket.GetHashCode();
-            var clickCountKey = message;
-            var now = DateTime.Now.ToYYYYMMDDHHMMSS();
-
-            // 쿨타임 체크
-            if (LastClickTimeDic.ContainsKey(webSocketKey) && LastClickTimeDic[webSocketKey] + CooldownSec <= now)
+            try
             {
-                return;
-            }
-            LastClickTimeDic[webSocketKey] = now;
+                var webSocketKey = webSocket.GetHashCode();
+                var clickCountKey = message;
+                var now = DateTime.Now.ToYYYYMMDDHHMMSS();
 
-            // 시간 갱신
-            if (TimeSeriesCountDic.ContainsKey(now) == false)
+                // 쿨타임 체크
+                if (LastClickTimeDic.ContainsKey(webSocketKey) && LastClickTimeDic[webSocketKey] + CooldownSec <= now)
+                {
+                    return;
+                }
+                LastClickTimeDic[webSocketKey] = now;
+
+                // 시간 갱신
+                if (TimeSeriesCountDic.ContainsKey(now) == false)
+                {
+                    TimeSeriesCountDic.Add(now, new Dictionary<string, int>());
+                    TimeSeriesCountDic = TimeSeriesCountDic.Skip(Math.Max(0, TimeSeriesCountDic.Count() - AccumlativeSec)).ToDictionary(x => x.Key, x => x.Value);
+                }
+
+                //클릭 횟수 증가
+                TimeSeriesCountDic[now].AddOrIncrease(clickCountKey, 1);
+
+                BroadcastClickCount();
+            }
+            catch (Exception e)
             {
-                TimeSeriesCountDic.Add(now, new Dictionary<string, int>());
-                TimeSeriesCountDic = TimeSeriesCountDic.Skip(Math.Max(0, TimeSeriesCountDic.Count() - AccumlativeSec)).ToDictionary(x => x.Key, x => x.Value);
+                var task = SendMessageAsync(webSocket, e.ToString());
             }
-
-            // 클릭 횟수 증가
-            TimeSeriesCountDic[now].AddOrIncrease(clickCountKey, 1);
-
-            BroadcastClickCount();
         }
 
         private void BroadcastClickCount()
@@ -116,12 +121,12 @@ namespace WebSocketDemo
 
                 foreach (var webSocket in WebSocketDic.Values)
                 {
-                    SendAsyncMessage(webSocket, jsonString);
+                    var task = SendMessageAsync(webSocket, jsonString);
                 }
             }
         }
 
-        async void SendAsyncMessage(WebSocket webSocket, string message)
+        private async Task SendMessageAsync(WebSocket webSocket, string message)
         {
             await webSocket.SendAsync(
                 new ArraySegment<byte>(Encoding.UTF8.GetBytes(message)),
@@ -142,11 +147,11 @@ namespace WebSocketDemo
         {
             if (dic.ContainsKey(key))
             {
-                dic.Add(key, value);
+                dic[key] += value;
             }
             else
             {
-                dic[key] += value;
+                dic.Add(key, value);
             }
         }
     }
