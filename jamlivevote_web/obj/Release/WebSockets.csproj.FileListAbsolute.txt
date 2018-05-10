@@ -1,8 +1,0 @@
-D:\git\jamlive\jamlive\jamlivevote_web\bin\WebSocketDemo.dll.config
-D:\git\jamlive\jamlive\jamlivevote_web\bin\WebSocketDemo.dll
-D:\git\jamlive\jamlive\jamlivevote_web\bin\WebSocketDemo.pdb
-D:\git\jamlive\jamlive\jamlivevote_web\bin\Newtonsoft.Json.dll
-D:\git\jamlive\jamlive\jamlivevote_web\obj\Release\WebSockets.csprojResolveAssemblyReference.cache
-D:\git\jamlive\jamlive\jamlivevote_web\obj\Release\WebSockets.csproj.CoreCompileInputs.cache
-D:\git\jamlive\jamlive\jamlivevote_web\obj\Release\WebSocketDemo.dll
-D:\git\jamlive\jamlive\jamlivevote_web\obj\Release\WebSocketDemo.pdb
