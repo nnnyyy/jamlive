@@ -1,21 +1,27 @@
-﻿<HTML>
-<HEAD>
-<TITLE>Live</TITLE>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="View.aspx.cs" Inherits="WebSocketDemo.View" %>
 
-<script>
+<HTML>
+<HEAD>
+    <TITLE>Live</TITLE>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+    <script>
 
     var webSocket;
     var username;
-    
+
     function WebSocketTest() {
         if ("WebSocket" in window) {
             //webSocket = new WebSocket("ws://push.mabinogi.nexon.com/default.Socket");
             webSocket = new WebSocket("ws://4seasonpension.com:4921/WebSocketHandler.ashx");
             webSocket.onopen = function () {
                 //Connection Opened, if you want to do something while opening connection do it here
+                console.log("connected open");
+
+                webSocket.send("JOIN:" + "<%=Request.ServerVariables["REMOTE_ADDR"]%>");
+                console.log(webSocket);
             };
         }
         else {
@@ -247,17 +253,56 @@
 
 
 
-    });
-</script>
-<style>
-	.container1 {min-width: 400px; height: 400px; margin: 0 auto;}
-	.container2 {width: 100%; height: 400px; margin: 0 auto;}
-	/*.highcharts-yaxis-labels {display:none;}*/
-</style>
+        });
+
+        function selectNumber(val) {
+            console.log("BUTTON:" + val);
+            webSocket.send("BUTTON:" + val);
+        }
+
+        webSocket.onmessage = function (evt) {
+            console.log(evt.data);
+        };
+
+        //fired when the connection gets closed
+        webSocket.onclose = function () {
+            alert("Connection is closed");
+        };
+
+        //Fired when there comes some error in the web socket connection
+        webSocket.onerror = function(error)
+        {
+            alert(error.data);
+        };
+    </script>
+    <style>
+        .container1 {
+            min-width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .container2 {
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        button {
+            width: 100px;
+            height: 50px;
+        }
+        /*.highcharts-yaxis-labels {display:none;}*/
+    </style>
 </HEAD>
 <BODY>
-	<div class="container1" id="container1"></div>
-	<br />
+    <div>
+        <button onclick="selectNumber('1')" value="1">1</button>
+        <button onclick="selectNumber('2')" value="2">2</button>
+        <button onclick="selectNumber('3')" value="3">3</button>
+    </div>
+    <div class="container1" id="container1"></div>
+    <br />
     <div class="container2" id="container2"></div>
 </BODY>
 </HTML>

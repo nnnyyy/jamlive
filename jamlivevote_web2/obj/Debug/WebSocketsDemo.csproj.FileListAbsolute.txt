@@ -1,0 +1,6 @@
+C:\Users\sono\Desktop\websocket\bin\WebSocketDemo.dll.config
+C:\Users\sono\Desktop\websocket\bin\WebSocketDemo.dll
+C:\Users\sono\Desktop\websocket\bin\WebSocketDemo.pdb
+C:\Users\sono\Desktop\websocket\obj\Debug\WebSocketsDemo.csproj.CoreCompileInputs.cache
+C:\Users\sono\Desktop\websocket\obj\Debug\WebSocketDemo.dll
+C:\Users\sono\Desktop\websocket\obj\Debug\WebSocketDemo.pdb
