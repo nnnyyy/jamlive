@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.WebSockets;
 using Newtonsoft.Json;
 
-namespace MabiWebSocket
+namespace WebSocketDemo
 {
     internal class ClickCountMessage
     {
