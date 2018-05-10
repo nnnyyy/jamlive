@@ -22,49 +22,30 @@
   <input type="button" class="btn_vote" data="0" value="1번"/>
   <input type="button" class="btn_vote" data="1" value="2번"/>
   <input type="button" class="btn_vote" data="2" value="3번"/>
-
   <!-- Script -->
   <script>
-      timeClicked = Date.now() - 20000;
-      function timerloop() {
-          reqClickEvent('/vote', {cmd:'get'});
-      }
-
-      function reqClickEvent(url, jsondata) {
-          $.ajax({
-              type: 'POST',
-              dataType: 'json',
-              data: JSON.stringify(jsondata),
-              contentType: 'application/json',
-              url: '/vote',
-              success: function(data) {
-                  $('#votecnt').text(data[0].cnt +','+data[1].cnt +','+data[2].cnt);
-              }
-          });
-      }
-
       $(document).ready(function(){
-          reqClickEvent('/vote', {cmd:'get'});
-          setInterval(timerloop, 500);
-          $('.btn_vote').each(function(idx){
-              $(this).click(function(){
-                  event.preventDefault();
-                  var curDate = Date.now();
-                  if( curDate - timeClicked < 5000 ) {
-                      return;
-                  }
+          var socket = io();
+          socket.on('testdata', function(data) {
+              var p = JSON.parse(data.cnt)._data;
+              var ret = [];
+              for( var key in p ) {
+                  var t = new Date(1970, 0, 1); // Epoch
+                  t.setSeconds(key);
+                  t.setHours(t.getHours() + 9 + 9);
+                  ret.push({name: t.toISOString(), value: p[key][1] });
+              }
 
-                  reqClickEvent('/vote', {cmd:'add', votenum: $(this).attr('data')});
-                  timeClicked = curDate;
-                  return true;
-              });
+              $('#votecnt').text(JSON.stringify(ret));
           })
 
+          $('.btn_vote').each(function(idx) {
+              $(this).click(function() {
+                  socket.emit('vote', {idx:$(this).attr('data')})
+              });
+          })
       });
   </script>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-      var socket = io();
-  </script>
   </body>
 </html>
