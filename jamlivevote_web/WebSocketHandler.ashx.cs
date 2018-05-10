@@ -40,31 +40,34 @@ namespace WebSocketDemo
             {
                 if (httpContext.IsWebSocketRequest)
                 {
-                    httpContext.AcceptWebSocketRequest(ProcessWebSocketRequest);
+                    httpContext.AcceptWebSocketRequest(WebSocketRequestHandler);
                 }
             });
         }
 
-        private async Task ProcessWebSocketRequest(AspNetWebSocketContext aspNetWebSocketContext)
+        private async Task WebSocketRequestHandler(AspNetWebSocketContext aspNetWebSocketContext)
         {
             var webSocket = aspNetWebSocketContext.WebSocket;
             var webSocketKey = webSocket.GetHashCode();
 
-            while (webSocket != null && webSocket.State != WebSocketState.Closed)
+            while (webSocket != null && webSocket.State == WebSocketState.Open)
             {
                 WebSocketDic[webSocketKey] = webSocket;
 
+                var cancellationToken = new CancellationToken();
                 ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-                WebSocketReceiveResult webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                WebSocketReceiveResult webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, cancellationToken);
 
-                if (webSocket.State == WebSocketState.Open)
+                if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
                 {
-                    var message = Encoding.UTF8.GetString(buffer.Array, 0, webSocketReceiveResult.Count);
-                    OnMessageReceived(webSocket, message);
+                    WebSocketDic.Remove(webSocketKey);
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, cancellationToken);
                 }
                 else
                 {
-                    WebSocketDic.Remove(webSocketKey);
+                    var payloadData = buffer.Array.Where(x => x != 0).ToArray();
+                    var message = Encoding.UTF8.GetString(payloadData, 0, payloadData.Length);
+                    OnMessageReceived(webSocket, message);
                 }
             }
         }
