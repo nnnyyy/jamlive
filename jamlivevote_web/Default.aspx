@@ -52,7 +52,7 @@
         };
 
         //Fired when there comes some error in the web socket connection
-        webSocket.onerror = funtion(error)
+        webSocket.onerror = function(error)
         {
             alert(error.data);
         };
