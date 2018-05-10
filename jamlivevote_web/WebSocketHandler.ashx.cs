@@ -78,22 +78,26 @@ namespace WebSocketDemo
                 var clickCountKey = message;
                 var now = DateTime.Now.ToYYYYMMDDHHMMSS();
 
-                // 쿨타임 체크
                 if (LastClickTimeDic.ContainsKey(webSocketKey) && LastClickTimeDic[webSocketKey] + CooldownSec >= now)
                 {
                     return;
                 }
                 LastClickTimeDic[webSocketKey] = now;
 
-                // 시간 갱신
-                if (TimeSeriesCountDic.ContainsKey(now) == false)
+                if (TimeSeriesCountDic.ContainsKey(now))
                 {
-                    TimeSeriesCountDic.Add(now, new Dictionary<string, int>());
-                    TimeSeriesCountDic = TimeSeriesCountDic.Skip(Math.Max(0, TimeSeriesCountDic.Count() - AccumlativeSec)).ToDictionary(x => x.Key, x => x.Value);
+                    TimeSeriesCountDic[now].AddOrIncrease(clickCountKey, 1);
                 }
+                else
+                {
+                    TimeSeriesCountDic.Add(now, new Dictionary<string, int>() { { clickCountKey, 1 } } );
 
-                //클릭 횟수 증가
-                TimeSeriesCountDic[now].AddOrIncrease(clickCountKey, 1);
+                    var skipCount = TimeSeriesCountDic.Count() - AccumlativeSec;
+                    if (skipCount > 0)
+                    {
+                        TimeSeriesCountDic = TimeSeriesCountDic.OrderBy(x => x.Key).Skip(skipCount).ToDictionary(x => x.Key, x => x.Value);
+                    }
+                }
 
                 BroadcastClickCount();
             }
@@ -107,21 +111,25 @@ namespace WebSocketDemo
         {
             if (TimeSeriesCountDic.Count() > 0)
             {
-                var clickCountMessage = new ClickCountMessage() { Time = 0, Count = new Dictionary<string, int>() };
+                var dic = new Dictionary<string, int>();
 
                 foreach (var clickCountDic in TimeSeriesCountDic.Values)
                 {
-                    foreach (var clickCount in clickCountDic)
+                    foreach (var pair in clickCountDic)
                     {
-                        clickCountMessage.Count.AddOrIncrease(clickCount.Key, clickCount.Value);
+                        dic.AddOrIncrease(pair.Key, pair.Value);
                     }
                 }
 
-                var jsonString = JsonConvert.SerializeObject(clickCountMessage);
+                var message = JsonConvert.SerializeObject(new ClickCountMessage()
+                {
+                    Time = TimeSeriesCountDic.Keys.OrderBy(x => x).Last(),
+                    Count = dic.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value)
+                });
 
                 foreach (var webSocket in WebSocketDic.Values)
                 {
-                    var task = SendMessageAsync(webSocket, jsonString);
+                    var task = SendMessageAsync(webSocket, message);
                 }
             }
         }
