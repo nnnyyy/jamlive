@@ -69,7 +69,6 @@ namespace MabiWebSocket
             }
         }
 
-        //This message is fired and parent can forget about this, what this method do is gets the message and push it to the different clients which are connected
         void OnMessageReceived(WebSocket webSocket, string message)
         {
             var webSocketKey = webSocket.GetHashCode();
@@ -100,9 +99,7 @@ namespace MabiWebSocket
         {
             if (TimeSeriesCountDic.Count() > 0)
             {
-                var clickCountMessage = new ClickCountMessage();
-
-                clickCountMessage.Time = TimeSeriesCountDic.Last().Key;
+                var clickCountMessage = new ClickCountMessage() { Time = 0, Count = new Dictionary<string, int>() };
 
                 foreach (var clickCountDic in TimeSeriesCountDic.Values)
                 {
