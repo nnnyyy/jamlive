@@ -11,14 +11,14 @@ using Newtonsoft.Json;
 
 namespace WebSocketDemo
 {
-    internal class ClickCountMessage
-    {
-        public long Time { get; set; }
-        public Dictionary<string, int> Count { get; set; }
-    }
-
     public class WebSocketHandler : HttpTaskAsyncHandler
     {
+        private class ClickCountMessage
+        {
+            public long Time { get; set; }
+            public Dictionary<string, int> Count { get; set; }
+        }
+
         static readonly int AccumlativeSec = 10;
         static readonly int CooldownSec = 1;
 
