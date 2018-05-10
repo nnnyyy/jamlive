@@ -1,3 +1,4 @@
+console.log('load app.js');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -11,6 +12,7 @@ var session = require('express-session');
 
 var app = express();
 
+console.log('test4');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

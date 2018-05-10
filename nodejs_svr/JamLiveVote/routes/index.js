@@ -1,3 +1,5 @@
+console.log('load index.js');
+
 var express = require('express');
 var JamLive = require('./jamlive');
 var Log = require('./Log');
@@ -9,4 +11,5 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 router.post('/vote', JamLive.clickevent );
+
 module.exports = router;

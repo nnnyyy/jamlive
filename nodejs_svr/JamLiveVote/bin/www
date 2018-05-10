@@ -3,7 +3,6 @@
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
 var debug = require('debug')('NxBettingWeb:server');
 var http = require('http');
@@ -20,7 +19,9 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
 
+require('../routes/io')(io);
 /**
  * Listen on provided port, on all network interfaces.
  */
