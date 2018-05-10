@@ -79,7 +79,7 @@ namespace WebSocketDemo
                 var now = DateTime.Now.ToYYYYMMDDHHMMSS();
 
                 // 쿨타임 체크
-                if (LastClickTimeDic.ContainsKey(webSocketKey) && LastClickTimeDic[webSocketKey] + CooldownSec <= now)
+                if (LastClickTimeDic.ContainsKey(webSocketKey) && LastClickTimeDic[webSocketKey] + CooldownSec >= now)
                 {
                     return;
                 }
