@@ -35,13 +35,13 @@ ServerMan.prototype.setIO = function(io) {
 
     setInterval(function() {
         servman.broadcastVoteInfo();
-    }, 700);
+    }, 500);
 }
 
 ServerMan.prototype.broadcastVoteInfo = function() {
     var cur = new Date();
-    cur /= 1000;
-    cur -= (cur % 3);
+    cur -= cur % 500;
+    cur /= 500;
 
     if( this.counts.get(cur) == null ) {
         this.counts.set(cur, [0,0,0]);
@@ -52,15 +52,16 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
-    //console.log(this.counts);
+    console.log(cur);
 
     this.io.sockets.emit('testdata', {cnt: JSON.stringify(this.counts), users: this.socketmap.count()})
 }
 
 ServerMan.prototype.click = function(idx) {
     var cur = new Date();
-    cur /= 1000;
-    cur -= (cur % 3);
+    cur -= cur % 500;
+    cur /= 500;
+
     var obj = this.counts.get(cur);
     if( obj == null ) {
         this.counts.set(cur, [0,0,0]);
