@@ -16,7 +16,6 @@
   </head>
   <body>
   <!-- HTML Design -->
-  <div class="mostanswer"><div class="mostanswerinner">1</div></div>
   <div class="content">
       <maintitle>JAM LIVE 정답 투표기</maintitle><br/>
       <subtitle>힘을 합쳐서 정답을 공유 해 보아요!(참여인원 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
@@ -142,7 +141,7 @@
               if( !bRecommand ) {
                   retText = '-'
               }
-              $('.mostanswerinner').text(retText);
+              //$('.mostanswerinner').text(retText);
 
               showBarChart(barLabelRet, barDataSeriesRet);
               showPieChart(['1번(' + ret[0] + ')', '2번(' + ret[1] + ')', '3번(' + ret[2] + ')'],ret);
