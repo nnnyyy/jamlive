@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
-    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+      <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+      <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+      <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
   <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -22,21 +24,70 @@
   <input type="button" class="btn_vote" data="0" value="1번"/>
   <input type="button" class="btn_vote" data="1" value="2번"/>
   <input type="button" class="btn_vote" data="2" value="3번"/>
+  <div class="ct-chart" style="height: 500px; background-color:#ffffff"></div>
   <!-- Script -->
   <script>
+      function showPieChart(dataSeries) {
+          var data = {
+              labels: ['1번', '2번', '3번'],
+              series: dataSeries
+          };
+
+          var options = {
+              labelInterpolationFnc: function(value) {
+                  return value[0]
+              }
+          };
+
+          var responsiveOptions = [
+              ['screen and (min-width: 640px)', {
+                  chartPadding: 30,
+                  labelOffset: 100,
+                  labelDirection: 'explode',
+                  labelInterpolationFnc: function(value) {
+                      return value;
+                  }
+              }],
+              ['screen and (min-width: 1024px)', {
+                  labelOffset: 80,
+                  chartPadding: 20
+              }]
+          ];
+          new Chartist.Pie('.ct-chart', data, options, responsiveOptions);
+      }
+
+      function showChart(data) {
+          new Chartist.Line('.ct-chart', {
+              series: [
+                  data
+              ]
+          }, {
+              seriesBarDistance: 1,
+              low: 0,
+              high: 100,
+              fullWidth: true,
+              chartPadding: {
+                  right: 40
+              }
+          });
+      }
+
       $(document).ready(function(){
           var socket = io();
           socket.on('testdata', function(data) {
               var p = JSON.parse(data.cnt)._data;
-              var ret = [];
+              var ret = [1,1,1];
               for( var key in p ) {
                   var t = new Date(1970, 0, 1); // Epoch
                   t.setSeconds(key);
                   t.setHours(t.getHours() + 9 + 9);
-                  ret.push({name: t.toISOString(), value: p[key][1] });
+                  ret[0] += p[key][1][0];
+                  ret[1] += p[key][1][1];
+                  ret[2] += p[key][1][2];
               }
 
-              $('#votecnt').text(JSON.stringify(ret));
+              showPieChart(ret);
+              //$('#votecnt').text(JSON.stringify(ret));
           })
 
           $('.btn_vote').each(function(idx) {
