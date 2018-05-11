@@ -157,7 +157,7 @@
           $(document).keypress(function(event) {
               if( event.charCode >= 49 && event.charCode <= 51) {
                   var curTime = new Date();
-                  if( curTime - tClick < 1000 ) {
+                  if( curTime - tClick < 100 ) {
                       return;
                   }
                   tClick = curTime;
