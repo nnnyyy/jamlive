@@ -24,7 +24,8 @@
   <input type="button" class="btn_vote" data="0" value="1번"/>
   <input type="button" class="btn_vote" data="1" value="2번"/>
   <input type="button" class="btn_vote" data="2" value="3번"/>
-  <div class="ct-chart" style="height: 500px; background-color:#ffffff"></div>
+  <div class="ct-chart" style="height: 300px; background-color:#ffffff"></div>
+  <div class="ct-barchart" style="height: 300px; background-color:#ffffff"></div>
   <!-- Script -->
   <script>
       function showPieChart(dataSeries) {
@@ -56,6 +57,25 @@
           new Chartist.Pie('.ct-chart', data, options, responsiveOptions);
       }
 
+      function showBarChart(labelSeries, dataSeries) {
+          var data = {
+              labels: labelSeries,
+              series: dataSeries
+          };
+
+          var options = {
+              seriesBarDistance: 10,
+              axisX: {
+                  offset: 60
+              },
+              axisY: {
+                  offset: 80
+              }
+          };
+
+          new Chartist.Bar('.ct-barchart', data, options);
+      }
+
       function showChart(data) {
           new Chartist.Line('.ct-chart', {
               series: [
@@ -77,6 +97,8 @@
           socket.on('testdata', function(data) {
               var p = JSON.parse(data.cnt)._data;
               var ret = [1,1,1];
+              var barLabelRet = [];
+              var barDataSeriesRet = [[],[],[]];
               for( var key in p ) {
                   var t = new Date(1970, 0, 1); // Epoch
                   t.setSeconds(key);
@@ -84,8 +106,14 @@
                   ret[0] += p[key][1][0];
                   ret[1] += p[key][1][1];
                   ret[2] += p[key][1][2];
+
+                  barLabelRet.push(t.toISOString());
+                  barDataSeriesRet[0].push(p[key][1][0]);
+                  barDataSeriesRet[1].push(p[key][1][1]);
+                  barDataSeriesRet[2].push(p[key][1][2]);
               }
 
+              showBarChart(barLabelRet, barDataSeriesRet);
               showPieChart(ret);
               //$('#votecnt').text(JSON.stringify(ret));
           })
