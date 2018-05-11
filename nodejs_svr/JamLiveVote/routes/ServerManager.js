@@ -52,8 +52,6 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
-    console.log(cur);
-
     this.io.sockets.emit('testdata', {cnt: JSON.stringify(this.counts), users: this.socketmap.count()})
 }
 
