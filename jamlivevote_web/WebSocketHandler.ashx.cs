@@ -15,7 +15,7 @@ namespace WebSocketDemo
     {
         static readonly int AccumlativeSec = 10;
         static readonly int CooldownSec = 1;
-        static readonly int SendIntervalMilliSec = 500;
+        static readonly int SendIntervalMilliSec = 1000;
 
         static Devcat.Core.Threading.JobProcessor LogicThread;
         static Dictionary<int, WebSocket> WebSocketDic = new Dictionary<int, WebSocket>();
@@ -119,8 +119,6 @@ namespace WebSocketDemo
                         TimeSeriesCountDic = TimeSeriesCountDic.OrderBy(x => x.Key).Skip(skipCount).ToDictionary(x => x.Key, x => x.Value);
                     }
                 }
-
-                task = SendMessageAsync(webSocket, GetCountMessage());
             }
             catch (Exception e)
             {
