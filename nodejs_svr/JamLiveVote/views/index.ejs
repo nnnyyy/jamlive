@@ -16,6 +16,7 @@
   </head>
   <body>
   <!-- HTML Design -->
+  <div class="mostanswer"><div class="mostanswerinner">1</div></div>
   <div class="content">
       <maintitle>JAM LIVE 정답 투표기</maintitle><br/>
       <subtitle>집단지성으로 퀴즈 정답을 유추 해 보즈아!!!(현재 지성인 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
@@ -44,30 +45,20 @@
   </div>
   <!-- Script -->
   <script>
-      function showPieChart(dataSeries) {
+      function showPieChart(dataLabels, dataSeries) {
           var data = {
-              labels: ['1번', '2번', '3번'],
+              labels: dataLabels,
               series: dataSeries
           };
 
           var options = {
-              labelInterpolationFnc: function(value) {
-                  return value[0]
-              }
           };
 
           var responsiveOptions = [
               ['screen and (min-width: 640px)', {
-                  chartPadding: 30,
-                  labelOffset: 100,
-                  labelDirection: 'explode',
-                  labelInterpolationFnc: function(value) {
-                      return value;
-                  }
-              }],
-              ['screen and (min-width: 1024px)', {
-                  labelOffset: 80,
-                  chartPadding: 20
+                  chartPadding: 10,
+                  labelOffset: 30,
+                  labelDirection: 'explode'
               }]
           ];
           new Chartist.Pie('.ct-chart', data, options, responsiveOptions);
@@ -133,8 +124,28 @@
                   barDataSeriesRet[2].push(p[key][1][2]);
               }
 
+              var temp = ret[0];
+              var recommandIdx = 1;
+              var bRecommand = false;
+              for( var i =  1; i < 3 ; ++i ) {
+                  if( temp < ret[i] ) {
+                      recommandIdx = (i + 1);
+                      temp = ret[i];
+                      bRecommand = true;
+                  }
+                  else if(temp > ret[i]) {
+                      bRecommand = true;
+                  }
+              }
+
+              var retText =  recommandIdx + '번 유력';
+              if( !bRecommand ) {
+                  retText = '-'
+              }
+              $('.mostanswerinner').text(retText);
+
               showBarChart(barLabelRet, barDataSeriesRet);
-              showPieChart(ret);
+              showPieChart(['1번(' + ret[0] + ')', '2번(' + ret[1] + ')', '3번(' + ret[2] + ')'],ret);
               //$('#votecnt').text(JSON.stringify(ret));
           })
 
