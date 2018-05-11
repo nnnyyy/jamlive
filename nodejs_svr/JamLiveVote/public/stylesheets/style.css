@@ -1,8 +1,33 @@
 body {
-  padding: 50px;
+  padding: 10px;
+  background-color: cornflowerblue;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.content {
+  text-align: center;
+}
+
+maintitle {
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+subtitle {
+  font-size: x-large;
+}
+
+info {
+  color: #ffff00;
+  font-size: large;
+  font-weight: bold;
+}
+
+.btn_vote {
+  width: 30%;
+  height: 50px;
 }
