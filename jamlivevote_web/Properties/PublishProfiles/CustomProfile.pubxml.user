@@ -7,44 +7,47 @@
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAXJsyeVsOrUiJ6R0jc+YTpQAAAAACAAAAAAADZgAAwAAAABAAAAAdx15VQDZo9wAfmZ/ZVJ3IAAAAAASAAACgAAAAEAAAANpaMjMAhPTKsUvYw+wVNm0YAAAAkgH6sDQnoJKT4s1ZFOdlyz0SJrX9b5A7FAAAAEHsB5DAPqY5r73DLK7/ITSDGI3o</EncryptedPassword>
-    <_PublishTargetUrl>C:\Users\sono\Desktop\jamlive</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\Users\sono\Desktop\jamlive_deploy</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
+    <File Include="bin/Core.dll">
+      <publishTime>05/11/2018 10:51:53</publishTime>
+    </File>
     <File Include="bin/Microsoft.WebSockets.dll">
-      <publishTime>05/10/2018 10:17:05</publishTime>
+      <publishTime>05/10/2018 16:58:18</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>01/28/2016 14:22:24</publishTime>
     </File>
     <File Include="bin/WebSocketDemo.dll">
-      <publishTime>05/10/2018 12:44:44</publishTime>
+      <publishTime>05/11/2018 13:28:10</publishTime>
     </File>
     <File Include="bin/WebSocketDemo.pdb">
-      <publishTime>05/10/2018 12:44:44</publishTime>
+      <publishTime>05/11/2018 13:28:10</publishTime>
     </File>
     <File Include="Default.aspx">
-      <publishTime>05/10/2018 11:15:12</publishTime>
+      <publishTime>05/10/2018 16:58:18</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>05/10/2018 10:29:47</publishTime>
+      <publishTime>05/10/2018 16:58:18</publishTime>
     </File>
     <File Include="Scripts/jquery-1.7.2.min.js">
-      <publishTime>05/10/2018 10:17:05</publishTime>
+      <publishTime>05/10/2018 16:58:18</publishTime>
     </File>
     <File Include="Scripts/modernizr-2.5.3.js">
-      <publishTime>05/10/2018 10:17:05</publishTime>
+      <publishTime>05/10/2018 16:58:18</publishTime>
     </File>
     <File Include="View.aspx">
       <publishTime>05/10/2018 12:41:13</publishTime>
     </File>
     <File Include="View.html">
-      <publishTime>05/10/2018 12:53:30</publishTime>
+      <publishTime>05/11/2018 13:27:39</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/10/2018 12:42:03</publishTime>
+      <publishTime>05/11/2018 13:28:10</publishTime>
     </File>
     <File Include="WebSocketHandler.ashx">
-      <publishTime>05/10/2018 10:17:05</publishTime>
+      <publishTime>05/10/2018 16:58:18</publishTime>
     </File>
   </ItemGroup>
 </Project>
