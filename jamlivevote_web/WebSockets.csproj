@@ -40,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Core">
+      <HintPath>..\bin\Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WebSockets">
       <HintPath>..\packages\Microsoft.WebSockets.0.2.3\lib\net45\Microsoft.WebSockets.dll</HintPath>

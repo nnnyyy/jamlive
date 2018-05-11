@@ -11,20 +11,21 @@ using Newtonsoft.Json;
 
 namespace WebSocketDemo
 {
-    internal class ClickCountMessage
-    {
-        public long Time { get; set; }
-        public Dictionary<string, int> Count { get; set; }
-    }
-
     public class WebSocketHandler : HttpTaskAsyncHandler
     {
         static readonly int AccumlativeSec = 10;
         static readonly int CooldownSec = 1;
+        static readonly int SendIntervalSec = 1;
 
-        static Dictionary<int, WebSocket> WebSocketDic = new Dictionary<int, WebSocket>();
+        static Devcat.Core.Threading.JobProcessor LogicThread;
         static Dictionary<int, long> LastClickTimeDic = new Dictionary<int, long>();
         static Dictionary<long, Dictionary<string, int>> TimeSeriesCountDic = new Dictionary<long, Dictionary<string, int>>();
+
+        static WebSocketHandler()
+        {
+            LogicThread = new Devcat.Core.Threading.JobProcessor();
+            LogicThread.Start();
+        }
 
         public override bool IsReusable
         {
@@ -48,49 +49,62 @@ namespace WebSocketDemo
         private async Task WebSocketRequestHandler(AspNetWebSocketContext aspNetWebSocketContext)
         {
             var webSocket = aspNetWebSocketContext.WebSocket;
-            var webSocketKey = webSocket.GetHashCode();
 
             while (webSocket.State != WebSocketState.Closed)
             {
-                WebSocketDic[webSocketKey] = webSocket;
+                RegisterSchedule(webSocket);
 
-                ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-                WebSocketReceiveResult webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                var buffer = new ArraySegment<byte>(new byte[1024]);
+                var webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
 
                 if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
                 {
-                    WebSocketDic.Remove(webSocketKey);
-
                     await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, CancellationToken.None);
                 }
                 else if (webSocketReceiveResult.MessageType == WebSocketMessageType.Text)
                 {
-                    ProcessMessage(webSocket, Encoding.UTF8.GetString(buffer.Array, 0, webSocketReceiveResult.Count));
+                    var message = Encoding.UTF8.GetString(buffer.Array, 0, webSocketReceiveResult.Count);
+                    var job = Devcat.Core.Threading.Job.Create(() => { ProcessMessage(webSocket, message); });
+                    Devcat.Core.Threading.Scheduler.Schedule(LogicThread, job, 0);
                 }
             }
         }
 
-        protected void ProcessMessage(WebSocket webSocket, string message)
+        private void RegisterSchedule(WebSocket webSocket)
         {
+            Devcat.Core.Threading.Scheduler.Schedule(LogicThread, Devcat.Core.Threading.Job.Create(() =>
+            {
+                if (webSocket.State != WebSocketState.Closed)
+                {
+                    var task = SendMessageAsync(webSocket, GetCountMessage());
+                    RegisterSchedule(webSocket);
+                }
+            }), SendIntervalSec * 1000);
+        }
+
+        private void ProcessMessage(WebSocket webSocket, string message)
+        {
+            Task task;
+
             try
             {
-                var webSocketKey = webSocket.GetHashCode();
-                var clickCountKey = message;
                 var now = DateTime.Now.ToYYYYMMDDHHMMSS();
+                var clientID = webSocket.GetHashCode();
+                var clickIndex = message;
 
-                if (LastClickTimeDic.ContainsKey(webSocketKey) && LastClickTimeDic[webSocketKey] + CooldownSec >= now)
+                if (LastClickTimeDic.ContainsKey(clientID) && LastClickTimeDic[clientID] + CooldownSec >= now)
                 {
                     return;
                 }
-                LastClickTimeDic[webSocketKey] = now;
+                LastClickTimeDic[clientID] = now;
 
                 if (TimeSeriesCountDic.ContainsKey(now))
                 {
-                    TimeSeriesCountDic[now].AddOrIncrease(clickCountKey, 1);
+                    TimeSeriesCountDic[now].AddOrIncrease(clickIndex, 1);
                 }
                 else
                 {
-                    TimeSeriesCountDic.Add(now, new Dictionary<string, int>() { { clickCountKey, 1 } } );
+                    TimeSeriesCountDic.Add(now, new Dictionary<string, int>() { { clickIndex, 1 } });
 
                     var skipCount = TimeSeriesCountDic.Count() - AccumlativeSec;
                     if (skipCount > 0)
@@ -99,39 +113,28 @@ namespace WebSocketDemo
                     }
                 }
 
-                BroadcastClickCount();
+                task = SendMessageAsync(webSocket, GetCountMessage());
             }
             catch (Exception e)
             {
-                var task = SendMessageAsync(webSocket, e.ToString());
+                task = SendMessageAsync(webSocket, e.Message);
             }
         }
 
-        private void BroadcastClickCount()
+        private string GetCountMessage()
         {
-            if (TimeSeriesCountDic.Count() > 0)
+            var now = DateTime.Now.ToYYYYMMDDHHMMSS();
+            var dic = new Dictionary<string, int>();
+
+            foreach (var clickCountDic in TimeSeriesCountDic.Where(x => x.Key > now - AccumlativeSec))
             {
-                var dic = new Dictionary<string, int>();
-
-                foreach (var clickCountDic in TimeSeriesCountDic.Values)
+                foreach (var pair in clickCountDic.Value)
                 {
-                    foreach (var pair in clickCountDic)
-                    {
-                        dic.AddOrIncrease(pair.Key, pair.Value);
-                    }
-                }
-
-                var message = JsonConvert.SerializeObject(new ClickCountMessage()
-                {
-                    Time = TimeSeriesCountDic.Keys.OrderBy(x => x).Last(),
-                    Count = dic.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value)
-                });
-
-                foreach (var webSocket in WebSocketDic.Values)
-                {
-                    var task = SendMessageAsync(webSocket, message);
+                    dic.AddOrIncrease(pair.Key, pair.Value);
                 }
             }
+
+            return JsonConvert.SerializeObject(dic.OrderBy(x => x.Key));
         }
 
         private async Task SendMessageAsync(WebSocket webSocket, string message)
