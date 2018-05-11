@@ -15,9 +15,10 @@ namespace WebSocketDemo
     {
         static readonly int AccumlativeSec = 10;
         static readonly int CooldownSec = 1;
-        static readonly int SendIntervalSec = 1;
+        static readonly int SendIntervalMilliSec = 500;
 
         static Devcat.Core.Threading.JobProcessor LogicThread;
+        static Dictionary<int, WebSocket> WebSocketDic = new Dictionary<int, WebSocket>();
         static Dictionary<int, long> LastClickTimeDic = new Dictionary<int, long>();
         static Dictionary<long, Dictionary<string, int>> TimeSeriesCountDic = new Dictionary<long, Dictionary<string, int>>();
 
@@ -49,16 +50,22 @@ namespace WebSocketDemo
         private async Task WebSocketRequestHandler(AspNetWebSocketContext aspNetWebSocketContext)
         {
             var webSocket = aspNetWebSocketContext.WebSocket;
+            var webSocketKey = webSocket.GetHashCode();
 
             while (webSocket.State != WebSocketState.Closed)
             {
-                RegisterSchedule(webSocket);
+                if (WebSocketDic.ContainsKey(webSocketKey) == false)
+                {
+                    WebSocketDic.Add(webSocketKey, webSocket);
+                    RegisterSchedule(webSocket);
+                }
 
                 var buffer = new ArraySegment<byte>(new byte[1024]);
                 var webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
 
                 if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
                 {
+                    WebSocketDic.Remove(webSocketKey);
                     await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, CancellationToken.None);
                 }
                 else if (webSocketReceiveResult.MessageType == WebSocketMessageType.Text)
@@ -79,7 +86,7 @@ namespace WebSocketDemo
                     var task = SendMessageAsync(webSocket, GetCountMessage());
                     RegisterSchedule(webSocket);
                 }
-            }), SendIntervalSec * 1000);
+            }), SendIntervalMilliSec);
         }
 
         private void ProcessMessage(WebSocket webSocket, string message)
