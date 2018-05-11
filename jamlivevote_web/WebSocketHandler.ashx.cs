@@ -15,7 +15,7 @@ namespace WebSocketDemo
     {
         static readonly int AccumlativeSec = 10;
         static readonly int CooldownSec = 1;
-        static readonly int SendIntervalMilliSec = 1000;
+        static readonly int SendIntervalMilliSec = 500;
 
         static Devcat.Core.Threading.JobProcessor LogicThread;
         static Dictionary<int, WebSocket> WebSocketDic = new Dictionary<int, WebSocket>();
