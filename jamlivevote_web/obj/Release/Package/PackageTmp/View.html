@@ -48,18 +48,7 @@
         gloabl_rank3 = 3;
 
 
-        setInterval(function () {
-
-
-            var arr = [number_count1, number_count2, number_count3];
-            var sorted = arr.slice().sort(function (a, b) { return b - a })
-            var ranks = arr.slice().map(function (v) { return sorted.indexOf(v) + 1 });
-
-            gloabl_rank1 = ranks[0];
-            gloabl_rank2 = ranks[1];
-            gloabl_rank3 = ranks[2];
-        }, 1000);
-
+    
         $(function () {
             $(document).ready(function () {
 
