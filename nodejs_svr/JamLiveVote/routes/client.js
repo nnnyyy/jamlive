@@ -8,7 +8,7 @@ var Client = function(socket) {
 
 Client.prototype.isClickable = function() {
     var cur = new Date();
-    return (cur - this.tLastClick) > 200;
+    return (cur - this.tLastClick) > 800;
 }
 
 module.exports = Client;

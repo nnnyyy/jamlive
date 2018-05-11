@@ -54,7 +54,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
 
     //console.log(this.counts);
 
-    this.io.sockets.emit('testdata', {cnt: JSON.stringify(this.counts)})
+    this.io.sockets.emit('testdata', {cnt: JSON.stringify(this.counts), users: this.socketmap.count()})
 }
 
 ServerMan.prototype.click = function(idx) {

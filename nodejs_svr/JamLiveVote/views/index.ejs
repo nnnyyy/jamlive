@@ -8,24 +8,33 @@
       <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <!-- JamLive페이지용 광고 -->
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-3598320494828213"
-       data-ad-slot="4326018437"
-       data-ad-format="auto"></ins>
-  <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
   <!-- HTML Design -->
-  JamLive Answer Vote System<br/>
-  click : <votecount id="votecnt"></votecount>
-  <input type="button" class="btn_vote" data="0" value="1번"/>
-  <input type="button" class="btn_vote" data="1" value="2번"/>
-  <input type="button" class="btn_vote" data="2" value="3번"/>
-  <div class="ct-chart" style="height: 300px; background-color:#ffffff"></div>
-  <div class="ct-barchart" style="height: 300px; background-color:#ffffff"></div>
+  <div class="content">
+      <maintitle>JAM LIVE 정답 투표기</maintitle><br/>
+      <subtitle>집단지성으로 퀴즈 정답을 유추 해 보즈아!!!(현재 지성인 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
+      <info>PC : 키보드 1,2,3 번으로 선택 가능한 부분! ( 누르고 있으면 연속 선택 가능. 듣고 정답같다 싶으면 사정없이 누르고 계세요! )</info>
+      <div class="ct-chart ct-series-x" style="height: 300px; "></div>
+      <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
+      <!-- 구글 플레이 스토어 링크 -->
+      <a target='_blank' href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img class="ads_banner" src="/images/playstore.png"/></a>
+      <!-- 애플 스토어 링크 -->
+      <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="/images/appstore.png"/></a>
+      <div class="ct-barchart" style="height: 300px; "></div>
+
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <input type="button" class="btn_vote" data="0" value="1번"/>
+      <input type="button" class="btn_vote" data="1" value="2번"/>
+      <input type="button" class="btn_vote" data="2" value="3번"/>
+      <!-- JamLive페이지용 광고 -->
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3598320494828213"
+           data-ad-slot="4326018437"
+           data-ad-format="auto"></ins>
+      <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+  </div>
   <!-- Script -->
   <script>
       function showPieChart(dataSeries) {
@@ -92,9 +101,13 @@
           });
       }
 
+      var tClick = 0;
+
       $(document).ready(function(){
           var socket = io();
           socket.on('testdata', function(data) {
+              var users = data.users;
+              $('#usercnt').text(users);
               var p = JSON.parse(data.cnt)._data;
               var ret = [1,1,1];
               var barLabelRet = [];
@@ -122,6 +135,17 @@
               $(this).click(function() {
                   socket.emit('vote', {idx:$(this).attr('data')})
               });
+          })
+
+          $(document).keypress(function(event) {
+              if( event.charCode >= 49 && event.charCode <= 51) {
+                  var curTime = new Date();
+                  if( curTime - tClick < 1000 ) {
+                      return;
+                  }
+                  tClick = curTime;
+                  socket.emit('vote', {idx:event.charCode - 49 })
+              }
           })
       });
   </script>
