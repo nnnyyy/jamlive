@@ -1,6 +1,6 @@
 body {
   padding: 10px;
-  background-color: cornflowerblue;
+  background-color: #F5F1D5;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -22,13 +22,13 @@ subtitle {
 }
 
 info {
-  color: #ffff00;
+  color: #1B3440;
   font-size: large;
   font-weight: bold;
 }
 
 .btn_vote {
-  width: 30%;
+  width: 10%;
   height: 50px;
 }
 
@@ -56,4 +56,15 @@ info {
 .mostanswerinner {
   line-height: 200px;
   text-align: center;
+}
+
+#banner_area {
+  margin: auto;
+  background-color: #1B3440;
+  width: 50%;
+}
+
+.newtype {
+  stroke: green;
+  color: green;
 }

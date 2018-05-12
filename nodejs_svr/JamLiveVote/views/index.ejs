@@ -23,12 +23,14 @@
       <input type="button" class="btn_vote" data="0" value="1번"/>
       <input type="button" class="btn_vote" data="1" value="2번"/>
       <input type="button" class="btn_vote" data="2" value="3번"/>
-      <div class="ct-chart ct-series-x" style="height: 300px; "></div>
-      <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
-      <!-- 구글 플레이 스토어 링크 -->
-      <a target='_blank' href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img class="ads_banner" src="/images/playstore.png"/></a>
-      <!-- 애플 스토어 링크 -->
-      <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="/images/appstore.png"/></a>
+      <div class="ct-chart" style="margin:auto;width: 40%; height: 300px; "></div>
+      <div id="banner_area">
+          <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
+          <!-- 구글 플레이 스토어 링크 -->
+          <a target='_blank' href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img class="ads_banner" src="/images/playstore.png"/></a>
+          <!-- 애플 스토어 링크 -->
+          <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="/images/appstore.png"/></a>
+      </div>
       <div class="ct-barchart" style="height: 300px; "></div>
 
       <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -44,23 +46,36 @@
   </div>
   <!-- Script -->
   <script>
-      function showPieChart(dataLabels, dataSeries) {
+      var color = ['#DE5B49','#324D5C', '#F0CA4D' ];
+
+      function showMainBarChart(labelSeries, dataSeries) {
           var data = {
-              labels: dataLabels,
+              labels: labelSeries,
               series: dataSeries
           };
 
           var options = {
+              seriesBarDistance: 10,
+              axisX: {
+                  offset: 60
+              },
+              axisY: {
+                  offset: 80
+              }
           };
 
-          var responsiveOptions = [
-              ['screen and (min-width: 640px)', {
-                  chartPadding: 10,
-                  labelOffset: 30,
-                  labelDirection: 'explode'
-              }]
-          ];
-          new Chartist.Pie('.ct-chart', data, options, responsiveOptions);
+          var chart = new Chartist.Bar('.ct-chart', data, options);
+          chart.on('draw', function(context) {
+              if( context.type == 'bar') {
+                  console.log(context);
+                  var c = color[context.index % 3];
+                  context.element.attr({
+
+                      // Now we set the style attribute on our bar to override the default color of the bar. By using a HSL colour we can easily set the hue of the colour dynamically while keeping the same saturation and lightness. From the context we can also get the current value of the bar. We use that value to calculate a hue between 0 and 100 degree. This will make our bars appear green when close to the maximum and red when close to zero.
+                      style: 'stroke: ' + c
+                  });
+              }
+          })
       }
 
       function showBarChart(labelSeries, dataSeries) {
@@ -79,23 +94,17 @@
               }
           };
 
-          new Chartist.Bar('.ct-barchart', data, options);
-      }
+          var chart = new Chartist.Bar('.ct-barchart', data, options);
+          chart.on('draw', function(context) {
+              if( context.type == 'bar') {
+                  var c = color[context.seriesIndex % 3];
+                  context.element.attr({
 
-      function showChart(data) {
-          new Chartist.Line('.ct-chart', {
-              series: [
-                  data
-              ]
-          }, {
-              seriesBarDistance: 1,
-              low: 0,
-              high: 100,
-              fullWidth: true,
-              chartPadding: {
-                  right: 40
+                      // Now we set the style attribute on our bar to override the default color of the bar. By using a HSL colour we can easily set the hue of the colour dynamically while keeping the same saturation and lightness. From the context we can also get the current value of the bar. We use that value to calculate a hue between 0 and 100 degree. This will make our bars appear green when close to the maximum and red when close to zero.
+                      style: 'stroke: ' + c
+                  });
               }
-          });
+          })
       }
 
       var tClick = 0;
@@ -106,7 +115,7 @@
               var users = data.users;
               $('#usercnt').text(users);
               var p = JSON.parse(data.cnt)._data;
-              var ret = [1,1,1];
+              var ret = [0,0,0];
               var barLabelRet = [];
               var barDataSeriesRet = [[],[],[]];
               for( var key in p ) {
@@ -118,33 +127,13 @@
                   ret[2] += p[key][1][2];
 
                   barLabelRet.push(t.toISOString());
-                  barDataSeriesRet[0].push(p[key][1][0]);
-                  barDataSeriesRet[1].push(p[key][1][1]);
-                  barDataSeriesRet[2].push(p[key][1][2]);
+                  barDataSeriesRet[0].push({value:p[key][1][0]});
+                  barDataSeriesRet[1].push({value:p[key][1][1]});
+                  barDataSeriesRet[2].push({value:p[key][1][2]});
               }
-
-              var temp = ret[0];
-              var recommandIdx = 1;
-              var bRecommand = false;
-              for( var i =  1; i < 3 ; ++i ) {
-                  if( temp < ret[i] ) {
-                      recommandIdx = (i + 1);
-                      temp = ret[i];
-                      bRecommand = true;
-                  }
-                  else if(temp > ret[i]) {
-                      bRecommand = true;
-                  }
-              }
-
-              var retText =  recommandIdx + '번 유력';
-              if( !bRecommand ) {
-                  retText = '-'
-              }
-              //$('.mostanswerinner').text(retText);
 
               showBarChart(barLabelRet, barDataSeriesRet);
-              showPieChart(['1번(' + ret[0] + ')', '2번(' + ret[1] + ')', '3번(' + ret[2] + ')'],ret);
+              showMainBarChart(['1번','2번','3번'],[ret]);
               //$('#votecnt').text(JSON.stringify(ret));
           })
 
