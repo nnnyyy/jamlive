@@ -99,10 +99,6 @@ namespace WebSocketDemo
                 var clientID = webSocket.GetHashCode();
                 var clickIndex = message;
 
-                if (LastClickTimeDic.ContainsKey(clientID) && LastClickTimeDic[clientID] + CooldownSec >= now)
-                {
-                    return;
-                }
                 LastClickTimeDic[clientID] = now;
 
                 if (TimeSeriesCountDic.ContainsKey(now))
