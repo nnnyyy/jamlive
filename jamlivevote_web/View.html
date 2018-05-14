@@ -65,9 +65,9 @@
                                 // set up the updating of the chart each second
                                 var series = this.series[0];
 
-                                setInterval(function () {
-                                    series.setData([number_count1, number_count2, number_count3]);
-                                }, 1000);
+                                //setInterval(function () {
+                                //    series.setData([number_count1, number_count2, number_count3]);
+                                //}, 1000);
                             }
                         }
                     },
@@ -162,6 +162,10 @@
             $(".text_number1").text(number_count1 + "개");
             $(".text_number2").text(number_count2 + "개");
             $(".text_number3").text(number_count3 + "개");
+
+            console.log(number_count1 + " / " + number_count2 + " / " + number_count3);
+
+            chart1.series[0].setData([number_count1, number_count2, number_count3], true);
 
         };
 
