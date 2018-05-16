@@ -9,6 +9,8 @@ a {
 }
 
 .content {
+  float: left;
+  width: 67%;
   text-align: center;
 }
 
@@ -66,4 +68,71 @@ info {
 .newtype {
   stroke: green;
   color: green;
+}
+
+#mainframe {
+}
+
+#chat {
+  background-color: white;
+  float: left;
+  width: 33%;
+  height: 100%;
+}
+
+.top-bar {
+  background: #666;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.top-bar::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  bottom: -100%;
+  opacity: 0.25;
+  background: radial-gradient(white, black);
+}
+
+#chatwndul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#chatwndul li {
+  margin: 0;
+  padding: 0;
+}
+
+.chatscrollarea {
+  height: 300px;
+  overflow-y:scroll;
+
+}
+
+.chatinputarea {
+  display: table;
+  width: 100%;
+}
+
+#chatnicknamearea {
+  display: table-cell;
+  width: 100px;
+}
+
+.chatnickname {
+  width: 100%;
+}
+
+#chatinputboxarea {
+  display: table-cell;
+}
+
+.chatinputbox {
+  width: 100%;
 }

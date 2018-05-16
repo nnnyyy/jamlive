@@ -60,3 +60,6 @@ typings/
 
 log/
 \.idea/
+\.vs/
+bin/
+obj/

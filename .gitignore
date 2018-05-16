@@ -1,9 +1,11 @@
 
+jamlivevote_web/\.vs/
+
 jamlivevote_web/bin/
 
-jamlivevote_web/obj/Debug/
+jamlivevote_web/obj/
 
-jamlivevote_web/\.vs/WebSockets/v14/\.suo
+jamlivevote_web/obj/Debug/
 
 # Logs
 logs

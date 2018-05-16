@@ -3,6 +3,7 @@
  */
 var HashMap = require('hashmap');
 var Client = require('./client');
+var ChatRoom = require('./chatroom');
 var ServerMan = function() {
     this.socketmap = new HashMap();
     this.counts = new HashMap();
@@ -32,6 +33,7 @@ ServerMan.prototype.getClient = function(socket){
 
 ServerMan.prototype.setIO = function(io) {
     this.io = io;
+    this.chatroom = new ChatRoom(io);
 
     setInterval(function() {
         servman.broadcastVoteInfo();
@@ -78,6 +80,7 @@ ServerMan.prototype.click = function(idx) {
 ServerMan.prototype.register = function(socket) {
     this.addSocket(socket);
     socket.on('disconnect', function(){
+        servman.chatroom.leave(this);
         servman.removeSocket(this);
     });
 
@@ -87,7 +90,19 @@ ServerMan.prototype.register = function(socket) {
             servman.click(data.idx);
             client.tLastClick = new Date();
         }
+    });
+
+    socket.on('chat', function(data) {
+        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + this.handshake.address.substr(7) + ')', msg: data.msg });
     })
+
+    socket.on('enterchat', function(data) {
+        servman.chatroom.enter(this, data.nickname);
+    });
+
+    socket.on('leavechat', function() {
+        servman.chatroom.leave(this);
+    });
 }
 
 module.exports = servman;
