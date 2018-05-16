@@ -16,33 +16,49 @@
   </head>
   <body>
   <!-- HTML Design -->
-  <div class="content">
-      <maintitle>JAM LIVE 정답 투표기</maintitle><br/>
-      <subtitle>힘을 합쳐서 정답을 공유 해 보아요!(참여인원 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
-      <info>[투표방법] PC : 키보드 1,2,3 번 or 버튼, 모바일 : 버튼</info><br/>
-      <input type="button" class="btn_vote" data="0" value="1번"/>
-      <input type="button" class="btn_vote" data="1" value="2번"/>
-      <input type="button" class="btn_vote" data="2" value="3번"/>
-      <div class="ct-chart" style="margin:auto;width: 40%; height: 300px; "></div>
-      <div id="banner_area">
-          <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
-          <!-- 구글 플레이 스토어 링크 -->
-          <a target='_blank' href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img class="ads_banner" src="/images/playstore.png"/></a>
-          <!-- 애플 스토어 링크 -->
-          <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="/images/appstore.png"/></a>
-      </div>
-      <div class="ct-barchart" style="height: 300px; "></div>
+  <div id ='mainframe'>
+      <div class="content">
+          <maintitle>JAM LIVE 정답 투표기</maintitle><br/>
+          <subtitle>힘을 합쳐서 정답을 공유 해 보아요!(참여인원 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
+          <info>[투표방법] PC : 키보드 1,2,3 번 or 버튼, 모바일 : 버튼</info><br/>
+          <input type="button" class="btn_vote" data="0" value="1번"/>
+          <input type="button" class="btn_vote" data="1" value="2번"/>
+          <input type="button" class="btn_vote" data="2" value="3번"/>
+          <div class="ct-chart" style="margin:auto;width: 40%; height: 300px; "></div>
+          <div id="banner_area">
+              <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
+              <!-- 구글 플레이 스토어 링크 -->
+              <a target='_blank' href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img class="ads_banner" src="/images/playstore.png"/></a>
+              <!-- 애플 스토어 링크 -->
+              <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="/images/appstore.png"/></a>
+          </div>
+          <div class="ct-barchart" style="height: 300px; "></div>
 
-      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-      <!-- JamLive페이지용 광고 -->
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-3598320494828213"
-           data-ad-slot="4326018437"
-           data-ad-format="auto"></ins>
-      <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+          <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+          <!-- JamLive페이지용 광고 -->
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-3598320494828213"
+               data-ad-slot="4326018437"
+               data-ad-format="auto"></ins>
+          <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <div id="chat">
+          <header class="top-bar">
+              <h1 style="margin-left: 20px;">채팅 ( 채팅 참여 : 키보드 0번, 포커스 취소 : esc ) </h1>
+              <!-- likely some spans and stuff -->
+          </header>
+          <div class="chatscrollarea">
+              <ul id="chatwndul">
+              </ul>
+          </div>
+          <div class="chatinputarea">
+              <div id="chatnicknamearea"><input class="chatnickname" type="text"></div>
+              <div id="chatinputboxarea"><input class="chatinputbox" type="text"/></div>
+          </div>
+      </div>
   </div>
   <!-- Script -->
   <script>
@@ -106,13 +122,34 @@
           })
       }
 
+      function addChat(msg) {
+          var bAutoMoveToBottom = false;
+          var chatwndheight = $('.chatscrollarea').height();
+          if( $('#chatwndul').find('li').length > 200 ) {
+              $('#chatwndul').find('li').eq(0).remove();
+          }
+
+          if( $('.chatscrollarea').get(0).scrollTop == ($('.chatscrollarea').get(0).scrollHeight - chatwndheight) ) {
+              bAutoMoveToBottom = true;
+          }
+
+
+          $('#chatwndul').append('<li><div class="message"><p>' + msg + '</p></div></li>')
+          if( bAutoMoveToBottom ) {
+              $('.chatscrollarea').scrollTop($('.chatscrollarea').get(0).scrollHeight);
+          }
+      }
+
       var tClick = 0;
 
       $(document).ready(function(){
+          console.log(navigator.userAgent);
           if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
               // is mobile..
               $('.ct-chart').css('width','90%');
               $('.btn_vote').css('width','30%');
+              $('#chat').css('visibility','hidden');
+              $('.content').css('width', '100%');
           }
 
           var socket = io();
@@ -140,6 +177,11 @@
               showBarChart(barLabelRet, barDataSeriesRet);
               showMainBarChart(['1번','2번','3번'],[ret]);
               //$('#votecnt').text(JSON.stringify(ret));
+
+          })
+
+          socket.on('chat', function(data) {
+              addChat(data.nickname + ' : ' + data.msg);
           })
 
           $('.btn_vote').each(function(idx) {
@@ -149,6 +191,7 @@
           })
 
           $(document).keypress(function(event) {
+              if( $('.chatinputbox').is(':focus') ) return;
               if( event.charCode >= 49 && event.charCode <= 51) {
                   var curTime = new Date();
                   if( curTime - tClick < 100 ) {
@@ -157,7 +200,30 @@
                   tClick = curTime;
                   socket.emit('vote', {idx:event.charCode - 49 })
               }
+
+              if( event.charCode == 48 ) {
+                  $('.chatinputbox').focus();
+                  $('.chatinputbox').val('');
+              }
           })
+
+          $('.chatinputbox').keypress(function(e) {
+              var code = (e.keyCode ? e.keyCode : e.which);
+              if( code == 13 ) {
+                  socket.emit('chat', {nickname:$('.chatnickname').val(), msg: $(this).val() });
+                  $(this).val('');
+              }
+          })
+
+          $('.chatinputbox').keyup(function(e) {
+              var code = (e.keyCode ? e.keyCode : e.which);
+              if( code == 27 ) {
+                  $(this).blur();
+              }
+          })
+
+          var rd = Math.floor(Math.random() * 5000000);
+          $('.chatnickname').val('guest' + rd);
       });
   </script>
   <script src="/socket.io/socket.io.js"></script>
