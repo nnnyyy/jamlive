@@ -6,6 +6,7 @@ var Client = require('./client');
 var ChatRoom = require('./chatroom');
 var ServerMan = function() {
     this.socketmap = new HashMap();
+    this.uniqueip = new HashMap();
     this.counts = new HashMap();
     this.countslist = [];
 }
@@ -14,6 +15,7 @@ var servman = new ServerMan();
 
 ServerMan.prototype.addSocket = function(socket) {
     this.socketmap.set(socket, new Client(socket));
+    this.uniqueip.set(socket.handshake.address, 1);
     console.log('user connected : ' + socket.handshake.address);
 }
 
@@ -24,6 +26,7 @@ ServerMan.prototype.removeSocket = function(socket) {
     }
 
     this.socketmap.delete(socket);
+    this.uniqueip.delete(socket.handshake.address);
     console.log('user disconnected : ' + socket.handshake.address);
 }
 

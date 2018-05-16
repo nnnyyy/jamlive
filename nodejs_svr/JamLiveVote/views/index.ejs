@@ -12,6 +12,7 @@
       <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
       <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
       <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+      <script src="/basic.js"></script>
       <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
@@ -47,7 +48,7 @@
       </div>
       <div id="chat">
           <header class="top-bar">
-              <h1 style="margin-left: 20px;">채팅 ( 채팅 참여 : 키보드 0번, 포커스 취소 : esc ) </h1>
+              <chattitle style="margin-left: 20px;line-height: 40px;">채팅 ( 채팅 참여 : 1~3번을 제외한 아무 키, 포커스 취소 : esc ) </chattitle>
               <!-- likely some spans and stuff -->
           </header>
           <div class="chatscrollarea">
@@ -134,17 +135,18 @@
           }
 
 
-          $('#chatwndul').append('<li><div class="message"><p>' + msg + '</p></div></li>')
+          $('#chatwndul').append('<li><div class="message"><p>' + strip(msg) + '</p></div></li>')
           if( bAutoMoveToBottom ) {
               $('.chatscrollarea').scrollTop($('.chatscrollarea').get(0).scrollHeight);
           }
       }
 
       var tClick = 0;
+      var bTrigger = false;
 
       $(document).ready(function(){
           console.log(navigator.userAgent);
-          if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+          if( isMobile() ) {
               // is mobile..
               $('.ct-chart').css('width','90%');
               $('.btn_vote').css('width','30%');
@@ -153,6 +155,11 @@
           }
 
           var socket = io();
+          socket.on('disconnect' , function() {
+              alert('동시 접속 불가');
+              self.close();
+          });
+
           socket.on('testdata', function(data) {
               var users = data.users;
               $('#usercnt').text(users);
@@ -200,23 +207,40 @@
                   tClick = curTime;
                   socket.emit('vote', {idx:event.charCode - 49 })
               }
-
-              if( event.charCode == 48 ) {
-                  $('.chatinputbox').focus();
+              else {
                   $('.chatinputbox').val('');
+                  $('.chatinputbox').focus();
+                  bTrigger = true;
               }
           })
 
           $('.chatinputbox').keypress(function(e) {
               var code = (e.keyCode ? e.keyCode : e.which);
               if( code == 13 ) {
-                  socket.emit('chat', {nickname:$('.chatnickname').val(), msg: $(this).val() });
+                  var nick = strip($('.chatnickname').val());
+                  var msg = $(this).val();
+                  if( msg.length > 40 ) {
+                      alert('메시지는 짧게');
+                      $('.chatinputbox').val('');
+                      return;
+                  }
+                  if( nick.length > 14) {
+                      alert('닉네임은 14자 이하로');
+                      return;
+                  }
+                  nick = nick.substr(0,14);
+                  socket.emit('chat', {nickname: nick, msg: msg });
                   $(this).val('');
               }
           })
 
           $('.chatinputbox').keyup(function(e) {
               var code = (e.keyCode ? e.keyCode : e.which);
+              if( bTrigger ) {
+                  bTrigger = false;
+                  $(this).val('');
+                  return;
+              }
               if( code == 27 ) {
                   $(this).blur();
               }
