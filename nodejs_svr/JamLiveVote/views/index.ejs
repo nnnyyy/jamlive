@@ -199,6 +199,7 @@
 
           $(document).keypress(function(event) {
               if( $('.chatinputbox').is(':focus') ) return;
+              if( $('.chatnickname').is(':focus') ) return;
               if( event.charCode >= 49 && event.charCode <= 51) {
                   var curTime = new Date();
                   if( curTime - tClick < 100 ) {
