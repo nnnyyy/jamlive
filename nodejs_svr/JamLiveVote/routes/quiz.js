@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/getquiz', function(req, res, next) {
     var datesn = req.body.date_sn;
-    dbhelper.getQuizList(function(result) {
+    dbhelper.getQuizList(datesn, function(result) {
         res.json(result);
     })
 })

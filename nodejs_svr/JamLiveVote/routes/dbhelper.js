@@ -24,10 +24,23 @@ exports.getQuizDateList = function(cb) {
     }
 }
 
-exports.getQuizList = function(cb) {
+exports.getQuizList = function(sn, cb) {
     try {
-        cb({ret: 0});
+        dbpool.query("select * from quiz where date_sn = " + sn + ' order by quiz_idx', function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            console.log(rows);
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push({sn: d.sn, quiz_date: d.quiz_date});
+            }
+            cb({ret:0, list: data});
+        });
     }catch(err) {
-        cb({ret: -1})
+        Log.logger.debug('DB Failed - getQuizDateList');
+        cb({ret: -1});
     }
 }
