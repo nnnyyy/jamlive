@@ -23,3 +23,11 @@ exports.getQuizDateList = function(cb) {
         cb({ret: -1});
     }
 }
+
+exports.getQuizList = function(cb) {
+    try {
+        cb({ret: 0});
+    }catch(err) {
+        cb({ret: -1})
+    }
+}

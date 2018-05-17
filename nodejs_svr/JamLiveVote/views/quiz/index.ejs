@@ -22,13 +22,12 @@
           <h1>잼라이브 기출문제</h1>
           <select id="quiz_date" name="quiz_date">
           </select>
-          <input type="button" value="문제 풀기"/>
+          <input id="getquiz" type="button" value="문제 풀기"/>
       </div>
   </div>
   <!-- Script -->
   <script>
       $(document).ready(function(){
-          console.log(navigator.userAgent);
           if( isMobile() ) {
               // is mobile..
           }
@@ -36,6 +35,21 @@
           <% for(var i = 0 ; i < list.length ; ++i) {%>
             $('#quiz_date').append("<option value='<%=list[i].sn%>'>" + "<%= moment(list[i].quiz_date).format('YYYY-MM-DD hh:mm')%> 기출 문제" + "</option>");
           <% }%>
+
+          $('#getquiz').click(function(){
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'json',
+                  data: JSON.stringify({
+                      date_sn: $('#quiz_date option:selected').val()
+                  }),
+                  contentType: 'application/json',
+                  url: '/quiz/getquiz',
+                  success: function(data) {
+
+                  }
+              });
+          })
       });
   </script>
   <script src="/socket.io/socket.io.js"></script>
