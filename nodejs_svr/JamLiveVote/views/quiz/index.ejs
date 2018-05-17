@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>JAM LIVE 기출 문제 풀기</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+      <meta name="description" content="JAM LIVE ( 잼라이브 ) 기출 문제를 풀어볼 수 있는 사이트"/>
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="JAM LIVE 기출 문제 풀기">
+      <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 기출 문제를 풀어볼 수 있는 사이트">
+      <meta property="og:image" content="http://4seasonpension.com:4647/images/hotcom_banner.jpg">
+      <meta property="og:url" content="http://4seasonpension.com:4647">
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+      <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+      <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+      <script src="/basic.js"></script>
+      <link rel='stylesheet' href='/stylesheets/style_quiz.css' />
+  </head>
+  <body>
+  <!-- HTML Design -->
+  <div id ='mainframe'>
+      <div class="content">
+          <h1>잼라이브 기출문제</h1>
+          <select id="quiz_date" name="quiz_date">
+          </select>
+          <input type="button" value="문제 풀기"/>
+      </div>
+  </div>
+  <!-- Script -->
+  <script>
+      $(document).ready(function(){
+          console.log(navigator.userAgent);
+          if( isMobile() ) {
+              // is mobile..
+          }
+
+          <% for(var i = 0 ; i < list.length ; ++i) {%>
+            $('#quiz_date').append("<option value='<%=list[i].sn%>'>" + "<%= moment(list[i].quiz_date).format('YYYY-MM-DD hh:mm')%> 기출 문제" + "</option>");
+          <% }%>
+      });
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  </body>
+</html>

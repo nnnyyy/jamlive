@@ -14,7 +14,7 @@
     "express": "~4.13.1",
     "express-session": "^1.15.6",
     "hashmap": "^2.3.0",
-    "moment": "^2.22.0",
+    "moment": "^2.22.1",
     "morgan": "~1.6.1",
     "mysql": "^2.15.0",
     "serve-favicon": "~2.3.0",
