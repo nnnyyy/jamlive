@@ -32,12 +32,12 @@ exports.getQuizList = function(sn, cb) {
                 return;
             }
             var data = [];
-            console.log(rows);
             for( var i  = 0; i < rows.length ; ++i ) {
                 var d = rows[i];
-                data.push({sn: d.sn, quiz_date: d.quiz_date});
+                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_answer});
             }
-            cb({ret:0, list: data});
+            console.log(data);
+            cb({ret:0, quizlist: data});
         });
     }catch(err) {
         Log.logger.debug('DB Failed - getQuizDateList');

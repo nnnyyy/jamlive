@@ -1,7 +1,7 @@
 body {
   padding: 10px;
   background-color: #F5F1D5;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -10,4 +10,20 @@ a {
 
 .content {
   text-align: center;
+}
+
+.quiz_title {
+  line-height: 50px;
+  height:50px;
+  margin: 5px;
+}
+
+.quiz_answer {
+  line-height: 40px;
+  height: 40px;
+  margin: 5px;
+}
+
+time {
+  color:red;
 }

@@ -19,19 +19,120 @@
   <!-- HTML Design -->
   <div id ='mainframe'>
       <div class="content">
-          <h1>잼라이브 기출문제</h1>
-          <select id="quiz_date" name="quiz_date">
-          </select>
-          <input id="getquiz" type="button" value="문제 풀기"/>
+          <h1><a href="/quiz">잼라이브 기출문제</a></h1>
+          <div id="quiz_date_select">
+              <select id="quiz_date" name="quiz_date">
+              </select>
+              <input id="getquiz" type="button" value="문제 풀기"/>
+          </div>
+          <div id="quiz_main">
+              <div class="quiz_title"><question id="quiz_question">문제</question></div>
+              <div class="quiz_answer" id="quiz_a1" idx="0">보기1</div>
+              <div class="quiz_answer" id="quiz_a2" idx="1">보기2</div>
+              <div class="quiz_answer" id="quiz_a3" idx="2">보기3</div>
+              <time>남은 시간 : 0</time>
+          </div>
       </div>
   </div>
   <!-- Script -->
   <script>
+      var quizidx = 0;
+      var collectcnt = 0;
+      var tStartQuiz = 0;
+      var tWait = 0;
+      var quizdata = [];
+      var intervalid = 0;
+      function startQuiz(data) {
+          quizidx = 0;
+          collectcnt = 0;
+          tStartQuiz = 0;
+          tWait = 0;
+          quizdata = [];
+          intervalid = 0;
+          $('#quiz_date_select').css('visibility','hidden');
+          quizdata = data.quizlist;
+
+          nStep = 0;
+          tWait = Date.now();
+          resetQuestion();
+          intervalid = setInterval(updateQuiz, 100);
+      }
+
+      function resetQuestion() {
+          $('#quiz_main').css('visibility', 'visible');
+          $('#quiz_question').text('-- 다음 문제 대기 --');
+          $('#quiz_a1').text('');
+          $('#quiz_a2').text('');
+          $('#quiz_a3').text('');
+          $('time').text('');
+      }
+
+      function setQuestion() {
+          $('#quiz_question').text('[ ' + (quizidx+1) + '번 ] ' + quizdata[quizidx].question);
+          $('#quiz_a1').text('1.'+quizdata[quizidx].answer[0]);
+          $('#quiz_a1').attr('collect', quizdata[quizidx].answer[0] == quizdata[quizidx].collect);
+          $('#quiz_a2').text('2.'+quizdata[quizidx].answer[1]);
+          $('#quiz_a2').attr('collect', quizdata[quizidx].answer[1] == quizdata[quizidx].collect);
+          $('#quiz_a3').text('3.'+quizdata[quizidx].answer[2]);
+          $('#quiz_a3').attr('collect', quizdata[quizidx].answer[2] == quizdata[quizidx].collect);
+          tStartQuiz = Date.now();
+          $('#quiz_main').css('visibility', 'visible');
+      }
+
+      function updateQuiz() {
+          if( nStep == 0 && Date.now() - tWait > 2000 ) {
+              setQuestion();
+              nStep++;
+          }
+
+          if( nStep == 1 ) {
+              if( Date.now() - tStartQuiz > 10000 ) {
+
+                  //    답표시
+                  $('.quiz_answer').each(function(idx) {
+                      if( $(this).attr('collect') == 'true' ) {
+                          $(this).css('background-color' , '#417378');
+                          $(this).css('color', 'white');
+                      }
+                  })
+                  tStartQuiz = Date.now();
+                  nStep++;
+                  $('time').text('');
+              }
+              else {
+                  //    시간 표시
+                  var remain = Math.floor((10000 - (Date.now() - tStartQuiz)) / 1000);
+                  $('time').text('남은 시간 : ' + remain);
+              }
+          }
+
+          if( nStep == 2 && Date.now() - tStartQuiz > 4000 ) {
+
+              quizidx++;
+              if( quizidx >= quizdata.length) {
+                  clearInterval(intervalid);
+                  $('#quiz_date_select').css('visibility','visible');
+                  $('#quiz_main').css('visibility', 'hidden');
+                  return;
+              }
+
+              nStep = 0;
+              tWait = Date.now();
+              resetQuestion();  
+
+              $('.quiz_answer').each(function(idx) {
+                  $(this).css('background-color' , '');
+                  $(this).css('color','black');
+              })
+          }
+      }
+
       $(document).ready(function(){
           if( isMobile() ) {
               // is mobile..
           }
 
+          $('#quiz_main').css('visibility', 'hidden');
           <% for(var i = 0 ; i < list.length ; ++i) {%>
             $('#quiz_date').append("<option value='<%=list[i].sn%>'>" + "<%= moment(list[i].quiz_date).format('YYYY-MM-DD hh:mm')%> 기출 문제" + "</option>");
           <% }%>
@@ -46,7 +147,7 @@
                   contentType: 'application/json',
                   url: '/quiz/getquiz',
                   success: function(data) {
-
+                      startQuiz(data);
                   }
               });
           })
