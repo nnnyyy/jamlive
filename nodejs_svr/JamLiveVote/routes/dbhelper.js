@@ -34,9 +34,8 @@ exports.getQuizList = function(sn, cb) {
             var data = [];
             for( var i  = 0; i < rows.length ; ++i ) {
                 var d = rows[i];
-                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_answer});
+                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
             }
-            console.log(data);
             cb({ret:0, quizlist: data});
         });
     }catch(err) {
