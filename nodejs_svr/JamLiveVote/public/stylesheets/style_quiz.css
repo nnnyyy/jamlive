@@ -1,7 +1,7 @@
 body {
-  padding: 10px;
   background-color: #F5F1D5;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
 }
 
 a {
@@ -34,4 +34,23 @@ time {
   position: relative;
   top: -100px;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#banner_area {
+  margin-top: 20px;
+  background-color: #1B3440;
+}
+
+.ads_banner {
+  margin-top: 10px;
+  height: 50px;
+}
+
+#quiz_date_select {
+  margin-top: 10px;
+}
+
+recommandcode {
+  font: 23px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: darkred;
 }
