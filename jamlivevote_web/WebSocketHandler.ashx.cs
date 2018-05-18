@@ -73,16 +73,15 @@ namespace WebSocketDemo
             var webSocket = aspNetWebSocketContext.WebSocket;
             var webSocketKey = webSocket.GetHashCode();
 
+            EnterUser(webSocket);
+
             while (webSocket.State != WebSocketState.Closed)
             {
-                TryEnterUser(webSocket);
-
                 var buffer = new ArraySegment<byte>(new byte[1024]);
                 var webSocketReceiveResult = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
                 if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
                 {
-                    LeaveUser(webSocket);
-                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, CancellationToken.None);
+                    break;
                 }
                 else if (webSocketReceiveResult.MessageType == WebSocketMessageType.Text)
                 {
@@ -91,9 +90,12 @@ namespace WebSocketDemo
                     Devcat.Core.Threading.Scheduler.Schedule(LogicThread, job, 0);
                 }
             }
+
+            LeaveUser(webSocket);
+            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, String.Empty, CancellationToken.None);
         }
 
-        private void TryEnterUser(WebSocket webSocket)
+        private void EnterUser(WebSocket webSocket)
         {
             Devcat.Core.Threading.Scheduler.Schedule(LogicThread, Devcat.Core.Threading.Job.Create(() =>
             {
