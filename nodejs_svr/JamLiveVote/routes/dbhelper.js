@@ -4,27 +4,43 @@
 var Log = require('./Log');
 var dbpool = require('./MySQL').init();
 
-exports.CheckLogin = function(_id, _pw, cb) {
-    Log.logger.debug('Check Login Start..');
-    dbpool.query('select * from Account', function(err, rows){
-        Log.logger.debug('select length : ' + rows.length );
-        if( err ){
-            Log.logger.debug('Check Login Error..');
-            cb(-1);
-            return;;
-        }
-        Log.logger.debug('Check Login Success..');
-        cb(0);
-    })
+exports.getQuizDateList = function(cb) {
+    try {
+        dbpool.query("select sn, quiz_date from quiz_date_list", function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push({sn: d.sn, quiz_date: d.quiz_date});
+            }
+            cb({ret:0, list: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getQuizDateList');
+        cb({ret: -1});
+    }
 }
 
-exports.GetList = function(cb) {
-    data = {}
-
-    data.list = [
-        {sn: 0, home: '장민석', away: '문희대', home_rate: 187, away_rate: 174, regdate: '2018-04-13 6:00:00', betlimitdate: '2018-04-13 7:00:00', state: 2 },
-        {sn: 1, home: '신동휘', away: '왕예식', home_rate: 187, away_rate: 174, regdate: '2018-04-13 10:00:00',betlimitdate: '2018-04-13 7:00:00', state: 0 },
-        {sn: 2, home: '신동규', away: '박건희', home_rate: 187, away_rate: 174, regdate: '2018-04-13 10:00:00', betlimitdate: '2018-04-13 7:00:00', state: 0 }
-    ];
-    cb(data);
+exports.getQuizList = function(sn, cb) {
+    try {
+        dbpool.query("select * from quiz where date_sn = " + sn + ' order by quiz_idx', function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_answer});
+            }
+            console.log(data);
+            cb({ret:0, quizlist: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getQuizDateList');
+        cb({ret: -1});
+    }
 }

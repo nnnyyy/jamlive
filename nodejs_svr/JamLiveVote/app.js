@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var routes_game = require('./routes/game');
+var routes_quiz = require('./routes/quiz');
 var session = require('express-session');
 
 var app = express();
@@ -30,7 +30,7 @@ app.use(session({
 }));
 
 app.use('/', routes);
-app.use('/game', routes_game);
+app.use('/quiz', routes_quiz);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
