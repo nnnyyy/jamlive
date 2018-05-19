@@ -43,3 +43,23 @@ exports.getQuizList = function(sn, cb) {
         cb({ret: -1});
     }
 }
+
+exports.getRandomQuizList = function( cb ) {
+    try {
+        dbpool.query("select * from quiz where quiz_idx >= 4 order by rand() limit 0,12", function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
+            }
+            cb({ret:0, quizlist: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getQuizDateList');
+        cb({ret: -1});
+    }
+}

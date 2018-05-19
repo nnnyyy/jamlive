@@ -54,3 +54,13 @@ recommandcode {
   font: 23px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: darkred;
 }
+
+#quiz_date {
+  width: 200px;
+  height: 45px;
+}
+
+#getquiz, #getrandomquiz {
+  width: 120px;
+  height: 45px;
+}

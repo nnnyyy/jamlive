@@ -24,4 +24,11 @@ router.post('/getquiz', function(req, res, next) {
     })
 })
 
+router.post('/getrandomquiz', function(req, res, next) {
+    dbhelper.getRandomQuizList(function(result) {
+        res.json(result);
+    })
+    Log.logger.info("getrandomquiz : " + req.connection.remoteAddress);
+})
+
 module.exports = router;
