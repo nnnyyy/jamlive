@@ -62,6 +62,7 @@
           tStartQuiz = 0;
           tWait = 0;
           quizdata = [];
+          clearInterval(intervalid);
           intervalid = 0;
           $('#quiz_date_select').css('visibility','hidden');
           quizdata = data.quizlist;
@@ -142,8 +143,8 @@
                           $(this).css('color', 'white');
                       }
                   })
-                  tStartQuiz = Date.now();
                   nStep++;
+                  tStartQuiz = Date.now();
                   $('time').text('');
               }
               else {
@@ -153,26 +154,31 @@
               }
           }
 
-          if( nStep == 2 && Date.now() - tStartQuiz > 4000 ) {
+          if( nStep == 2 ) {
+              if( Date.now() - tStartQuiz > 3300 ) {
+                  quizidx++;
+                  if( quizidx >= quizdata.length) {
+                      //    게임 끝
+                      clearInterval(intervalid);
+                      intervalid = 0;
+                      $('#quiz_date_select').css('visibility','visible');
+                      $('#quiz_main').css('visibility', 'hidden');
+                      $('#quiz_result').text('정답 갯수 : ' + collectcnt);
+                      return;
+                  }
 
-              quizidx++;
-              if( quizidx >= quizdata.length) {
-                  //    게임 끝
-                  clearInterval(intervalid);
-                  $('#quiz_date_select').css('visibility','visible');
-                  $('#quiz_main').css('visibility', 'hidden');
-                  $('#quiz_result').text('정답 갯수 : ' + collectcnt);
-                  return;
+                  nStep = 0;
+                  tWait = Date.now();
+                  resetQuestion();
+
+                  $('.quiz_answer').each(function(idx) {
+                      $(this).css('background-color' , '');
+                      $(this).css('color','black');
+                  })
               }
-
-              nStep = 0;
-              tWait = Date.now();
-              resetQuestion();  
-
-              $('.quiz_answer').each(function(idx) {
-                  $(this).css('background-color' , '');
-                  $(this).css('color','black');
-              })
+              else {
+                  //     대기 중 행동
+              }
           }
       }
 
