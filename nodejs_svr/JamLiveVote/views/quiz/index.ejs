@@ -25,6 +25,7 @@
               <select id="quiz_date" name="quiz_date">
               </select>
               <input id="getquiz" type="button" value="문제 풀기"/>
+              <input id="getrandomquiz" type="button" value="고난도랜덤 풀기"/>
           </div>
           <div id="quiz_main">
               <div class="quiz_title"><question id="quiz_question">문제</question></div>
@@ -201,6 +202,19 @@
                   }),
                   contentType: 'application/json',
                   url: '/quiz/getquiz',
+                  success: function(data) {
+                      startQuiz(data);
+                  }
+              });
+          })
+
+          $('#getrandomquiz').click(function(){
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {},
+                  contentType: 'application/json',
+                  url: '/quiz/getrandomquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
