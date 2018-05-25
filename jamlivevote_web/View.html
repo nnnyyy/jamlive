@@ -24,14 +24,9 @@
 
         function WebSocketTest() {
             if ("WebSocket" in window) {
-                //webSocket = new WebSocket("ws://push.mabinogi.nexon.com/default.Socket");
                 webSocket = new WebSocket("ws://4seasonpension.com:4921/WebSocketHandler.ashx");
                 webSocket.onopen = function () {
-                    //Connection Opened, if you want to do something while opening connection do it here
                     console.log("connected open");
-                    webSocket.send("JOIN:" + username);
-                    //webSocket.send("USERCOUNT:" + guid());
-                    
                 };
             }
             else {
@@ -59,7 +54,9 @@
         gloabl_rank2 = 2;
         gloabl_rank3 = 3;
 
-
+        var user_count = 0;
+        var user_name = "";
+        var check_flag = false;
 
         $(function () {
             $(document).ready(function () {
@@ -70,17 +67,17 @@
                         type: 'bar',
                         animation: Highcharts.svg, // don't animate in old IE
                         marginRight: 10,
-                        events: {
-                            load: function () {
+                        //events: {
+                        //    load: function () {
 
-                                // set up the updating of the chart each second
-                                var series = this.series[0];
+                        //        // set up the updating of the chart each second
+                        //        var series = this.series[0];
 
-                                //setInterval(function () {
-                                //    series.setData([number_count1, number_count2, number_count3]);
-                                //}, 1000);
-                            }
-                        }
+                        //        //setInterval(function () {
+                        //        //    series.setData([number_count1, number_count2, number_count3]);
+                        //        //}, 1000);
+                        //    }
+                        //}
                     },
                     title: {
                         text: '잼라이브 실시간 선택'
@@ -135,57 +132,102 @@
 
         // 서버에서 메세지를 받음
         webSocket.onmessage = function (evt) {
+
             // 카운트를 받으면 글로벌 변수를 변경해줌
-            var result_data = JSON.parse(evt.data);
-            
-            console.log(result_data);
 
-            var temp_number1 = 0;
-            var temp_number2 = 0;
-            var temp_number3 = 0;
+            var result_data = evt.data;
+            //console.log(result_data);
 
-            if (result_data.length == 0) {
-                number_count1 = 0;
-                number_count2 = 0;
-                number_count3 = 0;
-            } else {
-
-                $.each(result_data, function (key, value) {
-
-                    if (value.Key == 'CLICK:1') {
-                        temp_number1 = value.Value;
-                    }
-
-                    if (value.Key == 'CLICK:2') {
-                        temp_number2 = value.Value;
-                    }
-
-                    if (value.Key == 'CLICK:3') {
-                        temp_number3 = value.Value;
-                    }
-
-                    
-
-                    if (value.Key.indexOf("CHAT:") > -1) {
-                        
-                        $("#all_msg").append(value.Key.replace("CHAT:", "") + "\n");
-                        document.getElementById("all_msg").scrollTop = document.getElementById("all_msg").scrollHeight;
-                    }
-                });
-
-                number_count1 = temp_number1;
-                number_count2 = temp_number2;
-                number_count3 = temp_number3;
+            // 입장
+            if (evt.data.indexOf("ENTER") > -1) {
+                if (user_name == "") {
+                    user_name = evt.data.replace("ENTER:", "");
+                    webSocket.send("JOIN:" + user_name);
+                    $(".user_name").text(user_name);
+                }
             }
 
-            $(".text_number1").text(number_count1 + "개");
-            $(".text_number2").text(number_count2 + "개");
-            $(".text_number3").text(number_count3 + "개");
+            // 유저카운트
+            if (evt.data.indexOf("USERCOUNT") > -1) {
+                user_count = JSON.parse(evt.data.replace("USERCOUNT:", ""));
+                $(".top_count").text("현재 접속자 : " + user_count + "명");
+            }
 
-            //console.log(number_count1 + " / " + number_count2 + " / " + number_count3);
+            // 채팅메세지
+            if (evt.data.indexOf("CHAT:") > -1) {
 
-            chart1.series[0].setData([number_count1, number_count2, number_count3], true);
+                chat_result = JSON.parse(evt.data.replace("CHAT:", ""));
 
+                $.each(chat_result, function (key, value) {
+
+                    if (key == "USERNAME") {
+                        chat_user_name = value;
+                    }
+
+                    if (key == "MESSAGE") {
+                        chat_message = value;
+                    }
+                });
+                $("#all_msg").append(chat_user_name + " : " + chat_message + "\n");
+                document.getElementById("all_msg").scrollTop = document.getElementById("all_msg").scrollHeight;
+            }
+
+            // 클릭카운트 메세지
+            if (evt.data.indexOf("CLICKCOUNT") > -1) {
+
+                var temp_number1 = 0;
+                var temp_number2 = 0;
+                var temp_number3 = 0;
+
+                click_count_result = JSON.parse(evt.data.replace("CLICKCOUNT:", ""));
+
+                if (click_count_result.length == 0) {
+                    number_count1 = 0;
+                    number_count2 = 0;
+                    number_count3 = 0;
+
+                    if (check_flag == true) {
+                        chart1.series[0].setData([0, 0, 0], true);
+                        check_flag = false;
+                    }
+                    
+                } else {
+
+                    check_flag = true;
+
+                    $.each(click_count_result, function (key, value) {
+
+                        if (value.Key == '1') {
+                            temp_number1 = value.Value;
+                            //chart1.series[0].setData([number_count1, number_count2, number_count3], true);
+                        }
+
+                        if (value.Key == '2') {
+                            temp_number2 = value.Value;
+                            //chart1.series[0].setData([number_count1, number_count2, number_count3], true);
+                        }
+
+                        if (value.Key == '3') {
+                            temp_number3 = value.Value;
+                            //chart1.series[0].setData([number_count1, number_count2, number_count3], true);
+                        }
+                    });
+
+                    number_count1 = temp_number1;
+                    number_count2 = temp_number2;
+                    number_count3 = temp_number3;
+
+                    //console.log(number_count1 + " / " + number_count2 + " / " + number_count3);
+
+                    chart1.series[0].setData([number_count1, number_count2, number_count3], true);
+                    //chart1.series[0].setData([0, 0, 0], true);
+                }
+
+                $(".text_number1").text(number_count1 + "개");
+                $(".text_number2").text(number_count2 + "개");
+                $(".text_number3").text(number_count3 + "개");
+            }
+            
         };
 
         //fired when the connection gets closed
@@ -213,9 +255,12 @@
             }
         }
 
+        // 메세지 전송
         function sendMsg() {
-            webSocket.send("CHAT:" + $("#my_msg").val());
-            $("#my_msg").val("");
+            if ($("#my_msg").val().length > 0) {
+                webSocket.send("CHAT:" + $("#my_msg").val());
+                $("#my_msg").val("");
+            }
         }
     </script>
     <style>
@@ -365,7 +410,15 @@
             width: 100%;
             height: 10%;
             min-height: 52px;
+            
         }
+
+        .top_count {
+            display:inline-block;
+            font-weight: bold;
+            margin-bottom : 2px;
+        }
+
         .bar_type {
             width:65%;
             margin-right:10px;
@@ -381,7 +434,7 @@
             height: 60%;
         }
         .my_msg {
-            width:80%;
+            width:70%;
             height:30px;
         }
 
@@ -393,6 +446,10 @@
             width:50px;
             height:30px;
             font-size:10px;
+        }
+
+        .user_name {
+            padding-right:3px;
         }
     </style>
 </HEAD>
@@ -417,7 +474,9 @@
         </div>
     </div>
     <div class="ttype chat_type">
+        <span class="top_count"></span>
         <textarea id="all_msg" class="all_msg" readonly></textarea>
+        <span class="user_name">유저명</span>
         <input type="text" id="my_msg" class="my_msg" name="my_msg" onkeypress="if(event.keyCode==13) {sendMsg(); return false;}"/>
         <button class="send_msg" onclick="sendMsg();">보내기</button>
     </div>
