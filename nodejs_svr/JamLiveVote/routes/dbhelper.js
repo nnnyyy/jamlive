@@ -6,7 +6,7 @@ var dbpool = require('./MySQL').init();
 
 exports.getQuizDateList = function(cb) {
     try {
-        dbpool.query("select sn, quiz_date from quiz_date_list", function(err, rows) {
+        dbpool.query("select sn, quiz_date from quiz_date_list order by quiz_date", function(err, rows) {
             if(err) {
                 cb({ret: -1});
                 return;
