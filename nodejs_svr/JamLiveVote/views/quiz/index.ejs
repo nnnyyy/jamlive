@@ -124,6 +124,21 @@
           })
       }
 
+      function SendResult( collect, quizcnt ) {
+          $.ajax({
+              type: 'POST',
+              dataType: 'json',
+              data: JSON.stringify({
+                  collect : collect,
+                  quizcnt : quizcnt
+              }),
+              contentType: 'application/json',
+              url: '/quiz/quizresult',
+              success: function(data) {
+              }
+          });
+      }
+
       function updateQuiz() {
           if( nStep == 0 && Date.now() - tWait > 1200 ) {
               setQuestion();
@@ -165,6 +180,8 @@
                       $('#quiz_date_select').css('visibility','visible');
                       $('#quiz_main').css('visibility', 'hidden');
                       $('#quiz_result').text('정답 갯수 : ' + collectcnt);
+                      var rate = collectcnt / quizdata.length * 100;
+                      SendResult(collectcnt, quizdata.length);
                       return;
                   }
 
