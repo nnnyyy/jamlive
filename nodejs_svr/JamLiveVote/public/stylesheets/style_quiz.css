@@ -5,7 +5,8 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  text-decoration: none;
+  color: #333333;
 }
 
 .content {
@@ -24,7 +25,11 @@ a {
 }
 
 time {
+  display: inline;
   color:red;
+  height: 30px;
+  font-weight: bold;
+  font: 25px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 #quiz_main {
   position: relative;
@@ -61,6 +66,14 @@ recommandcode {
 }
 
 #getquiz, #getrandomquiz {
+  margin-top: 5px;
   width: 120px;
   height: 45px;
+}
+
+#recomm {
+  margin-top: 5px;
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  line-height: 18px;
+  color: #666666;
 }

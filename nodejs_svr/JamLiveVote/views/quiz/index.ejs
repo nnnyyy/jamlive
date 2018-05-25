@@ -20,11 +20,13 @@
   <div id ='mainframe'>
       <div class="content">
           <h1><a href="/quiz">잼라이브 기출문제</a></h1>
-          추천인코드 : <recommandcode>FBICT</recommandcode>
+          추천인코드 : <recommandcode>FBICT</recommandcode><div id="recomm">
+          추천하면 한사람, 받은사람 모두 하트가 1개씩 생깁니다<br/>
+          이 사이트가 유용했다면 추천인 코드 입력 부탁드려요~</div>
           <div id="quiz_date_select">
               <select id="quiz_date" name="quiz_date">
               </select>
-              <input id="getquiz" type="button" value="문제 풀기"/>
+              <br/><input id="getquiz" type="button" value="문제 풀기"/>
               <input id="getrandomquiz" type="button" value="고난도랜덤 풀기"/>
           </div>
           <div id="quiz_main">
@@ -57,6 +59,12 @@
       var intervalid = 0;
       var bClicked = 0;
       var nClickIdx = -1;
+
+      function SetVisibleDateSelect( _visible ) {
+          $('#quiz_date_select').css('visibility',_visible ? 'visible': 'hidden');
+          $('#quiz_date_select').css('height', _visible ? 'auto' : '0');
+      }
+
       function startQuiz(data) {
           quizidx = 0;
           collectcnt = 0;
@@ -65,11 +73,11 @@
           quizdata = [];
           clearInterval(intervalid);
           intervalid = 0;
-          $('#quiz_date_select').css('visibility','hidden');
+          SetVisibleDateSelect( false );
           quizdata = data.quizlist;
 
           if( quizdata.length <= 0 ) {
-              $('#quiz_date_select').css('visibility','visible');
+              SetVisibleDateSelect( true );
               $('#quiz_main').css('visibility', 'hidden');
               $('#quiz_result').text('아직 업데이트 되지 않았습니다. 나중에 다시 시도 해 주세요.');
               return;
@@ -177,7 +185,7 @@
                       //    게임 끝
                       clearInterval(intervalid);
                       intervalid = 0;
-                      $('#quiz_date_select').css('visibility','visible');
+                      SetVisibleDateSelect( true );
                       $('#quiz_main').css('visibility', 'hidden');
                       $('#quiz_result').text('정답 갯수 : ' + collectcnt);
                       var rate = collectcnt / quizdata.length * 100;
