@@ -22,13 +22,21 @@ router.post('/getquiz', function(req, res, next) {
     dbhelper.getQuizList(datesn, function(result) {
         res.json(result);
     })
+    Log.logger.info("[Quiz] SN : " + datesn + ", Ip : " + req.connection.remoteAddress);
 })
 
 router.post('/getrandomquiz', function(req, res, next) {
     dbhelper.getRandomQuizList(function(result) {
         res.json(result);
     })
-    Log.logger.info("getrandomquiz : " + req.connection.remoteAddress);
+    Log.logger.info("[RandQuiz] Ip : " + req.connection.remoteAddress);
+
+})
+
+router.post('/quizresult', function(req, res, next) {
+    var collect = req.body.collect;
+    var quizcnt = req.body.quizcnt;
+    Log.logger.info("[Quiz] collect : " + collect + ", quizcnt : " + quizcnt + ", Ip : " + req.connection.remoteAddress);
 })
 
 module.exports = router;
