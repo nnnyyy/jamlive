@@ -48,7 +48,7 @@
       </div>
       <div id="chat">
           <header class="top-bar">
-              <chattitle style="margin-left: 20px;line-height: 40px;">채팅 ( 채팅 참여 : 1~3번을 제외한 아무 키, 포커스 취소 : esc ) </chattitle>
+              <chattitle style="margin-left: 20px;line-height: 40px;">채팅</chattitle>
               <!-- likely some spans and stuff -->
           </header>
           <div class="chatscrollarea">
@@ -131,7 +131,7 @@
           })
       }
 
-      function addChat(msg) {
+      function addChat(msg, bStrip) {
           var bAutoMoveToBottom = false;
           var chatwndheight = $('.chatscrollarea').height();
           if( $('#chatwndul').find('li').length > 200 ) {
@@ -143,7 +143,7 @@
           }
 
 
-          $('#chatwndul').append('<li><div class="message"><p>' + strip(msg) + '</p></div></li>')
+          $('#chatwndul').append('<li><div class="message"><p>' + (bStrip ? strip(msg) : msg) + '</p></div></li>')
           if( bAutoMoveToBottom ) {
               $('.chatscrollarea').scrollTop($('.chatscrollarea').get(0).scrollHeight);
           }
@@ -200,7 +200,7 @@
           })
 
           socket.on('chat', function(data) {
-              addChat(data.nickname + ' : ' + data.msg);
+              addChat(data.nickname + ' : ' + data.msg, true);
           })
 
           $('.btn_vote').each(function(idx) {
@@ -235,6 +235,10 @@
                   if( msg.length > 40 ) {
                       alert('메시지는 짧게');
                       $('.chatinputbox').val('');
+                      return;
+                  }
+
+                  if( msg.length <= 0 ) {
                       return;
                   }
                   if( nick.length > 14) {
@@ -273,7 +277,8 @@
           var rd = Math.floor(Math.random() * 50000);
           $('.chatnickname').val('guest' + rd);
 
-          addChat("--'1111', '22','333' 등을 입력해서 투표할 수 있습니다--");
+          addChat("<b>채팅창에서 포커스를 떼고(esc 버튼) 1~3번 키를 눌러서 투표를 할수도 있고, </br>'1111', '22','333' 등을 입력해서 투표할 수도 있습니다</b>", false);
+          addChat("<a href='/quiz' target='_blank'><b style='color:red;font-size: larger'>이곳</b></a>을 클릭하시면 기출문제를 풀 수 있는 페이지로 이동합니다.", false);
       });
   </script>
   <script src="/socket.io/socket.io.js"></script>
