@@ -137,3 +137,7 @@ info {
 .chatinputbox {
   width: 100%;
 }
+
+.message {
+  margin-left: 8px;
+}
