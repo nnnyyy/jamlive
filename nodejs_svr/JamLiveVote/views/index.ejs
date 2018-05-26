@@ -205,7 +205,11 @@
 
           $('.btn_vote').each(function(idx) {
               $(this).click(function() {
-                  vote(socket, {idx:$(this).attr('data')});
+                  var idx = $(this).attr('data');
+                  var nick = strip($('.chatnickname').val());
+                  nick = nick.substr(0,14);
+                  socket.emit('chat', {nickname: nick, msg: '[vote] ' + (idx+1) });
+                  vote(socket, {idx:idx});
               });
           })
 
@@ -218,7 +222,13 @@
                       return;
                   }
                   tClick = curTime;
-                  socket.emit('vote', {idx:event.charCode - 49 })
+
+                  var idx = event.charCode - 49;
+
+                  var nick = strip($('.chatnickname').val());
+                  nick = nick.substr(0,14);
+                  socket.emit('chat', {nickname: nick, msg: '[vote] ' + (idx+1) });
+                  vote(socket, {idx: idx });
               }
               else {
                   $('.chatinputbox').val('');
