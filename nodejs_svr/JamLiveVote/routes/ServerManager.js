@@ -88,19 +88,20 @@ ServerMan.prototype.register = function(socket) {
     });
 
     socket.on('vote', function(data) {
-        var client = servman.getClient(this)
+        var client = servman.getClient(this);
+        var ip = this.handshake.address.substr(7);
+        ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         if( client.isClickable() ) {
             servman.click(data.idx);
             client.tLastClick = new Date();
+
+            servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + (data.idx + 1), isvote: data.idx });
         }
     });
 
     socket.on('chat', function(data) {
         var ip = this.handshake.address.substr(7);
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        if(data.isvote != -1) {
-            data.msg = '[투표] ' + data.msg;
-        }
         servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg, isvote: data.isvote });
     })
 

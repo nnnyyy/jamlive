@@ -151,7 +151,14 @@
       }
 
       function vote(socket, data) {
+          data.nickname = getNickName();
           socket.emit('vote', data);
+      }
+
+      function getNickName() {
+          var nick = strip($('.chatnickname').val());
+          nick = nick.substr(0,14);
+          return nick;
       }
 
       var tClick = 0;
@@ -212,10 +219,6 @@
           $('.btn_vote').each(function(idx) {
               $(this).click(function() {
                   var idx = $(this).attr('data');
-                  var nick = strip($('.chatnickname').val());
-                  nick = nick.substr(0,14);
-                  var clicked = (Number(idx)+1);
-                  socket.emit('chat', {nickname: nick, msg: clicked , isvote: idx});
                   vote(socket, {idx:idx});
               });
           })
@@ -232,10 +235,8 @@
 
                   var idx = event.charCode - 49;
 
-                  var nick = strip($('.chatnickname').val());
-                  nick = nick.substr(0,14);
+                  var nick = getNickName();
                   var clicked = (idx+1);
-                  socket.emit('chat', {nickname: nick, msg: clicked, isvote: idx });
                   vote(socket, {idx: idx });
               }
               else {
@@ -248,7 +249,7 @@
           $('.chatinputbox').keypress(function(e) {
               var code = (e.keyCode ? e.keyCode : e.which);
               if( code == 13 ) {
-                  var nick = strip($('.chatnickname').val());
+                  var nick = getNickName();
                   var msg = $(this).val();
                   if( msg.length > 40 ) {
                       alert('메시지는 짧게');
@@ -257,10 +258,6 @@
                   }
 
                   if( msg.length <= 0 ) {
-                      return;
-                  }
-                  if( nick.length > 14) {
-                      alert('닉네임은 14자 이하로');
                       return;
                   }
 
