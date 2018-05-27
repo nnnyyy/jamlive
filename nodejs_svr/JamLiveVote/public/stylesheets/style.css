@@ -141,3 +141,9 @@ info {
 .message {
   margin-left: 8px;
 }
+
+#quiztypedesc {
+  color: #ee3344;
+  font-weight: bold;
+  font-size: 15px;
+}
