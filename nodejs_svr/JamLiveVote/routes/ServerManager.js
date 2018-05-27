@@ -95,7 +95,9 @@ ServerMan.prototype.register = function(socket) {
             servman.click(data.idx);
             client.tLastClick = new Date();
 
-            servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + (data.idx + 1), isvote: data.idx });
+            var number = Number(data.idx) + 1;
+
+            servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, isvote: data.idx });
         }
     });
 
