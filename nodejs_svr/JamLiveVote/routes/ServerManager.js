@@ -98,7 +98,10 @@ ServerMan.prototype.register = function(socket) {
     socket.on('chat', function(data) {
         var ip = this.handshake.address.substr(7);
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg });
+        if(data.isvote) {
+            data.msg = '[투표] ' + data.msg;
+        }
+        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg, isvote: data.isvote });
     })
 
     socket.on('enterchat', function(data) {

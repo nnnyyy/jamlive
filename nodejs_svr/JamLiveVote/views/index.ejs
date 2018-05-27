@@ -201,7 +201,12 @@
           })
 
           socket.on('chat', function(data) {
-              addChat(data.nickname + ' : ' + data.msg, true);
+              if( data.isvote != -1 ) {
+                  addChat( data.nickname + ' : <b style="color: '+ color[data.isvote] + '">' + data.msg + '</b>', false);
+              }
+              else {
+                  addChat(data.nickname + ' : ' + data.msg, true);
+              }
           })
 
           $('.btn_vote').each(function(idx) {
@@ -209,7 +214,8 @@
                   var idx = $(this).attr('data');
                   var nick = strip($('.chatnickname').val());
                   nick = nick.substr(0,14);
-                  socket.emit('chat', {nickname: nick, msg: '[vote] ' + (idx+1) });
+                  var clicked = (Number(idx)+1);
+                  socket.emit('chat', {nickname: nick, msg: clicked , isvote: idx});
                   vote(socket, {idx:idx});
               });
           })
@@ -228,7 +234,8 @@
 
                   var nick = strip($('.chatnickname').val());
                   nick = nick.substr(0,14);
-                  socket.emit('chat', {nickname: nick, msg: '[vote] ' + (idx+1) });
+                  var clicked = (idx+1);
+                  socket.emit('chat', {nickname: nick, msg: clicked, isvote: idx });
                   vote(socket, {idx: idx });
               }
               else {
@@ -257,18 +264,22 @@
                       return;
                   }
 
+                  var isvote = -1;
                   if( msg.search(/11+/g) != -1 ) {
                       vote(socket, {idx:0});
+                      isvote = 0;
                   }
                   else if( msg.search(/22+/g) != -1 ) {
                       vote(socket, {idx:1});
+                      isvote = 1;
                   }
                   else if( msg.search(/33+/g) != -1 ) {
                       vote(socket, {idx:2});
+                      isvote = 2;
                   }
 
                   nick = nick.substr(0,14);
-                  socket.emit('chat', {nickname: nick, msg: msg });
+                  socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote });
                   $(this).val('');
               }
           })
