@@ -29,7 +29,7 @@ time {
   color:red;
   height: 30px;
   font-weight: bold;
-  font: 25px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 #quiz_main {
   position: relative;
@@ -76,4 +76,13 @@ recommandcode {
   font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
   line-height: 18px;
   color: #666666;
+}
+
+#nextq {
+  width: 200px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  font: 25px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin-top: 15px;
 }
