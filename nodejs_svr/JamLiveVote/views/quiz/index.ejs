@@ -34,7 +34,8 @@
               <div class="quiz_answer" id="quiz_a1" idx="0">보기1</div>
               <div class="quiz_answer" id="quiz_a2" idx="1">보기2</div>
               <div class="quiz_answer" id="quiz_a3" idx="2">보기3</div>
-              <time>남은 시간 : 0</time>
+              <time>남은 시간 : 0</time><br/>
+              <div id="nextq">다음 문제로</div>
           </div>
           <div id="quiz_result">
 
@@ -74,6 +75,7 @@
           clearInterval(intervalid);
           intervalid = 0;
           SetVisibleDateSelect( false );
+          SetVisibleNextBtn( false );
           quizdata = data.quizlist;
 
           if( quizdata.length <= 0 ) {
@@ -127,9 +129,14 @@
                       nClickIdx = $(this).attr('idx');
                       $(this).css('background-color' , 'yellow');
                       bClicked = true;
+                      SetVisibleNextBtn(true);
                   }
               })
           })
+      }
+
+      function SetVisibleNextBtn(visible) {
+          $('#nextq').css('display', visible ? 'inline-block' : 'none');
       }
 
       function SendResult( collect, quizcnt ) {
@@ -157,6 +164,7 @@
               if( Date.now() - tStartQuiz > ANSWER_WAIT_TIME ) {
                   //    답표시
                   bClicked = true;
+                  SetVisibleNextBtn(false);
                   $('.quiz_answer').each(function(idx) {
                       if( $(this).attr('collect') == 'true' ) {
                           if( nClickIdx == $(this).attr('idx') ) {
@@ -245,6 +253,12 @@
                   }
               });
           })
+
+          $('#nextq').click(function() {
+              tStartQuiz = 0;
+          })
+
+          SetVisibleNextBtn(false);
       });
   </script>
   <script src="/socket.io/socket.io.js"></script>
