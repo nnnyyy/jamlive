@@ -1,0 +1,88 @@
+body {
+  background-color: #F5F1D5;
+  font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #333333;
+}
+
+.content {
+  text-align: center;
+}
+
+.quiz_title {
+  height:50px;
+  margin: 5px;
+}
+
+.quiz_answer {
+  line-height: 40px;
+  height: 40px;
+  margin: 5px;
+}
+
+time {
+  display: inline;
+  color:red;
+  height: 30px;
+  font-weight: bold;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+#quiz_main {
+  position: relative;
+}
+
+#quiz_result {
+  position: relative;
+  top: -100px;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#banner_area {
+  margin-top: 20px;
+  background-color: #1B3440;
+}
+
+.ads_banner {
+  margin-top: 10px;
+  height: 50px;
+}
+
+#quiz_date_select {
+  margin-top: 10px;
+}
+
+recommandcode {
+  font: 23px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: darkred;
+}
+
+#quiz_date {
+  width: 200px;
+  height: 45px;
+}
+
+#getquiz, #getrandomquiz {
+  margin-top: 5px;
+  width: 120px;
+  height: 45px;
+}
+
+#recomm {
+  margin-top: 5px;
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+  line-height: 18px;
+  color: #666666;
+}
+
+#nextq {
+  width: 200px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  font: 25px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin-top: 15px;
+}

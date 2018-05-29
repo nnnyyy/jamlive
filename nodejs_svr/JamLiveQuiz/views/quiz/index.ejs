@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>JAM LIVE 기출 문제 풀기</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+      <meta name="description" content="JAM LIVE ( 잼라이브 ) 기출 문제를 풀어볼 수 있는 사이트"/>
+      <meta property="og:type" content="website">
+      <meta property="og:title" content="JAM LIVE 기출 문제 풀기">
+      <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 기출 문제를 풀어볼 수 있는 사이트">
+      <meta property="og:image" content="http://jamlive.net/images/hotcom_banner.jpg">
+      <meta property="og:url" content="http://jamlive.net">
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+      <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+      <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+      <script src="http://jamlive.net/basic.js"></script>
+      <link rel='stylesheet' href='http://jamlive.net/stylesheets/style_quiz.css' />
+  </head>
+  <body>
+  <!-- HTML Design -->
+  <div id ='mainframe'>
+      <div class="content">
+          <h1><a href="/quiz">잼라이브 기출문제</a></h1>
+          추천인코드 : <recommandcode>F8DW6</recommandcode><div id="recomm">
+          추천하면 한사람, 받은사람 모두 하트가 1개씩 생깁니다<br/>
+          이 사이트가 유용했다면 추천인 코드 입력 부탁드려요~</div>
+          <div id="quiz_date_select">
+              <select id="quiz_date" name="quiz_date">
+              </select>
+              <br/><input id="getquiz" type="button" value="문제 풀기"/>
+              <input id="getrandomquiz" type="button" value="고난도랜덤 풀기"/>
+          </div>
+          <div id="quiz_main">
+              <div class="quiz_title"><question id="quiz_question">문제</question></div>
+              <div class="quiz_answer" id="quiz_a1" idx="0">보기1</div>
+              <div class="quiz_answer" id="quiz_a2" idx="1">보기2</div>
+              <div class="quiz_answer" id="quiz_a3" idx="2">보기3</div>
+              <time>남은 시간 : 0</time><br/>
+              <div id="nextq">다음 문제로</div>
+          </div>
+          <div id="quiz_result">
+
+          </div>
+          <div id="banner_area">
+              <img class="ads_banner" src="http://jamlive.net/images/hotcom_banner.jpg"/>
+              <!-- 구글 플레이 스토어 링크 -->
+              <a target='_blank' href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img class="ads_banner" src="http://jamlive.net/images/playstore.png"/></a>
+              <!-- 애플 스토어 링크 -->
+              <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="http://jamlive.net/images/appstore.png"/></a>
+          </div>
+      </div>
+      <div id="ddn_ads" style="text-align: center;">
+          <ins class="daum_ddn_area" style="display:none;margin-top:30px"
+               data-ad-unit    = "DAN-1hbghejif3l2e"
+               data-ad-media   = "5MC"
+               data-ad-pubuser = "4jp"
+               data-ad-type    = "D"
+               data-ad-width   = "250"
+               data-ad-height  = "250"></ins>
+          <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+      </div>
+  </div>
+  <!-- Script -->
+  <script>
+      var ANSWER_WAIT_TIME = 10000;
+      var quizidx = 0;
+      var collectcnt = 0;
+      var tStartQuiz = 0;
+      var tWait = 0;
+      var quizdata = [];
+      var intervalid = 0;
+      var bClicked = 0;
+      var nClickIdx = -1;
+
+      function SetVisibleDateSelect( _visible ) {
+          $('#quiz_date_select').css('visibility',_visible ? 'visible': 'hidden');
+          $('#quiz_date_select').css('height', _visible ? 'auto' : '0');
+      }
+
+      function startQuiz(data) {
+          quizidx = 0;
+          collectcnt = 0;
+          tStartQuiz = 0;
+          tWait = 0;
+          quizdata = [];
+          clearInterval(intervalid);
+          intervalid = 0;
+          SetVisibleDateSelect( false );
+          SetVisibleNextBtn( false );
+          quizdata = data.quizlist;
+
+          if( quizdata.length <= 0 ) {
+              SetVisibleDateSelect( true );
+              SetVisibleQuizMain(false);
+              $('#quiz_result').text('아직 업데이트 되지 않았습니다. 나중에 다시 시도 해 주세요.');
+              return;
+          }
+
+          $('#quiz_result').text('');
+          $('.quiz_answer').each(function(idx) {
+              $(this).css('background-color' , '');
+              $(this).css('color','black');
+          })
+
+          nStep = 0;
+          tWait = Date.now();
+          resetQuestion();
+          intervalid = setInterval(updateQuiz, 100);
+      }
+
+      function resetQuestion() {
+          SetVisibleQuizMain(true);
+          $('#quiz_question').text('....Wait....');
+          $('#quiz_a1').text('');
+          $('#quiz_a2').text('');
+          $('#quiz_a3').text('');
+          $('time').text('');
+          $('.quiz_answer').each(function(idx) {
+              $(this).css('cursor', 'default');
+              $(this).unbind('click');
+          })
+          bClicked = false;
+          nClickIdx = -1;
+      }
+
+      function setQuestion() {
+          $('#quiz_question').text('[ ' + (quizidx+1) + '번 ] ' + quizdata[quizidx].question);
+          var answer_elems = [$('#quiz_a1'), $('#quiz_a2'), $('#quiz_a3')];
+          for( var i = 0 ; i < answer_elems.length ; ++i) {
+              answer_elems[i].text('' + (i+1) + '. ' + quizdata[quizidx].answer[i]);
+              answer_elems[i].attr('collect', i == quizdata[quizidx].collect);
+              answer_elems[i].attr('idx', i);
+          }
+          tStartQuiz = Date.now();
+          SetVisibleQuizMain(true);
+          $('.quiz_answer').each(function(idx){
+              $(this).css('cursor', 'pointer');
+              $(this).click(function() {
+                  if( !bClicked ) {
+                      nClickIdx = $(this).attr('idx');
+                      $(this).css('background-color' , 'yellow');
+                      bClicked = true;
+                      SetVisibleNextBtn(true);
+                  }
+              })
+          })
+      }
+
+      function SetVisibleNextBtn(visible) {
+          $('#nextq').css('display', visible ? 'inline-block' : 'none');
+      }
+
+      function SetVisibleQuizMain(visible) {
+          $('#quiz_main').css('display', visible ? 'inline-block' : 'none');
+      }
+
+      function SendResult( collect, quizcnt ) {
+          $.ajax({
+              type: 'POST',
+              dataType: 'json',
+              data: JSON.stringify({
+                  collect : collect,
+                  quizcnt : quizcnt
+              }),
+              contentType: 'application/json',
+              url: '/quizresult',
+              success: function(data) {
+              }
+          });
+      }
+
+      function updateQuiz() {
+          if( nStep == 0 && Date.now() - tWait > 1200 ) {
+              setQuestion();
+              nStep++;
+          }
+
+          if( nStep == 1 ) {
+              if( Date.now() - tStartQuiz > ANSWER_WAIT_TIME ) {
+                  //    답표시
+                  bClicked = true;
+                  SetVisibleNextBtn(false);
+                  $('.quiz_answer').each(function(idx) {
+                      if( $(this).attr('collect') == 'true' ) {
+                          if( nClickIdx == $(this).attr('idx') ) {
+                              collectcnt++;
+                              console.log('collect!!');
+                          }
+                          $(this).css('background-color' , '#417378');
+                          $(this).css('color', 'white');
+                      }
+                  })
+                  nStep++;
+                  tStartQuiz = Date.now();
+                  $('time').text('');
+              }
+              else {
+                  //    시간 표시
+                  var remain = Math.floor((ANSWER_WAIT_TIME - (Date.now() - tStartQuiz)) / 1000);
+                  $('time').text('남은 시간 : ' + remain);
+              }
+          }
+
+          if( nStep == 2 ) {
+              if( Date.now() - tStartQuiz > 3300 ) {
+                  quizidx++;
+                  if( quizidx >= quizdata.length) {
+                      //    게임 끝
+                      clearInterval(intervalid);
+                      intervalid = 0;
+                      SetVisibleDateSelect( true );
+                      SetVisibleQuizMain(false);
+                      $('#quiz_result').text('정답 갯수 : ' + collectcnt);
+                      var rate = collectcnt / quizdata.length * 100;
+                      SendResult(collectcnt, quizdata.length);
+                      return;
+                  }
+
+                  nStep = 0;
+                  tWait = Date.now();
+                  resetQuestion();
+
+                  $('.quiz_answer').each(function(idx) {
+                      $(this).css('background-color' , '');
+                      $(this).css('color','black');
+                  })
+              }
+              else {
+                  //     대기 중 행동
+              }
+          }
+      }
+
+      $(document).ready(function(){
+          if( isMobile() ) {
+              // is mobile..
+          }
+
+          SetVisibleQuizMain(false);
+          <% for(var i = 0 ; i < list.length ; ++i) {%>
+            $('#quiz_date').append("<option value='<%=list[i].sn%>'>" + "<%= moment(list[i].quiz_date).format('YYYY-MM-DD hh:mm')%> 기출 문제" + "</option>");
+          <% }%>
+
+          $('#getquiz').click(function(){
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'json',
+                  data: JSON.stringify({
+                      date_sn: $('#quiz_date option:selected').val()
+                  }),
+                  contentType: 'application/json',
+                  url: '/getquiz',
+                  success: function(data) {
+                      startQuiz(data);
+                  }
+              });
+          })
+
+          $('#getrandomquiz').click(function(){
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'json',
+                  data: {},
+                  contentType: 'application/json',
+                  url: '/getrandomquiz',
+                  success: function(data) {
+                      startQuiz(data);
+                  }
+              });
+          })
+
+          $('#nextq').click(function() {
+              tStartQuiz = 0;
+          })
+
+          SetVisibleNextBtn(false);
+      });
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  </body>
+</html>
