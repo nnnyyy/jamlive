@@ -103,6 +103,9 @@ ServerMan.prototype.register = function(socket) {
 
     socket.on('chat', function(data) {
         var ip = this.handshake.address.substr(7);
+        if( socket.handshake.headers['x-real-ip'] != null ) {
+            ip = socket.handshake.headers['x-real-ip'];
+        }
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg, isvote: data.isvote });
     })
