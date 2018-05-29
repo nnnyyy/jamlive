@@ -90,6 +90,9 @@ ServerMan.prototype.register = function(socket) {
     socket.on('vote', function(data) {
         var client = servman.getClient(this);
         var ip = this.handshake.address.substr(7);
+        if( socket.handshake.headers['x-real-ip'] != null ) {
+            ip = socket.handshake.headers['x-real-ip'];
+        }
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         if( client.isClickable() ) {
             servman.click(data.idx);
