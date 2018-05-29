@@ -1,12 +1,12 @@
 body {
-  background-color: #F5F1D5;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
+  color: #004843;
 }
 
 a {
   text-decoration: none;
-  color: #333333;
+  color: #004843;
 }
 
 .content {
@@ -31,24 +31,19 @@ time {
   font-weight: bold;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-#quiz_main {
-  position: relative;
-}
 
 #quiz_result {
-  position: relative;
-  top: -100px;
+  margin-top: 10px;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 #banner_area {
   margin-top: 20px;
-  background-color: #1B3440;
 }
 
 .ads_banner {
   margin-top: 10px;
-  height: 50px;
+  height: 40px;
 }
 
 #quiz_date_select {
