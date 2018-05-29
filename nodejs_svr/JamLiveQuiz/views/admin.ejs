@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<!-- HTML Design -->
+<% if( session ) {%>
+    관리자 페이지<br/>
+    <input type="button" id="btn_add_competition" value="배팅 추가"/>
+<%}%>
+<!-- Script -->
+<script>
+    $(document).ready(function(){
+        <% if( !session ) {%>
+        window.location.href = '/';
+        return;
+        <%} else {%>
+            $('#btn_add_competition').click(function(e){
+                window.location.href = '/admin/addbet';
+            })
+        <%}%>
+    });
+</script>
+</body>
+</html>

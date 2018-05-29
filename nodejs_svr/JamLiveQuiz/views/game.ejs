@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<!-- HTML Design -->
+<% if( session ) {%>
+<div id="welcome">
+    잔액 : 10,000 p<br/><br/>
+    게임 리스트<br/>
+    <%for( var i = 0 ; i < list.length ; ++i ) {%>
+    마감: <%=list[i].regdate%> --- <%=list[i].home%>[<%=(parseFloat(list[i].home_rate) / 100.0)%>] vs [<%=(parseFloat(list[i].away_rate) / 100.0)%>]<%=list[i].away%>  상태:<%=list[i].state%><br/>
+    <%}%>
+</div>
+<%}%>
+<!-- Script -->
+<script>
+    $(document).ready(function(){
+        <% if( !session ) {%>
+        window.location.href = '/login';
+        return;
+        <%} else {%>
+        <%}%>
+    });
+</script>
+</body>
+</html>
