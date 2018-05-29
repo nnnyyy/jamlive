@@ -20,12 +20,12 @@
   <div id ='mainframe'>
       <div class="content">
           <maintitle>라이브 퀴즈쇼 정답 투표기</maintitle><br/>
-          <subtitle>힘을 합쳐서 정답을 공유 해 보아요!(참여인원 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
-          <div id="quiztypedesc">잼라이브, 라이브팝, 페이큐 이용자에게 유용합니다</div>
+          <subtitle>정답을 공유 해 보아요 (참여인원 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
+          <div id="quiztypedesc">잼라이브, 라이브팝, 페이큐<br/> 이용자에게 유용합니다</div>
           <input type="button" class="btn_vote" data="0" value="1번"/>
           <input type="button" class="btn_vote" data="1" value="2번"/>
           <input type="button" class="btn_vote" data="2" value="3번"/>
-          <div class="ct-chart" style="margin:auto;width: 40%; height: 300px; "></div>
+          <div class="ct-chart" style="margin:auto;width: 40%; "></div>
           <div id="banner_area">
               <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
               <!-- 구글 플레이 스토어 링크 -->
@@ -49,14 +49,16 @@
               <div id="chatinputboxarea"><input class="chatinputbox" type="text"/></div>
           </div>
       </div>
-      <ins class="daum_ddn_area" style="display:none;margin-top:30px"
-           data-ad-unit    = "DAN-1hbghejif3l2e"
-           data-ad-media   = "5MC"
-           data-ad-pubuser = "4jp"
-           data-ad-type    = "D"
-           data-ad-width   = "250"
-           data-ad-height  = "250"></ins>
-      <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+      <div style="text-align: center;">
+          <ins class="daum_ddn_area" style="display:none;margin-top:30px"
+               data-ad-unit    = "DAN-1hbghejif3l2e"
+               data-ad-media   = "5MC"
+               data-ad-pubuser = "4jp"
+               data-ad-type    = "D"
+               data-ad-width   = "250"
+               data-ad-height  = "250"></ins>
+          <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+      </div>
   </div>
   <!-- Script -->
   <script>
@@ -70,11 +72,14 @@
 
           var options = {
               seriesBarDistance: 10,
+              height: 200,
+              showLabel: false,
               axisX: {
-                  offset: 60
+                  offset: 20
               },
               axisY: {
-                  offset: 80
+                  showLabel: false,
+                  offset: 0
               }
           };
 
@@ -170,10 +175,13 @@
       $(document).ready(function(){
           if( isMobile() ) {
               // is mobile..
+              $('maintitle').css('font-size', 'x-large');
+              $('subtitle').css('font-size', 'large');
               $('.ct-chart').css('width','90%');
               $('.btn_vote').css('width','30%');
-              $('#chat').css('visibility','hidden');
+              $('#chat').css('display','none');
               $('.content').css('width', '100%');
+              $('.daum_ddn_area').css('margin-top', '0');
           }
 
           var socket = io();
@@ -307,6 +315,10 @@
                   $(this).blur();
               }
           })
+
+          if( isMobile() ) {
+              $('.ct-barchart').css('display', 'none');
+          }
 
           var rd = Math.floor(Math.random() * 50000);
           $('.chatnickname').val('guest' + rd);
