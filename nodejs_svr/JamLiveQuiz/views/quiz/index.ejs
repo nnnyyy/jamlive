@@ -7,13 +7,13 @@
       <meta property="og:type" content="website">
       <meta property="og:title" content="JAM LIVE 기출 문제 풀기">
       <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 기출 문제를 풀어볼 수 있는 사이트">
-      <meta property="og:image" content="http://jamlive.net/images/hotcom_banner.jpg">
+      <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
       <meta property="og:url" content="http://jamlive.net">
       <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
       <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
       <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
       <script src="http://jamlive.net/basic.js"></script>
-      <link rel='stylesheet' href='http://jamlive.net/stylesheets/style_quiz.css' />
+      <link rel='stylesheet' href='/stylesheets/style_quiz.css' />
   </head>
   <body>
   <!-- HTML Design -->
@@ -38,7 +38,6 @@
               <div id="nextq">다음 문제로</div>
           </div>
           <div id="quiz_result">
-
           </div>
           <div id="banner_area">
               <img class="ads_banner" src="http://jamlive.net/images/hotcom_banner.jpg"/>
@@ -271,6 +270,9 @@
           $('#nextq').click(function() {
               tStartQuiz = 0;
           })
+
+          var d = Math.floor(Math.random() * 30) % 2;
+          $('recommandcode').text( d == 0 ? 'FBICT' : 'F8DW6');
 
           SetVisibleNextBtn(false);
       });
