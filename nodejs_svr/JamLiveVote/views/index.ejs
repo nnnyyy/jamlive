@@ -3,12 +3,12 @@
   <head>
       <title>JAM LIVE ( 잼라이브 ) 정답 공유기</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
-      <meta name="description" content="JAM LIVE ( 잼라이브 ) 퀴즈 문제의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+      <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
       <meta property="og:type" content="website">
-      <meta property="og:title" content="JAM LIVE ( 잼라이브 ) 정답 공유기">
+      <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
       <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 퀴즈 문제의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
-      <meta property="og:image" content="http://4seasonpension.com:4647/images/hotcom_banner.jpg">
-      <meta property="og:url" content="http://4seasonpension.com:4647">
+      <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+      <meta property="og:url" content="http://jamlive.net">
       <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
       <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
       <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
@@ -121,6 +121,13 @@
           })
       }
 
+      function addBannerAds() {
+          var img = '<img class="ads_banner" src="/images/hotcom_banner.jpg"></img>';
+          var text = '<p class="ft-strong">지하철, 버스에서 심심할 땐? 구글스토어에서 <aa class="ft-strong fts-big ftc-a">\'핫커뮤니티\'</aa>를 검색하세요~!</p>';
+          var div = '<div>' + img + '<div>' + '<div>' + text + '</div>';
+          addChat(div,false);
+      }
+
       function addChat(msg, bStrip) {
           var bAutoMoveToBottom = false;
           var chatwndheight = $('.chatscrollarea').height();
@@ -162,7 +169,6 @@
       var bTrigger = false;
 
       $(document).ready(function(){
-          console.log(navigator.userAgent);
           if( isMobile() ) {
               // is mobile..
               $('.ct-chart').css('width','90%');
@@ -172,10 +178,6 @@
           }
 
           var socket = io();
-          socket.on('disconnect' , function() {
-              alert('동시 접속 불가');
-              self.close();
-          });
 
           socket.on('testdata', function(data) {
               var users = data.users;
@@ -210,6 +212,11 @@
               }
               else {
                   addChat(data.nickname + ' : ' + data.msg, true);
+              }
+
+              var rd = Math.floor(Math.random() * 30);
+              if( rd == 15 ) {
+                  addBannerAds();
               }
           })
 
@@ -302,6 +309,7 @@
 
           addChat("<b>채팅창에서 포커스를 떼고(esc 버튼) 1~3번 키를 눌러서 투표를 할수도 있고, </br>'1111', '22','333' 등을 입력해서 투표할 수도 있습니다</br><search style='color: darkblue;'>슬래시(/)를 누른 후에 채팅을 입력하시면 구글 검색결과가 새 창으로 열립니다</search></b>", false);
           addChat("<a href='/quiz' target='_blank'><b style='color:red;font-size: larger'>이곳</b></a>을 클릭하시면 기출문제를 풀 수 있는 페이지로 이동합니다.", false);
+          addBannerAds();
       });
   </script>
   <script src="/socket.io/socket.io.js"></script>

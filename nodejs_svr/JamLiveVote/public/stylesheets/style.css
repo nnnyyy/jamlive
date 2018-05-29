@@ -62,7 +62,6 @@ info {
 
 #banner_area {
   margin: auto;
-  background-color: #1B3440;
 }
 
 .newtype {
@@ -146,4 +145,20 @@ info {
   color: #ee3344;
   font-weight: bold;
   font-size: 15px;
+}
+
+.ft-strong {
+  font-weight: bold;
+}
+
+.fts-big {
+  font-size: x-large;
+}
+
+.ftc-a {
+  color: red;
+}
+
+p {
+  display: inline;
 }
