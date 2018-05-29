@@ -48,14 +48,16 @@
               <a target='_blank' href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img class="ads_banner" src="http://jamlive.net/images/appstore.png"/></a>
           </div>
       </div>
-      <ins class="daum_ddn_area" style="display:none;margin-top:30px"
-           data-ad-unit    = "DAN-1hbghejif3l2e"
-           data-ad-media   = "5MC"
-           data-ad-pubuser = "4jp"
-           data-ad-type    = "D"
-           data-ad-width   = "250"
-           data-ad-height  = "250"></ins>
-      <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+      <div id="ddn_ads" style="text-align: center;">
+          <ins class="daum_ddn_area" style="display:none;margin-top:30px"
+               data-ad-unit    = "DAN-1hbghejif3l2e"
+               data-ad-media   = "5MC"
+               data-ad-pubuser = "4jp"
+               data-ad-type    = "D"
+               data-ad-width   = "250"
+               data-ad-height  = "250"></ins>
+          <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+      </div>
   </div>
   <!-- Script -->
   <script>
@@ -68,6 +70,8 @@
       var intervalid = 0;
       var bClicked = 0;
       var nClickIdx = -1;
+
+      var BASE_ADDR = 'http://jamlive.net';
 
       function SetVisibleDateSelect( _visible ) {
           $('#quiz_date_select').css('visibility',_visible ? 'visible': 'hidden');
@@ -88,7 +92,7 @@
 
           if( quizdata.length <= 0 ) {
               SetVisibleDateSelect( true );
-              $('#quiz_main').css('visibility', 'hidden');
+              SetVisibleQuizMain(false);
               $('#quiz_result').text('아직 업데이트 되지 않았습니다. 나중에 다시 시도 해 주세요.');
               return;
           }
@@ -106,7 +110,7 @@
       }
 
       function resetQuestion() {
-          $('#quiz_main').css('visibility', 'visible');
+          SetVisibleQuizMain(true);
           $('#quiz_question').text('....Wait....');
           $('#quiz_a1').text('');
           $('#quiz_a2').text('');
@@ -129,7 +133,7 @@
               answer_elems[i].attr('idx', i);
           }
           tStartQuiz = Date.now();
-          $('#quiz_main').css('visibility', 'visible');
+          SetVisibleQuizMain(true);
           $('.quiz_answer').each(function(idx){
               $(this).css('cursor', 'pointer');
               $(this).click(function() {
@@ -147,6 +151,10 @@
           $('#nextq').css('display', visible ? 'inline-block' : 'none');
       }
 
+      function SetVisibleQuizMain(visible) {
+          $('#quiz_main').css('display', visible ? 'inline-block' : 'none');
+      }
+
       function SendResult( collect, quizcnt ) {
           $.ajax({
               type: 'POST',
@@ -156,7 +164,7 @@
                   quizcnt : quizcnt
               }),
               contentType: 'application/json',
-              url: '/quiz/quizresult',
+              url: BASE_ADDR + '/quiz/quizresult',
               success: function(data) {
               }
           });
@@ -202,7 +210,7 @@
                       clearInterval(intervalid);
                       intervalid = 0;
                       SetVisibleDateSelect( true );
-                      $('#quiz_main').css('visibility', 'hidden');
+                      SetVisibleQuizMain(false);
                       $('#quiz_result').text('정답 갯수 : ' + collectcnt);
                       var rate = collectcnt / quizdata.length * 100;
                       SendResult(collectcnt, quizdata.length);
@@ -229,7 +237,7 @@
               // is mobile..
           }
 
-          $('#quiz_main').css('visibility', 'hidden');
+          SetVisibleQuizMain(false);
           <% for(var i = 0 ; i < list.length ; ++i) {%>
             $('#quiz_date').append("<option value='<%=list[i].sn%>'>" + "<%= moment(list[i].quiz_date).format('YYYY-MM-DD hh:mm')%> 기출 문제" + "</option>");
           <% }%>
@@ -242,7 +250,7 @@
                       date_sn: $('#quiz_date option:selected').val()
                   }),
                   contentType: 'application/json',
-                  url: '/quiz/getquiz',
+                  url: BASE_ADDR + '/quiz/getquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
@@ -255,7 +263,7 @@
                   dataType: 'json',
                   data: {},
                   contentType: 'application/json',
-                  url: '/quiz/getrandomquiz',
+                  url: BASE_ADDR + '/quiz/getrandomquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
