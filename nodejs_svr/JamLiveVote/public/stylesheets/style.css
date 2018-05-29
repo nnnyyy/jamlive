@@ -1,7 +1,8 @@
 body {
   padding: 10px;
-  background-color: #F5F1D5;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #11625b;
+  background-color: #e6f5f7;
 }
 
 a {
@@ -80,23 +81,14 @@ info {
 }
 
 .top-bar {
-  background: #666;
+  background: #11625b;
   position: relative;
   overflow: hidden;
   color: white;
   height: 40px;
 }
 
-.top-bar::before {
-  content: "";
-  position: absolute;
-  top: -100%;
-  left: 0;
-  right: 0;
-  bottom: -100%;
-  opacity: 0.25;
-  background: radial-gradient(white, black);
-}
+
 
 #chatwndul {
   list-style: none;
@@ -112,7 +104,6 @@ info {
 .chatscrollarea {
   height: 460px;
   overflow-y:scroll;
-
 }
 
 .chatinputarea {
