@@ -164,7 +164,7 @@
                   quizcnt : quizcnt
               }),
               contentType: 'application/json',
-              url: BASE_ADDR + '/quiz/quizresult',
+              url: '/quizresult',
               success: function(data) {
               }
           });
@@ -250,7 +250,7 @@
                       date_sn: $('#quiz_date option:selected').val()
                   }),
                   contentType: 'application/json',
-                  url: BASE_ADDR + '/quiz/getquiz',
+                  url: '/getquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
@@ -263,7 +263,7 @@
                   dataType: 'json',
                   data: {},
                   contentType: 'application/json',
-                  url: BASE_ADDR + '/quiz/getrandomquiz',
+                  url: '/getrandomquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
