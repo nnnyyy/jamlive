@@ -71,8 +71,6 @@
       var bClicked = 0;
       var nClickIdx = -1;
 
-      var BASE_ADDR = '..';
-
       function SetVisibleDateSelect( _visible ) {
           $('#quiz_date_select').css('visibility',_visible ? 'visible': 'hidden');
           $('#quiz_date_select').css('height', _visible ? 'auto' : '0');
@@ -164,7 +162,7 @@
                   quizcnt : quizcnt
               }),
               contentType: 'application/json',
-              url: '/quizresult',
+              url: '/quiz/quizresult',
               success: function(data) {
               }
           });
@@ -250,7 +248,7 @@
                       date_sn: $('#quiz_date option:selected').val()
                   }),
                   contentType: 'application/json',
-                  url: '/getquiz',
+                  url: '/quiz/getquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
@@ -263,7 +261,7 @@
                   dataType: 'json',
                   data: {},
                   contentType: 'application/json',
-                  url: '/getrandomquiz',
+                  url: '/quiz/getrandomquiz',
                   success: function(data) {
                       startQuiz(data);
                   }
