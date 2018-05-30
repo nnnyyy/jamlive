@@ -65,7 +65,7 @@
           <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
       </div>
   </div>
-  <mobilechat><mobilechatinner>#모바일에서는 채팅입력이 불가능합니다#</mobilechatinner></mobilechat>
+  <mobilechat><mobilechatinner>#이 창을 터치하면 채팅이 가능합니다#</mobilechatinner></mobilechat>
   <footer>
       <input type="button" class="btn_vote enjoy-css" data="0" value="1번"/>
       <input type="button" class="btn_vote enjoy-css" data="1" value="2번"/>
@@ -152,6 +152,10 @@
               bAutoMoveToBottom = true;
           }
 
+          if(isMobile()) {
+              bAutoMoveToBottom = true;
+          }
+
 
           $('#chatwndul').append('<li><div class="message"><p>' + (bStrip ? strip(msg) : msg) + '</p></div></li>')
           $('mobilechatinner').html((bStrip ? strip(msg) : msg));
@@ -190,6 +194,23 @@
               $('.ct-chart').css('width','90%');
               $('.btn_vote').css('width','20%');
               $('#chat').css('display','none');
+              $('#chat').css('position','fixed');
+              $('#chat').css('opacity','0.85');
+              $('#chat').css('width','100%');
+              $('#chat').css('height','100%');
+              $('.chatscrollarea').css('height','90%');
+              $('.chatinputarea').css('height','10%');
+              $('#chat').css('bottom','0');
+              $('#chat').css('right','0');
+              $('.chatscrollarea').click(function() {
+                  $('#chat').css('display','none');
+                  $('mobilechat').css('display','inline-block');
+              })
+              $('mobilechat').click(function() {
+                  $(this).css('display', 'none');
+                  $('#chat').css('display', 'inline-block');
+              })
+              $('footer').after($('#chat'));
               $('.content').css('width', '100%');
               $('.daum_ddn_area').css('margin-top', '0');
               $('pcbuttons').css('display', 'none');

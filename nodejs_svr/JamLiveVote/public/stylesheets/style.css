@@ -6,6 +6,7 @@ html, body {
   height: 100%;
 }
 body {
+  margin-top: 8px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #11625b;
   background-color: #e6f5f7;
@@ -180,6 +181,7 @@ mobilechatinner {
 .chatinputarea {
   display: table;
   width: 100%;
+  height: 20px;
 }
 
 #chatnicknamearea {
