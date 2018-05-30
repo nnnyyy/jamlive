@@ -22,9 +22,11 @@
           <maintitle>라이브 퀴즈쇼 정답 투표기</maintitle><br/>
           <subtitle>정답을 공유 해 보아요 (참여인원 :<usercnt id="usercnt">0</usercnt>명)</subtitle><br/>
           <div id="quiztypedesc">잼라이브, 라이브팝, 페이큐<br/> 이용자에게 유용합니다</div>
-          <input type="button" class="btn_vote" data="0" value="1번"/>
-          <input type="button" class="btn_vote" data="1" value="2번"/>
-          <input type="button" class="btn_vote" data="2" value="3번"/>
+          <pcbuttons>
+              <input type="button" class="btn_vote" data="0" value="1번"/>
+              <input type="button" class="btn_vote" data="1" value="2번"/>
+              <input type="button" class="btn_vote" data="2" value="3번"/>
+          </pcbuttons>
           <div class="ct-chart" style="margin:auto;width: 40%; "></div>
           <div id="banner_area">
               <img class="ads_banner" src="/images/hotcom_banner.jpg"/>
@@ -63,6 +65,12 @@
           <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
       </div>
   </div>
+  <mobilechat><mobilechatinner>안녕하세요 안녕하세요 안녕하세요 안녕하세요 안녕하세요</mobilechatinner></mobilechat>
+  <footer>
+      <input type="button" class="btn_vote enjoy-css" data="0" value="1번"/>
+      <input type="button" class="btn_vote enjoy-css" data="1" value="2번"/>
+      <input type="button" class="btn_vote enjoy-css" data="2" value="3번"/>
+  </footer>
   <!-- Script -->
   <script>
       var color = ['#DE5B49','#324D5C', '#F0CA4D' ];
@@ -146,6 +154,7 @@
 
 
           $('#chatwndul').append('<li><div class="message"><p>' + (bStrip ? strip(msg) : msg) + '</p></div></li>')
+          $('mobilechatinner').html((bStrip ? strip(msg) : msg));
           if( bAutoMoveToBottom ) {
               $('.chatscrollarea').scrollTop($('.chatscrollarea').get(0).scrollHeight);
           }
@@ -179,10 +188,14 @@
               $('maintitle').css('font-size', 'x-large');
               $('subtitle').css('font-size', 'large');
               $('.ct-chart').css('width','90%');
-              $('.btn_vote').css('width','30%');
+              $('.btn_vote').css('width','20%');
               $('#chat').css('display','none');
               $('.content').css('width', '100%');
               $('.daum_ddn_area').css('margin-top', '0');
+              $('pcbuttons').css('display', 'none');
+          }
+          else {
+              $('footer').css('display', 'none');
           }
 
           var socket = io();
