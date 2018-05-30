@@ -6,7 +6,8 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  text-decoration: none;
+  color: #11625b;
 }
 
 .content {
@@ -36,7 +37,6 @@ info {
 }
 
 .ads_banner {
-  margin-top: 10px;
   height: 40px;
 }
 
@@ -140,6 +140,10 @@ info {
 
 .ft-strong {
   font-weight: bold;
+}
+
+.fts-normal {
+  font-size: medium;
 }
 
 .fts-big {

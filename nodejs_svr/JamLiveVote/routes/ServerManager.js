@@ -40,7 +40,7 @@ ServerMan.prototype.setIO = function(io) {
 
     setInterval(function() {
         servman.broadcastVoteInfo();
-    }, 500);
+    }, 300);
 }
 
 ServerMan.prototype.broadcastVoteInfo = function() {
