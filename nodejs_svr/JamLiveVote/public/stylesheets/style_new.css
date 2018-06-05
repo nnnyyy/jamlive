@@ -41,7 +41,7 @@ body {
 
 .content {
     width: 100%;
-    height: -webkit-calc( 100vh - 128px  - 88px);
+    height: calc( 100vh - 128px  - 88px);
     color: #1b3440;
 }
 
@@ -180,7 +180,7 @@ body {
 
 .chat_msg {
     width: 100%;
-    height: -webkit-calc( 100vh - 128px  - 88px - 20px - 60px - 32px);
+    height: calc( 100vh - 128px  - 88px - 20px - 60px - 32px);
     overflow-y: scroll;
     border-radius: 12px;
 }
