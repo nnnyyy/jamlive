@@ -200,7 +200,7 @@ body {
 
 .chat_ul li .chat_name {
     float: left;
-    width: 150px;
+    width: 160px;
     min-height: 32px;
     line-height: 32px;
     margin-left: 15px;
@@ -209,7 +209,7 @@ body {
 
 .chat_ul li .chat_text {
     float: left;
-    width: calc( 100% - 165px - 8px );
+    width: calc( 100% - 175px - 8px );
     min-height: 32px;
     line-height: 32px;
     margin: 0 auto;
