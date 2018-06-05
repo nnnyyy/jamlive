@@ -69,6 +69,13 @@ body {
     word-break: break-all;
 }
 
+.search_desc {
+    width:100%;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}
+
 .search_ret_root {
     color: #1b3440;
 }
@@ -225,9 +232,15 @@ body {
 }
 
 .footer {
+    width: 100%;
     height: 88px;
     color: #f5f1d5;
     background-color: #1b3440;
+    text-align: center;
+}
+
+.bottom_ads {
+
 }
 
 .ip_name {
