@@ -52,6 +52,16 @@
                         검색 결과물 출력
                     -->
                     <div style="width:100%;text-align: center;">검색방법 : 채팅창에서 /(슬래시) 누른 후 검색어 입력</div>
+                    <div style="text-align: center;">
+                        <ins class="daum_ddn_area" style="display:none;margin-top:30px"
+                             data-ad-unit    = "DAN-1hbghejif3l2e"
+                             data-ad-media   = "5MC"
+                             data-ad-pubuser = "4jp"
+                             data-ad-type    = "D"
+                             data-ad-width   = "250"
+                             data-ad-height  = "250"></ins>
+                        <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,11 +121,13 @@
 <script>
     var tClick = 0;
     var bTrigger = false;
+    var htmlBackup = '';
     $(document).ready(function(){
         var socket = io();
         registerSocketEvent(socket);
         registerKeyEvent(socket);
         setNickName();
+        htmlBackup = $('.search_article').html();
 
         if( isMobile() ) {
             $('.content_left').css('display','none');
@@ -171,8 +183,11 @@
         });
 
         socket.on('chat', function(data) {
-            if( data.isvote != -1 ) {
-                addChat( data.nickname, '<b style="color: '+ color[data.isvote] + '">' + data.msg + '</b>', false);
+            if( data.mode == "vote" ) {
+                addChat( data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false);
+            }
+            else if( data.mode == "search") {
+                addChat( data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
             }
             else {
                 addChat(data.nickname, data.msg, true);
@@ -203,7 +218,7 @@
 
                 if( msg[0] == '/' ) {
                     $(this).val('');
-                    searchWeb(msg.substr(1));
+                    searchWeb(socket, msg.substr(1));
                     return;
                 }
 
@@ -298,7 +313,9 @@
 
     }
 
-    function searchWeb( query ) {
+    function searchWeb( socket, query ) {
+        var nick = getNickName();
+        socket.emit('search', {nickname: nick, msg: query });
         $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -329,6 +346,9 @@
             html += div;
         }
         $('.search_article').html(html);
+        setTimeout(function() {
+            $('.search_article').html(htmlBackup);
+        }, 10000);
     }
 
     function getNickName() {
