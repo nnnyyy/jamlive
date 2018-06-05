@@ -4,6 +4,7 @@
 var HashMap = require('hashmap');
 var Client = require('./client');
 var ChatRoom = require('./chatroom');
+var VOTEPERTIME = 1000;
 var ServerMan = function() {
     this.socketmap = new HashMap();
     this.uniqueip = new HashMap();
@@ -45,8 +46,8 @@ ServerMan.prototype.setIO = function(io) {
 
 ServerMan.prototype.broadcastVoteInfo = function() {
     var cur = new Date();
-    cur -= cur % 500;
-    cur /= 500;
+    cur -= cur % VOTEPERTIME;
+    cur /= VOTEPERTIME;
 
     if( this.counts.get(cur) == null ) {
         this.counts.set(cur, [0,0,0]);
@@ -57,13 +58,13 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
-    this.io.sockets.emit('testdata', {cnt: JSON.stringify(this.counts), users: this.socketmap.count()})
+    this.io.sockets.emit('vote_data', {cnt: JSON.stringify(this.counts), users: this.socketmap.count()})
 }
 
 ServerMan.prototype.click = function(idx) {
     var cur = new Date();
-    cur -= cur % 500;
-    cur /= 500;
+    cur -= cur % VOTEPERTIME;
+    cur /= VOTEPERTIME;
 
     var obj = this.counts.get(cur);
     if( obj == null ) {

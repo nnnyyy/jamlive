@@ -2,6 +2,8 @@
  * Created by nnnyyy on 2018-05-09.
  */
 var Log = require('./Log');
+var request = require('request');
+
 function VoteObj() {
     this.countlist = [0,0,0];
 }
@@ -34,4 +36,27 @@ exports.clickevent = function( req, res, next) {
     }catch(err) {
         res.json( {cnt:[]} );
     }
+}
+
+exports.search = function( req, res, next ) {
+    var api_url = 'https://openapi.naver.com/v1/search/kin.json?query=' + encodeURI(req.body.query); // json ??
+
+    var options = {
+        url: api_url,
+        headers: {'X-Naver-Client-Id':'RrVyoeWlAzqS736WZDq3', 'X-Naver-Client-Secret': 'ZaMzW0bOM7'}
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.json(body);
+            } else {
+                res.json(response.statusCode);
+                console.log('error = ' + response.statusCode);
+            }
+        });
+    }
+    catch(e){
+        console.log(e);
+    }
+
 }

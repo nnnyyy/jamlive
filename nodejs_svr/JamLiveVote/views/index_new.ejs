@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>라이브 퀴즈 정답 공유기 v0.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 퀴즈 문제의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="/basic.js"></script>
+    <script src="/myChart.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style_new.css' />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-3598320494828213",
+            enable_page_level_ads: true
+        });
+    </script>
+</head>
+<body>
+<!-- HTML Design -->
+<script src="/socket.io/socket.io.js"></script>
+<div class="main_frame">
+    <div class="header">
+        <div class="logo">
+            라이브 퀴즈 정답 공유기
+        </div>
+        <div class="logo_bot">
+            잼라이브 | 라이브 팝 | 페이큐 | 더 퀴즈 라이브
+        </div>
+    </div>
+    <div class="content">
+        <!--
+            왼쪽에 사용 방법 설명창 ( 열고 닫을 수 있는 )
+            왼쪽에 지식인 검색
+            가운데에 표
+            오른쪽에 채팅창
+        -->
+        <div class="content_left">
+            <div class="search_root">
+                <div class="search_top">
+                    검색 결과가 표시 됩니다.
+                </div>
+                <div class="search_article">
+                    <!--
+                        검색 결과물 출력
+                    -->
+                    <div style="width:100%;text-align: center;">검색방법 : 채팅창에서 /(슬래시) 누른 후 검색어 입력</div>
+                </div>
+            </div>
+        </div>
+        <div class="content_mid">
+            <div class="mid_top">
+                투표 결과 차트
+            </div>
+            <div class="mid_desc">
+                <desc>키보드 1,2,3 번을 누르거나 아래의 버튼을 클릭하면 투표가 됩니다.</desc>
+            </div>
+            <div class="mid_btn_area">
+                <input type="button" class="btn_vote" data="0" value="1번"/>
+                <input type="button" class="btn_vote" data="1" value="2번"/>
+                <input type="button" class="btn_vote" data="2" value="3번"/>
+            </div>
+            <div class="ct-chart">
+
+            </div>
+            <div class="mid_top">
+                실시간 투표 참여 인원
+            </div>
+            <div class="mid_article">
+                <vote_user_cnt>0</vote_user_cnt>명
+            </div>
+            <div class="mid_top">
+                투표에서 제외된 ip 리스트 수
+            </div>
+            <div class="mid_article">
+                <vote_except>0</vote_except>개
+            </div>
+        </div>
+        <div class="content_right">
+            <div class="chat_top">
+                실시간 채팅
+            </div>
+            <div class="chat_root">
+                <div class="chat_msg">
+                    <ul class="chat_ul">
+                    </ul>
+                </div>
+                <div class="chat_input">
+                    <input class="ip_name" type="text"><input class="ip_msg" type="text">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <img src="/images/hotcom_banner.jpg" style="height: 80px;margin: 4px;"/>
+
+    </div>
+</div>
+<script>
+    var tClick = 0;
+    var bTrigger = false;
+    $(document).ready(function(){
+        var socket = io();
+        registerSocketEvent(socket);
+        registerKeyEvent(socket);
+        setNickName();
+    });
+
+    function registerSocketEvent( socket ) {
+        socket.on('vote_data', function(data) {
+            var users = data.users;
+            $('vote_user_cnt').text(users);
+            var p = JSON.parse(data.cnt)._data;
+            var ret = [0, 0, 0];
+            var barLabelRet = [];
+            var barDataSeriesRet = [[], [], []];
+            for (var key in p) {
+                var t = new Date(1970, 0, 1); // Epoch
+                t.setSeconds(key);
+                t.setHours(t.getHours() + 9 + 9);
+                ret[0] += p[key][1][0];
+                ret[1] += p[key][1][1];
+                ret[2] += p[key][1][2];
+
+                barLabelRet.push(t.toISOString());
+                barDataSeriesRet[0].push({value: p[key][1][0]});
+                barDataSeriesRet[1].push({value: p[key][1][1]});
+                barDataSeriesRet[2].push({value: p[key][1][2]});
+            }
+
+            showBarChart('.ct-chart',['1번','2번','3번'],[ret], {
+                seriesBarDistance: 10,
+                height: 260,
+                axisX: {
+                    offset: 20
+                },
+                axisY: {
+                    offset: 20
+                }
+            });
+        });
+
+        socket.on('chat', function(data) {
+            if( data.isvote != -1 ) {
+                addChat( data.nickname, '<b style="color: '+ color[data.isvote] + '">' + data.msg + '</b>', false);
+            }
+            else {
+                addChat(data.nickname, data.msg, true);
+            }
+
+            var rd = Math.floor(Math.random() * 30);
+            if( rd == 15 ) {
+                addBannerAds();
+            }
+        })
+    }
+
+    function registerKeyEvent( socket ) {
+        $('.ip_msg').keypress(function(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if( code == 13 ) {
+                var nick = getNickName();
+                var msg = $(this).val();
+                if( msg.length > 40 ) {
+                    alert('메시지는 짧게');
+                    $(this).val('');
+                    return;
+                }
+
+                if( msg.length <= 0 ) {
+                    return;
+                }
+
+                if( msg[0] == '/' ) {
+                    $(this).val('');
+                    searchWeb(msg.substr(1));
+                    return;
+                }
+
+                var isvote = -1;
+                if( msg.search(/111+/g) != -1 || msg == "1") {
+                    vote(socket, {idx:0});
+                    isvote = 0;
+                }
+                else if( msg.search(/222+/g) != -1 || msg == "2" ) {
+                    vote(socket, {idx:1});
+                    isvote = 1;
+                }
+                else if( msg.search(/333+/g) != -1 || msg == "3") {
+                    vote(socket, {idx:2});
+                    isvote = 2;
+                }
+
+                if( isvote != -1 ) {
+                    $(this).val('');
+                    return;
+                }
+
+                nick = nick.substr(0,14);
+                socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote });
+                $(this).val('');
+            }
+        })
+
+        $(document).keypress(function(event) {
+            if( $('.ip_name').is(':focus') ) return;
+            if( $('.ip_msg').is(':focus') ) return;
+            if( event.charCode >= 49 && event.charCode <= 51) {
+                var curTime = new Date();
+                if( curTime - tClick < 100 ) {
+                    return;
+                }
+                tClick = curTime;
+
+                var idx = event.charCode - 49;
+
+                var nick = getNickName();
+                var clicked = (idx+1);
+                vote(socket, {idx: idx });
+            }
+            else {
+                $('.ip_msg').val('');
+                $('.ip_msg').focus();
+                bTrigger = true;
+            }
+        })
+
+        $('.ip_msg').keyup(function(e) {
+            var code = (e.keyCode ? e.keyCode : e.which);
+            if( bTrigger ) {
+                bTrigger = false;
+                if( $(this).val() != '/')
+                    $(this).val('');
+                return;
+            }
+            if( code == 27 ) {
+                $(this).blur();
+            }
+        })
+
+        $('.btn_vote').each(function(idx) {
+            $(this).click(function() {
+                var idx = $(this).attr('data');
+                vote(socket, {idx:idx});
+            });
+        })
+    }
+
+    function addChat( name, msg, bStrip ) {
+        var li = '<li>' +
+                '<div class="chat_msg_obj">' +
+                '<div class="chat_name">' +
+                (bStrip ? strip(name) : name) +
+                '</div>' +
+                '<div class="chat_text">' +
+                (bStrip ? strip(msg) : msg) +
+                '</div>' +
+                '</div>' +
+                '</li>';
+
+        $('.chat_ul').append(li);
+
+        //  끝 정렬
+        $('.chat_msg').scrollTop($('.chat_msg').get(0).scrollHeight);
+    }
+
+    function addBannerAds() {
+
+    }
+
+    function searchWeb( query ) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                query : query
+            }),
+            contentType: 'application/json',
+            url: '/search',
+            success: function(data) {
+                var items = JSON.parse(data).items;
+                setSearchRet(items);
+            }
+        });
+    }
+
+    function setSearchRet(items) {
+        var html = '';
+        for( var i = 0 ; i < items.length ; ++i) {
+            var item = items[i];
+            var div = '<div class="search_ret_root">' +
+                            '<div class="search_ret_title">' +
+                            item.title +
+                            '</div><div class="search_ret_desc">' +
+                            item.description +
+                            '</div>' +
+                            '</div>';
+
+            html += div;
+        }
+        $('.search_article').html(html);
+    }
+
+    function getNickName() {
+        var nick = strip($('.ip_name').val());
+        nick = nick.substr(0,10);
+        return nick;
+    }
+
+    function setNickName() {
+        var rd = Math.floor(Math.random() * 500);
+        $('.ip_name').val('손님' + rd);
+    }
+
+    function vote(socket, data) {
+        data.nickname = getNickName();
+        socket.emit('vote', data);
+    }
+</script>
+</body>
+</html>
