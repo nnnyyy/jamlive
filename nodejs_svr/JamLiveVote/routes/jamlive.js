@@ -118,7 +118,11 @@ function parcing(data, body) {
         descDom.find('.f').text('');
         var desc = descDom.find('.st').html();
         if( title == null || title == '' || desc == null || desc == '' ||
-            title.indexOf('- YouTube') > 0 || title.indexOf('- Google Play 앱') > 0 || title.indexOf('• Instagram') > 0 || title.indexOf('| Facebook') > 0 ) {
+            title.indexOf('- YouTube') > 0 ||
+            title.indexOf('- Google Play 앱') > 0 ||
+            title.indexOf('• Instagram') > 0 ||
+            title.indexOf('| Facebook') > 0  ||
+            title.indexOf('on Instagram') > 0 ) {
             return;
         }
 
