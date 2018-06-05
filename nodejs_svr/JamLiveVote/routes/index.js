@@ -2,6 +2,8 @@ var express = require('express');
 var JamLive = require('./jamlive');
 var Log = require('./Log');
 var router = express.Router();
+var request = require('request');
+
 
 /* GET home page. */
 router.use( Log.logging );

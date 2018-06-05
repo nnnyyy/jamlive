@@ -62,8 +62,8 @@
                              data-ad-height  = "250"></ins>
                         <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
                     </div>
-                    <div style="text-align: center;font-size: large; font-weight: bold">
-                        검색은 네이버 지식인을 기반으로 하고 있습니다.
+                    <div style="text-align: center;font-size: 17px; font-weight: bold">
+                        검색은 네이버 지식인과 구글을 기반으로 하고 있습니다.
                     </div>
                 </div>
             </div>
@@ -225,7 +225,7 @@
                 }
 
                 if( msg[0] == '/' ) {
-                    $(this).val('');
+                    $(this).val('/');
                     searchWeb(socket, msg.substr(1));
                     return;
                 }
@@ -333,8 +333,7 @@
             contentType: 'application/json',
             url: '/search',
             success: function(data) {
-                var items = JSON.parse(data).items;
-                setSearchRet(items);
+                setSearchRet(data);
             }
         });
     }
