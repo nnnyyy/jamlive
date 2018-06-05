@@ -126,6 +126,7 @@
     var tClick = 0;
     var bTrigger = false;
     var htmlBackup = '';
+    var timerID = 0;
     $(document).ready(function(){
         var socket = io();
         registerSocketEvent(socket);
@@ -350,7 +351,8 @@
             html += div;
         }
         $('.search_article').html(html);
-        setTimeout(function() {
+        clearTimeout(timerID);
+        timerID = setTimeout(function() {
             $('.search_article').html(htmlBackup);
         }, 10000);
     }
