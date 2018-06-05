@@ -3,6 +3,9 @@
  */
 var Log = require('./Log');
 var request = require('request');
+var cheerio = require('cheerio');
+var iconv = require('iconv-lite');
+var async = require('async');
 
 function VoteObj() {
     this.countlist = [0,0,0];
@@ -39,7 +42,25 @@ exports.clickevent = function( req, res, next) {
 }
 
 exports.search = function( req, res, next ) {
-    var api_url = 'https://openapi.naver.com/v1/search/kin.json?display=20&query=' + encodeURI(req.body.query); // json ??
+    async.waterfall(
+        [
+            async.apply(requestKIN, req.body.query),
+            requestGoogle
+        ]
+        ,
+        function(err, data){
+            if( err == null ) {
+                res.json(data);
+            }
+            else {
+                res.json(err);
+            }
+    });
+}
+
+function requestKIN(query, callback) {
+
+    var api_url = 'https://openapi.naver.com/v1/search/kin.json?display=20&query=' + encodeURI(query); // json ??
 
     var options = {
         url: api_url,
@@ -48,15 +69,59 @@ exports.search = function( req, res, next ) {
     try {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                res.json(body);
+                callback(null, query, JSON.parse(body).items);
             } else {
-                res.json(response.statusCode);
-                console.log('error = ' + response.statusCode);
+                callback(response.statusCode);
             }
         });
     }
     catch(e){
-        console.log(e);
+        callback(-1);
+    }
+}
+
+function requestGoogle(query, data, callback) {
+
+    data = data.slice(0,2);
+    var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
+
+    var options = {
+        url: url,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+        }
+        ,encoding: null
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                parcing(data, body);
+                callback(null, data);
+            } else {
+                callback(-1);
+            }
+        });
+    }
+    catch(e){
+        callback(-1);
     }
 
+
+}
+
+function parcing(data, body) {
+    var strContents = new Buffer(body);
+    var $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
+    $('#search').find('.g').each(function(idx) {
+        var title = $(this).find('h3.r a').text();
+        var descDom = $(this).find('.s');
+        descDom.find('.f').text('');
+        var desc = descDom.find('.st').html();
+        if( title == null || title == '' || desc == null || desc == '' ||
+            title.indexOf('- YouTube') > 0 || title.indexOf('- Google Play 앱') > 0 || title.indexOf('• Instagram') > 0 || title.indexOf('| Facebook') > 0 ) {
+            return;
+        }
+
+        data.push({title: title, description: desc});
+    })
 }

@@ -86,6 +86,10 @@ body {
     color: #1b3440;
 }
 
+em {
+    font-weight: bold;
+}
+
 .search_ret_title {
     font-size: 15px;
     color: red;
