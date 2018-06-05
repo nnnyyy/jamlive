@@ -101,7 +101,7 @@ ServerMan.prototype.register = function(socket) {
 
             var number = Number(data.idx) + 1;
 
-            servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, isvote: data.idx });
+            servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx });
         }
     });
 
@@ -111,7 +111,16 @@ ServerMan.prototype.register = function(socket) {
             ip = socket.handshake.headers['x-real-ip'];
         }
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg, isvote: data.isvote });
+        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat" });
+    })
+
+    socket.on('search', function(data) {
+        var ip = this.handshake.address.substr(7);
+        if( socket.handshake.headers['x-real-ip'] != null ) {
+            ip = socket.handshake.headers['x-real-ip'];
+        }
+        ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
+        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search" });
     })
 
     socket.on('enterchat', function(data) {
