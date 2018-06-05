@@ -39,7 +39,7 @@ exports.clickevent = function( req, res, next) {
 }
 
 exports.search = function( req, res, next ) {
-    var api_url = 'https://openapi.naver.com/v1/search/kin.json?query=' + encodeURI(req.body.query); // json ??
+    var api_url = 'https://openapi.naver.com/v1/search/kin.json?display=20&query=' + encodeURI(req.body.query); // json ??
 
     var options = {
         url: api_url,

@@ -64,9 +64,10 @@ body {
 }
 
 .search_article {
-    overflow: hidden;
+    overflow-y: scroll;
     padding: 12px;
     word-break: break-all;
+    height: calc(100% - 84px);
 }
 
 .search_desc {
