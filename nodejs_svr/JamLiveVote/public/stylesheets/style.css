@@ -173,7 +173,7 @@ mobilechatinner {
   padding: 0;
 }
 
-.chatscrollarea {
+. chatscrollarea {
   height: 460px;
   overflow-y:scroll;
 }
