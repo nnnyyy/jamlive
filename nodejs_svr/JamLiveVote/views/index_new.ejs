@@ -102,6 +102,11 @@
         <img src="/images/hotcom_banner.jpg" style="height: 80px;margin: 4px;"/>
 
     </div>
+    <footer>
+        <input type="button" class="btn_vote enjoy-css" data="0" value="1번"/>
+        <input type="button" class="btn_vote enjoy-css" data="1" value="2번"/>
+        <input type="button" class="btn_vote enjoy-css" data="2" value="3번"/>
+    </footer>
 </div>
 <script>
     var tClick = 0;
@@ -111,6 +116,24 @@
         registerSocketEvent(socket);
         registerKeyEvent(socket);
         setNickName();
+
+        if( isMobile() ) {
+            $('.content_left').css('display','none');
+            $('.content_right').css('display','none');
+            $('.content_mid').css('width','100%');
+            $('.footer').css('display', 'none');
+            $('.mid_btn_area').css('display', 'none');
+            $('.header').css('text-align','center');
+            $('.header').css('height','100px');
+            $('.logo').css('width','100%');
+            $('.logo').css('margin-left','0px');
+            $('.logo').css('font-size','20px');
+            $('.logo_bot').css('display', 'none');
+
+        }
+        else {
+            $('footer').css('display','none');
+        }
     });
 
     function registerSocketEvent( socket ) {
