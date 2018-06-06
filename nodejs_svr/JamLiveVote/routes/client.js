@@ -11,4 +11,9 @@ Client.prototype.isClickable = function() {
     return (cur - this.tLastClick) > 3500;
 }
 
+
+Client.prototype.isBanedIP = function( hashcode ) {
+    
+}
+
 module.exports = Client;

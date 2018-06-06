@@ -98,7 +98,7 @@
         </div>
         <div class="content_right">
             <div class="chat_top">
-                실시간 채팅
+                실시간 채팅 <sub>( 부정 투표자 아이디를 클릭하면 신고 가능 )</sub>
             </div>
             <div class="chat_root">
                 <div class="chat_msg">
@@ -134,6 +134,10 @@
         var socket = io();
         registerSocketEvent(socket);
         registerKeyEvent(socket);
+        registerClickEvent(socket);
+
+        console.log('event register finish');
+
         setNickName();
         htmlBackup = $('.search_article').html();
 
@@ -156,10 +160,21 @@
         }
     });
 
+    function registerClickEvent( socket ) {
+        $(document).on('click', '.chat_name', function (e) {
+            var name = $(this).text();
+            if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
+                socket.emit('ban', {hash: $(this).attr('hash')});
+            }
+            e.preventDefault();
+        });
+    }
+
     function registerSocketEvent( socket ) {
         socket.on('vote_data', function(data) {
             var users = data.users;
             $('vote_user_cnt').text(users);
+            $('vote_except').text(data.bans);
             var p = JSON.parse(data.cnt)._data;
             var ret = [0, 0, 0];
             var barLabelRet = [];
@@ -192,19 +207,23 @@
 
         socket.on('chat', function(data) {
             if( data.mode == "vote" ) {
-                addChat( data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false);
+                addChat( data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false);
             }
             else if( data.mode == "search") {
-                addChat( data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
+                addChat( data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
             }
             else {
-                addChat(data.nickname, data.msg, true);
+                addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
             }
 
             var rd = Math.floor(Math.random() * 30);
             if( rd == 15 ) {
                 addBannerAds();
             }
+        })
+
+        socket.on('serv_msg', function(data) {
+            alert(data.msg);
         })
     }
 
@@ -299,10 +318,10 @@
         })
     }
 
-    function addChat( name, msg, bStrip ) {
+    function addChat( isbaned, hash , name, msg, bStrip ) {
         var li = '<li>' +
                 '<div class="chat_msg_obj">' +
-                '<div class="chat_name">' +
+                '<div class="chat_name '+ (isbaned ? 'baned' : '') +'" hash=' + hash + '>' +
                 (bStrip ? strip(name) : name) +
                 '</div>' +
                 '<div class="chat_text">' +

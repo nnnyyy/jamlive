@@ -4,11 +4,41 @@
 var HashMap = require('hashmap');
 var Client = require('./client');
 var ChatRoom = require('./chatroom');
+var sf = require('./StringFunction');
+
 var VOTEPERTIME = 1000;
+var BANTIME = 2 * 60 * 1000;
+var BANCNT = 3;
+
+var BanUserInfo = function() {
+    this.tBanStart = 0;
+    this.nCnt = 0;
+    this.user = new HashMap();
+}
+
+BanUserInfo.prototype.add = function(byHash) {
+    if( this.user.get(byHash) == null) {
+        this.nCnt++;
+        this.user.set(byHash, true);
+        return true;
+    }
+
+    return false;
+}
+
+BanUserInfo.prototype.isAbleBan = function() {
+    if( this.nCnt >= BANCNT )
+        return true;
+
+    return false;
+}
+
 var ServerMan = function() {
     this.socketmap = new HashMap();
+    this.banMap = new HashMap();
     this.uniqueip = new HashMap();
     this.counts = new HashMap();
+    this.banUsers = new HashMap();
     this.countslist = [];
 }
 
@@ -42,6 +72,10 @@ ServerMan.prototype.setIO = function(io) {
     setInterval(function() {
         servman.broadcastVoteInfo();
     }, 300);
+
+    setInterval(function() {
+        servman.checkAllBaned();
+    }, 3000);
 }
 
 ServerMan.prototype.broadcastVoteInfo = function() {
@@ -58,7 +92,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
-    this.io.sockets.emit('vote_data', {cnt: JSON.stringify(this.counts), users: this.socketmap.count()})
+    this.io.sockets.emit('vote_data', {cnt: JSON.stringify(this.counts), users: this.socketmap.count(), bans: this.banUsers.count()})
 }
 
 ServerMan.prototype.click = function(idx) {
@@ -81,6 +115,66 @@ ServerMan.prototype.click = function(idx) {
     obj[idx]++;
 }
 
+ServerMan.prototype.banUser = function( hash, byHash ) {
+    var bui = this.banMap.get( hash );
+    if( bui == null ) {
+        var newbui = new BanUserInfo();
+        newbui.add(byHash);
+        this.banMap.set(hash, newbui);
+
+        if( newbui.isAbleBan() ) {
+            this.banUsers.set( hash, Date.now() );
+            this.banMap.delete( hash );
+        }
+        return true;
+    }
+
+    if( bui.add(byHash) ) {
+        if( bui.isAbleBan() ) {
+            this.banUsers.set( hash, Date.now() );
+            this.banMap.delete( hash );
+        }
+        return true;
+    }
+
+    return false;
+}
+
+ServerMan.prototype.checkBaned = function( _hash ) {
+    var hash = _hash.toString();
+    var tBanStart = this.banUsers.get(hash);
+
+    if (tBanStart != null) {
+        //  밴이 되어있는 상태
+        var cur = new Date();
+        if ((cur - tBanStart) > BANTIME) {
+            servman.banUsers.delete(hash);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+ServerMan.prototype.checkAllBaned = function() {
+    var cur = new Date();
+
+    try {
+        this.banUsers.forEach(function(value, key) {
+            if( cur - value > BANTIME) {
+                servman.banUsers.delete(key);
+            }
+        });
+    }catch(e) {
+        console.log(e);
+    }
+}
+
+
 ServerMan.prototype.register = function(socket) {
     this.addSocket(socket);
     socket.on('disconnect', function(){
@@ -94,6 +188,14 @@ ServerMan.prototype.register = function(socket) {
         if( socket.handshake.headers['x-real-ip'] != null ) {
             ip = socket.handshake.headers['x-real-ip'];
         }
+        var ipHashed = ip.hashCode();
+
+        if( servman.checkBaned( ipHashed ) ) {
+            var msg = '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         if( client.isClickable() ) {
             servman.click(data.idx);
@@ -101,7 +203,7 @@ ServerMan.prototype.register = function(socket) {
 
             var number = Number(data.idx) + 1;
 
-            servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx });
+            servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false });
         }
     });
 
@@ -110,8 +212,15 @@ ServerMan.prototype.register = function(socket) {
         if( socket.handshake.headers['x-real-ip'] != null ) {
             ip = socket.handshake.headers['x-real-ip'];
         }
+        var ipHashed = ip.hashCode();
+
+        var isBaned = false;
+        if( servman.checkBaned( ipHashed ) ) {
+            isBaned = true;
+        }
+
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat" });
+        servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned });
     })
 
     socket.on('search', function(data) {
@@ -119,8 +228,15 @@ ServerMan.prototype.register = function(socket) {
         if( socket.handshake.headers['x-real-ip'] != null ) {
             ip = socket.handshake.headers['x-real-ip'];
         }
+        var ipHashed = ip.hashCode();
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search" });
+
+        var isBaned = false;
+        if( servman.checkBaned( ipHashed ) ) {
+            isBaned = true;
+        }
+
+        servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned });
     })
 
     socket.on('enterchat', function(data) {
@@ -130,6 +246,37 @@ ServerMan.prototype.register = function(socket) {
     socket.on('leavechat', function() {
         servman.chatroom.leave(this);
     });
+
+    socket.on('ban', function(data) {
+        var ip = this.handshake.address.substr(7);
+        if( socket.handshake.headers['x-real-ip'] != null ) {
+            ip = socket.handshake.headers['x-real-ip'];
+        }
+        var ipHashed = ip.hashCode();
+
+        var msg = '';
+
+        if( ipHashed == data.hash ) {
+            msg = '자신을 신고할 수 없습니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
+        if( servman.checkBaned( ipHashed ) ) {
+            msg = '이미 밴 되어 있습니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
+        if( servman.banUser(data.hash, ipHashed) ) {
+            msg = '밴 신청 완료';
+        }
+        else {
+            msg = '동일 유저에게 신고할 수 없습니다.';
+        }
+
+        socket.emit('serv_msg', {msg: msg});
+    })
 }
 
 module.exports = servman;

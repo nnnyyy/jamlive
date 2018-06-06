@@ -156,6 +156,10 @@ em {
     font-size: 18px;
 }
 
+.chat_top sub {
+    font-size: 14px;
+}
+
 .chat_root {
     background-color: white;
     width: calc(100% - 20px);
@@ -222,6 +226,12 @@ em {
     line-height: 32px;
     margin-left: 15px;
     overflow: hidden;
+    cursor: crosshair;
+}
+
+.chat_ul .baned {
+    color: red;
+    font-weight: bold;
 }
 
 .chat_ul li .chat_text {
