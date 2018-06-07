@@ -44,7 +44,8 @@ exports.clickevent = function( req, res, next) {
 exports.search = function( req, res, next ) {
     async.waterfall(
         [
-            async.apply(requestKIN, req.body.query),
+            async.apply(requestEncyc, req.body.query),
+            requestKIN,
             requestGoogle
         ]
         ,
@@ -55,12 +56,12 @@ exports.search = function( req, res, next ) {
             else {
                 res.json(err);
             }
-    });
+        });
 }
 
-function requestKIN(query, callback) {
+function requestEncyc(query, callback) {
 
-    var api_url = 'https://openapi.naver.com/v1/search/kin.json?display=20&query=' + encodeURI(query); // json ??
+    var api_url = 'https://openapi.naver.com/v1/search/encyc.json?display=10&query=' + encodeURI(query); // json ??
 
     var options = {
         url: api_url,
@@ -71,7 +72,30 @@ function requestKIN(query, callback) {
             if (!error && response.statusCode == 200) {
                 callback(null, query, JSON.parse(body).items);
             } else {
-                callback(response.statusCode);
+                console.log(error);
+                callback(-1);
+            }
+        });
+    }
+    catch(e){
+        callback(-1);
+    }
+}
+
+function requestKIN(query, data, callback) {
+    data = data.slice(0,2);
+    var api_url = 'https://openapi.naver.com/v1/search/kin.json?display=10&query=' + encodeURI(query); // json ??
+
+    var options = {
+        url: api_url,
+        headers: {'X-Naver-Client-Id':'RrVyoeWlAzqS736WZDq3', 'X-Naver-Client-Secret': 'ZaMzW0bOM7'}
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                callback(null, query, data.concat(JSON.parse(body).items));
+            } else {
+                callback(-1);
             }
         });
     }
@@ -81,8 +105,7 @@ function requestKIN(query, callback) {
 }
 
 function requestGoogle(query, data, callback) {
-
-    data = data.slice(0,2);
+    data = data.slice(0,4);
     var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
 
     var options = {
