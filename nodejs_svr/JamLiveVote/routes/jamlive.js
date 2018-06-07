@@ -44,9 +44,11 @@ exports.clickevent = function( req, res, next) {
 exports.search = function( req, res, next ) {
     async.waterfall(
         [
-            async.apply(requestEncyc, req.body.query),
+            async.apply(reqFirst, req.body.query),
+            requestEncyc,
             requestKIN,
-            requestGoogle
+            requestBlog,
+            postProc
         ]
         ,
         function(err, data){
@@ -59,8 +61,11 @@ exports.search = function( req, res, next ) {
         });
 }
 
-function requestEncyc(query, callback) {
+function reqFirst(query, callback) {
+    callback(null, query, []);
+}
 
+function requestEncyc(query, data, callback) {
     var api_url = 'https://openapi.naver.com/v1/search/encyc.json?display=10&query=' + encodeURI(query); // json ??
 
     var options = {
@@ -70,9 +75,8 @@ function requestEncyc(query, callback) {
     try {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                callback(null, query, JSON.parse(body).items);
+                callback(null, query, data.concat(JSON.parse(body).items));
             } else {
-                console.log(error);
                 callback(-1);
             }
         });
@@ -85,6 +89,28 @@ function requestEncyc(query, callback) {
 function requestKIN(query, data, callback) {
     data = data.slice(0,2);
     var api_url = 'https://openapi.naver.com/v1/search/kin.json?display=10&query=' + encodeURI(query); // json ??
+
+    var options = {
+        url: api_url,
+        headers: {'X-Naver-Client-Id':'RrVyoeWlAzqS736WZDq3', 'X-Naver-Client-Secret': 'ZaMzW0bOM7'}
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                callback(null, query, data.concat(JSON.parse(body).items));
+            } else {
+                callback(-1);
+            }
+        });
+    }
+    catch(e){
+        callback(-1);
+    }
+}
+
+function requestBlog(query, data, callback) {
+    data = data.slice(0,4);
+    var api_url = 'https://openapi.naver.com/v1/search/blog.json?display=10&query=' + encodeURI(query); // json ??
 
     var options = {
         url: api_url,
@@ -130,6 +156,23 @@ function requestGoogle(query, data, callback) {
     }
 
 
+}
+
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+function postProc(query, data, callback) {
+    // ??
+    //shuffle(data);
+    callback(null, data);
 }
 
 function parcing(data, body) {

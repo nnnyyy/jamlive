@@ -25,7 +25,7 @@
             라이브 퀴즈 정답 공유기
         </div>
         <div class="logo_bot">
-            팩트 : 사이트 보고 틀린 문제는 어짜피 틀렸을 문제다. 틀리면 자신을 탓하라. 그리고 <a href="http://quiz.jamlive.net" target="_blank">여기를 클릭</a>해서 기출문제를 풀고 연습하라.
+            팩트 : 사이트 보고 틀린 문제는 어차피 틀렸을 문제다. 틀리면 자신을 탓하라. 그리고 <a href="http://quiz.jamlive.net" target="_blank">여기를 클릭</a>해서 기출문제를 풀고 연습하라.
         </div>
     </div>
     <div class="content">
@@ -37,10 +37,10 @@
         -->
         <div class="content_left">
             <div class="search_root">
-                <div class="search_top">
-                    검색 결과가 표시 됩니다.
-                </div>
                 <div class="search_article">
+                    <div class="search_top">
+                        검색 결과가 표시 됩니다.
+                    </div>
                     <!--
                         검색 결과물 출력
                     -->
@@ -68,7 +68,7 @@
                              data-ad-format="auto"></ins>
                     </div>
                     <div style="text-align: center;font-size: 17px; font-weight: bold">
-                        검색은 네이버 지식인과 구글을 기반으로 하고 있습니다.
+                        검색은 네이버를 기반으로 하고 있습니다.
                     </div>
                 </div>
             </div>
@@ -382,7 +382,7 @@
         clearTimeout(timerID);
         timerID = setTimeout(function() {
             $('.search_article').html(htmlBackup);
-        }, 10000);
+        }, 15000);
     }
 
     function getNickName() {
