@@ -219,8 +219,14 @@ ServerMan.prototype.register = function(socket) {
             isBaned = true;
         }
 
+        var client = servman.getClient(this);
+        if( data.msg == "#1216" ) {
+            client.isAdmin = !client.isAdmin;
+            return;
+        }
+
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned });
+        servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
     })
 
     socket.on('search', function(data) {
