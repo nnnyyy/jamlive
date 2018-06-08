@@ -4,6 +4,7 @@
 var Client = function(socket) {
     this.socket = socket;
     this.tLastClick = 0;
+    this.isAdmin = false;
 }
 
 Client.prototype.isClickable = function() {

@@ -286,3 +286,34 @@ footer {
     height: 60px;
     text-align: center;
 }
+
+.admin_msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40vw;
+    height: 40px;
+    margin-left: -20vw;
+    background-color: white;
+    text-align: center;
+    line-height: 40px;
+
+    opacity: 0;
+}
+
+.opacity {
+
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+.non_opacity {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+}

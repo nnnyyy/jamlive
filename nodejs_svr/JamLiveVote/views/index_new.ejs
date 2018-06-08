@@ -129,6 +129,7 @@
         <input type="button" class="btn_vote enjoy-css" data="1" value="2번"/>
         <input type="button" class="btn_vote enjoy-css" data="2" value="3번"/>
     </footer>
+    <div class="admin_msg">안녕하세요.</div>
 </div>
 <script>
     var tClick = 0;
@@ -161,10 +162,13 @@
             $('.logo').css('font-size','20px');
             $('.logo_bot').css('display', 'none');
 
+
         }
         else {
             $('footer').css('display','none');
         }
+
+        showAdminMsg('안녕하세요.');
     });
 
     function registerClickEvent( socket ) {
@@ -220,7 +224,14 @@
                 addChat( data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
             }
             else {
-                addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
+
+                if( data.admin ) {
+                    showAdminMsg(data.msg);
+                }
+                else {
+                    addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
+                }
+
             }
 
             var rd = Math.floor(Math.random() * 30);
@@ -399,6 +410,25 @@
     function vote(socket, data) {
         data.nickname = getNickName();
         socket.emit('vote', data);
+    }
+
+    var animOpacityTimerID = -1;
+    function showAdminMsg(msg) {
+        var obj = $('.admin_msg');
+        if( animOpacityTimerID != -1 ) {
+            clearTimeout(animOpacityTimerID);
+            animOpacityTimerID = -1;
+            obj.removeClass('opacity');
+            obj.addClass('non_opacity');
+        }
+        obj.addClass('opacity');
+        obj.removeClass('non_opacity');
+        $('.admin_msg').text(msg);
+        $('.admin_msg').css('opacity', '0.75');
+        animOpacityTimerID = setTimeout(function() {
+            $('.admin_msg').css('opacity', '0');
+        }, 3000);
+
     }
 </script>
 </body>
