@@ -91,13 +91,18 @@ em {
 }
 
 .search_ret_title {
-    font-size: 15px;
+    font-size: 13px;
     color: red;
 }
 
 .search_ret_desc {
-    font-size: 13.5px;
-    margin-bottom: 8px;
+    font-size: 12.5px;
+    margin-bottom: 4px;
+}
+
+.search_ret_desc b {
+    font-weight: bolder;
+    color: blue;
 }
 
 .content_mid {
@@ -298,12 +303,11 @@ footer {
     text-align: center;
     line-height: 60px;
     font-size: 17px;
-
     opacity: 0;
+    overflow: hidden;
 }
 
 .opacity {
-
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -ms-transition: all 0.5s ease-in-out;
