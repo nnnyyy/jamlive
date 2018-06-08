@@ -55,9 +55,6 @@
                              data-ad-height  = "250"></ins>
                         <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
                     </div>
-                    <div style="text-align: center;" >
-                        <script type="text/javascript" src="//rsc.adpies.com/js/adpie-min.js?mediaId=5b18b0ef8aec491cc678ab2d&slotId=5b18b3108aec491cc678ab31&adType=banner&width=468&height=60&dtype=2"></script>
-                    </div>
                     <div style="text-align: center;">
                         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                         <!-- jamlive -->
@@ -99,6 +96,9 @@
             </div>
             <div class="mid_article">
                 <vote_except>0</vote_except>개
+            </div>
+            <div style="text-align: center;" >
+                <script type="text/javascript" src="//rsc.adpies.com/js/adpie-min.js?mediaId=5b18b0ef8aec491cc678ab2d&slotId=5b18b3108aec491cc678ab31&adType=banner&width=468&height=60&dtype=2"></script>
             </div>
         </div>
         <div class="content_right">
@@ -167,8 +167,6 @@
         else {
             $('footer').css('display','none');
         }
-
-        showAdminMsg('안녕하세요.');
     });
 
     function registerClickEvent( socket ) {
@@ -423,11 +421,11 @@
         }
         obj.addClass('opacity');
         obj.removeClass('non_opacity');
-        $('.admin_msg').text(msg);
+        $('.admin_msg').html(msg);
         $('.admin_msg').css('opacity', '0.75');
         animOpacityTimerID = setTimeout(function() {
             $('.admin_msg').css('opacity', '0');
-        }, 3000);
+        }, 5000);
 
     }
 </script>
