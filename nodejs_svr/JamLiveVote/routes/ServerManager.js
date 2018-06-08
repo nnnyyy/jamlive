@@ -11,7 +11,6 @@ var BANTIME = 2 * 60 * 1000;
 var BANCNT = 3;
 
 var BanUserInfo = function() {
-    this.tBanStart = 0;
     this.nCnt = 0;
     this.user = new HashMap();
 }
@@ -177,6 +176,9 @@ ServerMan.prototype.checkAllBaned = function() {
 
 ServerMan.prototype.register = function(socket) {
     this.addSocket(socket);
+
+    socket.emit('myid', {socket: socket.id});
+
     socket.on('disconnect', function(){
         servman.chatroom.leave(this);
         servman.removeSocket(this);
@@ -203,7 +205,7 @@ ServerMan.prototype.register = function(socket) {
 
             var number = Number(data.idx) + 1;
 
-            servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false });
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false });
         }
     });
 
@@ -226,7 +228,7 @@ ServerMan.prototype.register = function(socket) {
         }
 
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
+        servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
     })
 
     socket.on('search', function(data) {
@@ -242,16 +244,8 @@ ServerMan.prototype.register = function(socket) {
             isBaned = true;
         }
 
-        servman.io.sockets.emit('chat', {hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned });
+        servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned });
     })
-
-    socket.on('enterchat', function(data) {
-        servman.chatroom.enter(this, data.nickname);
-    });
-
-    socket.on('leavechat', function() {
-        servman.chatroom.leave(this);
-    });
 
     socket.on('ban', function(data) {
         var ip = this.handshake.address.substr(7);
@@ -282,6 +276,19 @@ ServerMan.prototype.register = function(socket) {
         }
 
         socket.emit('serv_msg', {msg: msg});
+    })
+
+    socket.on('help_search', function(data) {
+        var ip = this.handshake.address.substr(7);
+        if( socket.handshake.headers['x-real-ip'] != null ) {
+            ip = socket.handshake.headers['x-real-ip'];
+        }
+        var ipHashed = ip.hashCode();
+        if( ipHashed == data.hash ) {
+            msg = '자신에게 요청할 수 없습니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
     })
 }
 

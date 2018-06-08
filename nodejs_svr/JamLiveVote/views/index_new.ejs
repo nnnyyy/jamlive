@@ -65,8 +65,9 @@
                              data-ad-format="auto"></ins>
                     </div>
                     <div style="text-align: center;font-size: 17px; font-weight: bold">
-                        검색은 네이버를 기반으로 하고 있습니다.
+                        검색은 네이버를 기반으로 하고 있습니다.<br>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -96,6 +97,9 @@
             </div>
             <div class="mid_article">
                 <vote_except>0</vote_except>개
+            </div>
+            <div style="text-align: center;">
+                반자동 검색 (정확도는 떨어지나 타자 치기 귀찮을 때 ) <input type="checkbox" class="cb_auto_search" value="반자동 검색"/>
             </div>
             <div style="text-align: center;" >
                 <script type="text/javascript" src="//rsc.adpies.com/js/adpie-min.js?mediaId=5b18b0ef8aec491cc678ab2d&slotId=5b18b3108aec491cc678ab31&adType=banner&width=468&height=60&dtype=2"></script>
@@ -136,6 +140,11 @@
     var bTrigger = false;
     var htmlBackup = '';
     var timerID = 0;
+    var myid = -1;
+    var autoSearchWordMap = new Map();
+    var tLast = 0;
+    var tAutoSearchFreeze = 0;
+
     $(document).ready(function(){
         (adsbygoogle = window.adsbygoogle || []).push({});
 
@@ -180,6 +189,10 @@
     }
 
     function registerSocketEvent( socket ) {
+        socket.on('myid', function(data) {
+            myid = data.socket;
+        })
+
         socket.on('vote_data', function(data) {
             var users = data.users;
             $('vote_user_cnt').text(users);
@@ -220,6 +233,37 @@
             }
             else if( data.mode == "search") {
                 addChat( data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
+                console.log(data.id + ': ' + myid);
+                if( data.id != myid && isAutoSearchChecked() ) {
+                    var tCur = new Date();
+                    if( tCur - tAutoSearchFreeze <= 5000) {
+                        return;
+                    }
+
+                    if( tCur - tLast > 1500 ) {
+                        autoSearchWordMap.clear();
+                    }
+
+                    tLast = tCur;
+
+                    var arr = data.msg.substr(5).split(' ');
+                    for( var i = 0 ; i < arr.length ; ++i ) {
+                        console.log('add : ' + arr[i]);
+                        autoSearchWordMap.put(arr[i], 1);
+                    }
+
+                    if( autoSearchWordMap.size() >= 4){
+                        var s = '';
+                        var aKeys = autoSearchWordMap.keys();
+                        for( var i = 0 ; i < aKeys.length ; ++i  ) {
+                            s += aKeys[i];
+                            s += ' ';
+                        }
+                        autoSearchWordMap.clear();
+                        tAutoSearchFreeze = tCur;
+                        searchWeb(this, s);
+                    }
+                }
             }
             else {
 
@@ -261,7 +305,12 @@
 
                 if( msg[0] == '/' ) {
                     $(this).val('/');
-                    searchWeb(socket, msg.substr(1));
+                    if( !isAutoSearchChecked() ) {
+                        searchWeb(socket, msg.substr(1));
+                    }
+                    else {
+                        showAdminMsg('반자동 검색을 해제 한 후에 검색을 사용할 수 있습니다');
+                    }
                     return;
                 }
 
@@ -427,6 +476,14 @@
             $('.admin_msg').css('opacity', '0');
         }, 7000);
 
+    }
+
+    function isAutoSearchChecked() {
+        if($('.cb_auto_search').is(':checked')) {
+            return true;
+        }
+
+        return false;
     }
 </script>
 </body>
