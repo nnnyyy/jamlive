@@ -267,7 +267,7 @@
 
                 if( data.admin ) {
                     showAdminMsg(data.msg);
-                    addChat( data.isBaned, data.hash, '<b>' + data.nickname + '</b>', data.msg, true);
+                    addChat( data.isBaned, data.hash, '<b>' + data.nickname + '</b>', data.msg, false);
                 }
                 else {
                     addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
