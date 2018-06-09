@@ -267,7 +267,7 @@
 
                 if( data.admin ) {
                     showAdminMsg(data.msg);
-                    addChat( data.isBaned, data.hash, '<b>' + data.nickname + '</b>', data.msg, false);
+                    addChat( data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false);
                 }
                 else {
                     addChat( data.isBaned, data.hash, data.nickname, data.msg, true);

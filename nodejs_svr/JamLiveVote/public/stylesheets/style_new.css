@@ -307,6 +307,11 @@ footer {
     overflow: hidden;
 }
 
+.admin_font {
+    background-color: black;
+    color: white;
+}
+
 .opacity {
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
