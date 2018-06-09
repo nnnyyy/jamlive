@@ -303,7 +303,7 @@
                 }
 
                 if( msg[0] == '/' ) {
-                    $(this).val('/');
+                    $(this).val('');
                     if( !isAutoSearchChecked() ) {
                         searchWeb(socket, msg.substr(1), true);
                     }
@@ -406,13 +406,12 @@
 
     function searchWeb( socket, query, isBroadcast ) {
         var nick = getNickName();
-        socket.emit('search', {nickname: nick, msg: query });
+        socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
         $.ajax({
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
-                query : query,
-                isBroadcast : isBroadcast
+                query : query
             }),
             contentType: 'application/json',
             url: '/search',
