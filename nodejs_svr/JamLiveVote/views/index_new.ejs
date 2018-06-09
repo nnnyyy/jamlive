@@ -436,6 +436,10 @@
 
             html += div;
         }
+
+        if( items.length == 0 ) {
+            html = '검색 결과가 없습니다. 좀 더 신중한 검색!';
+        }
         $('.search_article').html(html);
         clearTimeout(timerID);
         timerID = setTimeout(function() {
