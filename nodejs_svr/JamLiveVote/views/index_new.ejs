@@ -22,7 +22,7 @@
 <div class="main_frame">
     <div class="header">
         <div class="logo">
-            라이브 퀴즈 정답 공유기
+            라이브 퀴즈 정답 공유기 <guide class="guide_btn">사용법을 모르시면 클릭</guide>
         </div>
         <div class="logo_bot">
             팩트 : 사이트 보고 틀린 문제는 어차피 틀렸을 문제다. 틀리면 자신을 탓하라. 그리고 <a href="http://quiz.jamlive.net" target="_blank">여기를 클릭</a>해서 기출문제를 풀고 연습하라.
@@ -134,6 +134,10 @@
         <input type="button" class="btn_vote enjoy-css" data="2" value="3번"/>
     </footer>
     <div class="admin_msg">안녕하세요.</div>
+    <div class="youtube_video">
+        <iframe width="854" height="480" src="https://www.youtube.com/embed/cUDFcUr8TAs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <div class="youtube_close">닫기</div>
+    </div>
 </div>
 <script>
     var tClick = 0;
@@ -179,6 +183,16 @@
     });
 
     function registerClickEvent( socket ) {
+        $('.youtube_close').click(function(e){
+            $('.youtube_video').css('display', 'none');
+        });
+
+        $('.youtube_video').css('display', 'none');
+
+        $('.guide_btn').click(function(e){
+            $('.youtube_video').css('display', 'inline-block');
+        });
+
         $(document).on('click', '.chat_name', function (e) {
             var name = $(this).text();
             if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
