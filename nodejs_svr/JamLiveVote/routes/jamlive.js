@@ -48,7 +48,8 @@ exports.search = function( req, res, next ) {
             requestEncyc,
             requestKIN,
             requestBlog,
-            postProc
+            requestGoogle,
+            postProc,
         ]
         ,
         function(err, data){
@@ -131,6 +132,12 @@ function requestBlog(query, data, callback) {
 }
 
 function requestGoogle(query, data, callback) {
+    if( data.length > 3 ) {
+        //  검색결과가 충분하면 구글링 안함
+        console.log('google not ok');
+        callback(null, query, data);
+        return;
+    }
     data = data.slice(0,4);
     var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
 
@@ -145,7 +152,7 @@ function requestGoogle(query, data, callback) {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 parcing(data, body);
-                callback(null, data);
+                callback(null, query, data);
             } else {
                 callback(-1);
             }

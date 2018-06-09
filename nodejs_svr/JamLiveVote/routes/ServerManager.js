@@ -241,10 +241,13 @@ ServerMan.prototype.register = function(socket) {
 
         var isBaned = false;
         if( servman.checkBaned( ipHashed ) ) {
-            isBaned = true;
+            var msg = '다수의 신고로 인해 일시적으로 검색기능 사용이 불가합니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
         }
 
-        servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned });
+        if( data.isBroadcast )
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned });
     })
 
     socket.on('ban', function(data) {
