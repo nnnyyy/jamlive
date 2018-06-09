@@ -233,7 +233,6 @@
             }
             else if( data.mode == "search") {
                 addChat( data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
-                console.log(data.id + ': ' + myid);
                 if( data.id != myid && isAutoSearchChecked() ) {
                     var tCur = new Date();
                     if( tCur - tAutoSearchFreeze <= 5000) {
@@ -248,7 +247,6 @@
 
                     var arr = data.msg.substr(5).split(' ');
                     for( var i = 0 ; i < arr.length ; ++i ) {
-                        console.log('add : ' + arr[i]);
                         autoSearchWordMap.put(arr[i], 1);
                     }
 
@@ -261,7 +259,7 @@
                         }
                         autoSearchWordMap.clear();
                         tAutoSearchFreeze = tCur;
-                        searchWeb(this, s);
+                        searchWeb(this, s, false);
                     }
                 }
             }
@@ -269,6 +267,7 @@
 
                 if( data.admin ) {
                     showAdminMsg(data.msg);
+                    addChat( data.isBaned, data.hash, '<b>' + data.nickname + '</b>', data.msg, true);
                 }
                 else {
                     addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
@@ -306,7 +305,7 @@
                 if( msg[0] == '/' ) {
                     $(this).val('/');
                     if( !isAutoSearchChecked() ) {
-                        searchWeb(socket, msg.substr(1));
+                        searchWeb(socket, msg.substr(1), true);
                     }
                     else {
                         showAdminMsg('반자동 검색을 해제 한 후에 검색을 사용할 수 있습니다');
@@ -405,14 +404,15 @@
 
     }
 
-    function searchWeb( socket, query ) {
+    function searchWeb( socket, query, isBroadcast ) {
         var nick = getNickName();
         socket.emit('search', {nickname: nick, msg: query });
         $.ajax({
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
-                query : query
+                query : query,
+                isBroadcast : isBroadcast
             }),
             contentType: 'application/json',
             url: '/search',
