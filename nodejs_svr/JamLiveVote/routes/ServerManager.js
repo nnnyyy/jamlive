@@ -8,6 +8,7 @@ var sf = require('./StringFunction');
 
 var VOTEPERTIME = 1000;
 var BANTIME = 2 * 60 * 1000;
+var SEARCHTIME = 8 * 1000;
 var BANCNT = 3;
 
 var BanUserInfo = function() {
@@ -38,6 +39,7 @@ var ServerMan = function() {
     this.uniqueip = new HashMap();
     this.counts = new HashMap();
     this.banUsers = new HashMap();
+    this.searched = new HashMap();
     this.countslist = [];
 }
 
@@ -168,9 +170,35 @@ ServerMan.prototype.checkAllBaned = function() {
                 servman.banUsers.delete(key);
             }
         });
+
+        this.searched.forEach(function(val, key) {
+            if( cur - val.tLast > SEARCHTIME) {
+                servman.searched.delete(key);
+            }
+        })
     }catch(e) {
         console.log(e);
     }
+}
+
+ServerMan.prototype.getSearchedData = function(query) {
+    var d = this.searched.get(query);
+    if( d != null ) {
+        return d.data;
+    }
+
+    return null;
+}
+
+ServerMan.prototype.setSearchedData = function(query, data) {
+    var d = this.searched.get(query);
+    if( d ) {
+        d.tLast = new Date();
+        this.searched.set(query, d);
+        return;
+    }
+
+    this.searched.set(query, {data: data, tLast: new Date()});
 }
 
 
