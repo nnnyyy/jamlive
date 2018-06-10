@@ -233,7 +233,7 @@ ServerMan.prototype.register = function(socket) {
 
             var number = Number(data.idx) + 1;
 
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false });
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });
         }
     });
 
@@ -274,8 +274,10 @@ ServerMan.prototype.register = function(socket) {
             return;
         }
 
-        if( data.isBroadcast )
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned });
+        if( data.isBroadcast ){
+            var client = servman.getClient(this);
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin });
+        }
     })
 
     socket.on('ban', function(data) {

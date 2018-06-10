@@ -123,6 +123,14 @@ em {
     width: 100%;
 }
 
+.mid_caution {
+    text-align: center;
+    font-size: 18px;
+    width: 100%;
+    color: red;
+    font-weight: bolder;
+}
+
 .mid_sub_top {
     float: left;
     height: 60px;
