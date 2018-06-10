@@ -424,6 +424,7 @@
         $.ajax({
             type: 'POST',
             dataType: 'json',
+            timeout: 400,
             data: JSON.stringify({
                 query : query
             }),
@@ -431,6 +432,9 @@
             url: '/search',
             success: function(data) {
                 setSearchRet(data);
+            }
+            error: function(req, status, error ) {
+                setSearchRet([{title: '결과가 없습니다.', description: ''}]);
             }
         });
     }
