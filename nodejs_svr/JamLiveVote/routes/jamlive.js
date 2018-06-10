@@ -6,6 +6,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var iconv = require('iconv-lite');
 var async = require('async');
+var ServerManager = require('./ServerManager');
 
 function VoteObj() {
     this.countlist = [0,0,0];
@@ -42,6 +43,13 @@ exports.clickevent = function( req, res, next) {
 }
 
 exports.search = function( req, res, next ) {
+    var searched_data = ServerManager.getSearchedData(req.body.query);
+    if(searched_data != null) {
+        console.log('searched data : ' + req.body.query);
+        res.json(searched_data);
+        return;
+    }
+
     async.waterfall(
         [
             async.apply(reqFirst, req.body.query),
@@ -54,6 +62,7 @@ exports.search = function( req, res, next ) {
         ,
         function(err, data){
             if( err == null ) {
+                ServerManager.setSearchedData(req.body.query, data);
                 res.json(data);
             }
             else {
