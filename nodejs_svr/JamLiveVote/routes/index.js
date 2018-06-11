@@ -12,5 +12,6 @@ router.get('/', function(req, res, next) {
 });
 router.post('/vote', JamLive.clickevent );
 router.post('/search', JamLive.search );
+router.post('/searchex', JamLive.searchex );
 
 module.exports = router;

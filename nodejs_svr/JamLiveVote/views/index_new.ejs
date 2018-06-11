@@ -281,7 +281,7 @@
                         }
                         autoSearchWordMap.clear();
                         tAutoSearchFreeze = tCur;
-                        searchWeb(this, s, false);
+                        searchWebRoot(this, s, false);
                     }
                 }
             }
@@ -327,7 +327,8 @@
                 if( msg[0] == '/' ) {
                     $(this).val('');
                     if( !isAutoSearchChecked() ) {
-                        searchWeb(socket, msg.substr(1), true);
+                        var query = msg.substr(1);
+                        searchWebRoot(socket, query, true);
                     }
                     else {
                         showAdminMsg('반자동 검색을 해제 한 후에 검색을 사용할 수 있습니다');
@@ -426,17 +427,24 @@
 
     }
 
-    function searchWeb( socket, query, isBroadcast ) {
+    function searchWebRoot( socket, query, isBroadcast ) {
         var nick = getNickName();
         socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
+        searchWeb(0, query); //  백과사전
+        searchWeb(1, query); //  지시인
+        searchWeb(2, query); //  블로그
+    }
+
+    function searchWeb( type, query ) {
         $.ajax({
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
-                query : query
+                query : query,
+                type: type
             }),
             contentType: 'application/json',
-            url: '/search',
+            url: '/searchex',
             success: function(data) {
                 setSearchRet(data);
             }
@@ -461,11 +469,11 @@
         if( items.length == 0 ) {
             html = '검색 결과가 없습니다. 좀 더 신중한 검색!';
         }
-        $('.search_article').html(html);
+        $('.search_article').append(html);
         clearTimeout(timerID);
         timerID = setTimeout(function() {
             $('.search_article').html(htmlBackup);
-        }, 15000);
+        }, 12000);
     }
 
     function getNickName() {

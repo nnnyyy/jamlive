@@ -211,3 +211,40 @@ function parcing(data, body) {
         data.push({title: title, description: desc});
     })
 }
+
+exports.searchex = function(req, res, next) {
+    var query = req.body.query;
+    var type = req.body.type;
+
+    console.log(query + ' : ' + type);
+
+    var sType = 'encyc';
+    switch(type) {
+        case 0: sType = 'encyc'; break;
+        case 1: sType = 'kin'; break;
+        case 2: sType = 'blog'; break;
+    }
+
+    var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
+
+    var options = {
+        url: api_url,
+        headers: {'X-Naver-Client-Id':'RrVyoeWlAzqS736WZDq3', 'X-Naver-Client-Secret': 'ZaMzW0bOM7'}
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var data = JSON.parse(body).items;
+                if( type == 0 ) data = data.slice(0,2);
+                else if( type == 1 ) data = data.slice(0,3);
+                res.json(data);
+            } else {
+                console.log(error);
+                res.json([]);
+            }
+        });
+    }
+    catch(e){
+        callback(-1);
+    }
+}
