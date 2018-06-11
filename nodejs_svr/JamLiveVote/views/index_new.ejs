@@ -428,6 +428,7 @@
     }
 
     function searchWebRoot( socket, query, isBroadcast ) {
+        $('.search_article').text('');
         var nick = getNickName();
         socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
         searchWeb(0, query); //  백과사전
