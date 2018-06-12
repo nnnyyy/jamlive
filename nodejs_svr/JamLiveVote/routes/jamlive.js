@@ -44,8 +44,7 @@ exports.clickevent = function( req, res, next) {
 
 exports.search = function( req, res, next ) {
     var searched_data = ServerManager.getSearchedData(req.body.query);
-    if(searched_data != null) {
-        console.log('searched data : ' + req.body.query);
+    if(searched_data != null) {        
         res.json(searched_data);
         return;
     }
@@ -142,8 +141,7 @@ function requestBlog(query, data, callback) {
 
 function requestGoogle(query, data, callback) {
     if( data.length > 3 ) {
-        //  검색결과가 충분하면 구글링 안함
-        console.log('google not ok');
+        //  검색결과가 충분하면 구글링 안함        
         callback(null, query, data);
         return;
     }
@@ -214,9 +212,7 @@ function parcing(data, body) {
 
 exports.searchex = function(req, res, next) {
     var query = req.body.query;
-    var type = req.body.type;
-
-    console.log(query + ' : ' + type);
+    var type = req.body.type;    
 
     var sType = 'encyc';
     switch(type) {
