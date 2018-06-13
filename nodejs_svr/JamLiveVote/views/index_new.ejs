@@ -37,6 +37,12 @@
         -->
         <div class="content_left">
             <div class="search_root">
+                <div style="text-align: center;height:15px;">
+                    <input type="checkbox" id="cb_s0" name="chk_info" value="0" checked>백과사전
+                    <input type="checkbox" id="cb_s1" name="chk_info" value="1" checked>지식인
+                    <input type="checkbox" id="cb_s2" name="chk_info" value="2" checked>블로그
+                    <input type="checkbox" id="cb_s3" name="chk_info" value="3" checked>뉴스
+                </div>
                 <div class="search_article">
                     <div class="search_top">
                         검색 결과가 표시 됩니다.
@@ -441,12 +447,30 @@
     }
 
     function searchWebRoot( socket, query, isBroadcast ) {
-        $('.search_article').text('');
+        $('.search_article').html('');
         var nick = getNickName();
         socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
-        searchWeb(0, query); //  백과사전
-        searchWeb(1, query); //  지시인
-        searchWeb(2, query); //  블로그
+        var searched = false;
+        if( $('#cb_s0').is(':checked')) {
+            searchWeb(0, query);
+            searched = true;
+        } //  백과사전
+        if( $('#cb_s1').is(':checked')) {
+            searchWeb(1, query);
+            searched = true;
+        } //  지시인
+        if( $('#cb_s2').is(':checked')) {
+            searchWeb(2, query);
+            searched = true;
+        } //  블로그
+        if( $('#cb_s3').is(':checked')) {
+            searchWeb(3, query);
+            searched = true;
+        } //  뉴스
+
+        if( !searched ) {
+            $('.search_article').html(htmlBackup);
+        }
     }
 
     function searchWeb( type, query ) {
@@ -481,7 +505,7 @@
         }
 
         if( items.length == 0 ) {
-            html = '검색 결과가 없습니다. 좀 더 신중한 검색!';
+            html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
         }
         $('.search_article').append(html);
         clearTimeout(timerID);
