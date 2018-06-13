@@ -417,10 +417,23 @@
                 '</div>' +
                 '</li>';
 
+        var bAutoMoveToBottom = false;
+        var chatwndheight = $('.chat_msg').height();
+
+        if( $('.chat_msg').get(0).scrollTop == ($('.chat_msg').get(0).scrollHeight - chatwndheight) ) {
+            bAutoMoveToBottom = true;
+        }
+
+        if(isMobile()) {
+            bAutoMoveToBottom = true;
+        }
+
         $('.chat_ul').append(li);
 
         //  끝 정렬
-        $('.chat_msg').scrollTop($('.chat_msg').get(0).scrollHeight);
+        if( bAutoMoveToBottom )
+            $('.chat_msg').scrollTop($('.chat_msg').get(0).scrollHeight);
+
     }
 
     function addBannerAds() {
