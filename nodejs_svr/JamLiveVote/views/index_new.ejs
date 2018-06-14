@@ -115,6 +115,9 @@
             <div class="chat_top">
                 실시간 채팅 <sub>( 부정 투표자 아이디를 클릭하면 신고 가능 )</sub>
             </div>
+            <div style="height: 20px; margin-left: 12px;">
+                <input type="checkbox" id="cb_auto_scroll" value="auto scroll"/>강제 자동 스크롤 ( 스크롤이 안되는분들 임시 조치 )
+            </div>
             <div class="chat_root">
                 <div class="chat_msg">
                     <ul class="chat_ul">
@@ -426,7 +429,8 @@
         var bAutoMoveToBottom = false;
         var chatwndheight = $('.chat_msg').height();
 
-        if( $('.chat_msg').get(0).scrollTop == ($('.chat_msg').get(0).scrollHeight - chatwndheight) ) {
+        if( ($('.chat_msg').get(0).scrollTop == ($('.chat_msg').get(0).scrollHeight - chatwndheight) ) ||
+            $('#cb_auto_scroll').is(':checked')) {
             bAutoMoveToBottom = true;
         }
 
