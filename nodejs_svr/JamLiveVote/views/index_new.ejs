@@ -15,6 +15,13 @@
     <script src="/basic.js"></script>
     <script src="/myChart.js"></script>
     <link rel='stylesheet' href='/stylesheets/style_new.css' />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-3598320494828213",
+            enable_page_level_ads: true
+        });
+    </script>
 </head>
 <body>
 <!-- HTML Design -->
@@ -61,15 +68,6 @@
                              data-ad-height  = "250"></ins>
                         <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
                     </div>
-                    <div style="text-align: center;">
-                        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                        <!-- jamlive -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-3598320494828213"
-                             data-ad-slot="1906645715"
-                             data-ad-format="auto"></ins>
-                    </div>
                     <div style="text-align: center;font-size: 17px; font-weight: bold">
                         검색은 네이버를 기반으로 하고 있습니다.<br>
                     </div>
@@ -78,8 +76,11 @@
             </div>
         </div>
         <div class="content_mid">
-            <div class="mid_top">
-                투표 결과 차트
+            <div class="mid_sub_top">
+                실시간 투표 참여 인원
+            </div>
+            <div class="mid_article">
+                <vote_user_cnt>0</vote_user_cnt>명
             </div>
             <div class="mid_desc">
                 <desc>키보드 1,2,3 번을 누르거나 아래의 버튼을 클릭하면 투표가 됩니다.</desc>
@@ -92,14 +93,15 @@
             <div class="ct-chart">
 
             </div>
+            <div style="text-align: center;">
+                <ins class="kakao_ad_area" style="display:none;width:100%"
+                     data-ad-unit    = "DAN-t87e91n4i053"
+                     data-ad-width   = "320"
+                     data-ad-height  = "50"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+            </div>
             <div class="mid_caution">
                 투표는 확실히 아는 것에만 부탁드립니다!
-            </div>
-            <div class="mid_sub_top">
-                실시간 투표 참여 인원
-            </div>
-            <div class="mid_article">
-                <vote_user_cnt>0</vote_user_cnt>명
             </div>
             <div class="mid_sub_top">
                 투표에서 제외된 ip 리스트 수
@@ -151,7 +153,6 @@
     </div>
 </div>
 <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
     var tClick = 0;
     var bTrigger = false;
     var htmlBackup = '';

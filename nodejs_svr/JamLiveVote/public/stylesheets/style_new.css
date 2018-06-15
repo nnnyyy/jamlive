@@ -107,7 +107,7 @@ em {
 
 .content_mid {
     float: left;
-    width: 25%;
+    width: 30%;
     height: calc(100% - 8px);
     margin: 4px;
 }
@@ -155,7 +155,7 @@ em {
 .btn_vote {
     margin: 0;
     padding: 0;
-    width: 32.5%;
+    width: 32%;
     height: 34px;
 }
 
@@ -171,7 +171,7 @@ em {
     overflow: hidden;
     display: inline-block;
     float: left;
-    width: calc(100% - 25% - 2px - 35% - 8px);
+    width: calc(100% - 30% - 2px - 35% - 8px);
     border-left: 1px solid #1b3440;
 }
 
