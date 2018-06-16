@@ -93,14 +93,14 @@
           intervalid = 0;
           SetVisibleDateSelect( false );
           SetVisibleNextBtn( false );
-          $('.banner_area').css('display', 'none');
+          $('#banner_area').css('display', 'none');
           quizdata = data.quizlist;
 
           if( quizdata.length <= 0 ) {
               SetVisibleDateSelect( true );
               SetVisibleQuizMain(false);
               $('#quiz_result').text('아직 업데이트 되지 않았습니다. 나중에 다시 시도 해 주세요.');
-              $('.banner_area').css('display', 'inline-block');
+              $('#banner_area').css('display', 'inline-block');
               return;
           }
 
@@ -219,7 +219,7 @@
                       SetVisibleDateSelect( true );
                       SetVisibleQuizMain(false);
                       $('#quiz_result').text('정답 갯수 : ' + collectcnt);
-                      $('.banner_area').css('display', 'inline-block');
+                      $('#banner_area').css('display', 'inline-block');
                       var rate = collectcnt / quizdata.length * 100;
                       SendResult(collectcnt, quizdata.length);
                       return;
