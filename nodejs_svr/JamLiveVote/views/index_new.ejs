@@ -335,9 +335,7 @@
     var idTimeout = -1;
     function onQuiz(data) {
         $('.q_q').each(function(idx){
-            if( idx == data.quizdata.collect ) {
-                $(this).css('background-color','none');
-            }
+            $(this).css('background-color','none');
         })
         $('.quiz_wnd').css('display', 'inline-block');
         $('.q_title').text(data.quizdata.question);
