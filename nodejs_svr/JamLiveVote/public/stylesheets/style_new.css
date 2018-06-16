@@ -327,6 +327,31 @@ footer {
     overflow: hidden;
 }
 
+.quiz_wnd{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 26vw;
+    height: 230px;
+    margin-left: -13vw;
+    margin-top: -100px;
+    background-color: #1b3440;
+    color: #F5F1D5;
+    text-align: center;
+    font-size: 17px;
+    overflow: hidden;
+    opacity: 0.9;
+}
+
+.q_title {
+    margin: 10px;
+    height: 46px;
+}
+
+.q_q {
+    margin: 8px;
+}
+
 .youtube_video {
     position: absolute;
     top: 50%;

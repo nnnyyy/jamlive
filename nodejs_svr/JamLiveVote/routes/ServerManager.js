@@ -5,6 +5,7 @@ var HashMap = require('hashmap');
 var Client = require('./client');
 var ChatRoom = require('./chatroom');
 var sf = require('./StringFunction');
+var dbhelper = require('./dbhelper');
 
 var VOTEPERTIME = 1000;
 var BANTIME = 2 * 60 * 1000;
@@ -252,6 +253,14 @@ ServerMan.prototype.register = function(socket) {
         var client = servman.getClient(this);
         if( data.msg == "#1216" ) {
             client.isAdmin = !client.isAdmin;
+            return;
+        }
+
+        if( client.isAdmin && data.msg == "#quiz") {
+            dbhelper.getRandomQuiz(function(result) {
+                if( result.ret == 0 )
+                    servman.io.sockets.emit('quiz', {quizdata: result.quizdata});
+            });
             return;
         }
 
