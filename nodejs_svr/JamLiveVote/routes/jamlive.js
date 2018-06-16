@@ -232,7 +232,7 @@ exports.searchex = function(req, res, next) {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body).items;
-                if( type == 0 ) data = data.slice(0,3);
+                if( type == 1 ) data = data.slice(0,4);
                 else data = data.slice(0,3);
                 res.json(data);
             } else {
