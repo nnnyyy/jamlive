@@ -178,11 +178,6 @@
         registerKeyEvent(socket);
         registerClickEvent(socket);
 
-        //  폴링방식으로 변경 해봄
-         setInterval(function() {
-             socket.emit('gvd', {});
-         }, 450);
-
         console.log('event register finish');
 
         setNickName();
@@ -238,25 +233,8 @@
             var users = data.users;
             $('vote_user_cnt').text(users);
             $('vote_except').text(data.bans);
-            var p = JSON.parse(data.cnt)._data;
-            var ret = [0, 0, 0];
-            var barLabelRet = [];
-            var barDataSeriesRet = [[], [], []];
-            for (var key in p) {
-                var t = new Date(1970, 0, 1); // Epoch
-                t.setSeconds(key);
-                t.setHours(t.getHours() + 9 + 9);
-                ret[0] += p[key][1][0];
-                ret[1] += p[key][1][1];
-                ret[2] += p[key][1][2];
 
-                barLabelRet.push(t.toISOString());
-                barDataSeriesRet[0].push({value: p[key][1][0]});
-                barDataSeriesRet[1].push({value: p[key][1][1]});
-                barDataSeriesRet[2].push({value: p[key][1][2]});
-            }
-
-            showBarChart('.ct-chart',['1번','2번','3번'],[ret], {
+            showBarChart('.ct-chart',['1번','2번','3번'],[data.cnt], {
                 seriesBarDistance: 10,
                 height: 260,
                 axisX: {
