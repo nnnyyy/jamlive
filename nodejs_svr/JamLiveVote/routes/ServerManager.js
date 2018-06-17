@@ -68,11 +68,11 @@ ServerMan.prototype.addSocket = function(socket) {
     else {
         cinfo.tLast = new Date();
         cinfo.nCnt++;
-        if( cinfo.nCnt >= 5 ) {
-            var msg = '너무 접속 시도를 많이했습니다. 3분뒤에 접속 시도 해주세요.';
+        if( cinfo.nCnt >= 10 ) {
+            /*var msg = '너무 접속 시도를 많이했습니다. 3분뒤에 접속 시도 해주세요.';
             socket.emit('serv_msg', {msg: msg});
-            socket.disconnect();
-            this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '제한된 입장 리스트에 등록' , mode: "notice", isBaned: false, admin: false }});
+            socket.disconnect();*/
+            this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '-> 많은 접속 시도' , mode: "notice", isBaned: false, admin: false }});
             return;
         }
     }
