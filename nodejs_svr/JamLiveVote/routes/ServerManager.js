@@ -42,6 +42,7 @@ var ServerMan = function() {
     this.banUsers = new HashMap();
     this.searched = new HashMap();
     this.countslist = [];
+    this.others = [];
 }
 
 var servman = new ServerMan();
@@ -74,7 +75,7 @@ ServerMan.prototype.setIO = function(io) {
 
     setInterval(function() {
         servman.broadcastVoteInfo();
-    }, 400);
+    }, 350);
 
     setInterval(function() {
         servman.checkAllBaned();
@@ -102,24 +103,8 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         _counts[2] += value[2];
     })
 
-    this.io.sockets.emit('vote_data', {cnt: _counts, users: this.socketmap.count(), bans: this.banUsers.count()})
-}
-
-ServerMan.prototype.sendVoteData = function(socket) {
-    var cur = new Date();
-    cur -= cur % VOTEPERTIME;
-    cur /= VOTEPERTIME;
-
-    if( this.counts.get(cur) == null ) {
-        this.counts.set(cur, [0,0,0]);
-        this.countslist.push(cur);
-        if( this.counts.count() > 10 ) {
-            this.counts.delete(this.countslist[0]);
-            this.countslist.shift();
-        }
-    }
-
-    socket.emit('vote_data', {cnt: JSON.stringify(this.counts), users: this.socketmap.count(), bans: this.banUsers.count()});
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others })
+    this.others = [];
 }
 
 ServerMan.prototype.click = function(idx) {
@@ -264,7 +249,8 @@ ServerMan.prototype.register = function(socket) {
 
             var number = Number(data.idx) + 1;
 
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });
+            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin }})
+            //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });
         }
     });
 
@@ -296,7 +282,8 @@ ServerMan.prototype.register = function(socket) {
             }
 
             ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
+            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
+            //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
         }
         catch(err) {
             console.error(err);
@@ -320,7 +307,8 @@ ServerMan.prototype.register = function(socket) {
 
         if( data.isBroadcast ){
             var client = servman.getClient(this);
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin });
+            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});
+            //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin });
         }
     })
 

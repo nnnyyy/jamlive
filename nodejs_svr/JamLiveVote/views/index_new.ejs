@@ -230,11 +230,12 @@
         })
 
         socket.on('vote_data', function(data) {
-            var users = data.users;
+            var votedata = data.vote_data;
+            var users = votedata.users;
             $('vote_user_cnt').text(users);
-            $('vote_except').text(data.bans);
+            $('vote_except').text(votedata.bans);
 
-            showBarChart('.ct-chart',['1번','2번','3번'],[data.cnt], {
+            showBarChart('.ct-chart',['1번','2번','3번'],[votedata.cnt], {
                 seriesBarDistance: 10,
                 height: 260,
                 axisX: {
@@ -244,70 +245,79 @@
                     offset: 20
                 }
             });
+
+            var others = data.others;
+            console.log(others);
+            for( var i = 0 ; i < others.length ; ++i ) {
+                if( others[i].channel == "chat" ) {
+                    onChat(others[i].data);
+                }
+            }
         });
 
-        socket.on('chat', function(data) {
-            if( data.mode == "vote" ) {
-                if( data.admin ) {
-                    data.nickname = '<div class="admin_font">사이트관리자</div>';
-                }
-                addChat( data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false);
-            }
-            else if( data.mode == "search") {
-                if( data.admin ) {
-                    data.nickname = '<div class="admin_font">사이트관리자</div>';
-                }
-                addChat( data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
-                if( data.id != myid && isAutoSearchChecked() ) {
-                    var tCur = new Date();
-                    if( tCur - tAutoSearchFreeze <= 5000) {
-                        return;
-                    }
-
-                    if( tCur - tLast > 1500 ) {
-                        autoSearchWordMap.clear();
-                    }
-
-                    tLast = tCur;
-
-                    var arr = data.msg.substr(5).split(' ');
-                    for( var i = 0 ; i < arr.length ; ++i ) {
-                        autoSearchWordMap.put(arr[i], 1);
-                    }
-
-                    if( autoSearchWordMap.size() >= 3){
-                        var s = '';
-                        var aKeys = autoSearchWordMap.keys();
-                        for( var i = 0 ; i < aKeys.length ; ++i  ) {
-                            s += aKeys[i];
-                            s += ' ';
-                        }
-                        autoSearchWordMap.clear();
-                        tAutoSearchFreeze = tCur;
-                        searchWebRoot(this, s, false);
-                    }
-                }
-            }
-            else {
-
-                if( data.admin ) {
-                    showAdminMsg(data.msg);
-                    addChat( data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false);
-                }
-                else {
-                    addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
-                }
-
-            }
-
-            var rd = Math.floor(Math.random() * 30);
-            if( rd == 15 ) {
-                addBannerAds();
-            }
-        })
-
+        socket.on('chat', onChat );
         socket.on('serv_msg', onServMsg);
         socket.on('quiz', onQuiz);
+    }
+
+    function onChat(data) {
+        if( data.mode == "vote" ) {
+            if( data.admin ) {
+                data.nickname = '<div class="admin_font">사이트관리자</div>';
+            }
+            addChat( data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false);
+        }
+        else if( data.mode == "search") {
+            if( data.admin ) {
+                data.nickname = '<div class="admin_font">사이트관리자</div>';
+            }
+            addChat( data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
+            if( data.id != myid && isAutoSearchChecked() ) {
+                var tCur = new Date();
+                if( tCur - tAutoSearchFreeze <= 5000) {
+                    return;
+                }
+
+                if( tCur - tLast > 1500 ) {
+                    autoSearchWordMap.clear();
+                }
+
+                tLast = tCur;
+
+                var arr = data.msg.substr(5).split(' ');
+                for( var i = 0 ; i < arr.length ; ++i ) {
+                    autoSearchWordMap.put(arr[i], 1);
+                }
+
+                if( autoSearchWordMap.size() >= 3){
+                    var s = '';
+                    var aKeys = autoSearchWordMap.keys();
+                    for( var i = 0 ; i < aKeys.length ; ++i  ) {
+                        s += aKeys[i];
+                        s += ' ';
+                    }
+                    autoSearchWordMap.clear();
+                    tAutoSearchFreeze = tCur;
+                    searchWebRoot(this, s, false);
+                }
+            }
+        }
+        else {
+
+            if( data.admin ) {
+                showAdminMsg(data.msg);
+                addChat( data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false);
+            }
+            else {
+                addChat( data.isBaned, data.hash, data.nickname, data.msg, true);
+            }
+
+        }
+
+        var rd = Math.floor(Math.random() * 30);
+        if( rd == 15 ) {
+            addBannerAds();
+        }
     }
 
     function onServMsg(data) {
