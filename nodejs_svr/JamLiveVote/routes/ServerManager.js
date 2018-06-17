@@ -12,6 +12,11 @@ var BANTIME = 2 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
 var BANCNT = 3;
 
+var ConnectUserInfo = function() {
+    this.tLast = new Date();
+    this.nCnt = 1;
+}
+
 var BanUserInfo = function() {
     this.nCnt = 0;
     this.user = new HashMap();
@@ -41,6 +46,7 @@ var ServerMan = function() {
     this.counts = new HashMap();
     this.banUsers = new HashMap();
     this.searched = new HashMap();
+    this.check_connections = new HashMap();
     this.countslist = [];
     this.others = [];
 }
@@ -48,12 +54,30 @@ var ServerMan = function() {
 var servman = new ServerMan();
 
 ServerMan.prototype.addSocket = function(socket) {
-    this.socketmap.set(socket, new Client(socket));
     this.uniqueip.set(socket.handshake.address, 1);
     var ip = socket.handshake.address.substr(7);
     if( socket.handshake.headers['x-real-ip'] != null ) {
         ip = socket.handshake.headers['x-real-ip'];
     }
+
+    var cinfo = this.check_connections.get(ip);
+    if( cinfo == null ) {
+        cinfo = new ConnectUserInfo();
+        this.check_connections.set(ip, cinfo);
+    }
+    else {
+        cinfo.tLast = new Date();
+        cinfo.nCnt++;
+        if( cinfo.nCnt >= 5 ) {
+            var msg = '너무 접속 시도를 많이했습니다. 3분뒤에 접속 시도 해주세요.';
+            socket.emit('serv_msg', {msg: msg});
+            socket.disconnect();
+            this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '제한된 입장 리스트에 등록' , mode: "notice", isBaned: false, admin: false }});
+            return;
+        }
+    }
+
+    this.socketmap.set(socket, new Client(socket));
     ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
     this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '입장' , mode: "notice", isBaned: false, admin: false }});
     //console.log('user connected : ' + socket.handshake.headers['x-real-ip']);
@@ -202,6 +226,12 @@ ServerMan.prototype.checkAllBaned = function() {
         this.searched.forEach(function(val, key) {
             if( cur - val.tLast > SEARCHTIME) {
                 servman.searched.delete(key);
+            }
+        })
+
+        this.check_connections.forEach(function(val, key) {
+            if( cur - val.tLast > 3 * 60 * 1000 ) {
+                servman.check_connections.delete(key);
             }
         })
     }catch(e) {
