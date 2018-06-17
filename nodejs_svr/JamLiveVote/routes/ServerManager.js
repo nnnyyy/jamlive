@@ -263,33 +263,38 @@ ServerMan.prototype.register = function(socket) {
     });
 
     socket.on('chat', function(data) {
-        var ip = this.handshake.address.substr(7);
-        if( socket.handshake.headers['x-real-ip'] != null ) {
-            ip = socket.handshake.headers['x-real-ip'];
-        }
-        var ipHashed = ip.hashCode();
+        try {
+            var ip = this.handshake.address.substr(7);
+            if( socket.handshake.headers['x-real-ip'] != null ) {
+                ip = socket.handshake.headers['x-real-ip'];
+            }
+            var ipHashed = ip.hashCode();
 
-        var isBaned = false;
-        if( servman.checkBaned( ipHashed ) ) {
-            isBaned = true;
-        }
+            var isBaned = false;
+            if( servman.checkBaned( ipHashed ) ) {
+                isBaned = true;
+            }
 
-        var client = servman.getClient(this);
-        if( data.msg == "#1216" ) {
-            client.isAdmin = !client.isAdmin;
-            return;
-        }
+            var client = servman.getClient(this);
+            if( data.msg == "#1216" ) {
+                client.isAdmin = !client.isAdmin;
+                return;
+            }
 
-        if( client.isAdmin && data.msg == "#quiz") {
-            dbhelper.getRandomQuiz(function(result) {
-                if( result.ret == 0 )
-                    servman.io.sockets.emit('quiz', {quizdata: result.quizdata});
-            });
-            return;
-        }
+            if( client.isAdmin && data.msg == "#quiz") {
+                dbhelper.getRandomQuiz(function(result) {
+                    if( result.ret == 0 )
+                        servman.io.sockets.emit('quiz', {quizdata: result.quizdata});
+                });
+                return;
+            }
 
-        ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-        servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
+            ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
+        }
+        catch(err) {
+            console.error(err);
+        }
     })
 
     socket.on('search', function(data) {
