@@ -149,6 +149,7 @@
     <div class="quiz_wnd">
         <div>[방장 랜덤 기출 문제] <time>0</time></div>
         <div class="q_title">문제</div>
+        <div style="height: 10px;"></div>
         <div class="q_q">보기1</div>
         <div class="q_q">보기2</div>
         <div class="q_q">보기3</div>
@@ -176,6 +177,11 @@
         registerSocketEvent(socket);
         registerKeyEvent(socket);
         registerClickEvent(socket);
+
+        //  폴링방식으로 변경 해봄
+         setInterval(function() {
+             socket.emit('gvd', {});
+         }, 450);
 
         console.log('event register finish');
 

@@ -71,9 +71,11 @@ ServerMan.prototype.setIO = function(io) {
     this.io = io;
     this.chatroom = new ChatRoom(io);
 
+    /*
     setInterval(function() {
         servman.broadcastVoteInfo();
     }, 300);
+    */
 
     setInterval(function() {
         servman.checkAllBaned();
@@ -95,6 +97,23 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     }
 
     this.io.sockets.emit('vote_data', {cnt: JSON.stringify(this.counts), users: this.socketmap.count(), bans: this.banUsers.count()})
+}
+
+ServerMan.prototype.sendVoteData = function(socket) {
+    var cur = new Date();
+    cur -= cur % VOTEPERTIME;
+    cur /= VOTEPERTIME;
+
+    if( this.counts.get(cur) == null ) {
+        this.counts.set(cur, [0,0,0]);
+        this.countslist.push(cur);
+        if( this.counts.count() > 10 ) {
+            this.counts.delete(this.countslist[0]);
+            this.countslist.shift();
+        }
+    }
+
+    socket.emit('vote_data', {cnt: JSON.stringify(this.counts), users: this.socketmap.count(), bans: this.banUsers.count()});
 }
 
 ServerMan.prototype.click = function(idx) {
@@ -212,6 +231,11 @@ ServerMan.prototype.register = function(socket) {
         servman.chatroom.leave(this);
         servman.removeSocket(this);
     });
+
+    //  get vote data
+    socket.on('gvd', function() {
+        servman.sendVoteData(this);
+    })
 
     socket.on('vote', function(data) {
         var client = servman.getClient(this);
