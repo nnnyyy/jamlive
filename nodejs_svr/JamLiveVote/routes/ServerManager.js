@@ -339,8 +339,7 @@ ServerMan.prototype.register = function(socket) {
             }
 
             ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-            if( client.isAdmin )
-                servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
+            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
             //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
         }
         catch(err) {
