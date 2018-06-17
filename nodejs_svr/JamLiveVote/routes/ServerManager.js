@@ -79,7 +79,7 @@ ServerMan.prototype.addSocket = function(socket) {
 
     this.socketmap.set(socket, new Client(socket));
     ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-    this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '입장' , mode: "notice", isBaned: false, admin: false }});
+    //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '입장' , mode: "notice", isBaned: false, admin: false }});
     //console.log('user connected : ' + socket.handshake.headers['x-real-ip']);
 }
 
@@ -101,7 +101,7 @@ ServerMan.prototype.removeSocket = function(socket) {
     if( client.isAdmin ) {
         ip = '사이트관리자';
     }
-    this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '퇴장' , mode: "notice", isBaned: false, admin: false }});
+    //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '퇴장' , mode: "notice", isBaned: false, admin: false }});
     //console.log('user disconnected : ' + socket.handshake.headers['x-real-ip']);
 }
 
