@@ -302,6 +302,9 @@
                 }
             }
         }
+        else if ( data.mode == "notice") {
+            addChat( data.isBaned, data.hash, '<div class="notice_font">알리미</div>', data.msg, false);
+        }
         else {
 
             if( data.admin ) {
@@ -321,7 +324,7 @@
     }
 
     function onServMsg(data) {
-        alert(data.msg);
+        showAdminMsg(data.msg);
     }
 
     var tStartQuiz = 0;

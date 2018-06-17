@@ -383,6 +383,11 @@ footer {
     color: white;
 }
 
+.notice_font {
+    background-color: darkblue;
+    color: white;
+}
+
 .opacity {
     -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
