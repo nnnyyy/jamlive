@@ -72,8 +72,8 @@ ServerMan.prototype.addSocket = function(socket) {
             /*var msg = '너무 접속 시도를 많이했습니다. 3분뒤에 접속 시도 해주세요.';
             socket.emit('serv_msg', {msg: msg});
             socket.disconnect();*/
-            this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '-> 많은 접속 시도' , mode: "notice", isBaned: false, admin: false }});
-            return;
+            //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '-> 많은 접속 시도' , mode: "notice", isBaned: false, admin: false }});
+            //return;
         }
     }
 
