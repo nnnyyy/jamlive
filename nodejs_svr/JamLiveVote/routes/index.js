@@ -13,5 +13,6 @@ router.get('/', function(req, res, next) {
 router.post('/vote', JamLive.clickevent );
 router.post('/search', JamLive.search );
 router.post('/searchex', JamLive.searchex );
+router.post('/searchgoogle', JamLive.requestGoogle);
 
 module.exports = router;

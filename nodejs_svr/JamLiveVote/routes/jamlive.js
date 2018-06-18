@@ -139,13 +139,9 @@ function requestBlog(query, data, callback) {
     }
 }
 
-function requestGoogle(query, data, callback) {
-    if( data.length > 3 ) {
-        //  검색결과가 충분하면 구글링 안함        
-        callback(null, query, data);
-        return;
-    }
-    data = data.slice(0,4);
+exports.requestGoogle = function(req, res, next) {
+    var query = req.body.query;
+
     var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
 
     var options = {
@@ -157,16 +153,19 @@ function requestGoogle(query, data, callback) {
     };
     try {
         request.get(options, function (error, response, body) {
+            var data = [];
             if (!error && response.statusCode == 200) {
                 parcing(data, body);
-                callback(null, query, data);
+                data = data.slice(0,4);
+                res.json(data);
             } else {
-                callback(-1);
+                res.json([]);
             }
         });
     }
     catch(e){
-        callback(-1);
+        console.log('request google error - ' + e);
+        res.json([]);
     }
 
 

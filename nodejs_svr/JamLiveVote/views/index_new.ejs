@@ -49,6 +49,7 @@
                     <input type="checkbox" id="cb_s1" name="chk_info" value="1" checked>지식인
                     <input type="checkbox" id="cb_s2" name="chk_info" value="2" checked>블로그
                     <input type="checkbox" id="cb_s3" name="chk_info" value="3" checked>뉴스
+                    <input type="checkbox" id="cb_s4" name="chk_info" checked>구글
                 </div>
                 <div class="search_article">
                     <div class="search_top">
@@ -521,6 +522,11 @@
             searched = true;
         } //  뉴스
 
+        if( $('#cb_s4').is(':checked')) {
+            searchWebGoogle(query);
+            searched = true;
+        } //  구글
+
         if( !searched ) {
             $('.search_article').html(htmlBackup);
         }
@@ -537,12 +543,49 @@
             contentType: 'application/json',
             url: '/searchex',
             success: function(data) {
-                setSearchRet(data);
+                setSearchRet(data, false);
             }
         });
     }
 
-    function setSearchRet(items) {
+    function searchWebGoogle( query ) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                query : query
+            }),
+            contentType: 'application/json',
+            url: '/searchgoogle',
+            success: function(data) {
+                setSearchRet(data, true);
+            }
+        });
+    }
+
+    jQuery.fn.appendAt = function( content, index ) {
+        this.each(function(i, item) {
+            var $content = $(content).clone();
+            if ( index === 0 ) {
+                $(item).prepend($content);
+            } else {
+                $content.insertAfter($(item).children().eq(index-1));
+            }
+        });
+        $(content).remove();
+        return this;
+    };
+
+    jQuery.fn.appendAtRandom = function( content ) {
+        this.each(function(i, item) {
+            var max = $(item).children().length,
+                    pos = Math.floor( Math.random() * (max+1) );
+            $(item).appendAt(content, pos);
+        });
+        return this;
+    };
+
+    function setSearchRet(items, random) {
         var html = '';
         for( var i = 0 ; i < items.length ; ++i) {
             var item = items[i];
@@ -560,7 +603,12 @@
         if( items.length == 0 ) {
             html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
         }
-        $('.search_article').append(html);
+        if( random ) {
+            $('.search_article').appendAtRandom(html);
+        }
+        else {
+            $('.search_article').append(html);
+        }
         clearTimeout(timerID);
         timerID = setTimeout(function() {
             $('.search_article').html(htmlBackup);
