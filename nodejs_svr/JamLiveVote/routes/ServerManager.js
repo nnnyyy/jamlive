@@ -3,7 +3,6 @@
  */
 var HashMap = require('hashmap');
 var Client = require('./client');
-var ChatRoom = require('./chatroom');
 var sf = require('./StringFunction');
 var dbhelper = require('./dbhelper');
 
@@ -111,12 +110,10 @@ ServerMan.prototype.getClient = function(socket){
 
 ServerMan.prototype.setIO = function(io) {
     this.io = io;
-    this.chatroom = new ChatRoom(io);
-
 
     setInterval(function() {
         servman.broadcastVoteInfo();
-    }, 350);
+    }, 700);
 
     setInterval(function() {
         servman.checkAllBaned();
@@ -266,7 +263,6 @@ ServerMan.prototype.register = function(socket) {
     socket.emit('myid', {socket: socket.id});
 
     socket.on('disconnect', function(){
-        servman.chatroom.leave(this);
         servman.removeSocket(this);
     });
 
