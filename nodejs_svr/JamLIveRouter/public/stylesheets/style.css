@@ -1,0 +1,55 @@
+* {
+  margin : 0;
+}
+
+html, body {
+  height: 100%;
+}
+body {
+  margin-top: 8px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  color: #F5F1D5;
+  background-color: #1b3440;
+}
+
+a {
+  text-decoration: none;
+}
+
+#mainframe {
+  width: 100%;
+  height: 100%;
+}
+
+.center_wnd {
+  position: absolute;
+  width: 100%;
+  height: 400px;
+  top: 50%;
+  left: 0;
+  margin-top: -150px;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  margin: 10px;
+}
+
+.subtitle {
+  margin-bottom: 10px;
+}
+
+.c_main {
+  color: #F5F1D5;
+}
+
+.btn_box {
+  width: 160px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #F5F1D5;
+  color: #1b3440;
+  cursor: pointer;
+  margin: 20px auto;
+}
