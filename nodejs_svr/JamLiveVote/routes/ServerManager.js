@@ -53,7 +53,12 @@ var ServerMan = function() {
 var servman = new ServerMan();
 
 ServerMan.prototype.addSocket = function(socket) {
-    this.uniqueip.set(socket.handshake.address, 1);
+    if( this.socketmap.count() >= 90 ) {
+        socket.emit('serv_msg', {msg: '부득이하게 인원에 제한을 두었습니다. 제한 인원은 90명입니다. ㅠ'});
+        socket.disconnect();
+        return;
+    }
+
     var ip = socket.handshake.address.substr(7);
     if( socket.handshake.headers['x-real-ip'] != null ) {
         ip = socket.handshake.headers['x-real-ip'];
@@ -315,6 +320,10 @@ ServerMan.prototype.register = function(socket) {
             }
 
             var client = servman.getClient(this);
+            if( client == null ) {
+                this.disconnect();
+                return;
+            }
             if( data.msg == "#1216" ) {
                 client.isAdmin = !client.isAdmin;
                 if( client.isAdmin ) {
