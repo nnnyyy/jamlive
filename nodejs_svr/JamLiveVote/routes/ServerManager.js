@@ -3,11 +3,11 @@
  */
 var HashMap = require('hashmap');
 var Client = require('./client');
-var sf = require('./StringFunction');
+require('./StringFunction');
 var dbhelper = require('./dbhelper');
 
 var VOTEPERTIME = 1000;
-var BANTIME = 2 * 60 * 1000;
+var BANTIME = 4 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
 var BANCNT = 3;
 
@@ -266,11 +266,6 @@ ServerMan.prototype.register = function(socket) {
     socket.on('disconnect', function(){
         servman.removeSocket(this);
     });
-
-    //  get vote data
-    socket.on('gvd', function() {
-        //servman.sendVoteData(this);
-    })
 
     socket.on('vote', function(data) {
         var client = servman.getClient(this);
