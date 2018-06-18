@@ -54,12 +54,6 @@ var servman = new ServerMan();
 
 ServerMan.prototype.addSocket = function(socket) {
     var cur = new Date();
-    if( this.socketmap.count() >= 90 ) {
-        console.log('over connect.. ' + this.socketmap.count());
-        socket.emit('serv_msg', {msg: '부득이하게 인원에 제한을 두었습니다. 제한 인원은 90명입니다. ㅠ'});
-        socket.disconnect();
-        return;
-    }
 
     var ip = socket.handshake.address.substr(7);
     if( socket.handshake.headers['x-real-ip'] != null ) {
