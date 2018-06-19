@@ -16,6 +16,10 @@ var ConnectUserInfo = function() {
     this.nCnt = 1;
 }
 
+var CachedSearchData = function() {
+    this.searched = new HashMap();
+}
+
 var BanUserInfo = function() {
     this.nCnt = 0;
     this.user = new HashMap();
@@ -44,7 +48,7 @@ var ServerMan = function() {
     this.uniqueip = new HashMap();
     this.counts = new HashMap();
     this.banUsers = new HashMap();
-    this.searched = new HashMap();
+    this.searchedByType = new HashMap();
     this.check_connections = new HashMap();
     this.countslist = [];
     this.others = [];
@@ -227,10 +231,12 @@ ServerMan.prototype.checkAllBaned = function() {
             }
         });
 
-        this.searched.forEach(function(val, key) {
-            if( cur - val.tLast > SEARCHTIME) {
-                servman.searched.delete(key);
-            }
+        this.searchedByType.forEach(function(cachedSearchData, key) {
+            cachedSearchData.searched.forEach(function(val, key2) {
+                if( cur - val.tLast > SEARCHTIME) {
+                    cachedSearchData.searched.delete(key2);
+                }
+            });
         })
 
         this.check_connections.forEach(function(val, key) {
@@ -243,8 +249,14 @@ ServerMan.prototype.checkAllBaned = function() {
     }
 }
 
-ServerMan.prototype.getSearchedData = function(query) {
-    var d = this.searched.get(query);
+ServerMan.prototype.getCachedSearchResult = function(sType, query) {
+    var cachedType = this.searchedByType.get(sType);
+    if( !cachedType ) {
+        cachedType = new CachedSearchData();
+        this.searchedByType.set( sType, cachedType );
+    }
+
+    var d = cachedType.searched.get(query);
     if( d != null ) {
         return d.data;
     }
@@ -252,15 +264,21 @@ ServerMan.prototype.getSearchedData = function(query) {
     return null;
 }
 
-ServerMan.prototype.setSearchedData = function(query, data) {
-    var d = this.searched.get(query);
+ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
+    var cachedType = this.searchedByType.get(sType);
+    if( !cachedType ) {
+        cachedType = new CachedSearchData();
+        this.searchedByType.set( sType, cachedType );
+    }
+
+    var d = cachedType.searched.get(query);
     if( d ) {
         d.tLast = new Date();
-        this.searched.set(query, d);
+        cachedType.searched.set(query, d);
         return;
     }
 
-    this.searched.set(query, {data: data, tLast: new Date()});
+    cachedType.searched.set(query, {data: data, tLast: new Date()});
 }
 
 

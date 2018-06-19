@@ -212,7 +212,7 @@ function parcing(data, body) {
 
 exports.searchex = function(req, res, next) {
     var query = req.body.query;
-    var type = req.body.type;    
+    var type = req.body.type;
 
     var sType = 'encyc';
     switch(type) {
@@ -220,6 +220,13 @@ exports.searchex = function(req, res, next) {
         case 1: sType = 'kin'; break;
         case 2: sType = 'blog'; break;
         case 3: sType = 'news'; break;
+    }
+
+    var cached = ServerManager.getCachedSearchResult(sType, query);
+    if( cached ) {
+        console.log('cached : ' + query);
+        res.json(cached);
+        return;
     }
 
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
@@ -235,6 +242,7 @@ exports.searchex = function(req, res, next) {
                 if( type == 1 ) data = data.slice(0,4);
                 else data = data.slice(0,3);
                 res.json(data);
+                ServerManager.setCachedSearchResult(sType, query, data);
             } else {
                 console.log(error);
                 res.json([]);
