@@ -3,11 +3,11 @@
  */
 var HashMap = require('hashmap');
 var Client = require('./client');
-var sf = require('./StringFunction');
+require('./StringFunction');
 var dbhelper = require('./dbhelper');
 
 var VOTEPERTIME = 1000;
-var BANTIME = 2 * 60 * 1000;
+var BANTIME = 4 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
 var BANCNT = 3;
 
@@ -58,12 +58,6 @@ var servman = new ServerMan();
 
 ServerMan.prototype.addSocket = function(socket) {
     var cur = new Date();
-    if( this.socketmap.count() >= 90 ) {
-        console.log('over connect.. ' + this.socketmap.count());
-        socket.emit('serv_msg', {msg: '부득이하게 인원에 제한을 두었습니다. 제한 인원은 90명입니다. ㅠ'});
-        socket.disconnect();
-        return;
-    }
 
     var ip = socket.handshake.address.substr(7);
     if( socket.handshake.headers['x-real-ip'] != null ) {
@@ -290,11 +284,6 @@ ServerMan.prototype.register = function(socket) {
     socket.on('disconnect', function(){
         servman.removeSocket(this);
     });
-
-    //  get vote data
-    socket.on('gvd', function() {
-        //servman.sendVoteData(this);
-    })
 
     socket.on('vote', function(data) {
         var client = servman.getClient(this);

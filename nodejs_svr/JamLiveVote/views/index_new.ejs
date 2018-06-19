@@ -32,7 +32,7 @@
             라이브 퀴즈 정답 공유기 <guide class="guide_btn">사용법을 모르시면 클릭</guide>
         </div>
         <div class="logo_bot">
-            팩트 : 사이트 보고 틀린 문제는 어차피 틀렸을 문제다. 틀리면 자신을 탓하라. 그리고 <a href="http://quiz.jamlive.net" target="_blank">여기를 클릭</a>해서 기출문제를 풀고 연습하라.
+            잼라이브 : <color_red>FBICT</color_red> | 페이큐 : <color_red>LGJXRQ</color_red> | 더퀴라 : <color_red>70btom</color_red> | 라이브팝 : <color_red>왕야옹</color_red> | <a href="http://quiz.jamlive.net" target="_blank"> >> 여기를 클릭 <<</a>해서 기출문제를 풀고 연습하라.
         </div>
     </div>
     <div class="content">
@@ -49,6 +49,7 @@
                     <input type="checkbox" id="cb_s1" name="chk_info" value="1" checked>지식인
                     <input type="checkbox" id="cb_s2" name="chk_info" value="2" checked>블로그
                     <input type="checkbox" id="cb_s3" name="chk_info" value="3" checked>뉴스
+                    <input type="checkbox" id="cb_s4" name="chk_info" checked>구글
                 </div>
                 <div class="search_article">
                     <div class="search_top">
@@ -135,9 +136,11 @@
     </div>
     <div class="footer">
         <div class="bottom_ads">
-            <div style="float: left;">
-                <script type="text/javascript" src="//rsc.adpies.com/js/adpie-min.js?mediaId=5b18b0ef8aec491cc678ab2d&slotId=5b18b3108aec491cc678ab31&adType=banner&width=468&height=60&dtype=2"></script>
-            </div>
+            <ins class="kakao_ad_area" style="display:none;width:100%"
+                 data-ad-unit    = "DAN-uvjqvmlqkb3k"
+                 data-ad-width   = "320"
+                 data-ad-height  = "50"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
         </div>
     </div>
     <footer>
@@ -519,6 +522,11 @@
             searched = true;
         } //  뉴스
 
+        if( $('#cb_s4').is(':checked')) {
+            searchWebGoogle(query);
+            searched = true;
+        } //  구글
+
         if( !searched ) {
             $('.search_article').html(htmlBackup);
         }
@@ -535,12 +543,49 @@
             contentType: 'application/json',
             url: '/searchex',
             success: function(data) {
-                setSearchRet(data);
+                setSearchRet(data, false);
             }
         });
     }
 
-    function setSearchRet(items) {
+    function searchWebGoogle( query ) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                query : query
+            }),
+            contentType: 'application/json',
+            url: '/searchgoogle',
+            success: function(data) {
+                setSearchRet(data, true);
+            }
+        });
+    }
+
+    jQuery.fn.appendAt = function( content, index ) {
+        this.each(function(i, item) {
+            var $content = $(content).clone();
+            if ( index === 0 ) {
+                $(item).prepend($content);
+            } else {
+                $content.insertAfter($(item).children().eq(index-1));
+            }
+        });
+        $(content).remove();
+        return this;
+    };
+
+    jQuery.fn.appendAtRandom = function( content ) {
+        this.each(function(i, item) {
+            var max = $(item).children().length,
+                    pos = Math.floor( Math.random() * (max+1) );
+            $(item).appendAt(content, pos);
+        });
+        return this;
+    };
+
+    function setSearchRet(items, random) {
         var html = '';
         for( var i = 0 ; i < items.length ; ++i) {
             var item = items[i];
@@ -558,7 +603,12 @@
         if( items.length == 0 ) {
             html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
         }
-        $('.search_article').append(html);
+        if( random ) {
+            $('.search_article').appendAtRandom(html);
+        }
+        else {
+            $('.search_article').append(html);
+        }
         clearTimeout(timerID);
         timerID = setTimeout(function() {
             $('.search_article').html(htmlBackup);
