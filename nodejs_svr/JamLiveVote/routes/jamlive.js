@@ -142,6 +142,13 @@ function requestBlog(query, data, callback) {
 exports.requestGoogle = function(req, res, next) {
     var query = req.body.query;
 
+    var cached = ServerManager.getCachedSearchResult('google', query);
+    if( cached ) {
+        console.log('cached : ' + query);
+        res.json(cached);
+        return;
+    }
+
     var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
 
     var options = {
@@ -158,6 +165,7 @@ exports.requestGoogle = function(req, res, next) {
                 parcing(data, body);
                 data = data.slice(0,4);
                 res.json(data);
+                ServerManager.setCachedSearchResult('google', query, data);
             } else {
                 res.json([]);
             }
