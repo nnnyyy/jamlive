@@ -164,6 +164,12 @@
     </div>
 </div>
 <script>
+    var RETRY_INTERVAL = 2000;
+    var ConnectStateInfo = function() {
+        this.isConnected = false;
+        this.timeoutID = -1;
+    }
+    var connectStateInfo = new ConnectStateInfo();
     var tClick = 0;
     var bTrigger = false;
     var htmlBackup = '';
@@ -173,10 +179,29 @@
     var tLast = 0;
     var tAutoSearchFreeze = 0;
 
+    var socket = io();
+
+
+
+    ConnectStateInfo.prototype.Connect = function() {
+        this.isConnected = true;
+        clearInterval( this.timeoutID );
+    }
+
+    ConnectStateInfo.prototype.Disconnect = function() {
+        this.isConnected = false;
+        setInterval(function() {
+            if( !connectStateInfo.isConnected ) {
+                $.get('/ping', function(data){
+                    connectStateInfo.isConnected = true;
+                    window.location.href = unescape(window.location.pathname);
+                })
+            }
+        }, RETRY_INTERVAL);
+    }
+
     $(document).ready(function(){
 
-
-        var socket = io();
         registerSocketEvent(socket);
         registerKeyEvent(socket);
         registerClickEvent(socket);
@@ -228,6 +253,8 @@
     }
 
     function registerSocketEvent( socket ) {
+        socket.on('connect', connectStateInfo.Connect );
+        socket.on('disconnect', connectStateInfo.Disconnect);
         socket.on('myid', function(data) {
             myid = data.socket;
         })

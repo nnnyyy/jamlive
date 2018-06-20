@@ -10,6 +10,9 @@ router.use( Log.logging );
 router.get('/', function(req, res, next) {
   res.render('index_new');
 });
+router.get('/ping', function(req, res, next) {
+  res.send('pong');
+});
 router.post('/vote', JamLive.clickevent );
 router.post('/search', JamLive.search );
 router.post('/searchex', JamLive.searchex );
