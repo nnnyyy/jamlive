@@ -2,13 +2,13 @@ var express = require('express');
 var JamLive = require('./jamlive');
 var Log = require('./Log');
 var router = express.Router();
-var request = require('request');
+var config = require('../config');
 
 
 /* GET home page. */
 router.use( Log.logging );
 router.get('/', function(req, res, next) {
-  res.render('index_new');
+  res.render('index_new', {servname: config.serv_name});
 });
 router.get('/ping', function(req, res, next) {
   res.send('pong');
