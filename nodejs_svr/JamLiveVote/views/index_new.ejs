@@ -614,7 +614,7 @@
         return this;
     };
 
-    function setSearchRet(items, random) {
+    function setSearchRet(items, first) {
         var html = '';
         for( var i = 0 ; i < items.length ; ++i) {
             var item = items[i];
@@ -633,7 +633,7 @@
             html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
         }
         if( random ) {
-            $('.search_article').appendAtRandom(html);
+            $('.search_article').prepend(html);
         }
         else {
             $('.search_article').append(html);
