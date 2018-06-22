@@ -428,3 +428,10 @@ footer {
 color_red {
     color: yellow;
 }
+
+
+.min_vote_slider {
+    width: 50%;
+    height: 4px;
+    margin: 6px auto;
+}
