@@ -90,6 +90,9 @@
             <div class="mid_article">
                 <vote_user_cnt>0</vote_user_cnt>명
             </div>
+            <div style="text-align: center; margin: 4px;">
+                <input type="checkbox" class="cb_max_vote_duplicate" value=""/>최다 투표가 동률일 경우 미표시
+            </div>
             <div style="width: 100%; text-align: center;">아래 설정값 이상일 때 투표 결과가 보이도록 조정 ( 현재 : <min_vote>0</min_vote>표 이상)</div>
             <div class="min_vote_slider"></div>
             <div class="mid_desc">
@@ -283,8 +286,23 @@
             $('vote_except').text(votedata.bans);
 
             var totalCnt = 0;
+            var maxVoteCnt = 0;
             for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
                 totalCnt += votedata.cnt[i];
+                if( maxVoteCnt <= votedata.cnt[i]) {
+                    maxVoteCnt = votedata.cnt[i];
+                }
+            }
+
+            var duplicatedMaxVoteCnt = 0;
+            for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
+                if( maxVoteCnt == votedata.cnt[i] ) {
+                    duplicatedMaxVoteCnt++;
+                }
+            }
+
+            if( isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
+                votedata.cnt = [0,0,0];
             }
 
             var minVoteVal = Number($('min_vote').text());
@@ -296,7 +314,7 @@
 
             showBarChart('.ct-chart',['1번','2번','3번'],[votedata.cnt], {
                 seriesBarDistance: 10,
-                height: 260,
+                height: 200,
                 axisX: {
                     offset: 20
                 },
@@ -710,6 +728,14 @@
 
     function isAutoSearchChecked() {
         if($('.cb_auto_search').is(':checked')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function isMaxVoteDuplicateChecked() {
+        if($('.cb_max_vote_duplicate').is(':checked')) {
             return true;
         }
 
