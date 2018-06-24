@@ -56,16 +56,20 @@
                     <input type="checkbox" id="cb_s3" name="chk_info" value="3" checked>뉴스
                     <input type="checkbox" id="cb_s4" name="chk_info" checked>구글
                 </div>
-                <div class="search_article">
-                    <div class="search_top">
-                        검색 결과가 표시 됩니다.
-                    </div>
+                <div id ="sd_ret" class="search_article"></div>
+                <div id ="sd_ads" class="search_article">
                     <!--
                         검색 결과물 출력
                     -->
                     <div class="search_desc">검색방법 : 채팅창에서 /(슬래시) 누른 후 검색어 입력... 그리고 엔터!</div>
+                    <div style="text-align: center;width: 100%;margin-bottom: 5px;">
+                        <b>심심할 땐 구글 플레이스토어에서 '핫커뮤니티'를 검색하세요!</b><br>
+                        <img src="/images/hotcom_banner.jpg" style="height: 40px;"/><br>
+                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img src="/images/playstore.png" style="height: 40px;"/></a>
+                        <a target="_blank" href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img src="/images/appstore.png" style="height: 40px;"/></a>
+                    </div>
                     <div style="text-align: center;">
-                        <ins class="daum_ddn_area" style="display:none;margin-top:30px"
+                        <ins class="daum_ddn_area" style="display:none;margin-top:5px"
                              data-ad-unit    = "DAN-1hbghejif3l2e"
                              data-ad-media   = "5MC"
                              data-ad-pubuser = "4jp"
@@ -84,12 +88,6 @@
                         <script>
                             (adsbygoogle = window.adsbygoogle || []).push({});
                         </script>
-                    </div>
-                    <div style="text-align: center;width: 100%;margin-bottom: 10px;">
-                        <b>심심할 땐 구글 플레이스토어에서 '핫커뮤니티'를 검색하세요!</b><br>
-                        <img src="/images/hotcom_banner.jpg" style="height: 40px;"/><br>
-                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.sononpos.communityviwerex&hl=ko"><img src="/images/playstore.png" style="height: 40px;"/></a>
-                        <a target="_blank" href="https://itunes.apple.com/kr/app/%ED%95%AB-%EC%BB%A4%EB%AE%A4%EB%8B%88%ED%8B%B0/id1237566765?l=en&mt=8"><img src="/images/appstore.png" style="height: 40px;"/></a>
                     </div>
                 </div>
             </div>
@@ -241,6 +239,8 @@
 
         setNickName();
         htmlBackup = $('.search_article').html();
+        $('#sd_ret').css('display','none');
+        $('#sd_ads').css('display','inline-block');
 
         if( isMobile() ) {
             $('.content_left').css('display','none');
@@ -592,7 +592,10 @@
     }
 
     function searchWebRoot( socket, query, isBroadcast ) {
-        $('.search_article').html('');
+        //$('.search_article').html('');
+        $('#sd_ret').html('');
+        $('#sd_ret').css('display','inline-block');
+        $('#sd_ads').css('display','none');
         var nick = getNickName();
         socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
         var searched = false;
@@ -619,7 +622,9 @@
         } //  구글
 
         if( !searched ) {
-            $('.search_article').html(htmlBackup);
+            //$('.search_article').html(htmlBackup);
+            $('#sd_ret').css('display','none');
+            $('#sd_ads').css('display','inline-block');
         }
     }
 
@@ -695,14 +700,16 @@
             html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
         }
         if( first ) {
-            $('.search_article').prepend(html);
+            $('#sd_ret').prepend(html);
         }
         else {
-            $('.search_article').append(html);
+            $('#sd_ret').append(html);
         }
         clearTimeout(timerID);
         timerID = setTimeout(function() {
-            $('.search_article').html(htmlBackup);
+            //$('.search_article').html(htmlBackup);
+            $('#sd_ret').css('display','none');
+            $('#sd_ads').css('display','inline-block');
         }, 12000);
     }
 
