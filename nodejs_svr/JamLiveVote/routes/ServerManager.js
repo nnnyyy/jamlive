@@ -118,7 +118,7 @@ ServerMan.prototype.setIO = function(io) {
 
     setInterval(function() {
         servman.broadcastVoteInfo();
-    }, 600);
+    }, 450);
 
     setInterval(function() {
         servman.checkAllBaned();
