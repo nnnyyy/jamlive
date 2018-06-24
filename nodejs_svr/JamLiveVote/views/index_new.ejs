@@ -171,13 +171,13 @@
     </footer>
     <div class="admin_msg">안녕하세요.</div>
     <div class="quiz_wnd">
-        <div>[방장 랜덤 기출 문제] <time>0</time></div>
+        <div>[관리자 랜덤 기출 문제] <time>0</time></div>
         <div class="q_title">문제</div>
         <div style="height: 10px;"></div>
         <div class="q_q">보기1</div>
         <div class="q_q">보기2</div>
         <div class="q_q">보기3</div>
-
+        <div style="margin-top:10px;">더 많은 퀴즈를 풀어보려면? >> <a href="http://quiz.jamlive.net" target="_blank" style="text-decoration: none; color: yellow;">이동하기</a></div>
     </div>
     <div class="youtube_video">
         <iframe width="854" height="480" src="https://www.youtube.com/embed/cUDFcUr8TAs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
@@ -255,6 +255,11 @@
             $('.logo').css('font-size','20px');
             $('.logo_bot').css('display', 'none');
             $('guide').css('display','none');
+            $('.quiz_wnd').css('width','90vw');
+            $('.quiz_wnd').css('margin-left','-45vw');
+            $('.admin_msg').css('width', '90vw');
+            $('.admin_msg').css('margin-left','-45vw');
+            $('.admin_msg').css('line-height','30px');
         }
         else {
             $('footer').css('display','none');
@@ -396,7 +401,6 @@
         else {
 
             if( data.admin ) {
-                showAdminMsg(data.msg);
                 addChat( data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false);
             }
             else {
