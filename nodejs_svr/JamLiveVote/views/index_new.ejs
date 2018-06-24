@@ -464,13 +464,13 @@
             if( code == 13 ) {
                 var nick = getNickName();
                 var msg = $(this).val();
-                if( msg.length > 40 ) {
+                if( strip(msg).length > 60 ) {
                     alert('메시지는 짧게');
                     $(this).val('');
                     return;
                 }
 
-                if( msg.length <= 0 ) {
+                if( strip(msg).length <= 0 ) {
                     return;
                 }
 
@@ -538,7 +538,7 @@
             var code = (e.keyCode ? e.keyCode : e.which);
             if( bTrigger ) {
                 bTrigger = false;
-                if( $(this).val() != '/')
+                if( $(this).val() != '/' && $(this).val() != '#')
                     $(this).val('');
                 return;
             }

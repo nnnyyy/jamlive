@@ -50,6 +50,7 @@ var ServerMan = function() {
     this.banUsers = new HashMap();
     this.searchedByType = new HashMap();
     this.check_connections = new HashMap();
+    this.adminClient = null;
     this.countslist = [];
     this.others = [];
 }
@@ -282,6 +283,11 @@ ServerMan.prototype.register = function(socket) {
     socket.emit('myid', {socket: socket.id});
 
     socket.on('disconnect', function(){
+        var client = servman.getClient(this);
+        if( client && client.isAdmin ) {
+            servman.adminClient = null;
+            servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: '~~사이트관리자 퇴장~~' , mode: "notice", isBaned: false, admin: false }});
+        }
         servman.removeSocket(this);
     });
 
@@ -337,9 +343,11 @@ ServerMan.prototype.register = function(socket) {
                 client.isAdmin = !client.isAdmin;
                 if( client.isAdmin ) {
                     servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: '~~사이트관리자 입장~~' , mode: "notice", isBaned: false, admin: false }});
+                    adminClient = client;
                 }
                 else {
                     servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: '~~사이트관리자 퇴장~~' , mode: "notice", isBaned: false, admin: false }});
+                    adminClient = null;
                 }
                 return;
             }
