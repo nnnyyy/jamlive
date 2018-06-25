@@ -78,6 +78,39 @@
                              data-ad-height  = "250"></ins>
                         <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
                     </div>
+                    <div style="text-align: center">
+                        <div id='caulyDisplay2'>
+                            <script src='http://image.cauly.co.kr/websdk/common/lasted/ads.min.js'></script>
+                            <script>
+                                new CaulyAds({
+                                    app_code: 'rGdyBZMq',
+                                    placement: 1,
+                                    displayid: 'caulyDisplay2',
+                                    passback: function () {
+                                        console.log('cauly 2 passed');
+                                    },
+                                    success: function () { }
+                                });
+                            </script>
+                        </div>
+
+                    </div>
+                    <div style="text-align: center" >
+                        <div id='caulyDisplay'>
+                            <script src='http://image.cauly.co.kr/websdk/common/lasted/ads.min.js'></script>
+                            <script>
+                                new CaulyAds({
+                                    app_code: '8HV68Mb6',
+                                    placement: 1,
+                                    displayid: 'caulyDisplay',
+                                    passback: function () {
+                                        console.log('cauly 1 passed');
+                                    },
+                                    success: function () { }
+                                });
+                            </script>
+                        </div>
+                    </div>
                     <div style="text-align: center;">
                         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
                         <!-- 잼라이브사이트_직사각형_배너 -->
@@ -340,7 +373,6 @@
             });
 
             var others = data.others;
-            console.log(others);
             for( var i = 0 ; i < others.length ; ++i ) {
                 if( others[i].channel == "chat" ) {
                     onChat(others[i].data);
