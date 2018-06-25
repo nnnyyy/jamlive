@@ -323,7 +323,7 @@ footer {
     bottom: 0;
     right: 0;
     width: 100%;
-    height: 60px;
+    height: 80px;
     text-align: center;
 }
 
@@ -437,4 +437,9 @@ color_red {
     height: 4px;
     margin: 6px auto;
     z-index: 0;
+}
+
+.btn_mobi_chat {
+    width:46px;
+    height:46px;
 }
