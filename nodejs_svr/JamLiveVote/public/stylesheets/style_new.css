@@ -125,6 +125,7 @@ em {
     width: 30%;
     height: calc(100% - 8px);
     margin: 4px;
+    overflow-y: scroll;
 }
 
 .mid_top {

@@ -135,10 +135,10 @@
             <div style="text-align: center; margin: 4px;">
                 <input type="checkbox" class="cb_max_vote_duplicate" value=""/>최다 투표가 동률일 경우 미표시
             </div>
-            <div style="width: 100%; text-align: center;">아래 설정값 이상일 때 투표 결과가 보이도록 조정 ( 현재 : <min_vote>0</min_vote>표 이상)</div>
+            <div style="width: 100%; text-align: center;">아래 설정값 이하는 미표시 ( 현재 : <min_vote>0</min_vote>표 이하)</div>
             <div class="min_vote_slider"></div>
             <div class="mid_desc">
-                <desc>키보드 1,2,3 번을 누르거나 아래의 버튼을 클릭하면 투표가 됩니다.</desc>
+                <desc>[투표방법] 키보드 1,2,3 번을 누름 or 아래 버튼 클릭</desc>
             </div>
             <div class="mid_btn_area">
                 <input type="button" class="btn_vote" data="0" value="1번"/>
@@ -383,7 +383,7 @@
 
             showBarChart('.ct-chart',['1번','2번','3번'],[votedata.cnt], {
                 seriesBarDistance: 10,
-                height: 200,
+                height: 170,
                 axisX: {
                     offset: 20
                 },
