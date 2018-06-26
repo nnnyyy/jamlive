@@ -313,11 +313,17 @@ ServerMan.prototype.register = function(socket) {
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         if( client.isClickable() ) {
             servman.click(data.idx);
+            if( socket.request.session.username ) {
+                servman.click(data.idx);
+            }
             client.tLastClick = new Date();
 
             var number = Number(data.idx) + 1;
 
-            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin }})
+            var logined = socket.request.session.username ? true : false;
+            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+
+            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined }})
             //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });
         }
         else {
@@ -393,8 +399,10 @@ ServerMan.prototype.register = function(socket) {
 
         if( data.isBroadcast ){
             var client = servman.getClient(this);
+            var logined = socket.request.session.username ? true : false;
+            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin });
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined });
         }
     })
 

@@ -40,6 +40,26 @@ exports.login = function(id, pw, cb) {
     }
 }
 
+exports.getRandomQuiz = function( cb ) {
+    try {
+        dbpool.query("select * from quiz where quiz_idx >= 4 order by rand() limit 0,1", function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
+            }
+            cb({ret:0, quizdata: data[0]});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getQuizDateList');
+        cb({ret: -1});
+    }
+}##
+
 /*
  exports.buyItem = function(id, itemsn, cb) {
  // 가챠 종류와 일반 아이템 종류를 구분하자.
