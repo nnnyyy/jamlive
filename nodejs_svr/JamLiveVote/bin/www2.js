@@ -12,7 +12,7 @@ var config = require('../config');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '4647');
+var port = normalizePort(process.env.PORT || '5647');
 app.set('port', port);
 
 config.serv_name = '서버2';
