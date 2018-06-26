@@ -23,11 +23,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: '@#@$MYSIGN#@$#$',
+var sessionMiddleware = session({
+  secret: 'dhkddPtlr',
   resave: false,
   saveUninitialized: true
-}));
+});
+app.session = sessionMiddleware;
+app.use(sessionMiddleware);
 
 app.use('/', routes);
 app.use('/quiz', routes_quiz);

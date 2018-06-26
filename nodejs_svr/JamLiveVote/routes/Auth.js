@@ -5,31 +5,26 @@ var Log = require('./Log');
 var dbhelper = require('./dbhelper');
 
 exports.login = function(req, res, next) {
-    res.render('login', {session: null});
+    dbhelper.login(req.body.id, req.body.pw, function(json) {
+        if( json.ret != 0 ){
+            res.json(json.ret);
+            return;
+        }
+
+        req.session.username = json.id;
+        req.session.usernick = json.nick;
+        res.json(json.ret);
+    })
 }
 
 exports.logout = function(req, res, next) {
-    req.session.user_id = null;
-    res.redirect('/');
+    req.session.username = null;
+    res.json({ret: 0});
 }
 
-exports.checklogin = function( req, res, next) {
-    Log.logger.debug('Check Login ' + req.body.user_id + ' : ' + req.body.user_pw);
-    try {
-        dbhelper.CheckLogin(req.body.user_id, req.body.user_pw, function(dbret) {
-            if(dbret != 0) {
-                req.session.user_id = null;
-                res.json( { ret: -1 } );
-                return;
-            }
-
-            req.session.user_id = req.body.user_id;
-            Log.logger.debug('session id : ' + req.session.user_id);
-            res.send({ret:0});
-        });
-    }catch(err) {
-        req.session.user_id = null;
-        Log.logger.debug('error : ' + err);
-        res.json( {ret: -2} );
-    }
+exports.signup = function( req, res, next) {
+    dbhelper.signup(req.body.id, req.body.pw, req.body.nick, function(json) {
+        console.log('signup : ' + json);
+        res.json(json);
+    })
 }

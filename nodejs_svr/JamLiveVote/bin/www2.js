@@ -12,7 +12,7 @@ var config = require('../config');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '5647');
+var port = normalizePort(process.env.PORT || '4647');
 app.set('port', port);
 
 config.serv_name = '서버2';
@@ -38,6 +38,10 @@ require('../routes/io')(io);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+io.use(function(socket, next) {
+  app.session(socket.request, socket.request.res, next);
+})
 
 /**
  * Normalize a port into a number, string, or false.
@@ -69,8 +73,8 @@ function onError(error) {
   }
 
   var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+      ? 'Pipe ' + port
+      : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -94,7 +98,7 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }

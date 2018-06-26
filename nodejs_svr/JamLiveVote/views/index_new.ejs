@@ -220,6 +220,22 @@
         <div class="q_q">보기3</div>
         <div style="margin-top:10px;">더 많은 퀴즈를 풀어보려면? >> <a href="http://quiz.jamlive.net" target="_blank" style="text-decoration: none; color: yellow;">이동하기</a></div>
     </div>
+    <div class="login_wnd">
+        <table class="tb_login">
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" id="login_id"/></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" id="login_pw"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" value="로그인" style="width:100%;height:30px;" id="btn_login"></td>
+            </tr>
+        </table>
+        <div class="btn_login_close">닫기</div>
+    </div>
     <div class="youtube_video">
         <iframe width="854" height="480" src="https://www.youtube.com/embed/cUDFcUr8TAs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         <div class="youtube_close">닫기</div>
@@ -240,8 +256,9 @@
     var autoSearchWordMap = new Map();
     var tLast = 0;
     var tAutoSearchFreeze = 0;
-
     var socket = io();
+    var isLogin = false;
+    var usernick = '';
 
 
 
@@ -272,9 +289,18 @@
         setMinVoteSliderListener();
         setVoteMsgVisibleListener();
 
+        close_login_wnd();
         console.log('event register finish');
 
-        setNickName();
+        <%if(!username) {%>
+            setNickName();
+        $('.ip_name').prop('disabled', false);
+        <%}else {%>
+            isLogin = true;
+            $('.ip_name').val('<%- nick %>');
+            usernick = '<%= nick %>';
+            $('.ip_name').prop('disabled', true);
+        <%}%>
         htmlBackup = $('.search_article').html();
         $('#sd_ret').css('display','none');
         $('#sd_ads').css('display','inline-block');
@@ -339,6 +365,15 @@
             }
             e.preventDefault();
         });
+
+        $('#btn_login').click(function(e) {
+            $('#btn_login').prop('disabled', true);
+            login_test();
+        })
+
+        $('.btn_login_close').click(function(e) {
+            close_login_wnd();
+        })
     }
 
     function registerSocketEvent( socket ) {
@@ -527,6 +562,24 @@
                     return;
                 }
 
+                if( msg == "@login") {
+                    <%if(username) {%>
+                        showAdminMsg('이미 로그인 되어있습니다. 로그아웃은 @logout 입력');
+                    <%}else {%>
+                        open_login_wnd();
+                    <%}%>
+                    $(this).val('');
+                    return;
+                }
+
+                if( msg == "@logout") {
+                    if( isLogin ) {
+                        logout_test();
+                    }
+                    $(this).val('');
+                    return;
+                }
+
                 if( msg[0] == '/' ) {
                     $(this).val('');
                     if( !isAutoSearchChecked() ) {
@@ -567,6 +620,8 @@
         $(document).keypress(function(event) {
             if( $('.ip_name').is(':focus') ) return;
             if( $('.ip_msg').is(':focus') ) return;
+            if( $('#login_id').is(':focus') ) return;
+            if( $('#login_pw').is(':focus') ) return;
             if( event.charCode >= 49 && event.charCode <= 51) {
                 var curTime = new Date();
                 if( curTime - tClick < 100 ) {
@@ -708,6 +763,42 @@
             url: '/searchgoogle',
             success: function(data) {
                 setSearchRet(data, true);
+            }
+        });
+    }
+
+    function login_test( ) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+            }),
+            contentType: 'application/json',
+            url: '/login',
+            success: function(data) {
+                window.location.href = unescape(window.location.pathname);
+            }
+        });
+    }
+
+    function open_login_wnd() {
+        $('.login_wnd').css('display','inline-block');
+    }
+
+    function close_login_wnd() {
+        $('.login_wnd').css('display','none');
+    }
+
+    function logout_test() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+            }),
+            contentType: 'application/json',
+            url: '/logout',
+            success: function(data) {
+                window.location.href = unescape(window.location.pathname);
             }
         });
     }
