@@ -5,8 +5,6 @@ var Log = require('./Log');
 var dbhelper = require('./dbhelper');
 
 exports.login = function(req, res, next) {
-    console.log(req.body.id);
-    console.log(req.body.pw);
     dbhelper.login(req.body.id, req.body.pw, function(json) {
         if( json.ret != 0 ){
             res.json(json.ret);
@@ -15,6 +13,7 @@ exports.login = function(req, res, next) {
 
         req.session.username = json.id;
         req.session.usernick = json.nick;
+        req.session.auth = json.auth;
         res.json(json.ret);
     })
 }

@@ -313,7 +313,7 @@ ServerMan.prototype.register = function(socket) {
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         if( client.isClickable() ) {
             servman.click(data.idx);
-            if( socket.request.session.username ) {
+            if( socket.request.session.username && socket.request.session.auth >= 1 ) {
                 servman.click(data.idx);
             }
             client.tLastClick = new Date();
