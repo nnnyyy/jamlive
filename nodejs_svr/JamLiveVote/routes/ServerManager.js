@@ -322,8 +322,9 @@ ServerMan.prototype.register = function(socket) {
 
             var logined = socket.request.session.username ? true : false;
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var auth_state = socket.request.session.auth;
 
-            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined }})
+            servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state }})
             //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });
         }
         else {
@@ -375,7 +376,8 @@ ServerMan.prototype.register = function(socket) {
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
             var logined = socket.request.session.username ? true : false;
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin, isLogin: logined });
+            var auth_state = socket.request.session.auth;
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state });
         }
         catch(err) {
             console.error(err);
@@ -401,8 +403,9 @@ ServerMan.prototype.register = function(socket) {
             var client = servman.getClient(this);
             var logined = socket.request.session.username ? true : false;
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var auth_state = socket.request.session.auth;
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined });
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state });
         }
     })
 

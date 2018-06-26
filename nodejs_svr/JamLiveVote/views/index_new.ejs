@@ -452,7 +452,7 @@
             else if( data.isLogin ) {
                 data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
             }
-            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false);
+            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth);
             setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
         }
         else if( data.mode == "search") {
@@ -462,7 +462,7 @@
             else if( data.isLogin ) {
                 data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
             }
-            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false);
+            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth);
             if( data.id != myid && isAutoSearchChecked() ) {
                 var tCur = new Date();
                 if( tCur - tAutoSearchFreeze <= 5000) {
@@ -494,18 +494,18 @@
             }
         }
         else if ( data.mode == "notice") {
-            addChat( data.mode, data.isBaned, data.hash, '<div class="notice_font">알리미</div>', data.msg, false);
+            addChat( data.mode, data.isBaned, data.hash, '<div class="notice_font">알리미</div>', data.msg, false, data.auth);
         }
         else {
 
             if( data.admin ) {
-                addChat( data.mode, data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false);
+                addChat( data.mode, data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false, data.auth);
             }
             else if( data.isLogin ) {
-                addChat( data.mode, data.isBaned, data.hash, '<div class="logined_font">' + data.nickname + '</div>', '<b>' + data.msg + '</b>', false);
+                addChat( data.mode, data.isBaned, data.hash, '<div class="logined_font">' + data.nickname + '</div>', data.msg, false, data.auth);
             }
             else {
-                addChat( data.mode, data.isBaned, data.hash, data.nickname, data.msg, true);
+                addChat( data.mode, data.isBaned, data.hash, data.nickname, data.msg, true, data.auth);
             }
 
         }
@@ -676,9 +676,11 @@
         })
     }
 
-    function addChat( mode, isbaned, hash , name, msg, bStrip ) {
+    function addChat( mode, isbaned, hash , name, msg, bStrip,auth ) {
+        showAdminMsg(auth);
         var li = '<li class="chat_item" mode="' + mode + '" >' +
                 '<div class="chat_msg_obj">' +
+                (( auth >= 1 ) ? '<div class="chat_star"><img src="/images/star.png" style="width:12px;height:12px;margin-top:8px;"/></div>' : '') +
                 '<div class="chat_name '+ (isbaned ? 'baned' : '') +'" hash=' + hash + '>' +
                 (bStrip ? strip(name) : name) +
                 '</div>' +
