@@ -58,7 +58,7 @@ exports.getRandomQuiz = function( cb ) {
         Log.logger.debug('DB Failed - getQuizDateList');
         cb({ret: -1});
     }
-}##
+}
 
 /*
  exports.buyItem = function(id, itemsn, cb) {
