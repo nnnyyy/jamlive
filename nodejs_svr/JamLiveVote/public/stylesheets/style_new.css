@@ -437,6 +437,11 @@ footer {
     color: white;
 }
 
+.logined_font {
+    text-align: center;
+    color: blue;
+}
+
 .notice_font {
     text-align: center;
     background-color: darkblue;

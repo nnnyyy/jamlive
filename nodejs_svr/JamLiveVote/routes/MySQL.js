@@ -15,7 +15,8 @@ DBMan.init = function() {
         host: parsed.dbhost,
         user: parsed.user,
         password: parsed.password,
-        database: parsed.database
+        database: parsed.database,
+        multipleStatements: true
     });
 
 }

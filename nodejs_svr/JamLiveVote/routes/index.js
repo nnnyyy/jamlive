@@ -20,5 +20,9 @@ router.post('/searchex', JamLive.searchex );
 router.post('/searchgoogle', JamLive.requestGoogle);
 router.post('/login', Auth.login);
 router.post('/logout', Auth.logout);
+router.get('/signup', function(req, res, next) {
+  res.render('signup', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick});
+})
+router.post('/signup_req', Auth.signup);
 
 module.exports = router;

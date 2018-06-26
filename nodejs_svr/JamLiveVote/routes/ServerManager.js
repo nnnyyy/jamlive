@@ -367,7 +367,9 @@ ServerMan.prototype.register = function(socket) {
 
             ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
-            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin });
+            var logined = socket.request.session.username ? true : false;
+            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin, isLogin: logined });
         }
         catch(err) {
             console.error(err);

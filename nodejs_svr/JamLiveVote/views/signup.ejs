@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style_signup.css' />
+</head>
+<body>
+<!-- HTML Design -->
+<div class="main_frame">
+    <div class="center_wnd">
+        <div class="top_notice">가입 후 승인되면 활동 가능</div>
+        <table class="tb_signup">
+            <tr>
+                <th>아이디</th>
+                <td><input type="text" id="ip_id" placeholder="영문 숫자 6-10자"/></td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td><input type="password" id="ip_pw" placeholder="영문 숫자 포함 6-12자"/></td>
+            </tr>
+            <tr>
+                <th>비밀번호(재입력)</th>
+                <td><input type="password" id="ip_pwre" placeholder="위에 비번 다시 입력" /></td>
+            </tr>
+            <tr>
+                <th>닉네임</th>
+                <td><input type="text" id="ip_nick" placeholder="4-8자"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" id="btn_signup" value="가입 요청"/>
+                </td>
+            </tr>
+        </table>
+        <div class="alert_msg"></div>
+    </div>
+</div>
+<!-- Script -->
+<script>
+    function getTextLength(str) {
+        var len = 0;
+        for (var i = 0; i < str.length; i++) {
+            if (escape(str.charAt(i)).length == 6) {
+                len++;
+            }
+            len++;
+        }
+        return len;
+    }
+
+    function showErrorMsg(ret) {
+        var msg = '';
+        switch(ret) {
+            case -1:
+                    msg = '아이디 조건 X';
+                break;
+
+            case -2:
+                    msg = '비밀번호 조건 X';
+                break;
+
+            case -3:
+                    msg = '비밀번호가 서로 다름';
+                break;
+
+            case -4:
+                    msg = '닉네임 조건 X';
+                break;
+
+            case -5:
+                    msg = '닉네임에 특수문자 있음';
+                break;
+
+            case -101:
+                    msg = '아이디가 이미 존재합니다';
+                break;
+        }
+
+        $('.alert_msg').text(msg);
+    }
+
+    function validation(id, pw, pwre, nick ) {
+        var id_pattern = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,10}$/);
+        var ret = id_pattern.test(id);
+        if( ret == false ) {
+            return -1;
+        }
+
+        var pw_pattern = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,12}$/);
+        ret = pw_pattern.test(pw);
+        if( ret == false ) {
+            return -2;
+        }
+
+        if( pw != pwre ) {
+            return -3;
+        }
+
+        if( getTextLength(nick) < 4 || getTextLength(nick) > 8) {
+            return -4;
+        }
+
+        var nick_pattern =  new RegExp(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi);
+        ret = nick_pattern.test(nick);
+        if( ret == true ) {
+            //  특문 포함
+            return -5;
+        }
+
+        console.log('success');
+
+        return 0;
+    }
+
+    function sendPostSignup(data) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                id: data.id,
+                pw: data.pw,
+                nick: data.nick
+            }),
+            contentType: 'application/json',
+            url: '/signup_req',
+            success: function(ret) {
+                if( ret.ret != 0 ) {
+                    console.log(ret.ret);
+                    showErrorMsg(ret.ret);
+
+                    var inputs = [$('#ip_id'), $('#ip_pw'), $('#ip_pwre'), $('#ip_nick')];
+                    for( var i = 0 ; i < inputs.length ; ++i) {
+                        inputs[i].prop('disabled', false);
+                    }
+                }
+                else {
+                    alert('가입 완료!');
+                    window.location.href = '/';
+                }
+            }
+        });
+    }
+
+    function signup() {
+        var id = $('#ip_id').val();
+        var pw = $('#ip_pw').val();
+        var pwre = $('#ip_pwre').val();
+        var nick = $('#ip_nick').val();
+
+        var inputs = [$('#ip_id'), $('#ip_pw'), $('#ip_pwre'), $('#ip_nick')];
+
+        for( var i = 0 ; i < inputs.length ; ++i) {
+            inputs[i].prop('disabled', true);
+        }
+
+        var ret = 0;
+        if( (ret = validation(id, pw, pwre, nick)) < 0) {
+            //  실패
+            showErrorMsg(ret);
+            for( var i = 0 ; i < inputs.length ; ++i) {
+                inputs[i].prop('disabled', false);
+            }
+            return;
+        }
+
+        showErrorMsg(0);
+
+        sendPostSignup({id: id, pw: pw, nick: nick});
+    }
+
+    $(document).ready(function(){
+        $('#btn_signup').click(function(e) {
+            signup();
+        })
+    });
+</script>
+</body>
+</html>

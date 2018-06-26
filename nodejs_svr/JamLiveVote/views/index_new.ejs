@@ -367,13 +367,17 @@
         });
 
         $('#btn_login').click(function(e) {
-            $('#btn_login').prop('disabled', true);
+            setEnableLoginBtn(false);
             login_test();
         })
 
         $('.btn_login_close').click(function(e) {
             close_login_wnd();
         })
+    }
+
+    function setEnableLoginBtn( bEnable ) {
+        $('#btn_login').prop('disabled', bEnable ? false : true);
     }
 
     function registerSocketEvent( socket ) {
@@ -490,6 +494,9 @@
 
             if( data.admin ) {
                 addChat( data.mode, data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false);
+            }
+            else if( data.isLogin ) {
+                addChat( data.mode, data.isBaned, data.hash, '<div class="logined_font">' + data.nickname + '</div>', '<b>' + data.msg + '</b>', false);
             }
             else {
                 addChat( data.mode, data.isBaned, data.hash, data.nickname, data.msg, true);
@@ -772,11 +779,20 @@
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify({
+                id: $('#login_id').val(),
+                pw: $('#login_pw').val()
             }),
             contentType: 'application/json',
             url: '/login',
-            success: function(data) {
-                window.location.href = unescape(window.location.pathname);
+            success: function(ret) {
+                if( ret != 0 ) {
+                    close_login_wnd();
+                    setEnableLoginBtn(true);
+                    showAdminMsg('로그인 실패');
+                }
+                else {
+                    window.location.href = unescape(window.location.pathname);
+                }
             }
         });
     }
