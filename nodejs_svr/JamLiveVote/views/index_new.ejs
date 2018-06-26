@@ -677,7 +677,6 @@
     }
 
     function addChat( mode, isbaned, hash , name, msg, bStrip,auth ) {
-        showAdminMsg(auth);
         var li = '<li class="chat_item" mode="' + mode + '" >' +
                 '<div class="chat_msg_obj">' +
                 (( auth >= 1 ) ? '<div class="chat_star"><img src="/images/star.png" style="width:12px;height:12px;margin-top:8px;"/></div>' : '') +
