@@ -37,7 +37,9 @@
             <a href="http://jamlive.net">서버1</a> | <a href="http://ch2.jamlive.net">서버2</a> ( 현재서버 : <%- servname %> )
         </div>
         <div class="logo_bot">
-            잼라이브 : <color_red>FBICT</color_red> | 페이큐 : <color_red>LGJXRQ</color_red> | 더퀴라 : <color_red>70btom</color_red> | 라이브팝 : <color_red>왕야옹</color_red> | <a href="http://quiz.jamlive.net" target="_blank"> >> 여기를 클릭 <<</a>해서 기출문제를 풀고 연습하라.
+            <%if(!username) { %>
+            <a id="btn_login" href="/signin">로그인</a> <%} else { %> <btn_logout>로그아웃</btn_logout> <% }%>
+            | 잼라이브 : <color_red>FBICT</color_red> | 페이큐 : <color_red>LGJXRQ</color_red> | 더퀴라 : <color_red>70btom</color_red> | 라이브팝 : <color_red>왕야옹</color_red> | <a href="http://quiz.jamlive.net" target="_blank"> >> 여기를 클릭 <<</a>해서 기출문제를 풀고 연습하라.
         </div>
     </div>
     <div class="content">
@@ -373,6 +375,10 @@
 
         $('.btn_login_close').click(function(e) {
             close_login_wnd();
+        })
+
+        $('btn_logout').click(function(e) {
+            logout_test();
         })
     }
 

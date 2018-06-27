@@ -494,3 +494,12 @@ color_red {
     width:46px;
     height:46px;
 }
+
+btn_logout {
+    color: greenyellow;
+    cursor: pointer;
+}
+
+#btn_login {
+    color: greenyellow;
+}

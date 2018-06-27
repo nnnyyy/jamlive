@@ -1,0 +1,94 @@
+* {
+    margin: 0px;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    background-color: #1b3440;
+    color: #F5F1D5;
+}
+
+body {
+    font: 14px/1.8 "??", Arial;
+    overflow: hidden;
+    min-height: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: darkblue;
+}
+
+.main_frame {
+    width: 100%;
+    height: 100%;
+}
+
+.top_notice {
+    height: 80px;
+    line-height: 80px;
+}
+
+.btn_gohome {
+    height: 80px;
+    line-height: 80px;
+    font-size: 20px;
+}
+
+.center_wnd {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -200px;
+    width: 400px;
+    height: 300px;
+    background-color: #F5F1D5;
+    color: #1b3440;
+    text-align: center;
+}
+
+.tb_signup {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tb_signup tr {
+    height: 40px;
+    text-align: center;
+}
+
+.tb_signup th {
+    text-align: center;
+    width: 150px;
+}
+
+.tb_signup td {
+    text-align: center;
+    padding: 0;
+    marign: 0;
+}
+
+.tb_signup input {
+    float: left;
+    line-height: 40px;
+    width: 90%;
+    font-size: x-large;
+}
+.tb_signup input::placeholder {
+    font-size: 12px;
+}
+
+.tb_signup input[type='button'] {
+    font-size: large;
+    display: block;
+    margin-left: 5%;
+    width: 90%;
+}
+
+.alert_msg {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    color: red;
+}
