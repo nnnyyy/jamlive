@@ -581,24 +581,6 @@
                     return;
                 }
 
-                if( msg == "@login") {
-                    <%if(username) {%>
-                        showAdminMsg('이미 로그인 되어있습니다. 로그아웃은 @logout 입력');
-                    <%}else {%>
-                        open_login_wnd();
-                    <%}%>
-                    $(this).val('');
-                    return;
-                }
-
-                if( msg == "@logout") {
-                    if( isLogin ) {
-                        logout_test();
-                    }
-                    $(this).val('');
-                    return;
-                }
-
                 if( msg[0] == '/' ) {
                     $(this).val('');
                     if( !isAutoSearchChecked() ) {
