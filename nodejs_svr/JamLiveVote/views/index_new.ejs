@@ -38,7 +38,7 @@
         </div>
         <div class="logo_bot">
             <%if(!username) { %>
-            <a id="btn_login" href="/signin">로그인</a> <%} else { %> <btn_logout>로그아웃</btn_logout> <% }%>
+            <a id="btn_signup" href="/signup">고정닉 가입</a> | <a id="btn_login" href="/signin">로그인</a> <%} else { %> <btn_logout>로그아웃</btn_logout> <% }%>
             | 잼라이브 : <color_red>FBICT</color_red> | 페이큐 : <color_red>LGJXRQ</color_red> | 더퀴라 : <color_red>70btom</color_red> | 라이브팝 : <color_red>왕야옹</color_red> | <a href="http://quiz.jamlive.net" target="_blank"> >> 여기를 클릭 <<</a>해서 기출문제를 풀고 연습하라.
         </div>
     </div>
@@ -222,22 +222,7 @@
         <div class="q_q">보기3</div>
         <div style="margin-top:10px;">더 많은 퀴즈를 풀어보려면? >> <a href="http://quiz.jamlive.net" target="_blank" style="text-decoration: none; color: yellow;">이동하기</a></div>
     </div>
-    <div class="login_wnd">
-        <table class="tb_login">
-            <tr>
-                <td>아이디</td>
-                <td><input type="text" id="login_id"/></td>
-            </tr>
-            <tr>
-                <td>비밀번호</td>
-                <td><input type="password" id="login_pw"></td>
-            </tr>
-            <tr>
-                <td colspan="2"><input type="button" value="로그인" style="width:100%;height:30px;" id="btn_login"></td>
-            </tr>
-        </table>
-        <div class="btn_login_close">닫기</div>
-    </div>
+
     <div class="youtube_video">
         <iframe width="854" height="480" src="https://www.youtube.com/embed/cUDFcUr8TAs" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         <div class="youtube_close">닫기</div>
@@ -291,7 +276,6 @@
         setMinVoteSliderListener();
         setVoteMsgVisibleListener();
 
-        close_login_wnd();
         console.log('event register finish');
 
         <%if(!username) {%>
@@ -368,22 +352,9 @@
             e.preventDefault();
         });
 
-        $('#btn_login').click(function(e) {
-            setEnableLoginBtn(false);
-            login_test();
-        })
-
-        $('.btn_login_close').click(function(e) {
-            close_login_wnd();
-        })
-
         $('btn_logout').click(function(e) {
             logout_test();
         })
-    }
-
-    function setEnableLoginBtn( bEnable ) {
-        $('#btn_login').prop('disabled', bEnable ? false : true);
     }
 
     function registerSocketEvent( socket ) {
@@ -621,8 +592,7 @@
         $(document).keypress(function(event) {
             if( $('.ip_name').is(':focus') ) return;
             if( $('.ip_msg').is(':focus') ) return;
-            if( $('#login_id').is(':focus') ) return;
-            if( $('#login_pw').is(':focus') ) return;
+
             if( event.charCode >= 49 && event.charCode <= 51) {
                 var curTime = new Date();
                 if( curTime - tClick < 100 ) {
@@ -767,37 +737,6 @@
                 setSearchRet(data, true);
             }
         });
-    }
-
-    function login_test( ) {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            data: JSON.stringify({
-                id: $('#login_id').val(),
-                pw: $('#login_pw').val()
-            }),
-            contentType: 'application/json',
-            url: '/login',
-            success: function(ret) {
-                if( ret != 0 ) {
-                    close_login_wnd();
-                    setEnableLoginBtn(true);
-                    showAdminMsg('로그인 실패');
-                }
-                else {
-                    window.location.href = unescape(window.location.pathname);
-                }
-            }
-        });
-    }
-
-    function open_login_wnd() {
-        $('.login_wnd').css('display','inline-block');
-    }
-
-    function close_login_wnd() {
-        $('.login_wnd').css('display','none');
     }
 
     function logout_test() {
