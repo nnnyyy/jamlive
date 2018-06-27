@@ -85,7 +85,7 @@ ServerMan.prototype.addSocket = function(socket) {
     this.socketmap.set(socket, new Client(socket));
 
     if( socket.request.session.username ) {
-        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 입장!' , mode: "notice", isBaned: false, admin: false }});
+        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false }});
     }
 
     ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
@@ -111,6 +111,11 @@ ServerMan.prototype.removeSocket = function(socket) {
     if( client.isAdmin ) {
         ip = '사이트관리자';
     }
+
+    if( socket.request.session.username ) {
+        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 퇴장' , mode: "notice", isBaned: false, admin: false }});
+    }
+
     //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '퇴장' , mode: "notice", isBaned: false, admin: false }});
     //console.log('user disconnected : ' + socket.handshake.headers['x-real-ip']);
 }
