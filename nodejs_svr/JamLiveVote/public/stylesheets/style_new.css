@@ -436,7 +436,7 @@ footer {
 
 .guide_btn {
     cursor: pointer;
-    color: red;
+    color: #ff9284;
     font-size: 18px;
 }
 
@@ -495,15 +495,25 @@ color_red {
     height:46px;
 }
 
+.logo_sub a {
+    text-decoration: none;
+    color: #ff9284;
+}
+
+.logo_bot a {
+    text-decoration: none;
+    color: greenyellow;
+}
+
+.link_color {
+
+}
+
 btn_logout {
-    color: greenyellow;
     cursor: pointer;
+
 }
 
-#btn_login {
-    color: greenyellow;
-}
-
-#btn_signup {
-    color: greenyellow;
+recommand_code {
+    font-size: 15px;
 }
