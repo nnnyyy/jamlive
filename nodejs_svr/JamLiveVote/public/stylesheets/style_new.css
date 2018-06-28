@@ -517,3 +517,74 @@ btn_logout {
 recommand_code {
     font-size: 15px;
 }
+
+.bbam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 420px;
+    margin-left: -200px;
+    margin-top: -210px;
+    text-align: center;
+    font-size: 17px;
+    overflow: hidden;
+    opacity: 1;
+    z-index: 2;
+}
+
+.font_bbam1 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    font-size: 17px;
+    overflow: hidden;
+    opacity: 1;
+    z-index: 2;
+}
+
+.font_bbam1 img {
+    width: inherit;
+    height: inherit;
+}
+
+.font_bbam2 {
+    position: absolute;
+    bottom: 0;
+    left: 45%;
+    width: 130px;
+    height: 130px;
+    margin-left: -65px;
+    text-align: center;
+    font-size: 17px;
+    overflow: hidden;
+    opacity: 1;
+    z-index: 2;
+}
+
+.font_bbam2 img {
+    width: inherit;
+    height: inherit;
+}
+
+.font_bbam3 {
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    width: 150px;
+    height: 150px;
+    margin-left: -150px;
+    text-align: center;
+    font-size: 17px;
+    overflow: hidden;
+    opacity: 1;
+    z-index: 2;
+}
+
+.font_bbam3 img {
+    width: inherit;
+    height: inherit;
+}

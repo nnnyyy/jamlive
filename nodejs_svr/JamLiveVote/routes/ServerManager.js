@@ -377,6 +377,11 @@ ServerMan.prototype.register = function(socket) {
                 return;
             }
 
+            if( client.isAdmin && data.msg == "#bbam") {
+                servman.io.sockets.emit('effect', {name: 'bbam'});
+                return;
+            }
+
             ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
             var logined = socket.request.session.username ? true : false;
