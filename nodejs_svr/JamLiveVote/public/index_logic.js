@@ -407,6 +407,10 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searchWeb(3, query);
         searched = true;
     } //  뉴스
+    if( $('#cb_s4').is(':checked')) {
+        searchWeb(4, query);
+        searched = true;
+    } //  뉴스
 
     if( $('#cb_s4').is(':checked')) {
         searchWebGoogle(query);
@@ -431,7 +435,7 @@ function searchWeb( type, query ) {
         contentType: 'application/json',
         url: '/searchex',
         success: function(data) {
-            setSearchRet(data, false);
+            setSearchRet(data, type == 4 ? true : false);
         }
     });
 }
@@ -491,11 +495,12 @@ function setSearchRet(items, first) {
     var html = '';
     for( var i = 0 ; i < items.length ; ++i) {
         var item = items[i];
+        var image = '<img src="'+ item.thumbnail + '"/>';
         var div = '<div class="search_ret_root">' +
             '<div class="search_ret_title">' +
             item.title +
             '</div><div class="search_ret_desc">' +
-            item.description +
+            (item.description ? item.description : image) +
             '</div>' +
             '</div>';
 

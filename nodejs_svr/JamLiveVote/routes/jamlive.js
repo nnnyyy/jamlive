@@ -227,6 +227,7 @@ exports.searchex = function(req, res, next) {
         case 1: sType = 'kin'; break;
         case 2: sType = 'blog'; break;
         case 3: sType = 'news'; break;
+        case 4: sType = 'image'; break;
     }
 
     var cached = ServerManager.getCachedSearchResult(sType, query);
@@ -237,6 +238,10 @@ exports.searchex = function(req, res, next) {
     }
 
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
+    if( type == 4 ) {
+        //  image
+        api_url += '&filter=medium'
+    }
 
     var options = {
         url: api_url,
@@ -246,10 +251,16 @@ exports.searchex = function(req, res, next) {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body).items;
-                if( type == 1 ) data = data.slice(0,4);
-                else data = data.slice(0,3);
-                res.json(data);
-                ServerManager.setCachedSearchResult(sType, query, data);
+                if( typeof data === "Array" ) {
+                    if( type == 1 ) data = data.slice(0,4);
+                    else if ( type == 4 ) data = data.slice(0,1);
+                    else data = data.slice(0,3);
+                    res.json(data);
+                    ServerManager.setCachedSearchResult(sType, query, data);
+                }
+                else {
+                    res.json([]);
+                }
             } else {
                 console.log(error);
                 res.json([]);
