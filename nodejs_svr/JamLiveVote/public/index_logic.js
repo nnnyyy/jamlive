@@ -435,7 +435,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searched = true;
     } //  뉴스
 
-    if( $('#cb_s4').is(':checked')) {
+    if( $('#cb_s5').is(':checked')) {
         searchWebGoogle(query);
         searched = true;
     } //  구글
