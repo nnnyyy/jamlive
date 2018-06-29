@@ -505,7 +505,7 @@ function setSearchRet(items, first) {
             '<div class="search_ret_title">' +
             item.title +
             '</div><div class="search_ret_desc">' +
-            (item.description ? item.description : image) +
+            (item.description) +
             '</div>' +
             '</div>';
 

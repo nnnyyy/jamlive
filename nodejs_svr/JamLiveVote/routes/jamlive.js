@@ -238,10 +238,6 @@ exports.searchex = function(req, res, next) {
     }
 
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
-    if( type == 4 ) {
-        //  image
-        api_url += '&filter=medium'
-    }
 
     var options = {
         url: api_url,
