@@ -435,7 +435,12 @@ function searchWeb( type, query ) {
         contentType: 'application/json',
         url: '/searchex',
         success: function(data) {
-            setSearchRet(data, type == 4 ? true : false);
+            if( type == 4 ) {
+                setSearchRet(data, false);
+            }
+            else {
+                setSearchRetImage(data, true);
+            }
         }
     });
 }
@@ -506,6 +511,34 @@ function setSearchRet(items, first) {
 
         html += div;
     }
+
+    if( items.length == 0 ) {
+        html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+    }
+    if( first ) {
+        $('#sd_ret').prepend(html);
+    }
+    else {
+        $('#sd_ret').append(html);
+    }
+    clearTimeout(timerID);
+    timerID = setTimeout(function() {
+        //$('.search_article').html(htmlBackup);
+        $('#sd_ret').css('display','none');
+        $('#sd_ads').css('display','inline-block');
+    }, 12000);
+}
+
+function setSearchRetImage(items, first) {
+    var html = '';
+    var div = '<div class="search_ret_root"><div class="search_ret_desc">';
+    for( var i = 0 ; i < items.length ; ++i) {
+        var item = items[i];
+        var image = '<img src="'+ item.thumbnail + '"/>';
+        div += image;
+    }
+    div += '</div></div>';
+    html = div;
 
     if( items.length == 0 ) {
         html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
