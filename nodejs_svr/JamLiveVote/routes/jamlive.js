@@ -142,6 +142,8 @@ function requestBlog(query, data, callback) {
 exports.requestGoogle = function(req, res, next) {
     var query = req.body.query;
 
+    console.log('google search start : ' + query);
+
     var cached = ServerManager.getCachedSearchResult('google', query);
     if( cached ) {
         console.log('cached : ' + query);
