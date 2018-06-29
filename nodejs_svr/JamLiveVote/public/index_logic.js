@@ -250,7 +250,7 @@ function onEffect(data) {
 
 function registerKeyEvent( socket ) {
     $('.ip_msg').keypress(function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
+        var code = (e.which ? e.which : e.keyCode );
         if( code == 13 ) {
             var nick = getNickName();
             var msg = $(this).val();
@@ -273,6 +273,7 @@ function registerKeyEvent( socket ) {
                 else {
                     showAdminMsg('반자동 검색을 해제 한 후에 검색을 사용할 수 있습니다');
                 }
+                $(this).blur();
                 return;
             }
 
@@ -301,18 +302,20 @@ function registerKeyEvent( socket ) {
         }
     })
 
-    $(document).keypress(function(event) {
+    $(document).keydown(function(e) {
         if( $('.ip_name').is(':focus') ) return;
         if( $('.ip_msg').is(':focus') ) return;
 
-        if( event.charCode >= 49 && event.charCode <= 51) {
+        var code = (e.which ? e.which : e.keyCode );
+
+        if( code >= 97 && code <= 99 ) {
             var curTime = new Date();
             if( curTime - tClick < 100 ) {
                 return;
             }
             tClick = curTime;
 
-            var idx = event.charCode - 49;
+            var idx = code - 97;
 
             var nick = getNickName();
             var clicked = (idx+1);
@@ -326,13 +329,33 @@ function registerKeyEvent( socket ) {
     })
 
     $('.ip_msg').keyup(function(e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
+        var msg = $(this).val();
+        var code = (e.which ? e.which : e.keyCode );
         if( bTrigger ) {
             bTrigger = false;
             if( $(this).val() != '/' && $(this).val() != '#')
                 $(this).val('');
             return;
         }
+
+        var isvote = -1;
+        if( msg.search(/1111+/g) != -1 ) {
+            vote(socket, {idx:0});
+            isvote = 0;
+        }
+        else if( msg.search(/2222+/g) != -1  ) {
+            vote(socket, {idx:1});
+            isvote = 1;
+        }
+        else if( msg.search(/3333+/g) != -1 ) {
+            vote(socket, {idx:2});
+            isvote = 2;
+        }
+
+        if( isvote != -1 ) {
+            $(this).val('');
+        }
+
         if( code == 27 ) {
             $(this).blur();
         }
