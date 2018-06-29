@@ -251,16 +251,11 @@ exports.searchex = function(req, res, next) {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body).items;
-                if( typeof data === "Array" ) {
-                    if( type == 1 ) data = data.slice(0,4);
-                    else if ( type == 4 ) data = data.slice(0,1);
-                    else data = data.slice(0,3);
-                    res.json(data);
-                    ServerManager.setCachedSearchResult(sType, query, data);
-                }
-                else {
-                    res.json([]);
-                }
+                if( type == 1 ) data = data.slice(0,4);
+                else if ( type == 4 ) data = data.slice(0,1);
+                else data = data.slice(0,3);
+                res.json(data);
+                ServerManager.setCachedSearchResult(sType, query, data);
             } else {
                 console.log(error);
                 res.json([]);
