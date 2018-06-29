@@ -248,7 +248,7 @@ exports.searchex = function(req, res, next) {
             if (!error && response.statusCode == 200) {
                 var data = JSON.parse(body).items;
                 if( type == 1 ) data = data.slice(0,4);
-                else if ( type == 4 ) data = data.slice(0,4);
+                else if ( type == 4 ) data = data.slice(0,5);
                 else data = data.slice(0,3);
                 res.json(data);
                 ServerManager.setCachedSearchResult(sType, query, data);
