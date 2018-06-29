@@ -435,7 +435,7 @@ function searchWeb( type, query ) {
         contentType: 'application/json',
         url: '/searchex',
         success: function(data) {
-            if( type == 4 ) {
+            if( type != 4 ) {
                 setSearchRet(data, false);
             }
             else {
