@@ -167,6 +167,7 @@ exports.requestGoogle = function(req, res, next) {
                 res.json(data);
                 ServerManager.setCachedSearchResult('google', query, data);
             } else {
+                console.log('google search failed : ' + error);
                 res.json([]);
             }
         });
