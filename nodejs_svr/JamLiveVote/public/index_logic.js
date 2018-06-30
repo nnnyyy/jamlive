@@ -339,15 +339,15 @@ function registerKeyEvent( socket ) {
         }
 
         var isvote = -1;
-        if( msg.search(/1111+/g) != -1 ) {
+        if( msg.search(/111+/g) != -1 ) {
             vote(socket, {idx:0});
             isvote = 0;
         }
-        else if( msg.search(/2222+/g) != -1  ) {
+        else if( msg.search(/222+/g) != -1  ) {
             vote(socket, {idx:1});
             isvote = 1;
         }
-        else if( msg.search(/3333+/g) != -1 ) {
+        else if( msg.search(/333+/g) != -1 ) {
             vote(socket, {idx:2});
             isvote = 2;
         }
