@@ -369,7 +369,7 @@ ServerMan.prototype.register = function(socket) {
                 return;
             }
 
-            if( client.isAdmin && data.msg == "#quiz") {
+            if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#quiz") {
                 dbhelper.getRandomQuiz(function(result) {
                     if( result.ret == 0 )
                         servman.io.sockets.emit('quiz', {quizdata: result.quizdata});
