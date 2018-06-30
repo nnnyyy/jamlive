@@ -369,6 +369,10 @@ ServerMan.prototype.register = function(socket) {
                 return;
             }
 
+            var logined = socket.request.session.username ? true : false;
+            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var auth_state = socket.request.session.auth;
+
             if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#quiz") {
                 dbhelper.getRandomQuiz(function(result) {
                     if( result.ret == 0 )
@@ -376,10 +380,6 @@ ServerMan.prototype.register = function(socket) {
                 });
                 return;
             }
-
-            var logined = socket.request.session.username ? true : false;
-            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
-            var auth_state = socket.request.session.auth;
 
             if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
                 servman.io.sockets.emit('effect', {name: 'bbam'});
