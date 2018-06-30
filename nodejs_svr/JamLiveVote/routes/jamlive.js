@@ -144,8 +144,6 @@ function requestBlog(query, data, callback) {
 exports.requestGoogle = function(req, res, next) {
     var query = req.body.query;
 
-    console.log('google search start : ' + query);
-
     var cached = ServerManager.getCachedSearchResult('google', query);
     if( cached ) {
         console.log('cached : ' + query);
@@ -171,7 +169,7 @@ exports.requestGoogle = function(req, res, next) {
                 res.json(data);
                 ServerManager.setCachedSearchResult('google', query, data);
             } else {
-                console.log('google search failed : ' + error);
+                console.log('google search failed : ' + error + ', ' + response.statusCode );
                 res.json([]);
             }
         });
@@ -258,7 +256,7 @@ exports.searchex = function(req, res, next) {
                 res.json(data);
                 ServerManager.setCachedSearchResult(sType, query, data);
             } else {
-                console.log('searchex error : '+ error);
+                console.log('searchex failed : ' + error + ', ' + response.statusCode );
                 res.json([]);
             }
         });
