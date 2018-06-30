@@ -308,7 +308,7 @@ function registerKeyEvent( socket ) {
 
         var code = (e.which ? e.which : e.keyCode );
 
-        if( code >= 97 && code <= 99 ) {
+        if( (code >= 97 && code <= 99) ) {
             var curTime = new Date();
             if( curTime - tClick < 100 ) {
                 return;
@@ -316,6 +316,19 @@ function registerKeyEvent( socket ) {
             tClick = curTime;
 
             var idx = code - 97;
+
+            var nick = getNickName();
+            var clicked = (idx+1);
+            vote(socket, {idx: idx });
+        }
+        else if( ( code >= 49 && code <= 51 ) ) {
+            var curTime = new Date();
+            if( curTime - tClick < 100 ) {
+                return;
+            }
+            tClick = curTime;
+
+            var idx = code - 49;
 
             var nick = getNickName();
             var clicked = (idx+1);
