@@ -42,6 +42,7 @@ exports.clickevent = function( req, res, next) {
     }
 }
 
+/*
 exports.search = function( req, res, next ) {
     var searched_data = ServerManager.getSearchedData(req.body.query);
     if(searched_data != null) {        
@@ -138,6 +139,7 @@ function requestBlog(query, data, callback) {
         callback(-1);
     }
 }
+*/
 
 exports.requestGoogle = function(req, res, next) {
     var query = req.body.query;

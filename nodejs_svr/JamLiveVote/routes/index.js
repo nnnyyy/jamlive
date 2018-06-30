@@ -15,7 +15,7 @@ router.get('/ping', function(req, res, next) {
   res.send('pong');
 });
 router.post('/vote', JamLive.clickevent );
-router.post('/search', JamLive.search );
+//router.post('/search', JamLive.search );
 router.post('/searchex', JamLive.searchex );
 router.post('/searchgoogle', JamLive.requestGoogle);
 router.post('/login', Auth.login);
