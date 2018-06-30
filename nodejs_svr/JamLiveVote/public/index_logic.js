@@ -124,6 +124,7 @@ function registerSocketEvent( socket ) {
     socket.on('chat', onChat );
     socket.on('serv_msg', onServMsg);
     socket.on('quiz', onQuiz);
+    socket.on('quizret', onQuizRet);
     socket.on('effect', onEffect);
 }
 
@@ -225,21 +226,21 @@ function onQuiz(data) {
         if( remain <= 0 ) remain = 0;
         $('time').text(remain);
     }, 100);
+}
 
-    clearTimeout(idTimeout);
-    idTimeout = setTimeout(function() {
-        $('.q_q').each(function(idx){
-            if( idx == data.quizdata.collect ) {
-                $(this).css('background-color','blue');
-                addChat( "", false, 0, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '. ' + '' + data.quizdata.answer[idx] + '</div></b>', false);
-            }
-        })
+function onQuizRet(_data) {
+    console.log(_data);
+    $('.q_q').each(function(idx){
+        if( idx == _data.collect_idx ) {
+            $(this).css('background-color','blue');
+            var collect_rate = (_data.collect_cnt / _data.total_cnt) * 100.0;
+            addChat( "", false, 0, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+        }
+    })
 
-        clearInterval(idInterval);
-        setTimeout(function() {
-            $('.quiz_wnd').css('display', 'none');
-        }, 3000);
-    },13500);
+    setTimeout(function() {
+        $('.quiz_wnd').css('display', 'none');
+    }, 3000);
 }
 
 function onEffect(data) {

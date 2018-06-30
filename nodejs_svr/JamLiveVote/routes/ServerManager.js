@@ -5,6 +5,7 @@ var HashMap = require('hashmap');
 var Client = require('./client');
 require('./StringFunction');
 var dbhelper = require('./dbhelper');
+var quizDataObj = require('./quizman');
 
 var VOTEPERTIME = 1000;
 var BANTIME = 4 * 60 * 1000;
@@ -318,6 +319,9 @@ ServerMan.prototype.register = function(socket) {
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
         if( client.isClickable() ) {
             servman.click(data.idx);
+            if( servman.quizdata && !servman.quizdata.isEnd() ) {
+                servman.quizdata.vote(data.idx);
+            }
             if( socket.request.session.username && socket.request.session.auth >= 1 ) {
                 servman.click(data.idx);
             }
@@ -375,8 +379,9 @@ ServerMan.prototype.register = function(socket) {
 
             if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#quiz") {
                 dbhelper.getRandomQuiz(function(result) {
-                    if( result.ret == 0 )
-                        servman.io.sockets.emit('quiz', {quizdata: result.quizdata});
+                    if( result.ret == 0 ){
+                        servman.createQuizData(result.quizdata);
+                    }
                 });
                 return;
             }
@@ -463,6 +468,13 @@ ServerMan.prototype.register = function(socket) {
             return;
         }
     })
+}
+
+ServerMan.prototype.createQuizData = function( _quizdata ) {
+    if( this.quizdata && !this.quizdata.isEnd() ) {
+        return;
+    }
+    this.quizdata = new quizDataObj( _quizdata, this.io );
 }
 
 module.exports = servman;
