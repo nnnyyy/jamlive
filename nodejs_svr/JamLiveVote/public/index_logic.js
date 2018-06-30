@@ -689,6 +689,7 @@ var bbamIdx = 0;
 var bbam_fonts = [];
 
 function initBBam() {
+    clearTimeout( bbamTimeoutId );
     $('.bbam').css('display', 'none');
     $('.font_bbam1').css('display', 'none');
     $('.font_bbam2').css('display', 'none');
@@ -712,10 +713,10 @@ function showBBamFont() {
     bbam_fonts[bbamIdx].css('display', 'inline-block');
     bbamIdx++;
     if( bbam_fonts.length > bbamIdx) {
-        setTimeout(showBBamFont, 900);
+        bbamTimeoutId = setTimeout(showBBamFont, 900);
     }
     else {
         $('.bbam').effect('shake');
-        setTimeout(initBBam, 3000);
+        bbamTimeoutId = setTimeout(initBBam, 3000);
     }
 }
