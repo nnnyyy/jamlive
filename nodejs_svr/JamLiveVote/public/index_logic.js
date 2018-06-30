@@ -701,8 +701,11 @@ function initBBam() {
 }
 
 function animBBam() {
+    if( bbamTimeoutId != -1) {
+        return;
+    }
     $('.bbam').css('display', 'inline-block');
-    setTimeout(showBBamFont, 900);
+    bbamTimeoutId = setTimeout(showBBamFont, 900);
 }
 
 function showBBamFont() {

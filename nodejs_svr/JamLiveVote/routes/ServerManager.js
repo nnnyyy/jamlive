@@ -377,16 +377,17 @@ ServerMan.prototype.register = function(socket) {
                 return;
             }
 
-            if( client.isAdmin && data.msg == "#bbam") {
+            var logined = socket.request.session.username ? true : false;
+            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var auth_state = socket.request.session.auth;
+
+            if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
                 servman.io.sockets.emit('effect', {name: 'bbam'});
                 return;
             }
 
             ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin }})
-            var logined = socket.request.session.username ? true : false;
-            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
-            var auth_state = socket.request.session.auth;
             servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state });
         }
         catch(err) {
