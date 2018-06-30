@@ -250,7 +250,7 @@ ServerMan.prototype.checkAllBaned = function() {
             }
         })
     }catch(e) {
-        console.log(e);
+        console.log('checkAllBaned error : ' + e);
     }
 }
 

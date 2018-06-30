@@ -250,7 +250,7 @@ exports.searchex = function(req, res, next) {
     };
     try {
         request.get(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
+            if (!error && response.statusCode == 200 && body) {
                 var data = JSON.parse(body).items;
                 if( type == 1 ) data = data.slice(0,4);
                 else if ( type == 4 ) data = data.slice(0,5);
@@ -258,7 +258,7 @@ exports.searchex = function(req, res, next) {
                 res.json(data);
                 ServerManager.setCachedSearchResult(sType, query, data);
             } else {
-                console.log(error);
+                console.log('searchex error : '+ error);
                 res.json([]);
             }
         });
