@@ -18,6 +18,7 @@ router.post('/vote', JamLive.clickevent );
 //router.post('/search', JamLive.search );
 router.post('/searchex', JamLive.searchex );
 router.post('/searchgoogle', JamLive.requestGoogle);
+router.post('/searchdb', JamLive.requestDB)
 router.post('/login', Auth.login);
 router.post('/logout', Auth.logout);
 router.get('/signin', function(req, res, next) {

@@ -4,7 +4,6 @@
 /**
  * Created by nnnyyy on 2018-04-13.
  */
-var dbhelper = require('./dbhelper');
 var moment = require('moment');
 var Log = require('./Log');
 

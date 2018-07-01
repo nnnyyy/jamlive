@@ -7,6 +7,7 @@ var cheerio = require('cheerio');
 var iconv = require('iconv-lite');
 var async = require('async');
 var ServerManager = require('./ServerManager');
+var dbhelper = require('./dbhelper');
 
 function VoteObj() {
     this.countlist = [0,0,0];
@@ -188,6 +189,13 @@ exports.requestGoogle = function(req, res, next) {
     }
 
 
+}
+
+exports.requestDB = function( req, res, next ) {
+    console.log('db request');
+    dbhelper.search(req.body.query, function(ret) {
+        res.json(ret);
+    })
 }
 
 function shuffle(a) {

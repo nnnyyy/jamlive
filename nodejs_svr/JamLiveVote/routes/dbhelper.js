@@ -60,6 +60,52 @@ exports.getRandomQuiz = function( cb ) {
     }
 }
 
+exports.search = function( query , cb ) {
+    try {
+        var queries = query.split(' ');
+        var question_query = '';
+        var answer1_query = '';
+        var answer2_query = '';
+        var answer3_query = '';
+        for( var i = 0 ; i < queries.length ; ++i ) {
+            queries[i] = '%' + queries[i] + '%';
+            var t = ('like \'' + queries[i] + '\' ');
+            question_query += ('question ' + t);
+            answer1_query += ('answer1 ' + t);
+            answer2_query += ('answer2 ' + t);
+            answer3_query += ('answer3 ' + t);
+            if( i != queries.length - 1  ) {
+                question_query += ' or ';
+                answer1_query += ' or ';
+                answer2_query += ' or ';
+                answer3_query += ' or ';
+            }
+        }
+
+        var where = question_query + ' or ' + answer1_query + ' or ' + answer2_query + ' or ' + answer3_query;
+        console.log(where);
+
+        var final = "select * from quiz where " + where;
+        console.log( final );
+
+        dbpool.query(final, function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
+            }
+            cb({ret:0, quizdatalist: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - search');
+        cb({ret: -1});
+    }
+}
+
 /*
  exports.buyItem = function(id, itemsn, cb) {
  // 가챠 종류와 일반 아이템 종류를 구분하자.

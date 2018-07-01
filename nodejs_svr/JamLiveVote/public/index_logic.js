@@ -457,6 +457,11 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searched = true;
     } //  구글
 
+    if( $('#cb_s6').is(':checked')) {
+        searchFromDB(query);
+        searched = true;
+    }
+
     if( !searched ) {
         //$('.search_article').html(htmlBackup);
         $('#sd_ret').css('display','none');
@@ -481,6 +486,21 @@ function searchWeb( type, query ) {
             else {
                 setSearchRetImage(data, true);
             }
+        }
+    });
+}
+
+function searchFromDB( query ) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query
+        }),
+        contentType: 'application/json',
+        url: '/searchdb',
+        success: function(data) {
+            setSearchDB(data);
         }
     });
 }
@@ -590,6 +610,49 @@ function setSearchRetImage(items, first) {
     timerIDForImageSearch = setTimeout(function() {
         //$('.search_article').html(htmlBackup);
         $('.image_search_wnd').css('display','none');
+    }, 12000);
+}
+
+function setSearchDB(data) {
+    var items = data.quizdatalist;
+
+    console.log(items);
+
+    var html = '';
+    for( var i = 0 ; i < items.length ; ++i) {
+        var item = items[i];
+        console.log(item);
+        var sub = '';
+        for( var j = 0 ; j < 3 ; ++j ) {
+            if( j != item.collect ) {
+                sub += (j+1) + '. ' + item.answer[j] + ' ';
+            }
+            else {
+                sub += '<b>' + (j+1) + '. ' + item.answer[j] + '</b> ';
+            }
+        }
+        var div = '<div class="search_ret_root">' +
+            '<div class="search_ret_title">' +
+            item.question +
+            '</div><div class="search_ret_desc">' +
+            (sub) +
+            '</div>' +
+            '</div>';
+
+        html += div;
+    }
+
+    if( items.length == 0 ) {
+        html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+    }
+
+    $('#sd_ret').prepend(html);
+
+    clearTimeout(timerID);
+    timerID = setTimeout(function() {
+        //$('.search_article').html(htmlBackup);
+        $('#sd_ret').css('display','none');
+        $('#sd_ads').css('display','inline-block');
     }, 12000);
 }
 
