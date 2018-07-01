@@ -83,10 +83,10 @@ exports.search = function( query , cb ) {
         }
 
         var where = question_query + ' or ' + answer1_query + ' or ' + answer2_query + ' or ' + answer3_query;
-        console.log(where);
+        //console.log(where);
 
         var final = "select * from quiz where " + where;
-        console.log( final );
+        //console.log( final );
 
         dbpool.query(final, function(err, rows) {
             if(err) {
