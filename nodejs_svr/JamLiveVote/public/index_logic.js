@@ -618,13 +618,39 @@ function setSearchRetImage(items, first) {
 
 function setSearchDB(data) {
     var items = data.quizdatalist;
+    var queries = data.queries;
 
-    console.log(items);
+    items.sort( function(item1, item2) {
+        var cnt1 = 0, cnt2 = 0;
+        for( var i = 0 ; i < queries.length ; ++i) {
+            queries[i] = queries[i].replace('%', '');
+            queries[i] = queries[i].replace('%', '');
+            console.log(queries[i]);
+            if( item1.question.indexOf(queries[i]) != -1 ) {
+                cnt1++;
+            }
+            if( item2.question.indexOf(queries[i]) != -1 ) {
+                cnt2++;
+            }
+
+            for( var j = 0 ; j < 3 ; ++j) {
+                if( item1.answer[j].indexOf(queries[i]) != -1 ) {
+                    cnt1++;
+                }
+
+                if( item2.answer[j].indexOf(queries[i]) != -1 ) {
+                    cnt2++;
+                }
+            }
+        }
+
+        console.log(cnt1 + ' , ' + cnt2);
+        return cnt2 - cnt1;
+    });
 
     var html = '';
     for( var i = 0 ; i < items.length ; ++i) {
         var item = items[i];
-        console.log(item);
         var sub = '';
         for( var j = 0 ; j < 3 ; ++j ) {
             if( j != item.collect ) {

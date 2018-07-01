@@ -63,6 +63,7 @@ exports.getRandomQuiz = function( cb ) {
 exports.search = function( query , cb ) {
     try {
         var queries = query.trim().split(' ');
+        var queries_backup = queries;
         var question_query = '';
         var answer1_query = '';
         var answer2_query = '';
@@ -98,7 +99,7 @@ exports.search = function( query , cb ) {
                 var d = rows[i];
                 data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
             }
-            cb({ret:0, quizdatalist: data});
+            cb({ret:0, queries: queries_backup, quizdatalist: data});
         });
     }catch(err) {
         Log.logger.debug('DB Failed - search');
