@@ -62,13 +62,13 @@ exports.getRandomQuiz = function( cb ) {
 
 exports.search = function( query , cb ) {
     try {
-        var queries = query.split(' ');
+        var queries = query.trim().split(' ');
         var question_query = '';
         var answer1_query = '';
         var answer2_query = '';
         var answer3_query = '';
         for( var i = 0 ; i < queries.length ; ++i ) {
-            queries[i] = '%' + queries[i] + '%';
+            queries[i] = '%' + queries[i].trim() + '%';
             var t = ('like \'' + queries[i] + '\' ');
             question_query += ('question ' + t);
             answer1_query += ('answer1 ' + t);

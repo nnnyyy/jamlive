@@ -128,6 +128,18 @@ em {
     overflow-y: scroll;
 }
 
+#mid_quiz_search {
+    position: absolute;
+    width: inherit;
+    height: 600px;
+    overflow-y: scroll;
+    z-index: 2;
+    background-color: white;
+    opacity: 0.9;
+    color: black;
+    font-weight: normal;
+}
+
 .mid_top {
     height: 60px;
     line-height: 60px;

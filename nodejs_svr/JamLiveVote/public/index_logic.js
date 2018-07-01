@@ -12,6 +12,7 @@ var bTrigger = false;
 var htmlBackup = '';
 var timerID = 0;
 var timerIDForImageSearch = 0;
+var timerIDForDB = 0;
 var myid = -1;
 var autoSearchWordMap = new Map();
 var tLast = 0;
@@ -428,6 +429,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     $('#sd_ads').css('display','none');
     $('.image_search_wnd').html('');
     $('.image_search_wnd').css('display', 'inline-block');
+    $('#mid_quiz_search').html('');
     var nick = getNickName();
     socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
     var searched = false;
@@ -458,6 +460,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     } //  구글
 
     if( $('#cb_s6').is(':checked')) {
+        $('#mid_quiz_search').css('display','inline-block');
         searchFromDB(query);
         searched = true;
     }
@@ -586,7 +589,7 @@ function setSearchRet(items, first) {
         //$('.search_article').html(htmlBackup);
         $('#sd_ret').css('display','none');
         $('#sd_ads').css('display','inline-block');
-    }, 12000);
+    }, 15000);
 }
 
 function setSearchRetImage(items, first) {
@@ -610,7 +613,7 @@ function setSearchRetImage(items, first) {
     timerIDForImageSearch = setTimeout(function() {
         //$('.search_article').html(htmlBackup);
         $('.image_search_wnd').css('display','none');
-    }, 12000);
+    }, 15000);
 }
 
 function setSearchDB(data) {
@@ -646,14 +649,13 @@ function setSearchDB(data) {
         html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
     }
 
-    $('#sd_ret').prepend(html);
+    $('#mid_quiz_search').prepend(html);
 
-    clearTimeout(timerID);
-    timerID = setTimeout(function() {
+    clearTimeout(timerIDForDB);
+    timerIDForDB = setTimeout(function() {
         //$('.search_article').html(htmlBackup);
-        $('#sd_ret').css('display','none');
-        $('#sd_ads').css('display','inline-block');
-    }, 12000);
+        $('#mid_quiz_search').css('display','none');
+    }, 15000);
 }
 
 function getNickName() {
