@@ -518,6 +518,18 @@ recommand_code {
     font-size: 15px;
 }
 
+.image_search_wnd {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    height: 160px;
+}
+
+.img_search {
+    height: 160px;
+}
+
 .bbam {
     position: absolute;
     top: 50%;

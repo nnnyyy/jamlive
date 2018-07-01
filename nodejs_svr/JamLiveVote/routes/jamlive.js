@@ -142,6 +142,13 @@ function requestBlog(query, data, callback) {
 */
 
 exports.requestGoogle = function(req, res, next) {
+    var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
+    var ipHashed = ip.hashCode().toString();
+    if( ServerManager.checkBaned(ipHashed) ) {
+        res.json([]);
+        return;
+    }
+
     var query = req.body.query;
 
     var cached = ServerManager.getCachedSearchResult('google', query);
@@ -167,7 +174,8 @@ exports.requestGoogle = function(req, res, next) {
                 parcing(data, body);
                 data = data.slice(0,4);
                 res.json(data);
-                ServerManager.setCachedSearchResult('google', query, data);
+                if( data.length > 0 )
+                    ServerManager.setCachedSearchResult('google', query, data);
             } else {
                 console.log('google search failed : ' + error + ', ' + response.statusCode );
                 res.json([]);
@@ -220,9 +228,17 @@ function parcing(data, body) {
     })
 }
 
+var req_cnt = 0;
 exports.searchex = function(req, res, next) {
     var query = req.body.query;
     var type = req.body.type;
+
+    var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
+    var ipHashed = ip.hashCode().toString();
+    if( ServerManager.checkBaned(ipHashed) ) {
+        res.json([]);
+        return;
+    }
 
     var sType = 'encyc';
     switch(type) {
@@ -242,9 +258,18 @@ exports.searchex = function(req, res, next) {
 
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
 
+    var clientids = ['9mAvhW3E2l83KNBQgOMo', 'zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3'];
+    var secrets = ['ldR40qhxhS', 'kkusj_izbs', 'ZaMzW0bOM7'];
+    var modcnt = clientids.length;
+
+
+    var clientid = clientids[req_cnt%modcnt];
+    var secret = secrets[req_cnt%modcnt];
+    req_cnt++;
+
     var options = {
         url: api_url,
-        headers: {'X-Naver-Client-Id':'RrVyoeWlAzqS736WZDq3', 'X-Naver-Client-Secret': 'ZaMzW0bOM7'}
+        headers: {'X-Naver-Client-Id':clientid, 'X-Naver-Client-Secret': secret}
     };
     try {
         request.get(options, function (error, response, body) {
@@ -254,7 +279,8 @@ exports.searchex = function(req, res, next) {
                 else if ( type == 4 ) data = data.slice(0,5);
                 else data = data.slice(0,3);
                 res.json(data);
-                ServerManager.setCachedSearchResult(sType, query, data);
+                if( data.length > 0 )
+                    ServerManager.setCachedSearchResult(sType, query, data);
             } else {
                 console.log('searchex failed : ' + error + ', ' + response.statusCode );
                 res.json([]);

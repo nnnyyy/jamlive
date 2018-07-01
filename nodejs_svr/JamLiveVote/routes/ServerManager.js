@@ -90,6 +90,8 @@ ServerMan.prototype.addSocket = function(socket) {
     }
 
     ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
+
+
     //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '입장' , mode: "notice", isBaned: false, admin: false }});
     //console.log('user connected : ' + socket.handshake.headers['x-real-ip']);
 }
