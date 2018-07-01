@@ -264,15 +264,17 @@ exports.searchex = function(req, res, next) {
         return;
     }
 
+    var isAuthUser = (req.session.auth > 0) ? true : false;
+
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
 
-    var clientids = ['9mAvhW3E2l83KNBQgOMo', 'zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3'];
-    var secrets = ['ldR40qhxhS', 'kkusj_izbs', 'ZaMzW0bOM7'];
+    var clientids = ['zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3'];
+    var secrets = ['kkusj_izbs', 'ZaMzW0bOM7'];
     var modcnt = clientids.length;
 
 
-    var clientid = clientids[req_cnt%modcnt];
-    var secret = secrets[req_cnt%modcnt];
+    var clientid = isAuthUser ? clientids[req_cnt%modcnt] : '9mAvhW3E2l83KNBQgOMo';
+    var secret = isAuthUser ? secrets[req_cnt%modcnt] : 'ldR40qhxhS';
     req_cnt++;
 
     var options = {
