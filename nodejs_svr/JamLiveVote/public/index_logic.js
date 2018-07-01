@@ -338,9 +338,11 @@ function registerKeyEvent( socket ) {
             vote(socket, {idx: idx });
         }
         else {
-            $('.ip_msg').val('');
-            $('.ip_msg').focus();
-            bTrigger = true;
+            if( code != 27 ) {
+                $('.ip_msg').val('');
+                $('.ip_msg').focus();
+                bTrigger = true;
+            }
         }
     })
 
