@@ -651,7 +651,9 @@ function setSearchDB(data) {
     });
 
     var html = '';
-    for( var i = 0 ; i < items.length ; ++i) {
+    var htmlforleft = '';
+    var cnt = 0;
+    for( var i = 0 ; i < items.length ; ++i, ++cnt) {
         var item = items[i];
         var sub = '';
         for( var j = 0 ; j < 3 ; ++j ) {
@@ -671,6 +673,8 @@ function setSearchDB(data) {
             '</div>';
 
         html += div;
+        if( cnt < 1 )
+            htmlforleft += div;
     }
 
     if( items.length == 0 ) {
@@ -678,11 +682,14 @@ function setSearchDB(data) {
     }
 
     $('#mid_quiz_search').prepend(html);
+    $('#sd_ret').prepend(htmlforleft);
 
     clearTimeout(timerIDForDB);
     timerIDForDB = setTimeout(function() {
         //$('.search_article').html(htmlBackup);
         $('#mid_quiz_search').css('display','none');
+        $('#sd_ret').css('display','none');
+        $('#sd_ads').css('display','inline-block');
     }, 15000);
 }
 
