@@ -9,7 +9,7 @@ var Client = function(socket) {
 
 Client.prototype.isClickable = function() {
     var cur = new Date();
-    var _auth = this.socket.request.session.username ? socket.request.session.auth : -1;
+    var _auth = this.socket.request.session.username ? this.socket.request.session.auth : -1;
     if( _auth >= 1 ) {
         return (cur - this.tLastClick) > 1000;
     }
