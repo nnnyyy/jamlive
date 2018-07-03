@@ -2,7 +2,7 @@
   "dbhost": "52.79.205.198",
   "user":"root",
   "password": "s1980819",
-  "database": "jamlivequiz"
+  "database": "jamlivequiz",
   "servers" : [
     {
 
