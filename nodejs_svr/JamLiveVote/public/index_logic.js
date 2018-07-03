@@ -23,6 +23,7 @@ var usernick = '';
 
 
 
+
 ConnectStateInfo.prototype.Connect = function() {
     this.isConnected = true;
     clearInterval( this.timeoutID );
@@ -71,6 +72,9 @@ function registerSocketEvent( socket ) {
     //socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('myid', function(data) {
         myid = data.socket;
+        isLogin = data.isLogined;
+        setShowMemberVoteOnlyListener();
+        console.log('a;sjfa;slkfj');
     })
 
     socket.on('vote_data', function(data) {
@@ -846,6 +850,14 @@ function setSearchCheckboxes() {
 
 function setShowMemberVoteOnlyListener() {
 
+    if( !isLogin ) {
+        $('.cb_show_member_vote_only').attr('checked', false );
+        $('.cb_show_member_vote_only').attr('disabled', true);
+        return;
+    }
+    else {
+        $('.cb_show_member_vote_only').attr('disabled', false);
+    }
     var only = localStorage.getItem('cb_show_member_vote_only') || 0;
 
     $('.cb_show_member_vote_only').attr('checked', only == 1 ? true : false );

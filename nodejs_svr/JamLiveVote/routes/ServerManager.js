@@ -317,8 +317,6 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
 ServerMan.prototype.register = function(socket) {
     this.addSocket(socket);
 
-    socket.emit('myid', {socket: socket.id});
-
     socket.on('disconnect', function(){
         var client = servman.getClient(this);
         if( client && client.isAdmin ) {
@@ -327,6 +325,9 @@ ServerMan.prototype.register = function(socket) {
         }
         servman.removeSocket(this);
     });
+
+    var logined = socket.request.session.username ? true : false;
+    socket.emit('myid', {socket: socket.id, isLogined: logined });
 
     socket.on('vote', function(data) {
         var client = servman.getClient(this);
