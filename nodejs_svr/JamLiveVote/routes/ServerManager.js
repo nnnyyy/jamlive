@@ -45,14 +45,18 @@ BanUserInfo.prototype.isAbleBan = function() {
 
 var ServerMan = function() {
     this.socketmap = new HashMap();
+    this.membersmap = new HashMap();
     this.banMap = new HashMap();
     this.uniqueip = new HashMap();
-    this.counts = new HashMap();
+
     this.banUsers = new HashMap();
     this.searchedByType = new HashMap();
     this.check_connections = new HashMap();
-    this.adminClient = null;
+    this.counts = new HashMap();
     this.countslist = [];
+
+    this.countsForGuest  = new HashMap();
+    this.countslistForGuest = [];
     this.others = [];
 }
 
@@ -75,17 +79,14 @@ ServerMan.prototype.addSocket = function(socket) {
         cinfo.tLast = new Date();
         cinfo.nCnt++;
         if( cinfo.nCnt >= 10 ) {
-            /*var msg = '너무 접속 시도를 많이했습니다. 3분뒤에 접속 시도 해주세요.';
-            socket.emit('serv_msg', {msg: msg});
-            socket.disconnect();*/
-            //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '-> 많은 접속 시도' , mode: "notice", isBaned: false, admin: false }});
-            //return;
         }
     }
 
-    this.socketmap.set(socket, new Client(socket));
+    var client = new Client(socket);
+    this.socketmap.set(socket, client);
 
     if( socket.request.session.username ) {
+        this.membersmap.set(socket.request.session.username, true);
         servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false }});
     }
 
@@ -116,6 +117,7 @@ ServerMan.prototype.removeSocket = function(socket) {
     }
 
     if( socket.request.session.username ) {
+        this.membersmap.delete(socket.request.session.username);
         servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 퇴장' , mode: "notice", isBaned: false, admin: false }});
     }
 
@@ -153,31 +155,53 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
+    if( this.countsForGuest.get(cur) == null ) {
+        this.countsForGuest.set(cur, [0,0,0]);
+        this.countslistForGuest.push(cur);
+        if( this.countsForGuest.count() > 10 ) {
+            this.countsForGuest.delete(this.countslistForGuest[0]);
+            this.countslistForGuest.shift();
+        }
+    }
+
     var _counts = [0,0,0];
+    var _countsForGuest = [0,0,0];
+
     this.counts.forEach(function(value, key) {
         _counts[0] += value[0];
         _counts[1] += value[1];
         _counts[2] += value[2];
     })
 
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others })
+    this.countsForGuest.forEach(function(value, key) {
+        _countsForGuest[0] += value[0];
+        _countsForGuest[1] += value[1];
+        _countsForGuest[2] += value[2];
+    })
+
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others })
     this.others = [];
 }
 
-ServerMan.prototype.click = function(idx) {
+ServerMan.prototype.click = function(idx, isGuest) {
     var cur = new Date();
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
 
-    var obj = this.counts.get(cur);
+    console.log( isGuest );
+
+    var _counts = isGuest ? this.countsForGuest : this.counts;
+    var _countslist = isGuest ? this.countslistForGuest : this.countslist;
+
+    var obj = _counts.get(cur);
     if( obj == null ) {
-        this.counts.set(cur, [0,0,0]);
-        this.countslist.push(cur);
-        if( this.counts.count() > 10 ) {
-            this.counts.delete(this.countslist[0]);
-            this.countslist.shift();
+        _counts.set(cur, [0,0,0]);
+        _countslist.push(cur);
+        if( _counts.count() > 10 ) {
+            _counts.delete(_countslist[0]);
+            _countslist.shift();
         }
-        obj = this.counts.get(cur);
+        obj = _counts.get(cur);
     }
 
     if( obj == null ) return;
@@ -319,19 +343,21 @@ ServerMan.prototype.register = function(socket) {
         }
 
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
+
+        var logined = socket.request.session.username ? true : false;
+
         if( client.isClickable() ) {
-            servman.click(data.idx);
+            servman.click(data.idx, !logined);
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
                 servman.quizdata.vote(data.idx);
             }
             if( socket.request.session.username && socket.request.session.auth >= 1 ) {
-                servman.click(data.idx);
+                servman.click(data.idx, !logined);
             }
             client.tLastClick = new Date();
 
             var number = Number(data.idx) + 1;
 
-            var logined = socket.request.session.username ? true : false;
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
             var auth_state = socket.request.session.auth;
 
@@ -420,6 +446,9 @@ ServerMan.prototype.register = function(socket) {
         if( data.isBroadcast ){
             var client = servman.getClient(this);
             var logined = socket.request.session.username ? true : false;
+            if( !logined ) {
+                socket.emit('serv_msg', {msg: '손님은 검색결과 제한이 있습니다. 왼쪽상단의 "고정닉 가입" 하세요'});
+            }
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
             var auth_state = socket.request.session.auth;
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});

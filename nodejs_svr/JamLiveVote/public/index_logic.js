@@ -79,34 +79,45 @@ function registerSocketEvent( socket ) {
         $('vote_user_cnt').text(users);
         $('vote_except').text(votedata.bans);
 
+        var total = [0,0,0];
+        for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
+            total[i] += votedata.cnt[i];
+        }
+
+        if( !isShowMemberVoteOnly() ) {
+            for( var i = 0 ; i < votedata.guest_cnt.length ; ++i ) {
+                total[i] += votedata.guest_cnt[i];
+            }
+        }
+
         var totalCnt = 0;
         var maxVoteCnt = 0;
-        for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
-            totalCnt += votedata.cnt[i];
-            if( maxVoteCnt <= votedata.cnt[i]) {
-                maxVoteCnt = votedata.cnt[i];
+        for( var i = 0 ; i < total.length ; ++i ) {
+            totalCnt += total[i];
+            if( maxVoteCnt <= total[i]) {
+                maxVoteCnt = total[i];
             }
         }
 
         var duplicatedMaxVoteCnt = 0;
-        for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
-            if( maxVoteCnt == votedata.cnt[i] ) {
+        for( var i = 0 ; i < total.length ; ++i ) {
+            if( maxVoteCnt == total[i] ) {
                 duplicatedMaxVoteCnt++;
             }
         }
 
         if( isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
-            votedata.cnt = [0,0,0];
+            total = [0,0,0];
         }
 
         var minVoteVal = Number($('min_vote').text());
 
         if( totalCnt <= minVoteVal) {
-            votedata.cnt = [0,0,0];
+            total = [0,0,0];
         }
 
 
-        showBarChart('.ct-chart',['1번','2번','3번'],[votedata.cnt], {
+        showBarChart('.ct-chart',['1번','2번','3번'],[total], {
             seriesBarDistance: 10,
             height: 170,
             axisX: {
@@ -140,7 +151,12 @@ function onChat(data) {
         else if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-        addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth);
+        if( isShowMemberVoteOnly() && !data.auth ) {
+            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b>투표했습니다.</b>', false, data.auth);
+        }
+        else {
+            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth);
+        }
         setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
     }
     else if( data.mode == "search") {
@@ -746,6 +762,14 @@ function isMaxVoteDuplicateChecked() {
     return false;
 }
 
+function isShowMemberVoteOnly() {
+    if($('.cb_show_member_vote_only').is(':checked')) {
+        return true;
+    }
+
+    return false;
+}
+
 function setVoteMsgVisibleListener() {
     var checked = localStorage.getItem('cb_votemsg') || 0;
     $('#cb_votemsg').attr('checked', checked == 1 ? true : false );
@@ -795,6 +819,43 @@ function setMinVoteSliderListener() {
         }
         else {
             localStorage.setItem('max_vote_dupl', 0);
+        }
+    })
+}
+
+function setSearchCheckboxes() {
+    var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6'];
+    var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6')];
+    var cbs_ret = new Array(cbs_name.length);
+    $.each(cbs_name, function(idx, name) {
+        cbs_ret[idx] = localStorage.getItem(name) || 1;
+    });
+
+    $.each(cbs, function(idx, item) {
+        item.attr('checked', cbs_ret[idx] == 1 ? true : false);
+        item.change(function() {
+            if( $(this).is(':checked') ) {
+                localStorage.setItem(cbs_name[idx], 1);
+            }
+            else {
+                localStorage.setItem(cbs_name[idx], 0);
+            }
+        })
+    })
+}
+
+function setShowMemberVoteOnlyListener() {
+
+    var only = localStorage.getItem('cb_show_member_vote_only') || 0;
+
+    $('.cb_show_member_vote_only').attr('checked', only == 1 ? true : false );
+
+    $('.cb_show_member_vote_only').change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb_show_member_vote_only', 1);
+        }
+        else {
+            localStorage.setItem('cb_show_member_vote_only', 0);
         }
     })
 }

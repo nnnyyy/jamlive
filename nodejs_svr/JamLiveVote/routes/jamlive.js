@@ -146,60 +146,7 @@ function requestBlog(query, data, callback) {
 }
 */
 
-exports.requestGoogle = function(req, res, next) {
-    var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
-    var ipHashed = ip.hashCode().toString();
-    if( ServerManager.checkBaned(ipHashed) ) {
-        res.json([]);
-        return;
-    }
 
-    var query = req.body.query
-    query = query.trim();
-
-    var cached = ServerManager.getCachedSearchResult('google', query);
-    if( cached ) {
-        console.log('cached : ' + query);
-        res.json(cached);
-        return;
-    }
-
-    var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
-
-    var options = {
-        url: url,
-        headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
-        }
-        ,encoding: null
-    };
-    try {
-        request.get(options, function (error, response, body) {
-            var data = [];
-            if (!error && response.statusCode == 200) {
-                parcing(data, body);
-                if( isArray(data) && data.length > 0 ) {
-                    data = data.slice(0,4);
-                    res.json(data);
-                    if( data.length > 0 )
-                        ServerManager.setCachedSearchResult('google', query, data);
-                }
-                else {
-                    res.json([]);
-                }
-            } else {
-                console.log('google search failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
-                res.json([]);
-            }
-        });
-    }
-    catch(e){
-        console.log('request google error - ' + e);
-        res.json([]);
-    }
-
-
-}
 
 exports.requestDB = function( req, res, next ) {
     console.log('db request');
@@ -260,6 +207,11 @@ exports.searchex = function(req, res, next) {
         return;
     }
 
+    var isGuest = false;
+    if( !ServerManager.membersmap.get( req.session.username ) ) {
+        isGuest = true;
+    }
+
     var sType = 'encyc';
     switch(type) {
         case 0: sType = 'encyc'; break;
@@ -272,6 +224,9 @@ exports.searchex = function(req, res, next) {
     var cached = ServerManager.getCachedSearchResult(sType, query);
     if( cached ) {
         console.log('cached : ' + query);
+        if( isGuest ) {
+            cached = cached.slice(0,1);
+        }
         res.json(cached);
         return;
     }
@@ -298,12 +253,14 @@ exports.searchex = function(req, res, next) {
             if (!error && response.statusCode == 200 && body) {
                 var data = JSON.parse(body).items;
                 if( isArray(data) && data.length > 0 ) {
-                    if( type == 1 ) data = data.slice(0,4);
-                    else if ( type == 4 ) data = data.slice(0,5);
-                    else data = data.slice(0,3);
+                    if( type == 1 ) data = data.slice(0,isGuest ? 1 : 4);
+                    else if ( type == 4 ) data = data.slice(0,isGuest ? 1 : 5);
+                    else data = data.slice(0,isGuest ? 1 : 3);
+                    ServerManager.setCachedSearchResult(sType, query, data);
+                    if( isGuest ) {
+                        data = data.slice(0,1);
+                    }
                     res.json(data);
-                    if( data.length > 0 )
-                        ServerManager.setCachedSearchResult(sType, query, data);
                 }
                 else {
                     res.json([]);
@@ -317,4 +274,69 @@ exports.searchex = function(req, res, next) {
     catch(e){
         res.json([]);
     }
+}
+
+exports.requestGoogle = function(req, res, next) {
+    var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
+    var ipHashed = ip.hashCode().toString();
+    if( ServerManager.checkBaned(ipHashed) ) {
+        res.json([]);
+        return;
+    }
+
+    var query = req.body.query
+    query = query.trim();
+
+    var isGuest = false;
+    if( !ServerManager.membersmap.get( req.session.username ) ) {
+        isGuest = true;
+    }
+
+    var cached = ServerManager.getCachedSearchResult('google', query);
+    if( cached ) {
+        console.log('cached : ' + query);
+        if( isGuest ) {
+            cached = cached.slice(0,1);
+        }
+        res.json(cached);
+        return;
+    }
+
+    var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
+
+    var options = {
+        url: url,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+        }
+        ,encoding: null
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            var data = [];
+            if (!error && response.statusCode == 200) {
+                parcing(data, body);
+                if( isArray(data) && data.length > 0 ) {
+                    data = data.slice(0,4);
+                    ServerManager.setCachedSearchResult('google', query, data);
+                    if( isGuest ) {
+                        data = data.slice(0,1);
+                    }
+                    res.json(data);
+                }
+                else {
+                    res.json([]);
+                }
+            } else {
+                console.log('google search failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                res.json([]);
+            }
+        });
+    }
+    catch(e){
+        console.log('request google error - ' + e);
+        res.json([]);
+    }
+
+
 }

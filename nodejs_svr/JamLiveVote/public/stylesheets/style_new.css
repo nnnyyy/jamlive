@@ -356,7 +356,8 @@ footer {
     width: 40vw;
     height: 60px;
     margin-left: -20vw;
-    background-color: white;
+    background-color: black;
+    color: white;
     text-align: center;
     line-height: 60px;
     font-size: 17px;
@@ -470,11 +471,11 @@ footer {
 }
 
 .opacity {
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .non_opacity {
