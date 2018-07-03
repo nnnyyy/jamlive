@@ -30,6 +30,7 @@ ConnectStateInfo.prototype.Connect = function() {
 
 ConnectStateInfo.prototype.Disconnect = function() {
     this.isConnected = false;
+    /*
     setInterval(function() {
         if( !connectStateInfo.isConnected ) {
             $.get('/ping', function(data){
@@ -38,6 +39,7 @@ ConnectStateInfo.prototype.Disconnect = function() {
             })
         }
     }, RETRY_INTERVAL);
+    */
 }
 
 function registerClickEvent( socket ) {
@@ -66,7 +68,7 @@ function registerClickEvent( socket ) {
 
 function registerSocketEvent( socket ) {
     socket.on('connect', connectStateInfo.Connect );
-    socket.on('disconnect', connectStateInfo.Disconnect);
+    //socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('myid', function(data) {
         myid = data.socket;
     })
