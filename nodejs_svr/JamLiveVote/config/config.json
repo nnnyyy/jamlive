@@ -3,4 +3,15 @@
   "user":"root",
   "password": "s1980819",
   "database": "jamlivequiz"
+  "servers" : [
+    {
+
+    },
+    {
+
+    },
+    {
+
+    }
+  ]
 }
