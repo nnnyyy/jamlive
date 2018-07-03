@@ -9,6 +9,10 @@ var async = require('async');
 var ServerManager = require('./ServerManager');
 var dbhelper = require('./dbhelper');
 
+function isArray(what) {
+    return Object.prototype.toString.call(what) === '[object Array]';
+}
+
 function VoteObj() {
     this.countlist = [0,0,0];
 }
@@ -173,10 +177,15 @@ exports.requestGoogle = function(req, res, next) {
             var data = [];
             if (!error && response.statusCode == 200) {
                 parcing(data, body);
-                data = data.slice(0,4);
-                res.json(data);
-                if( data.length > 0 )
-                    ServerManager.setCachedSearchResult('google', query, data);
+                if( data.length > 0 ) {
+                    data = data.slice(0,4);
+                    res.json(data);
+                    if( data.length > 0 )
+                        ServerManager.setCachedSearchResult('google', query, data);
+                }
+                else {
+                    res.json([]);
+                }
             } else {
                 console.log('google search failed : ' + error + ', ' + response.statusCode );
                 res.json([]);
@@ -285,12 +294,17 @@ exports.searchex = function(req, res, next) {
         request.get(options, function (error, response, body) {
             if (!error && response.statusCode == 200 && body) {
                 var data = JSON.parse(body).items;
-                if( type == 1 ) data = data.slice(0,4);
-                else if ( type == 4 ) data = data.slice(0,5);
-                else data = data.slice(0,3);
-                res.json(data);
-                if( data.length > 0 )
-                    ServerManager.setCachedSearchResult(sType, query, data);
+                if( isArray(data) && data.length > 0 ) {
+                    if( type == 1 ) data = data.slice(0,4);
+                    else if ( type == 4 ) data = data.slice(0,5);
+                    else data = data.slice(0,3);
+                    res.json(data);
+                    if( data.length > 0 )
+                        ServerManager.setCachedSearchResult(sType, query, data);
+                }
+                else {
+                    res.json([]);
+                }
             } else {
                 console.log('searchex failed : ' + error + ', ' + response.statusCode );
                 res.json([]);
@@ -298,6 +312,6 @@ exports.searchex = function(req, res, next) {
         });
     }
     catch(e){
-        callback(-1);
+        res.json([]);
     }
 }
