@@ -177,7 +177,7 @@ exports.requestGoogle = function(req, res, next) {
             var data = [];
             if (!error && response.statusCode == 200) {
                 parcing(data, body);
-                if( data.length > 0 ) {
+                if( isArray(data) && data.length > 0 ) {
                     data = data.slice(0,4);
                     res.json(data);
                     if( data.length > 0 )
@@ -187,7 +187,7 @@ exports.requestGoogle = function(req, res, next) {
                     res.json([]);
                 }
             } else {
-                console.log('google search failed : ' + error + ', ' + response.statusCode );
+                console.log('google search failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
                 res.json([]);
             }
         });
@@ -306,7 +306,7 @@ exports.searchex = function(req, res, next) {
                     res.json([]);
                 }
             } else {
-                console.log('searchex failed : ' + error + ', ' + response.statusCode );
+                console.log('searchex failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
                 res.json([]);
             }
         });
