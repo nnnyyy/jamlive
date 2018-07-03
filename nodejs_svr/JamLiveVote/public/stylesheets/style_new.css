@@ -83,11 +83,12 @@ body {
 }
 
 .search_article {
-    width: calc(100% - 24px);
+    width: calc(100% - 20px);
     overflow-y: scroll;
     padding: 12px;
+    margin-top: 6px;
     word-break: break-all;
-    height: calc(100% - 24px - 15px);
+    height: calc(100% - 24px - 15px - 6px);
 }
 
 .search_desc {
@@ -107,7 +108,7 @@ em {
 
 .search_ret_title {
     font-size: 17px;	
-    color: red;
+    color: #880003;
 }
 
 .search_ret_desc {
@@ -117,7 +118,8 @@ em {
 
 .search_ret_desc b {
     font-weight: bolder;
-    color: blue;
+    color: black;
+    font-style: italic;
 }
 
 .content_mid {
