@@ -154,7 +154,8 @@ exports.requestGoogle = function(req, res, next) {
         return;
     }
 
-    var query = req.body.query;
+    var query = req.body.query
+    query = query.trim();
 
     var cached = ServerManager.getCachedSearchResult('google', query);
     if( cached ) {
@@ -249,6 +250,8 @@ var req_cnt = 0;
 exports.searchex = function(req, res, next) {
     var query = req.body.query;
     var type = req.body.type;
+
+    query = query.trim();
 
     var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
     var ipHashed = ip.hashCode().toString();
