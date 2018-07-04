@@ -149,7 +149,6 @@ function requestBlog(query, data, callback) {
 
 
 exports.requestDB = function( req, res, next ) {
-    console.log('db request');
     dbhelper.search(req.body.query, function(ret) {
         res.json(ret);
     })

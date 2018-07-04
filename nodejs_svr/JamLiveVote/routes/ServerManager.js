@@ -188,8 +188,6 @@ ServerMan.prototype.click = function(idx, isGuest) {
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
 
-    console.log( isGuest );
-
     var _counts = isGuest ? this.countsForGuest : this.counts;
     var _countslist = isGuest ? this.countslistForGuest : this.countslist;
 
@@ -360,7 +358,7 @@ ServerMan.prototype.register = function(socket) {
             var number = Number(data.idx) + 1;
 
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
-            var auth_state = socket.request.session.auth;
+            var auth_state = logined ? socket.request.session.auth : -1;
 
             servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state }})
             //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });

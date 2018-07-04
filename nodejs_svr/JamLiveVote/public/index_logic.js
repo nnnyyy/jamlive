@@ -21,9 +21,6 @@ var socket = io();
 var isLogin = false;
 var usernick = '';
 
-
-
-
 ConnectStateInfo.prototype.Connect = function() {
     this.isConnected = true;
     clearInterval( this.timeoutID );
@@ -41,6 +38,72 @@ ConnectStateInfo.prototype.Disconnect = function() {
         }
     }, RETRY_INTERVAL);
     */
+}
+
+var SearchSortMan = function() {
+    this.searchedItem = [];
+}
+
+SearchSortMan.prototype.Init = function() {
+    this.searchedItem.clear();
+}
+
+SearchSortMan.prototype.AddItems = function( type, items ) {
+    var _ssm = this;
+    $.each(items, function(_idx, item) {
+        _ssm.Add( type, item );
+    })
+}
+
+SearchSortMan.prototype.Add = function( type, item ) {
+    var si = new SearchItem();
+    si.idx = type;
+    si.item = item;
+
+    if( type >= 0 && type < 4 ) {
+        var div = '<div class="search_ret_root">' +
+            '<div class="search_ret_title">' +
+            item.title +
+            '</div><div class="search_ret_desc">' +
+            (item.description) +
+            '</div>' +
+            '</div>';
+        si.html = div;
+    }
+    else if( type == 6 ) {
+        var div = '<div class="search_ret_root">' +
+            '<div class="search_ret_title">' +
+            item.title +
+            '</div><div class="search_ret_desc">' +
+            (item.description) +
+            '</div>' +
+            '</div>';
+        si.html = div;
+    }
+
+    this.searchedItem.push(si);
+}
+
+SearchSortMan.prototype.MakeHTML = function() {
+    var _html = '';
+    this.searchedItem.sort(function(item1, item2) {
+        return item1.idx - item2.idx;
+    })
+
+    $.each(this.searchedItem, function( _idx, item ) {
+        _html += item.html;
+    })
+
+    console.log(_html);
+    return _html;
+}
+
+var ssm = new SearchSortMan();
+
+var SearchItem = function() {
+    this.idx = 0;
+    this.item = {};
+    this.html = '';
 }
 
 function registerClickEvent( socket ) {
@@ -155,7 +218,10 @@ function onChat(data) {
         else if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-        if( isShowMemberVoteOnly() && !data.auth ) {
+        console.log(data.auth);
+        if( isShowMemberVoteOnly() &&
+            ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
+        ) {
             addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b>투표했습니다.</b>', false, data.auth);
         }
         else {
@@ -512,6 +578,8 @@ function searchWeb( type, query ) {
         url: '/searchex',
         success: function(data) {
             if( type != 4 ) {
+                ssm.AddItems( type, data );
+                ssm.MakeHTML();
                 setSearchRet(data, false);
             }
             else {
@@ -546,6 +614,8 @@ function searchWebGoogle( query ) {
         contentType: 'application/json',
         url: '/searchgoogle',
         success: function(data) {
+            ssm.AddItems( 6, data );
+            ssm.MakeHTML();
             setSearchRet(data, true);
         }
     });
