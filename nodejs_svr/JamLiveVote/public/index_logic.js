@@ -599,6 +599,8 @@ function searchFromDB( query ) {
         contentType: 'application/json',
         url: '/searchdb',
         success: function(data) {
+            ssm.AddItems( 7, data );
+            ssm.MakeHTML();
             setSearchDB(data);
         }
     });

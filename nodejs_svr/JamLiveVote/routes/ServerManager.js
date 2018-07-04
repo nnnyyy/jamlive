@@ -329,21 +329,22 @@ ServerMan.prototype.register = function(socket) {
 
     socket.on('vote', function(data) {
         var client = servman.getClient(this);
+        var logined = socket.request.session.username ? true : false;
+        var auth_state = logined ? socket.request.session.auth : -1;
+
         var ip = this.handshake.address.substr(7);
         if( socket.handshake.headers['x-real-ip'] != null ) {
             ip = socket.handshake.headers['x-real-ip'];
         }
         var ipHashed = ip.hashCode();
 
-        if( servman.checkBaned( ipHashed ) ) {
+        if( auth_state < 1 && servman.checkBaned( ipHashed ) ) {
             var msg = '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.';
             socket.emit('serv_msg', {msg: msg});
             return;
         }
 
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-
-        var logined = socket.request.session.username ? true : false;
 
         if( client.isClickable() ) {
             servman.click(data.idx, !logined);
@@ -358,7 +359,7 @@ ServerMan.prototype.register = function(socket) {
             var number = Number(data.idx) + 1;
 
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
-            var auth_state = logined ? socket.request.session.auth : -1;
+
 
             servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state }})
             //servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin });
@@ -428,6 +429,10 @@ ServerMan.prototype.register = function(socket) {
     })
 
     socket.on('search', function(data) {
+        var client = servman.getClient(this);
+        var logined = socket.request.session.username ? true : false;
+        var auth_state = logined ? socket.request.session.auth : -1;
+
         var ip = this.handshake.address.substr(7);
         if( socket.handshake.headers['x-real-ip'] != null ) {
             ip = socket.handshake.headers['x-real-ip'];
@@ -436,20 +441,18 @@ ServerMan.prototype.register = function(socket) {
         ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
 
         var isBaned = false;
-        if( servman.checkBaned( ipHashed ) ) {
+        if( auth_state < 1 && servman.checkBaned( ipHashed ) ) {
             var msg = '다수의 신고로 인해 일시적으로 검색기능 사용이 불가합니다.';
             socket.emit('serv_msg', {msg: msg});
             return;
         }
 
         if( data.isBroadcast ){
-            var client = servman.getClient(this);
-            var logined = socket.request.session.username ? true : false;
             if( !logined ) {
                 socket.emit('serv_msg', {msg: '손님은 검색결과 제한이 있습니다. 왼쪽상단의 "고정닉 가입" 하세요'});
             }
             var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
-            var auth_state = socket.request.session.auth;
+
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});
             servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state });
         }
