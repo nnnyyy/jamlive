@@ -425,6 +425,10 @@ function addChat( mode, isbaned, hash , name, msg, bStrip,auth ) {
     var bAutoMoveToBottom = false;
     var chatwndheight = $('.chat_msg').height();
 
+    if( $('#chat_ul').find('li').length > 300 ) {
+        $('#chat_ul').find('li').eq(0).remove();
+    }
+
     if( ($('.chat_msg').get(0).scrollTop == ($('.chat_msg').get(0).scrollHeight - chatwndheight) ) ||
         $('#cb_auto_scroll').is(':checked')) {
         bAutoMoveToBottom = true;
