@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>라이브 퀴즈 정답 공유기 v0.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 퀴즈 문제의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="/basic.js"></script>
+    <script src="/myChart.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style3rd.css' />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<body>
+<separator role="menu">
+    <img src="/images/logo.png"/>
+    <div type="line"></div>
+    <%
+    // test
+    username = 'nnnyyy';
+    if( !username ) {%>
+    <div type="menu_btn" id="btn-login">로그인</div>
+    <%}else {%>
+    <div type="user-info">
+        <name>왕야옹</name>
+        <lv>견습생</lv>
+    </div>
+    <div type="line"></div>
+    <div type="menu_btn" id="btn-logout">로그아웃</div>
+    <%}%>
+    <% if( !username ) {%>
+    <div type="menu_btn" id="btn-signup">회원가입</div>
+    <%}else {%>
+    <%}%>
+
+    <div type="line"></div>
+    <div type="menu_btn" id="btn-settings">설정</div>
+    <div type="menu_btn" id="btn-help">사용법</div>
+    <div type="line"></div>
+    <div type="menu_btn" id="btn-help">기출문제</div>
+</separator>
+<article>
+    <separator role="search-ret-1">
+    </separator>
+    <separator role="search-ret-2">
+    </separator>
+    <separator role="vote-and-chat">
+        <separator role="vote-graph">
+            <div class="ct-chart">
+            </div>
+        </separator>
+        <separator role="ads-area">
+            <ins class="kakao_ad_area" style="display:none;"
+                 data-ad-unit    = "DAN-1iyeys41mnepk"
+                 data-ad-width   = "320"
+                 data-ad-height  = "100"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+        </separator>
+        <separator role="chat-area">
+            <div type="chat-msg">
+                
+            </div>
+            <div type="chat-input">
+                <input class="ip_name" type="text"><input class="ip_msg" type="text">
+            </div>
+        </separator>
+        <separator role="ads-area-2">
+            <ins class="kakao_ad_area" style="display:none;width:100%"
+                 data-ad-unit    = "DAN-t87e91n4i053"
+                 data-ad-width   = "320"
+                 data-ad-height  = "50"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+        </separator>
+    </separator>
+</article>
+<wnd role="settings">
+    <div type="title"> - 투표 - </div>
+    <div type="line"></div>
+    <div type="checkbox"><input type="checkbox"/>최다 투표 동률시 미표시</div>
+    <div type="checkbox"><input type="checkbox"/>고정닉 투표 결과만 보기</div>
+    <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
+    <div class="min_vote_slider"></div>
+    <div type="line"></div>
+    <div type="title"> - 검색 - </div>
+    <div type="line"></div>
+    <div type="checkbox"><input type="checkbox"/>네이버 - 백과사전</div>
+    <div type="checkbox"><input type="checkbox"/>네이버 - 지식인</div>
+    <div type="checkbox"><input type="checkbox"/>네이버 - 블로그</div>
+    <div type="checkbox"><input type="checkbox"/>네이버 - 뉴스</div>
+    <div type="checkbox"><input type="checkbox"/>네이버 - 이미지</div>
+    <div type="checkbox"><input type="checkbox"/>구글</div>
+    <div type="checkbox"><input type="checkbox"/>사이트 기출DB</div>
+    <div type="checkbox"><input type="checkbox"/>반자동 검색 기능 On/Off</div>
+    <div type="line"></div>
+    <div type="title"> - 채팅 - </div>
+    <div type="line"></div>
+    <div type="checkbox"><input type="checkbox"/>강제 자동 스크롤 on/off</div>
+    <div type="checkbox"><input type="checkbox"/>투표 채팅 가리기</div>
+</wnd>
+<wnd role="help">
+
+</wnd>
+</body>
+<script type="text/javascript" src="/index_3rd.js"></script>
+<script>
+    $(document).ready(function() {
+        setMinVoteSliderListener();
+        setSocketListener();
+        setBtnListener();
+    });
+</script>

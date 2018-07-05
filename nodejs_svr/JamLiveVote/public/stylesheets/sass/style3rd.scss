@@ -1,0 +1,238 @@
+$primary-color: #1b3440;
+$main-font-color: #ffffff;
+$wnd-width: 100vw;
+$menu-width: 100px;
+$article-width: calc(100vw - #{$menu-width} );
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  overflow-y: hidden;
+  overflow: hidden;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  background-color: $main-font-color;
+  color: $main-font-color;
+}
+
+separator {
+  display: inline-block;
+}
+
+separator[role="menu"] {
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  background-color: $primary-color;
+  width: $menu-width;
+  height: 100%;
+  text-align: center;
+
+  div[type="line"] {
+    height: 1px;
+    width: 80px;
+    background-color: $main-font-color;
+    margin: 0 auto;
+  }
+
+  div[type="menu_btn"] {
+    width: 100%;
+    height: 30px;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+
+  div[type="user-info"] {
+    $padding: 2px;
+    $width: calc(100% - #{$padding} - #{$padding});
+    width: $width;
+    padding: $padding;
+    margin-top: 8px;
+    name {
+      display: inline-block;
+      width: 100%;
+      height: 30px;
+      font-weight: bold;
+    }
+
+    lv {
+      display: inline-block;
+      width: 100%;
+      height: 30px;
+      font-size: 12px;
+    }
+  }
+}
+
+wnd[role="settings"] {
+  $width: 300px;
+  $line-width: $width / 10 * 9;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: $width;
+  height: 100%;
+  background-color: $main-font-color;
+  color: $primary-color;
+  z-index: 2;
+  box-shadow: 5px 0 0 0 $primary-color;
+  text-align: center;
+  overflow-y: auto;
+
+  div[type="title"] {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  div[type="line"] {
+    height: 1px;
+    width: $line-width;
+    background-color: $primary-color;
+    margin: 0 auto;
+  }
+
+  div[type="checkbox"] {
+    width: calc( 100% - 30px );
+    height: 30px;
+    text-align: left;
+    margin: 9px;
+  }
+
+  div[type="btn"] {
+  }
+
+  div[type="msg"] {
+    width: 100%;
+  }
+
+  .min_vote_slider {
+    width: calc(90% - 20px);
+    height: 10px;
+    margin: 10px auto;
+    z-index: 0;
+
+    .ui-slider-handle {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  #btn-exit {
+  }
+}
+
+article {
+  display: inline-block;
+  float: left;
+  background-color: inherit;
+  color: $primary-color;
+  width: $article-width;
+  height: 100%;
+
+  // 검색 결과창 1번
+  separator[role="search-ret-1"] {
+    float: left;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: hidden;
+    $width: 33%;
+    min-width: 200px;
+    width: $width;
+    height: 100%;
+    background-color: red;
+  }
+
+  separator[role="search-ret-2"] {
+    float: left;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: hidden;
+    $width: 33%;
+    min-width: 200px;
+    width: $width;
+    height: 100%;
+    background-color: green;
+  }
+
+  separator[role="vote-and-chat"] {
+    float: left;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: hidden;
+    $width: 34%;
+    width: $width;
+    height: 100%;
+  }
+
+  $vote-graph-height: 180px;
+  $ads-height: 100px;
+  $ads-2-height: 65px;
+
+  separator[role="vote-graph"] {
+    width: 100%;
+    height: $vote-graph-height;
+  }
+
+  separator[role="ads-area"] {
+    width: 100%;
+    height: $ads-height;
+  }
+
+  separator[role="ads-area-2"] {
+    width: 100%;
+    height: $ads-2-height;
+  }
+
+  separator[role="chat-area"] {
+    width: 100%;
+    height: calc(100% - #{$vote-graph-height} - #{$ads-height} - #{$ads-2-height});
+    background-color: #219161;
+
+    $input-height: 32px;
+
+    div[type="chat-msg"] {
+      width: 100%;
+      height: calc( 100% - #{$input-height} );
+      background-color: #2f3a40;
+    }
+
+    div[type="chat-input"] {
+      width: 100%;
+      height: $input-height;
+
+      $name-width: 150px;
+      $name-margin-left: 10px;
+      $msg-margin-right: 10px;
+
+      .ip_name {
+        display: inline-block;
+        float: left;
+        width: $name-width;
+        height: $input-height;
+        margin-left: $name-margin-left;
+      }
+
+      .ip_msg {
+        display: inline-block;
+        float: left;
+        margin-right: $msg-margin-right;
+        height: $input-height;
+        width: calc(100% - #{$name-width} - #{$name-margin-left} - #{$msg-margin-right});
+      }
+    }
+  }
+}
