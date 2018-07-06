@@ -358,7 +358,7 @@ ServerMan.prototype.register = function(socket) {
 
             var number = Number(data.idx) + 1;
 
-            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var nick = logined ? socket.request.session.usernick : data.nickname;
 
 
             servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: ip }})
@@ -403,7 +403,7 @@ ServerMan.prototype.register = function(socket) {
 
             var logined = socket.request.session.username ? true : false;
             ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var nick = logined ? socket.request.session.usernick : data.nickname;
             var auth_state = socket.request.session.auth;
 
             if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#quiz") {
@@ -451,7 +451,7 @@ ServerMan.prototype.register = function(socket) {
             if( !logined ) {
                 socket.emit('serv_msg', {msg: '손님은 검색결과 제한이 있습니다. 왼쪽상단의 "고정닉 가입" 하세요'});
             }
-            var nick = logined ? socket.request.session.usernick : data.nickname + '(' + ip + ')';
+            var nick = logined ? socket.request.session.usernick : data.nickname
 
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});
             servman.io.sockets.emit('chat', {id: this.id, hash: ipHashed, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: ip });

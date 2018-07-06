@@ -3,6 +3,8 @@ $main-font-color: #ffffff;
 $wnd-width: 100vw;
 $menu-width: 100px;
 $article-width: calc(100vw - #{$menu-width} );
+$chat-font-size: 14px;
+$sub-color: yellow;
 
 * {
   box-sizing: border-box;
@@ -68,6 +70,7 @@ separator[role="menu"] {
       width: 100%;
       height: 30px;
       font-size: 12px;
+      color: $sub-color;
     }
   }
 }
@@ -103,6 +106,7 @@ wnd[role="settings"] {
   }
 
   div[type="checkbox"] {
+    font-size: $chat-font-size;
     width: calc( 100% - 30px );
     height: 30px;
     text-align: left;
@@ -113,6 +117,7 @@ wnd[role="settings"] {
   }
 
   div[type="msg"] {
+    font-size: $chat-font-size;
     width: 100%;
   }
 
@@ -140,6 +145,44 @@ article {
   width: $article-width;
   height: 100%;
 
+  .search_ret_root {
+    color: $primary-color;
+    margin: 8px;
+  }
+
+  div.search_ret_root[type="fromDB"] {
+    background-color: $primary-color;
+    color: $main-font-color;
+
+    b {
+      background-color: red;
+    }
+  }
+
+  em {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  .search_ret_title {
+    font-size: 17px;
+
+    b {
+      font-size: 16px;
+    }
+  }
+
+  .search_ret_desc {
+    font-size: 14px;
+    margin-bottom: 4px;
+    line-height: 25px;
+
+    b {
+      font-size: 16px;
+    }
+  }
+
   // 검색 결과창 1번
   separator[role="search-ret-1"] {
     float: left;
@@ -151,7 +194,39 @@ article {
     min-width: 200px;
     width: $width;
     height: 100%;
-    background-color: red;
+    //background-color: red;
+    div[type="search-area-1"] {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+    }
+
+    div[type="ads-area-1"] {
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
+      top: 0;
+      left: 0;
+      //background-color: #7c2929;
+      z-index: 2;
+
+      div[type="title"] {
+        width: 100%;
+        font-size: 24px;
+        color: $primary-color;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+
+      div[type="sub-title"] {
+        width: 100%;
+        font-size: 15px;
+        color: $primary-color;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+    }
   }
 
   separator[role="search-ret-2"] {
@@ -164,7 +239,39 @@ article {
     min-width: 200px;
     width: $width;
     height: 100%;
-    background-color: green;
+    //background-color: green;
+    div[type="search-area-2"] {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+    }
+
+    div[type="ads-area-2"] {
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
+      top: 0;
+      left: 0;
+      //background-color: #7c2929;
+      z-index: 2;
+
+      div[type="title"] {
+        width: 100%;
+        font-size: 24px;
+        color: $primary-color;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+
+      div[type="sub-title"] {
+        width: 100%;
+        font-size: 15px;
+        color: $primary-color;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+    }
   }
 
 
@@ -223,24 +330,28 @@ article {
         height: calc(100% - #{$margin} - #{$margin});
         background-color: white;
 
-        $msg-min-line-height: 32px;
+        $msg-min-line-height: 26px;
         div[type="msg-obj"] {
           min-height: $msg-min-line-height;
-          line-height: $msg-min-line-height - 3px;
+          line-height: $msg-min-line-height - 13px;
           width: 100%;
+          font-size: $chat-font-size;
 
-          $nick-width: 210px;
+          $nick-width: 190px;
           [type="nick"] {
             float: left;
             width: $nick-width;
             min-height: $msg-min-line-height;
-            line-height: $msg-min-line-height - 3px;
+            line-height: $msg-min-line-height - 13px;
+            cursor: pointer;
             ip {
+              float: left;
               font-size: 10px;
             }
 
             $img-width: $msg-min-line-height - 6px;
             img[type="grade"] {
+              float: left;
               width: $img-width;
               height: $img-width;
               vertical-align: middle;
@@ -250,7 +361,8 @@ article {
           [type="msg"] {
             float: left;
             width: calc(100% - #{$nick-width});
-            min-height: $msg-min-line-height;
+            min-height: $msg-min-line-height - 3px;
+            height: $msg-min-line-height;
           }
         }
       }
@@ -285,4 +397,8 @@ article {
       }
     }
   }
+}
+
+notice-nick {
+  color: blue;
 }

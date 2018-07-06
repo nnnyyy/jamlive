@@ -26,14 +26,12 @@
     <img src="/images/logo.png"/>
     <div type="line"></div>
     <%
-    // test
-    username = 'nnnyyy';
     if( !username ) {%>
     <div type="menu_btn" id="btn-login">로그인</div>
     <%}else {%>
     <div type="user-info">
-        <name>왕야옹</name>
-        <lv>견습생</lv>
+        <name><%=nick%></name>
+        <lv><%=auth%> Lv</lv>
     </div>
     <div type="line"></div>
     <div type="menu_btn" id="btn-logout">로그아웃</div>
@@ -45,14 +43,38 @@
 
     <div type="line"></div>
     <div type="menu_btn" id="btn-settings">설정</div>
-    <div type="menu_btn" id="btn-help">사용법</div>
+    <div type="menu_btn" id="btn-help">도움말</div>
     <div type="line"></div>
-    <div type="menu_btn" id="btn-help">기출문제</div>
+    <div type="menu_btn" id="btn-quiz">기출문제</div>
 </separator>
 <article>
     <separator role="search-ret-1">
+        <div type="search-area-1" id="search-area-1"></div>
+        <div type="ads-area-1" id="ads-area-1">
+            <div type="title">검색 결과 창 - 1</div>
+            <div type="sub-title">검색 기능 활용법은 왼쪽 메뉴에서 [도움말]을 확인하세요</div>
+            <ins class="daum_ddn_area" style="display:none;margin-top:5px"
+                 data-ad-unit    = "DAN-1hbghejif3l2e"
+                 data-ad-media   = "5MC"
+                 data-ad-pubuser = "4jp"
+                 data-ad-type    = "D"
+                 data-ad-width   = "250"
+                 data-ad-height  = "250"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js"></script>
+        </div>
     </separator>
     <separator role="search-ret-2">
+        <div type="search-area-2" id="search-area-2">
+        </div>
+        <div type="ads-area-2" id="ads-area-2">
+            <div type="title">검색 결과 창 - 2</div>
+            <div type="sub-title">검색 기능 활용법은 왼쪽 메뉴에서 [도움말]을 확인하세요</div>
+            <ins class="kakao_ad_area" style="display:none;"
+                 data-ad-unit    = "DAN-urmud1jjvzg3"
+                 data-ad-width   = "250"
+                 data-ad-height  = "250"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+        </div>
     </separator>
     <separator role="vote-and-chat">
         <separator role="vote-graph">
@@ -69,12 +91,6 @@
         <separator role="chat-area">
             <div type="chat-msg">
                 <ul class="chat-ui">
-                    <li>
-                        <div type="msg-obj">
-                                <div type="nick"><img type="grade" src="/images/star.png"/>아마이달고나<ip>(127.0.0.1)</ip></div>
-                                <div type="msg">와하항와하항와하항와</div>
-                        </div>
-                    </li>
                 </ul>
             </div>
             <div type="chat-input">
@@ -93,26 +109,26 @@
 <wnd role="settings">
     <div type="title"> - 투표 - </div>
     <div type="line"></div>
-    <div type="checkbox"><input type="checkbox"/>최다 투표 동률시 미표시</div>
-    <div type="checkbox"><input type="checkbox"/>고정닉 투표 결과만 보기</div>
+    <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
+    <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>고정닉 투표 결과만 보기(로그인시)</div>
     <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
     <div class="min_vote_slider"></div>
     <div type="line"></div>
     <div type="title"> - 검색 - </div>
     <div type="line"></div>
-    <div type="checkbox"><input type="checkbox"/>네이버 - 백과사전</div>
-    <div type="checkbox"><input type="checkbox"/>네이버 - 지식인</div>
-    <div type="checkbox"><input type="checkbox"/>네이버 - 블로그</div>
-    <div type="checkbox"><input type="checkbox"/>네이버 - 뉴스</div>
-    <div type="checkbox"><input type="checkbox"/>네이버 - 이미지</div>
-    <div type="checkbox"><input type="checkbox"/>구글</div>
-    <div type="checkbox"><input type="checkbox"/>사이트 기출DB</div>
-    <div type="checkbox"><input type="checkbox"/>반자동 검색 기능 On/Off</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s0"/>네이버 - 백과사전</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s1"/>네이버 - 지식인</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s2"/>네이버 - 블로그</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s3"/>네이버 - 뉴스</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s4"/>네이버 - 이미지</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s5"/>구글</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s6"/>사이트 기출DB</div>
+    <div type="checkbox"><input type="checkbox" class="cb_auto_search"/>반자동 검색 기능 On/Off</div>
     <div type="line"></div>
     <div type="title"> - 채팅 - </div>
     <div type="line"></div>
     <div type="checkbox"><input type="checkbox" id="cb_auto_scroll"/>강제 자동 스크롤 on/off</div>
-    <div type="checkbox"><input type="checkbox"/>투표 채팅 가리기</div>
+    <div type="checkbox"><input type="checkbox" id="cb_votemsg"/>투표 채팅 가리기</div>
 </wnd>
 <wnd role="help">
 
@@ -121,9 +137,23 @@
 <script type="text/javascript" src="/index_3rd.js"></script>
 <script>
     $(document).ready(function() {
+        <%if(!username) {%>
+        setNickName();
+        $('.ip-name').prop('disabled', false);
+        <%}else {%>
+        isLogin = true;
+        $('.ip-name').val('<%- nick %>');
+        usernick = '<%= nick %>';
+        $('.ip-name').prop('disabled', true);
+        <%}%>
+        init();
+        registerKeyEvent();
+        registerSocketEvent();
         setMinVoteSliderListener();
+        setShowMemberVoteOnlyListener();
         setSocketListener();
         setBtnListener();
-        addChat('vote', false, '1111', '왕야옹', '안녕하세요~^^', true, 2, '211.255.34.xx');
+        setSearchCheckboxes();
+        setVoteMsgVisibleListener();
     });
 </script>

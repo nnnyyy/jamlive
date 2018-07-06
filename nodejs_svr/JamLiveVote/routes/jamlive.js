@@ -224,7 +224,7 @@ exports.searchex = function(req, res, next) {
     if( cached ) {
         console.log('cached : ' + query);
         if( isGuest ) {
-            cached = cached.slice(0,1);
+            //cached = cached.slice(0,1);
         }
         res.json(cached);
         return;
@@ -252,12 +252,11 @@ exports.searchex = function(req, res, next) {
             if (!error && response.statusCode == 200 && body) {
                 var data = JSON.parse(body).items;
                 if( isArray(data) && data.length > 0 ) {
-                    if( type == 1 ) data = data.slice(0,isGuest ? 1 : 4);
-                    else if ( type == 4 ) data = data.slice(0,isGuest ? 1 : 5);
-                    else data = data.slice(0,isGuest ? 1 : 3);
+                    if ( type == 4 ) data = data.slice(0,5);
+                    else data = data.slice(0,4);
                     ServerManager.setCachedSearchResult(sType, query, data);
                     if( isGuest ) {
-                        data = data.slice(0,1);
+                        //data = data.slice(0,1);
                     }
                     res.json(data);
                 }
@@ -295,7 +294,7 @@ exports.requestGoogle = function(req, res, next) {
     if( cached ) {
         console.log('cached : ' + query);
         if( isGuest ) {
-            cached = cached.slice(0,1);
+            //cached = cached.slice(0,1);
         }
         res.json(cached);
         return;
@@ -319,7 +318,7 @@ exports.requestGoogle = function(req, res, next) {
                     data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('google', query, data);
                     if( isGuest ) {
-                        data = data.slice(0,1);
+                        //data = data.slice(0,1);
                     }
                     res.json(data);
                 }
