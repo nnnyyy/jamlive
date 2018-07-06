@@ -17,7 +17,7 @@ function init() {
     setVisible($('#ads-area-1'), true);
     setVisible($('#search-area-2'), false);
     setVisible($('#ads-area-2'), true);
-    setVisible($('.quiz_wnd') , true);
+    setVisible($('.quiz_wnd') , false);
 }
 
 function registerKeyEvent( socket ) {
