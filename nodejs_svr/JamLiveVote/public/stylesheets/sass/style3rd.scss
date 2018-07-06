@@ -45,6 +45,19 @@ separator[role="menu"] {
     margin: 0 auto;
   }
 
+  div[type="noti"] {
+    width: 100%;
+    color: yellow;
+    height: 30px;
+    margin-top: 2px;
+  }
+
+  div[type="msg"] {
+    width: 100%;
+    height: 30px;
+    margin-top: 2px;
+  }
+
   div[type="menu_btn"] {
     width: 100%;
     height: 30px;
@@ -96,6 +109,7 @@ wnd[role="settings"] {
     line-height: 30px;
     margin-top: 5px;
     margin-bottom: 5px;
+    font-weight: bold;
   }
 
   div[type="line"] {
@@ -119,6 +133,8 @@ wnd[role="settings"] {
   div[type="msg"] {
     font-size: $chat-font-size;
     width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 
   .min_vote_slider {
@@ -133,7 +149,61 @@ wnd[role="settings"] {
     }
   }
 
+  .ret_cnt_slider {
+    width: calc(90% - 20px);
+    height: 10px;
+    margin: 10px auto;
+    z-index: 0;
+
+    .ui-slider-handle {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
   #btn-exit {
+  }
+}
+
+wnd[role="help"] {
+  $width: 300px;
+  $line-width: $width / 10 * 9;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: $width;
+  height: 100%;
+  background-color: $main-font-color;
+  color: $primary-color;
+  z-index: 2;
+  box-shadow: 5px 0 0 0 $primary-color;
+  text-align: center;
+  overflow-y: auto;
+
+  div[type="title"] {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  div[type="line"] {
+    height: 1px;
+    width: $line-width;
+    background-color: $primary-color;
+    margin: 0 auto;
+  }
+
+  div[type="msg"] {
+    text-align: left;
+    font-size: $chat-font-size;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: $chat-font-size + 7px;
+    padding: 8px;
   }
 }
 
@@ -167,6 +237,7 @@ article {
 
   .search_ret_title {
     font-size: 17px;
+    margin-bottom: 5px;
 
     b {
       font-size: 16px;
@@ -181,6 +252,13 @@ article {
     b {
       font-size: 16px;
     }
+  }
+
+  .separator {
+    width: 100%;
+    height: 1px;
+    background-color: $primary-color;
+    margin: 0 auto;
   }
 
   // 검색 결과창 1번
@@ -333,21 +411,18 @@ article {
         $msg-min-line-height: 26px;
         div[type="msg-obj"] {
           min-height: $msg-min-line-height;
-          line-height: $msg-min-line-height - 13px;
+          line-height: $msg-min-line-height;
           width: 100%;
           font-size: $chat-font-size;
 
-          $nick-width: 190px;
+          $nick-width: 140px;
           [type="nick"] {
+            display: inline-block;
             float: left;
             width: $nick-width;
             min-height: $msg-min-line-height;
-            line-height: $msg-min-line-height - 13px;
+            line-height: $msg-min-line-height;
             cursor: pointer;
-            ip {
-              float: left;
-              font-size: 10px;
-            }
 
             $img-width: $msg-min-line-height - 6px;
             img[type="grade"] {
@@ -356,12 +431,21 @@ article {
               height: $img-width;
               vertical-align: middle;
             }
+
+            div[type="nick-only"] {
+              float: left;
+            }
+
+            div[type="ip-only"] {
+              font-size: 11px;
+              float: left;
+            }
           }
 
           [type="msg"] {
             float: left;
             width: calc(100% - #{$nick-width});
-            min-height: $msg-min-line-height - 3px;
+            min-height: $msg-min-line-height;
             height: $msg-min-line-height;
           }
         }
@@ -401,4 +485,37 @@ article {
 
 notice-nick {
   color: blue;
+}
+
+.admin_msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40vw;
+  min-height: 60px;
+  padding: 15px;
+  margin-left: -20vw;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: 17px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.opacity {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.non_opacity {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
 }

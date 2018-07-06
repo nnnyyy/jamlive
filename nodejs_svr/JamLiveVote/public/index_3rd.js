@@ -50,7 +50,7 @@ function registerClickEvent( socket ) {
 
 function registerSocketEvent() {
     socket.on('chat', onChat );
-    //socket.on('serv_msg', onServMsg);
+    socket.on('serv_msg', onServMsg);
     //socket.on('quiz', onQuiz);
     //socket.on('quizret', onQuizRet);
 }
@@ -113,7 +113,7 @@ function onChat(data) {
         }
     }
     else if ( data.mode == "notice") {
-        addChat( data.mode, data.isBaned, data.hash, '<notice-nick>알리미</notice-nick>', data.msg, false, data.auth, data.ip);
+        addChat( data.mode, data.isBaned, data.hash, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip);
     }
     else {
 
@@ -287,9 +287,22 @@ function setSocketListener() {
 function setBtnListener() {
     $('wnd[role="settings"]').css('display', 'none');
     $('#btn-settings').click(onBtnSettings);
+    $('#btn-help').click(onBtnHelp);
 
     $('#btn-login').click(function(e) {
         window.location.href = '/signin';
+    });
+
+    $('#btn-signup').click(function(e) {
+        window.location.href = '/signup';
+    });
+
+    $('#btn-svr1').click(function(e) {
+        window.location.href = 'http://jamlive.net';
+    });
+
+    $('#btn-svr2').click(function(e) {
+        window.location.href = 'http://ch2.jamlive.net';
     });
 
     $('#btn-logout').click(function(e) {
@@ -297,9 +310,20 @@ function setBtnListener() {
     })
 
     $('#btn-quiz').click(function(e) {
-        console.log(e);
         window.open('http://quiz.jamlive.net');
     })
+
+    $(document).on('click', '.chat_item div[type="nick"]', function (e) {
+        if( $(this).attr('hash') == '') {
+            return;
+        }
+
+        var name = $(this).text();
+        if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
+            socket.emit('ban', {hash: $(this).attr('hash')});
+        }
+        e.preventDefault();
+    });
 }
 
 function setMinVoteSliderListener() {
@@ -318,6 +342,21 @@ function setMinVoteSliderListener() {
     $('.min_vote_slider').slider('value', min_vote_val);
     $( "min_vote" ).text( min_vote_val );
 
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    $('.ret_cnt_slider').slider({
+        range: "min",
+        value: 3,
+        min: 2,
+        max: 4,
+        slide: function( event, ui ) {
+            localStorage.setItem('ret_cnt', ui.value);
+            $( "ret_cnt" ).text( ui.value );
+        }
+    });
+
+    $('.ret_cnt_slider').slider('value', ret_cnt_val);
+    $( "ret_cnt" ).text( ret_cnt_val );
+
     var max_vote_dupl = localStorage.getItem('max_vote_dupl') || 0;
     $('.cb_max_vote_duplicate').attr('checked', max_vote_dupl == 1 ? true : false );
     $('.cb_max_vote_duplicate').change(function() {
@@ -333,8 +372,8 @@ function setMinVoteSliderListener() {
 function onProcessVoteData(data) {
     var votedata = data.vote_data;
     var users = votedata.users;
-    //$('vote_user_cnt').text(users);
-    //$('vote_except').text(votedata.bans);
+    $('vote_user_cnt').text(users);
+    $('vote_except').text(votedata.bans);
 
     var total = [0,0,0];
     for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
@@ -393,6 +432,29 @@ function onProcessVoteData(data) {
     }
 }
 
+function onServMsg(data) {
+    showAdminMsg(data.msg);
+}
+
+var animOpacityTimerID = -1;
+function showAdminMsg(msg) {
+    var obj = $('.admin_msg');
+    if( animOpacityTimerID != -1 ) {
+        clearTimeout(animOpacityTimerID);
+        animOpacityTimerID = -1;
+        obj.removeClass('opacity');
+        obj.addClass('non_opacity');
+    }
+    obj.addClass('opacity');
+    obj.removeClass('non_opacity');
+    $('.admin_msg').html(msg);
+    $('.admin_msg').css('opacity', '0.85');
+    animOpacityTimerID = setTimeout(function() {
+        $('.admin_msg').css('opacity', '0');
+    }, 7000);
+
+}
+
 function onBtnSettings(e) {
     e.stopPropagation();
     var settingsWnd = $('wnd[role="settings"]');
@@ -418,9 +480,45 @@ function onBtnSettings(e) {
     });
 }
 
+function onBtnHelp(e) {
+    e.stopPropagation();
+    var helpWnd = $('wnd[role="help"]');
+    helpWnd.css('display','inline-block');
+
+    helpWnd.click(function(e) {
+        e.stopPropagation();
+    })
+
+    $(window).click(function() {
+        helpWnd.animate({
+            left: "-=300"
+        }, 300, function() {
+            // Animation complete.
+            $(window).unbind('click');
+        });
+    })
+
+    helpWnd.animate({
+        left: "+=300"
+    }, 300, function() {
+        // Animation complete.
+    });
+}
+
 function getGradeImage( auth, isbaned ) {
-    if( auth == 1 ) {
-        return "/images/star.png";
+    if( isbaned ) {
+        return "/images/bone.png";
+    }
+
+    switch(auth){
+        case 0:
+            return "/images/0star.png";
+        case 1:
+            return "/images/star.png";
+        case 99:
+            return "/images/noti.png";
+        default:
+            return "/images/guest.png";
     }
 
     return "";
@@ -429,7 +527,7 @@ function getGradeImage( auth, isbaned ) {
 function addChat( mode, isbaned, hash , name, msg, bStrip,auth, ip ) {
     var li =    '<li class="chat_item" mode="' + mode +'">' +
                 '<div type="msg-obj">' +
-                '<div type="nick" hash="'+ hash +'"><img type="grade" src="' + getGradeImage(auth, isbaned) +'"/>' + name +'<ip>' + (ip ? ('(' + ip + ')') : '') + '</ip></div>' +
+                '<div type="nick" hash="'+ hash +'"><img type="grade" src="' + getGradeImage(auth, isbaned) +'"/><div type="nick-only">' + name +'</div><div type="ip-only">' + (ip ? ('(' + ip + ')') : '') + '</div></div>' +
                 '<div type="msg">' + ( bStrip ? strip(msg) : msg ) + '</div>' +
                 '<data class="chat_name" hash="'+ hash +'"></data>' +
                 '</div>' +
@@ -607,6 +705,11 @@ function setSearchDB(data) {
         return cnt2 - cnt1;
     });
 
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    if( items.length > ret_cnt_val) {
+        items = items.slice( 0, ret_cnt_val );
+    }
+
     var html = '';
     var htmlforleft = '';
     var cnt = 0;
@@ -615,10 +718,10 @@ function setSearchDB(data) {
         var sub = '';
         for( var j = 0 ; j < 3 ; ++j ) {
             if( j != item.collect ) {
-                sub += (j+1) + '. ' + item.answer[j] + ' ';
+                sub += (j+1) + '. ' + item.answer[j].trim() + '<br>';
             }
             else {
-                sub += '<b>' + (j+1) + '. ' + item.answer[j] + '</b> ';
+                sub += '<b>' + (j+1) + '. ' + item.answer[j].trim() + '</b><br>';
             }
         }
         var div = '<div class="search_ret_root" type="fromDB">' +
@@ -626,7 +729,7 @@ function setSearchDB(data) {
             '[기출문제] ' + item.question +
             '</div><div class="search_ret_desc">' +
             (sub) +
-            '</div>' +
+            '</div><div class="separator"></div>' +
             '</div>';
 
         html += div;
@@ -673,6 +776,11 @@ function setSearchRetImage(items, first) {
 }
 
 function setSearchRet(items, first, where) {
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    if( items.length > ret_cnt_val) {
+        items = items.slice( 0, ret_cnt_val );
+    }
+
     var html = '';
     for( var i = 0 ; i < items.length ; ++i) {
         var item = items[i];
@@ -681,7 +789,7 @@ function setSearchRet(items, first, where) {
             item.title +
             '</div><div class="search_ret_desc">' +
             (item.description) +
-            '</div>' +
+            '</div><div class="separator"></div>' +
             '</div>';
 
         html += div;

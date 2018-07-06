@@ -87,7 +87,7 @@ ServerMan.prototype.addSocket = function(socket) {
 
     if( socket.request.session.username ) {
         this.membersmap.set(socket.request.session.username, true);
-        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false }});
+        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false, auth: 99 }});
     }
 
     ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
@@ -118,7 +118,7 @@ ServerMan.prototype.removeSocket = function(socket) {
 
     if( socket.request.session.username ) {
         this.membersmap.delete(socket.request.session.username);
-        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 퇴장' , mode: "notice", isBaned: false, admin: false }});
+        servman.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: socket.request.session.usernick + '님의 퇴장' , mode: "notice", isBaned: false, admin: false, auth: 99 }});
     }
 
     //this.others.push({channel: "chat", data: {id: socket.id, hash: '', nickname: '알림', msg: ip + '퇴장' , mode: "notice", isBaned: false, admin: false }});
@@ -448,9 +448,6 @@ ServerMan.prototype.register = function(socket) {
         }
 
         if( data.isBroadcast ){
-            if( !logined ) {
-                socket.emit('serv_msg', {msg: '손님은 검색결과 제한이 있습니다. 왼쪽상단의 "고정닉 가입" 하세요'});
-            }
             var nick = logined ? socket.request.session.usernick : data.nickname
 
             //servman.others.push({channel: "chat", data: {id: this.id, hash: ipHashed, nickname: data.nickname + '(' + ip + ')', msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin }});

@@ -37,6 +37,17 @@ separator[role="menu"] div[type="line"] {
   background-color: #ffffff;
   margin: 0 auto;
 }
+separator[role="menu"] div[type="noti"] {
+  width: 100%;
+  color: yellow;
+  height: 30px;
+  margin-top: 2px;
+}
+separator[role="menu"] div[type="msg"] {
+  width: 100%;
+  height: 30px;
+  margin-top: 2px;
+}
 separator[role="menu"] div[type="menu_btn"] {
   width: 100%;
   height: 30px;
@@ -82,6 +93,7 @@ wnd[role="settings"] div[type="title"] {
   line-height: 30px;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-weight: bold;
 }
 wnd[role="settings"] div[type="line"] {
   height: 1px;
@@ -99,6 +111,8 @@ wnd[role="settings"] div[type="checkbox"] {
 wnd[role="settings"] div[type="msg"] {
   font-size: 14px;
   width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 wnd[role="settings"] .min_vote_slider {
   width: calc(90% - 20px);
@@ -109,6 +123,54 @@ wnd[role="settings"] .min_vote_slider {
 wnd[role="settings"] .min_vote_slider .ui-slider-handle {
   width: 15px;
   height: 15px;
+}
+wnd[role="settings"] .ret_cnt_slider {
+  width: calc(90% - 20px);
+  height: 10px;
+  margin: 10px auto;
+  z-index: 0;
+}
+wnd[role="settings"] .ret_cnt_slider .ui-slider-handle {
+  width: 15px;
+  height: 15px;
+}
+
+wnd[role="help"] {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100%;
+  background-color: #ffffff;
+  color: #1b3440;
+  z-index: 2;
+  -webkit-box-shadow: 5px 0 0 0 #1b3440;
+          box-shadow: 5px 0 0 0 #1b3440;
+  text-align: center;
+  overflow-y: auto;
+}
+wnd[role="help"] div[type="title"] {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+wnd[role="help"] div[type="line"] {
+  height: 1px;
+  width: 270px;
+  background-color: #1b3440;
+  margin: 0 auto;
+}
+wnd[role="help"] div[type="msg"] {
+  text-align: left;
+  font-size: 14px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 21px;
+  padding: 8px;
 }
 
 article {
@@ -137,6 +199,7 @@ article em {
 }
 article .search_ret_title {
   font-size: 17px;
+  margin-bottom: 5px;
 }
 article .search_ret_title b {
   font-size: 16px;
@@ -148,6 +211,12 @@ article .search_ret_desc {
 }
 article .search_ret_desc b {
   font-size: 16px;
+}
+article .separator {
+  width: 100%;
+  height: 1px;
+  background-color: #1b3440;
+  margin: 0 auto;
 }
 article separator[role="search-ret-1"] {
   float: left;
@@ -270,20 +339,17 @@ article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui {
 }
 article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] {
   min-height: 26px;
-  line-height: 13px;
+  line-height: 26px;
   width: 100%;
   font-size: 14px;
 }
 article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] {
+  display: inline-block;
   float: left;
-  width: 190px;
+  width: 140px;
   min-height: 26px;
-  line-height: 13px;
+  line-height: 26px;
   cursor: pointer;
-}
-article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] ip {
-  float: left;
-  font-size: 10px;
 }
 article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] img[type="grade"] {
   float: left;
@@ -291,10 +357,17 @@ article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="ms
   height: 20px;
   vertical-align: middle;
 }
+article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] div[type="nick-only"] {
+  float: left;
+}
+article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] div[type="ip-only"] {
+  font-size: 11px;
+  float: left;
+}
 article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="msg"] {
   float: left;
-  width: calc(100% - 190px);
-  min-height: 23px;
+  width: calc(100% - 140px);
+  min-height: 26px;
   height: 26px;
 }
 article separator[role="chat-area"] div[type="chat-input"] {
@@ -323,6 +396,33 @@ article separator[role="chat-area"] div[type="chat-input"] .ip-msg {
 
 notice-nick {
   color: blue;
+}
+
+.admin_msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40vw;
+  min-height: 60px;
+  padding: 15px;
+  margin-left: -20vw;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: 17px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.opacity {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.non_opacity {
+  -webkit-transition: none !important;
+  transition: none !important;
 }
 
 /*# sourceMappingURL=style3rd.css.map */
