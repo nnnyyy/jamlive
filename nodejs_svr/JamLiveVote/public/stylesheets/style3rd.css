@@ -1,25 +1,21 @@
 * {
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
+          box-sizing: border-box; }
 
 html {
   height: 100%;
   overflow-y: hidden;
-  overflow: hidden;
-}
+  overflow: hidden; }
 
 body {
   margin: 0px;
   padding: 0px;
   height: 100%;
   background-color: #ffffff;
-  color: #ffffff;
-}
+  color: #ffffff; }
 
 separator {
-  display: inline-block;
-}
+  display: inline-block; }
 
 separator[role="menu"] {
   display: inline-block;
@@ -29,37 +25,31 @@ separator[role="menu"] {
   background-color: #1b3440;
   width: 100px;
   height: 100%;
-  text-align: center;
-}
-separator[role="menu"] div[type="line"] {
-  height: 1px;
-  width: 80px;
-  background-color: #ffffff;
-  margin: 0 auto;
-}
-separator[role="menu"] div[type="menu_btn"] {
-  width: 100%;
-  height: 30px;
-  margin-top: 8px;
-  cursor: pointer;
-}
-separator[role="menu"] div[type="user-info"] {
-  width: calc(100% - 2px - 2px);
-  padding: 2px;
-  margin-top: 8px;
-}
-separator[role="menu"] div[type="user-info"] name {
-  display: inline-block;
-  width: 100%;
-  height: 30px;
-  font-weight: bold;
-}
-separator[role="menu"] div[type="user-info"] lv {
-  display: inline-block;
-  width: 100%;
-  height: 30px;
-  font-size: 12px;
-}
+  text-align: center; }
+  separator[role="menu"] div[type="line"] {
+    height: 1px;
+    width: 80px;
+    background-color: #ffffff;
+    margin: 0 auto; }
+  separator[role="menu"] div[type="menu_btn"] {
+    width: 100%;
+    height: 30px;
+    margin-top: 8px;
+    cursor: pointer; }
+  separator[role="menu"] div[type="user-info"] {
+    width: calc(100% - 2px - 2px);
+    padding: 2px;
+    margin-top: 8px; }
+    separator[role="menu"] div[type="user-info"] name {
+      display: inline-block;
+      width: 100%;
+      height: 30px;
+      font-weight: bold; }
+    separator[role="menu"] div[type="user-info"] lv {
+      display: inline-block;
+      width: 100%;
+      height: 30px;
+      font-size: 12px; }
 
 wnd[role="settings"] {
   position: fixed;
@@ -73,40 +63,33 @@ wnd[role="settings"] {
   -webkit-box-shadow: 5px 0 0 0 #1b3440;
           box-shadow: 5px 0 0 0 #1b3440;
   text-align: center;
-  overflow-y: auto;
-}
-wnd[role="settings"] div[type="title"] {
-  width: 100%;
-  height: 30px;
-  line-height: 30px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-wnd[role="settings"] div[type="line"] {
-  height: 1px;
-  width: 270px;
-  background-color: #1b3440;
-  margin: 0 auto;
-}
-wnd[role="settings"] div[type="checkbox"] {
-  width: calc( 100% - 30px );
-  height: 30px;
-  text-align: left;
-  margin: 9px;
-}
-wnd[role="settings"] div[type="msg"] {
-  width: 100%;
-}
-wnd[role="settings"] .min_vote_slider {
-  width: calc(90% - 20px);
-  height: 10px;
-  margin: 10px auto;
-  z-index: 0;
-}
-wnd[role="settings"] .min_vote_slider .ui-slider-handle {
-  width: 15px;
-  height: 15px;
-}
+  overflow-y: auto; }
+  wnd[role="settings"] div[type="title"] {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px; }
+  wnd[role="settings"] div[type="line"] {
+    height: 1px;
+    width: 270px;
+    background-color: #1b3440;
+    margin: 0 auto; }
+  wnd[role="settings"] div[type="checkbox"] {
+    width: calc( 100% - 30px );
+    height: 30px;
+    text-align: left;
+    margin: 9px; }
+  wnd[role="settings"] div[type="msg"] {
+    width: 100%; }
+  wnd[role="settings"] .min_vote_slider {
+    width: calc(90% - 20px);
+    height: 10px;
+    margin: 10px auto;
+    z-index: 0; }
+    wnd[role="settings"] .min_vote_slider .ui-slider-handle {
+      width: 15px;
+      height: 15px; }
 
 article {
   display: inline-block;
@@ -114,78 +97,101 @@ article {
   background-color: inherit;
   color: #1b3440;
   width: calc(100vw - 100px );
-  height: 100%;
-}
-article separator[role="search-ret-1"] {
-  float: left;
-  display: inline-block;
-  margin: 0px;
-  padding: 0px;
-  overflow-y: hidden;
-  min-width: 200px;
-  width: 33%;
-  height: 100%;
-  background-color: red;
-}
-article separator[role="search-ret-2"] {
-  float: left;
-  display: inline-block;
-  margin: 0px;
-  padding: 0px;
-  overflow-y: hidden;
-  min-width: 200px;
-  width: 33%;
-  height: 100%;
-  background-color: green;
-}
-article separator[role="vote-and-chat"] {
-  float: left;
-  display: inline-block;
-  margin: 0px;
-  padding: 0px;
-  overflow-y: hidden;
-  width: 34%;
-  height: 100%;
-}
-article separator[role="vote-graph"] {
-  width: 100%;
-  height: 180px;
-}
-article separator[role="ads-area"] {
-  width: 100%;
-  height: 100px;
-}
-article separator[role="ads-area-2"] {
-  width: 100%;
-  height: 65px;
-}
-article separator[role="chat-area"] {
-  width: 100%;
-  height: calc(100% - 180px - 100px - 65px);
-  background-color: #219161;
-}
-article separator[role="chat-area"] div[type="chat-msg"] {
-  width: 100%;
-  height: calc( 100% - 32px );
-  background-color: #2f3a40;
-}
-article separator[role="chat-area"] div[type="chat-input"] {
-  width: 100%;
-  height: 32px;
-}
-article separator[role="chat-area"] div[type="chat-input"] .ip_name {
-  display: inline-block;
-  float: left;
-  width: 150px;
-  height: 32px;
-  margin-left: 10px;
-}
-article separator[role="chat-area"] div[type="chat-input"] .ip_msg {
-  display: inline-block;
-  float: left;
-  margin-right: 10px;
-  height: 32px;
-  width: calc(100% - 150px - 10px - 10px);
-}
+  height: 100%; }
+  article separator[role="search-ret-1"] {
+    float: left;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: hidden;
+    min-width: 200px;
+    width: 33%;
+    height: 100%;
+    background-color: red; }
+  article separator[role="search-ret-2"] {
+    float: left;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: hidden;
+    min-width: 200px;
+    width: 33%;
+    height: 100%;
+    background-color: green; }
+  article separator[role="vote-and-chat"] {
+    float: left;
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: hidden;
+    width: 34%;
+    height: 100%; }
+  article separator[role="vote-graph"] {
+    width: 100%;
+    height: 180px; }
+  article separator[role="ads-area"] {
+    width: 100%;
+    height: 100px; }
+  article separator[role="ads-area-2"] {
+    width: 100%;
+    height: 65px; }
+  article separator[role="chat-area"] {
+    width: 100%;
+    height: calc(100% - 180px - 100px - 65px);
+    background-color: white; }
+    article separator[role="chat-area"] div[type="chat-msg"] {
+      width: 100%;
+      height: calc( 100% - 32px ); }
+      article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui {
+        list-style: none;
+        overflow-y: auto;
+        margin: 8px auto;
+        border-radius: 5px;
+        -webkit-box-shadow: -4px 4px 0 0 black;
+                box-shadow: -4px 4px 0 0 black;
+        border: 2px solid gray;
+        padding: 10px;
+        width: calc(100% - 8px - 8px);
+        height: calc(100% - 8px - 8px);
+        background-color: white; }
+        article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] {
+          min-height: 32px;
+          line-height: 29px;
+          width: 100%; }
+          article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] {
+            float: left;
+            width: 210px;
+            min-height: 32px;
+            line-height: 29px; }
+            article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] ip {
+              font-size: 10px; }
+            article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] img[type="grade"] {
+              width: 26px;
+              height: 26px;
+              vertical-align: middle; }
+          article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="msg"] {
+            float: left;
+            width: calc(100% - 210px);
+            min-height: 32px; }
+    article separator[role="chat-area"] div[type="chat-input"] {
+      width: 100%;
+      height: 32px;
+      margin-top: -10px;
+      padding: 0; }
+      article separator[role="chat-area"] div[type="chat-input"] .ip-name {
+        padding: 0;
+        display: inline-block;
+        float: left;
+        width: 150px;
+        height: 32px;
+        margin-left: 10px;
+        border-radius: 3px; }
+      article separator[role="chat-area"] div[type="chat-input"] .ip-msg {
+        display: inline-block;
+        float: left;
+        margin-right: 10px;
+        height: 32px;
+        width: calc(100% - 150px - 10px - 10px);
+        border-radius: 3px; }
 
 /*# sourceMappingURL=style3rd.css.map */

@@ -133,6 +133,38 @@ function onBtnSettings(e) {
     });
 }
 
+function getGradeImage( auth, isbaned ) {
+    return "/images/star.png";
+}
+
+function addChat( mode, isbaned, hash , name, msg, bStrip,auth, ip ) {
+    var li =    '<li>' +
+                '<div type="msg-obj">' +
+                '<div type="nick" '+ hash +'><img type="grade" src="' + getGradeImage(auth, isbaned) +'"/>' + name +'<ip>(' + ip + ')</ip></div>' +
+                '<div type="msg">' + ( bStrip ? strip(msg) : msg ) + '</div>' +
+                '</div>' +
+                '</li>';
+
+    var bAutoMoveToBottom = false;
+    var chatwndheight = $('.chat-ui').height();
+
+    if( $('.chat-ui').find('li').length > 300 ) {
+        $('.chat-ui').find('li').eq(0).remove();
+    }
+
+    if( ($('.chat-ui').get(0).scrollTop == ($('.chat-ui').get(0).scrollHeight - chatwndheight) ) ||
+        $('#cb_auto_scroll').is(':checked')) {
+        bAutoMoveToBottom = true;
+    }
+
+    $('.chat-ui').append(li);
+
+    //  끝 정렬
+    if( bAutoMoveToBottom )
+        $('.chat-ui').scrollTop($('.chat-ui').get(0).scrollHeight);
+
+}
+
 function isMaxVoteDuplicateChecked() {
     if($('.cb_max_vote_duplicate').is(':checked')) {
         return true;

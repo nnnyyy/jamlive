@@ -167,6 +167,8 @@ article {
     background-color: green;
   }
 
+
+
   separator[role="vote-and-chat"] {
     float: left;
     display: inline-block;
@@ -200,38 +202,86 @@ article {
   separator[role="chat-area"] {
     width: 100%;
     height: calc(100% - #{$vote-graph-height} - #{$ads-height} - #{$ads-2-height});
-    background-color: #219161;
+    background-color: white;
 
     $input-height: 32px;
+    $margin: 8px;
+    $padding: 10px;
 
     div[type="chat-msg"] {
       width: 100%;
       height: calc( 100% - #{$input-height} );
-      background-color: #2f3a40;
+      ul.chat-ui {
+        list-style: none;
+        overflow-y: auto;
+        margin: $margin auto;
+        border-radius: 5px;
+        box-shadow: -4px 4px 0 0 black;
+        border: 2px solid gray;
+        padding: $padding;
+        width: calc(100% - #{$margin} - #{$margin});
+        height: calc(100% - #{$margin} - #{$margin});
+        background-color: white;
+
+        $msg-min-line-height: 32px;
+        div[type="msg-obj"] {
+          min-height: $msg-min-line-height;
+          line-height: $msg-min-line-height - 3px;
+          width: 100%;
+
+          $nick-width: 210px;
+          [type="nick"] {
+            float: left;
+            width: $nick-width;
+            min-height: $msg-min-line-height;
+            line-height: $msg-min-line-height - 3px;
+            ip {
+              font-size: 10px;
+            }
+
+            $img-width: $msg-min-line-height - 6px;
+            img[type="grade"] {
+              width: $img-width;
+              height: $img-width;
+              vertical-align: middle;
+            }
+          }
+
+          [type="msg"] {
+            float: left;
+            width: calc(100% - #{$nick-width});
+            min-height: $msg-min-line-height;
+          }
+        }
+      }
     }
 
     div[type="chat-input"] {
       width: 100%;
       height: $input-height;
-
+      margin-top: -10px;
+      padding: 0;
       $name-width: 150px;
       $name-margin-left: 10px;
       $msg-margin-right: 10px;
 
-      .ip_name {
+      .ip-name {
+        padding: 0;
         display: inline-block;
         float: left;
         width: $name-width;
         height: $input-height;
         margin-left: $name-margin-left;
+        border-radius: 3px;
       }
 
-      .ip_msg {
+      .ip-msg {
         display: inline-block;
         float: left;
         margin-right: $msg-margin-right;
         height: $input-height;
         width: calc(100% - #{$name-width} - #{$name-margin-left} - #{$msg-margin-right});
+        border-radius: 3px;
       }
     }
   }
