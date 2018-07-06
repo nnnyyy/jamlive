@@ -17,6 +17,7 @@ function init() {
     setVisible($('#ads-area-1'), true);
     setVisible($('#search-area-2'), false);
     setVisible($('#ads-area-2'), true);
+    setVisible($('.quiz_wnd') , true);
 }
 
 function registerKeyEvent( socket ) {
@@ -51,8 +52,8 @@ function registerClickEvent( socket ) {
 function registerSocketEvent() {
     socket.on('chat', onChat );
     socket.on('serv_msg', onServMsg);
-    //socket.on('quiz', onQuiz);
-    //socket.on('quizret', onQuizRet);
+    socket.on('quiz', onQuiz);
+    socket.on('quizret', onQuizRet);
 }
 
 function onChat(data) {
@@ -128,6 +129,45 @@ function onChat(data) {
         }
 
     }
+}
+
+var tStartQuiz = 0;
+var idInterval = -1;
+var idTimeout = -1;
+function onQuiz(data) {
+    $('.q_q').each(function(idx){
+        $(this).css('background-color','transparent');
+    })
+    $('.quiz_wnd').css('display', 'inline-block');
+    $('.q_title').text(data.quizdata.question);
+    addChat( "", false, 0, '<div class="notice_font">퀴즈</div>', data.quizdata.question, false);
+    $('.q_q').each(function(idx) {
+        $(this).text((idx+1) + '. ' + data.quizdata.answer[idx]);
+    })
+
+    tStartQuiz = new Date();
+
+    clearInterval(idInterval);
+    idInterval = setInterval(function() {
+        var remain = Math.floor((11000 - (Date.now() - tStartQuiz)) / 1000);
+        if( remain <= 0 ) remain = 0;
+        $('time').text(remain);
+    }, 100);
+}
+
+function onQuizRet(_data) {
+    console.log(_data);
+    $('.q_q').each(function(idx){
+        if( idx == _data.collect_idx ) {
+            $(this).css('background-color','blue');
+            var collect_rate = (_data.collect_cnt / _data.total_cnt) * 100.0;
+            addChat( "", false, 0, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+        }
+    })
+
+    setTimeout(function() {
+        $('.quiz_wnd').css('display', 'none');
+    }, 3000);
 }
 
 function onInputMsgKeyPress(e) {
