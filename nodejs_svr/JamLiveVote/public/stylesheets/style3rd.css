@@ -346,7 +346,7 @@ article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="ms
 article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="nick"] {
   display: inline-block;
   float: left;
-  width: 140px;
+  width: 180px;
   min-height: 26px;
   line-height: 26px;
   cursor: pointer;
@@ -366,7 +366,7 @@ article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="ms
 }
 article separator[role="chat-area"] div[type="chat-msg"] ul.chat-ui div[type="msg-obj"] [type="msg"] {
   float: left;
-  width: calc(100% - 140px);
+  width: calc(100% - 180px);
   min-height: 26px;
 }
 article separator[role="chat-area"] div[type="chat-input"] {
