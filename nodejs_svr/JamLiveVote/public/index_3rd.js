@@ -723,19 +723,19 @@ function setSearchDB(data) {
             queries[i] = queries[i].replace('%', '');
             queries[i] = queries[i].replace('%', '');
             console.log(queries[i]);
-            if( item1.question.indexOf(queries[i]) != -1 ) {
+            if( item1.question.toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
                 cnt1+= add;
             }
-            if( item2.question.indexOf(queries[i]) != -1 ) {
+            if( item2.question.toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
                 cnt2+= add;
             }
 
             for( var j = 0 ; j < 3 ; ++j) {
-                if( item1.answer[j].indexOf(queries[i]) != -1 ) {
+                if( item1.answer[j].toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
                     cnt1+= add;
                 }
 
-                if( item2.answer[j].indexOf(queries[i]) != -1 ) {
+                if( item2.answer[j].toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
                     cnt2+= add;
                 }
             }
