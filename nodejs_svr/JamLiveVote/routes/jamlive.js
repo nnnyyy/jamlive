@@ -234,8 +234,8 @@ exports.searchex = function(req, res, next) {
 
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
 
-    var clientids = ['zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B'];
-    var secrets = ['kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw'];
+    var clientids = ['zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl'];
+    var secrets = ['kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G'];
     var modcnt = clientids.length;
 
 
