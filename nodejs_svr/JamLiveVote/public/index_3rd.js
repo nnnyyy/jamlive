@@ -73,10 +73,8 @@ function onChat(data) {
         setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
     }
     else if( data.mode == "search") {
-        if( data.admin ) {
-            data.nickname = '<div class="admin_font">사이트관리자</div>';
-        }
-        else if( data.isLogin ) {
+
+        if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
         addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip);
