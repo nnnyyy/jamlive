@@ -233,6 +233,9 @@ exports.searchex = function(req, res, next) {
     var isAuthUser = (req.session.auth > 0) ? true : false;
 
     var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query); // json ??
+    if( type == 4 ) {
+        api_url += '&sort=sim';
+    }
 
     var clientids = ['zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl'];
     var secrets = ['kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G'];
@@ -252,7 +255,7 @@ exports.searchex = function(req, res, next) {
             if (!error && response.statusCode == 200 && body) {
                 var data = JSON.parse(body).items;
                 if( isArray(data) && data.length > 0 ) {
-                    if ( type == 4 ) data = data.slice(0,5);
+                    if ( type == 4 ) data = data.slice(0,8);
                     else data = data.slice(0,4);
                     ServerManager.setCachedSearchResult(sType, query, data);
                     if( isGuest ) {

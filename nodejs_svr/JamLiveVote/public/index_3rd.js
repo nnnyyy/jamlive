@@ -807,12 +807,12 @@ function setSearchRetImage(items, first) {
         html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
     }
 
-    $('.image_search_wnd').html(html);
+    getSearchArea(1).prepend(html);
 
-    clearTimeout(timerIDForImageSearch);
-    timerIDForImageSearch = setTimeout(function() {
+    clearTimeout(timerID);
+    timerID = setTimeout(function() {
         //$('.search_article').html(htmlBackup);
-        $('.image_search_wnd').css('display','none');
+        restoreSearch();
     }, 15000);
 }
 
