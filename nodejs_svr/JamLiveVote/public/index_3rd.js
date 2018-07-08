@@ -58,10 +58,7 @@ function registerSocketEvent() {
 
 function onChat(data) {
     if( data.mode == "vote" ) {
-        if( data.admin ) {
-            data.nickname = '<div class="admin_font">사이트관리자</div>';
-        }
-        else if( data.isLogin ) {
+        if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
 
@@ -119,7 +116,7 @@ function onChat(data) {
     else {
 
         if( data.admin ) {
-            addChat( data.mode, data.isBaned, data.hash, '<div class="admin_font">사이트관리자</div>', data.msg, false, data.auth, data.ip);
+            addChat( data.mode, data.isBaned, data.hash, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + '</div>', false, data.auth, data.ip);
         }
         else if( data.isLogin ) {
             addChat( data.mode, data.isBaned, data.hash, '<div class="logined_font">' + data.nickname + '</div>', data.msg, false, data.auth, data.ip);
@@ -555,6 +552,10 @@ function getGradeImage( auth, isbaned ) {
             return "/images/0star.png";
         case 1:
             return "/images/star.png";
+        case 2:
+            return "/images/star2.png";
+        case 50:
+            return "/images/admin.png";
         case 99:
             return "/images/noti.png";
         default:

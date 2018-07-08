@@ -6,6 +6,10 @@ $article-width: calc(100vw - #{$menu-width} );
 $chat-font-size: 14px;
 $sub-color: yellow;
 
+div.admin-nick {
+  font-weight: bold;
+}
+
 * {
   box-sizing: border-box;
 }

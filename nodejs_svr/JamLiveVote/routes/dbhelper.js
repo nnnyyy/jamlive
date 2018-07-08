@@ -107,6 +107,42 @@ exports.search = function( query , cb ) {
     }
 }
 
+exports.getActivePoint = function( id, cb ) {
+    console.log('11111');
+    try {
+        dbpool.query("CALL getActivePoint( ?, @point ); select @point;", [id], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            var point = rows[rows.length - 1][0]['@point'];
+            cb({ret: 0, point: point});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getActivePoint');
+        cb({ret: -1});
+    }
+}
+
+exports.updateActivePoint = function( id, ap, cb ) {
+    try {
+        dbpool.query("CALL updateActivePoint( ?, ? );", [id, ap], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - updateActivePoint');
+        cb({ret: -1});
+    }
+}
+
 /*
  exports.buyItem = function(id, itemsn, cb) {
  // 가챠 종류와 일반 아이템 종류를 구분하자.

@@ -4,7 +4,8 @@
 var Client = function(socket) {
     this.socket = socket;
     this.tLastClick = 0;
-    this.tLastSearch = 0;
+    this.activePoint = 0;
+    this.auth = -1;
     this.isAdmin = false;
 }
 
