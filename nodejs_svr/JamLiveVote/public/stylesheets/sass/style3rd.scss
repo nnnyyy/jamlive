@@ -237,6 +237,7 @@ article {
     font-size: 16px;
     font-weight: bold;
     font-style: normal;
+    background-color: yellow;
   }
 
   .search_ret_title {
@@ -245,6 +246,7 @@ article {
 
     b {
       font-size: 16px;
+      background-color: yellow;
     }
   }
 
@@ -255,6 +257,7 @@ article {
 
     b {
       font-size: 16px;
+      background-color: yellow;
     }
   }
 
@@ -359,6 +362,14 @@ article {
         margin-top: 5px;
         margin-bottom: 5px;
       }
+    }
+
+    div[type="caution"] {
+      text-align: center;
+      font-size: 20px;
+      color: red;
+      font-weight: bold;
+      line-height: 35px;
     }
 
     memo-area {
