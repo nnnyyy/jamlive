@@ -58,6 +58,7 @@ var ServerMan = function() {
     this.countsForGuest  = new HashMap();
     this.countslistForGuest = [];
     this.others = [];
+    this.memo = "";
 }
 
 var servman = new ServerMan();
@@ -342,10 +343,15 @@ ServerMan.prototype.register = function(socket) {
     }
 
     socket.emit('myid', {socket: socket.id, isLogined: logined, auth: socket.request.session.auth });
+    socket.emit('memo', {memo: servman.memo });
     socket.on('vote', onSockVote);;
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
     socket.on('ban', onSockBan);
+    socket.on('memo', function(data) {
+        servman.memo = data.memo;
+        servman.io.sockets.emit('memo', {memo: data.memo });
+    })
 
     socket.on('help_search', function(data) {
         var ip = this.handshake.address.substr(7);

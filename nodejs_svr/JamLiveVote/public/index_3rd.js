@@ -54,6 +54,9 @@ function registerSocketEvent() {
     socket.on('serv_msg', onServMsg);
     socket.on('quiz', onQuiz);
     socket.on('quizret', onQuizRet);
+    socket.on('memo', function(data) {
+        $('div[type="memo"]').html(data.memo);
+    })
 }
 
 function onChat(data) {
@@ -180,6 +183,16 @@ function onInputMsgKeyPress(e) {
             return;
         }
 
+        if( msg == '@memo') {
+            var memo = $('.memo-area').val();
+
+            memo = memo.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            socket.emit('memo', {memo: memo });
+            //$('div[type="memo"]').html(memo);
+            $(this).val('');
+            return;
+        }
+
         if( msg[0] == '/' ) {
             $(this).val('');
 
@@ -256,6 +269,7 @@ function onInputMsgKeyUp(e) {
 function onGlobalKeyDown(e) {
     if( $('.ip-name').is(':focus') ) return;
     if( $('.ip-msg').is(':focus') ) return;
+    if( $('.memo-area').is(':focus')) return;
 
     var code = (e.which ? e.which : e.keyCode );
 
