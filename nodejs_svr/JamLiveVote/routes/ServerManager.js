@@ -372,7 +372,7 @@ function onSockBan(data) {
     var msg = '';
 
     console.log(client.ip  + ' : ' + toBanClient.ip );
-/*
+
     if( !logined ) {
         msg = '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.';
         socket.emit('serv_msg', {msg: msg});
@@ -386,7 +386,7 @@ function onSockBan(data) {
         socket.emit('serv_msg', {msg: msg});
         return;
     }
-*/
+
     if( servman.checkBaned( toBanClient.ip ) ) {
         msg = '이미 밴 되어 있습니다.';
         socket.emit('serv_msg', {msg: msg});
