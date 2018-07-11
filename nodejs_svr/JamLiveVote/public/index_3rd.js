@@ -39,7 +39,7 @@ function registerClickEvent( socket ) {
     $(document).on('click', '.chat_name', function (e) {
         var name = $(this).text();
         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
-            socket.emit('ban', {hash: $(this).attr('hash')});
+            socket.emit('ban', {ip: $(this).attr('ip')});
         }
         e.preventDefault();
     });
@@ -68,10 +68,10 @@ function onChat(data) {
         if( isShowMemberVoteOnly() &&
             ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
         ) {
-            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b>투표했습니다.</b>', false, data.auth, data.ip);
+            addChat( data.mode, data.isBaned, data.nickname, '<b>투표했습니다.</b>', false, data.auth, data.ip, data.sockid );
         }
         else {
-            addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth, data.ip);
+            addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
         }
         setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
     }
@@ -80,7 +80,7 @@ function onChat(data) {
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-        addChat( data.mode, data.isBaned, data.hash, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip);
+        addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
         if( data.id != myid && isAutoSearchChecked() ) {
             var tCur = new Date();
             if( tCur - tAutoSearchFreeze <= 5000) {
@@ -112,18 +112,18 @@ function onChat(data) {
         }
     }
     else if ( data.mode == "notice") {
-        addChat( data.mode, data.isBaned, data.hash, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip);
+        addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
     }
     else {
 
         if( data.admin ) {
-            addChat( data.mode, data.isBaned, data.hash, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + '</div>', false, data.auth, data.ip);
+            addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + '</div>', false, data.auth, data.ip, data.sockid);
         }
         else if( data.isLogin ) {
-            addChat( data.mode, data.isBaned, data.hash, '<div class="logined_font">' + data.nickname + '</div>', data.msg, false, data.auth, data.ip);
+            addChat( data.mode, data.isBaned, '<div class="logined_font">' + data.nickname + '</div>', data.msg, false, data.auth, data.ip, data.sockid);
         }
         else {
-            addChat( data.mode, data.isBaned, data.hash, data.nickname, data.msg, true, data.auth, data.ip);
+            addChat( data.mode, data.isBaned, data.nickname, data.msg, true, data.auth, data.ip, data.sockid );
         }
 
     }
@@ -138,7 +138,7 @@ function onQuiz(data) {
     })
     $('.quiz_wnd').css('display', 'inline-block');
     $('.q_title').text(data.quizdata.question);
-    addChat( "", false, 0, '<div class="notice_font">퀴즈</div>', data.quizdata.question, false);
+    addChat( "", false, '<div class="notice_font">퀴즈</div>', data.quizdata.question, false);
     $('.q_q').each(function(idx) {
         $(this).text((idx+1) + '. ' + data.quizdata.answer[idx]);
     })
@@ -159,7 +159,7 @@ function onQuizRet(_data) {
         if( idx == _data.collect_idx ) {
             $(this).css('background-color','blue');
             var collect_rate = (_data.collect_cnt / _data.total_cnt) * 100.0;
-            addChat( "", false, 0, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+            addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 ( 정답률 : ' + collect_rate + '% )</div></b>', false);
         }
     })
 
@@ -319,9 +319,8 @@ function getNickName() {
     return nick;
 }
 
-function setNickName() {
-    var rd = Math.floor(Math.random() * 500);
-    $('.ip-name').val('손님' + rd);
+function setNickName( nick ) {
+    $('.ip-name').val(nick);
 }
 
 function setSocketListener() {
@@ -329,6 +328,7 @@ function setSocketListener() {
     socket.on('myid', function(data) {
         myid = data.socket;
         isLogin = data.isLogined;
+        setNickName( data.nick );
         setShowMemberVoteOnlyListener();
     })
 }
@@ -363,13 +363,9 @@ function setBtnListener() {
     })
 
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
-        if( $(this).attr('hash') == '') {
-            return;
-        }
-
         var name = $(this).text();
         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
-            socket.emit('ban', {hash: $(this).attr('hash')});
+            socket.emit('ban', {sockid: $(this).attr('sockid')});
         }
         e.preventDefault();
     });
@@ -577,12 +573,12 @@ function getGradeImage( auth, isbaned ) {
     return "";
 }
 
-function addChat( mode, isbaned, hash , name, msg, bStrip,auth, ip ) {
+function addChat( mode, isbaned , name, msg, bStrip,auth, ip, sockid ) {
     var li =    '<li class="chat_item" mode="' + mode +'">' +
                 '<div type="msg-obj">' +
-                '<div type="nick" hash="'+ hash +'"><img type="grade" src="' + getGradeImage(auth, isbaned) +'"/><div type="nick-only">' + name +'</div><div type="ip-only">' + (ip ? ('(' + ip + ')') : '') + '</div></div>' +
+                '<div type="nick" ip="'+ ip +'" sockid="' + sockid + '"><img type="grade" src="' + getGradeImage(auth, isbaned) +'"/><div type="nick-only">' + name +'</div><div type="ip-only">' + (ip ? ('(' + ip + ')') : '') + '</div></div>' +
                 '<div type="msg">' + ( bStrip ? strip(msg) : msg ) + '</div>' +
-                '<data class="chat_name" hash="'+ hash +'"></data>' +
+                '<data class="chat_name"></data>' +
                 '</div>' +
                 '</li>';
 

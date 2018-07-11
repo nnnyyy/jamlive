@@ -6,6 +6,8 @@ var Client = function(socket) {
     this.tLastClick = 0;
     this.activePoint = 0;
     this.auth = -1;
+    this.nick = '';
+    this.ip = '';
     this.isAdmin = false;
 }
 

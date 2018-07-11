@@ -186,14 +186,12 @@
             return;
         }
 
+        $('.ip-name').prop('disabled', true);
         <%if(!username) {%>
-        setNickName();
-        $('.ip-name').prop('disabled', false);
         <%}else {%>
         isLogin = true;
         $('.ip-name').val('<%- nick %>');
         usernick = '<%= nick %>';
-        $('.ip-name').prop('disabled', true);
         <%}%>
         init();
         registerKeyEvent();
