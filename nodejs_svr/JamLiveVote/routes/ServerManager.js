@@ -489,8 +489,6 @@ function onSockVote(data) {
         return;
     }
 
-    ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-
     if( client.isClickable() ) {
         servman.click(data.idx, !logined);
         if( servman.quizdata && !servman.quizdata.isEnd() ) {
