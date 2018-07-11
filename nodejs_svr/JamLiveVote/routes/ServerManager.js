@@ -201,7 +201,7 @@ ServerMan.prototype.click = function(idx, isGuest) {
 }
 
 ServerMan.prototype.banUser = function( ip, byIp ) {
-    var bui = this.banMap.get( hash );
+    var bui = this.banMap.get( ip );
     if( bui == null ) {
         var newbui = new BanUserInfo();
         newbui.add(byIp);
@@ -336,7 +336,7 @@ ServerMan.prototype.register = function(socket) {
     }
 
     var rd = Math.floor(Math.random() * 500);
-    var nick = socket.request.session.username;
+    var nick = socket.request.session.usernick;
     if( !logined ){
         nick = '손님' + rd;
     }
@@ -372,7 +372,7 @@ function onSockBan(data) {
     var msg = '';
 
     console.log(client.ip  + ' : ' + toBanClient.ip );
-
+/*
     if( !logined ) {
         msg = '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.';
         socket.emit('serv_msg', {msg: msg});
@@ -386,7 +386,7 @@ function onSockBan(data) {
         socket.emit('serv_msg', {msg: msg});
         return;
     }
-
+*/
     if( servman.checkBaned( toBanClient.ip ) ) {
         msg = '이미 밴 되어 있습니다.';
         socket.emit('serv_msg', {msg: msg});
@@ -394,6 +394,7 @@ function onSockBan(data) {
     }
 
     if( servman.banUser(toBanClient.ip, client.ip) ) {
+        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님을 신고 했습니다.', mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
         msg = '밴 신청 완료';
         client.activePoint += 1;
     }
