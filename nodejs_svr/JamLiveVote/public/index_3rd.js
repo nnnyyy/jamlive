@@ -18,6 +18,7 @@ function init() {
     setVisible($('#search-area-2'), false);
     setVisible($('#ads-area-2'), true);
     setVisible($('.quiz_wnd') , false);
+    setVisible($('#btn-admin'), false);
 }
 
 function registerKeyEvent( socket ) {
@@ -331,6 +332,8 @@ function setSocketListener() {
     socket.on('myid', function(data) {
         myid = data.socket;
         isLogin = data.isLogined;
+        setVisible($('#btn-admin'), data.auth >= 50);
+        $('#btn-admin').setEnable(data.auth >= 50);
         setNickName( data.nick );
         setShowMemberVoteOnlyListener();
     })
@@ -340,6 +343,7 @@ function setBtnListener() {
     $('wnd[role="settings"]').css('display', 'none');
     $('#btn-settings').click(onBtnSettings);
     $('#btn-help').click(onBtnHelp);
+    $('#btn-admin').click(onBtnAdmin);
 
     $('#btn-login').click(function(e) {
         window.location.href = '/signin';
@@ -364,6 +368,8 @@ function setBtnListener() {
     $('#btn-quiz').click(function(e) {
         window.open('http://quiz.jamlive.net');
     })
+
+
 
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
         var name = $(this).text();
@@ -531,6 +537,31 @@ function onBtnSettings(e) {
 function onBtnHelp(e) {
     e.stopPropagation();
     var helpWnd = $('wnd[role="help"]');
+    helpWnd.css('display','inline-block');
+
+    helpWnd.click(function(e) {
+        e.stopPropagation();
+    })
+
+    $(window).click(function() {
+        helpWnd.animate({
+            left: "-=300"
+        }, 300, function() {
+            // Animation complete.
+            $(window).unbind('click');
+        });
+    })
+
+    helpWnd.animate({
+        left: "+=300"
+    }, 300, function() {
+        // Animation complete.
+    });
+}
+
+function onBtnAdmin(e) {
+    e.stopPropagation();
+    var helpWnd = $('wnd[role="analysis"]');
     helpWnd.css('display','inline-block');
 
     helpWnd.click(function(e) {
@@ -978,4 +1009,48 @@ function logout() {
             window.location.href = unescape(window.location.pathname);
         }
     });
+}
+
+jQuery.fn.extend({
+    setEnable: function(bEnable) {
+        this.attr('disabled', !bEnable);
+    }
+});
+
+var btnAnalStart = $('#anal-start');
+var btnAnalEnd = $('#anal-end');
+var btnQuizStart = $('#anal-quiz-start');
+var btnQuizEnd = $('#anal-quiz-end');
+
+function initAnalysis() {
+    btnAnalStart.setEnable(true);
+    btnAnalEnd.setEnable(false);
+    btnQuizStart.setEnable(false);
+    btnQuizEnd.setEnable(false);
+
+    btnAnalStart.click(function(e) {
+        $(this).setEnable(false);
+        btnAnalEnd.setEnable(true);
+        btnQuizStart.setEnable(true);
+        btnQuizEnd.setEnable(false);
+    })
+
+    btnQuizStart.click(function(e) {
+        $(this).setEnable(false);
+        btnQuizEnd.setEnable(true);
+        btnAnalEnd.setEnable(false);
+    })
+
+    btnQuizEnd.click(function(e) {
+        $(this).setEnable(false);
+        btnQuizStart.setEnable(true);
+        btnAnalEnd.setEnable(true);
+    })
+
+    btnAnalEnd.click(function(e){
+        $(this).setEnable(false);
+        btnAnalStart.setEnable(true);
+        btnQuizStart.setEnable(false);
+        btnQuizEnd.setEnable(false);
+    })
 }

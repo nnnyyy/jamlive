@@ -212,6 +212,44 @@ wnd[role="help"] {
   }
 }
 
+wnd[role="analysis"] {
+  $width: 300px;
+  $line-width: $width / 10 * 9;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: $width;
+  height: 100%;
+  background-color: $main-font-color;
+  color: $primary-color;
+  z-index: 3;
+  box-shadow: 5px 0 0 0 $primary-color;
+  text-align: center;
+  overflow-y: auto;
+
+  div[type="title"] {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  btn {
+    display: block;
+    color: $primary-color;
+    cursor: pointer;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  btn[disabled] {
+    color: gray;
+    cursor: default;
+  }
+}
+
 article {
   display: inline-block;
   float: left;

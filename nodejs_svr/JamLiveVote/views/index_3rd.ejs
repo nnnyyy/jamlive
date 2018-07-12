@@ -59,6 +59,7 @@
     <div type="noti">FBICT</div>
     <div type="msg">페이큐</div>
     <div type="noti">LGJXRQ</div>
+    <div type="menu_btn" id="btn-admin">운영자 메뉴</div>
 </separator>
 <article>
     <separator role="search-ret-1">
@@ -168,6 +169,16 @@
     <div type="msg"> - 채팅창에서 그 유저의 아이디를 클릭 후 신고</div>
     <div type="line"></div>
 </wnd>
+<wnd role="analysis">
+    <div type="title"> - 운영자 메뉴 - </div>
+    <btn id="anal-start">통계 시작</btn>
+    <btn id="anal-quiz-start">퀴즈 시작</btn>
+    <input type="radio" name="quiz_answer" value="1" checked>1
+    <input type="radio" name="quiz_answer" value="2">2
+    <input type="radio" name="quiz_answer" value="3">3
+    <btn id="anal-quiz-end">퀴즈 종료</btn>
+    <btn id="anal-end">통계 종료</btn>
+</wnd>
 <div class="admin_msg"></div>
 <div class="quiz_wnd">
     <div class="q_title">문제</div>
@@ -194,6 +205,7 @@
         usernick = '<%= nick %>';
         <%}%>
         init();
+        initAnalysis();
         registerKeyEvent();
         registerSocketEvent();
         setMinVoteSliderListener();
