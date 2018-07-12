@@ -1023,34 +1023,91 @@ var btnQuizStart = $('#anal-quiz-start');
 var btnQuizEnd = $('#anal-quiz-end');
 
 function initAnalysis() {
-    btnAnalStart.setEnable(true);
-    btnAnalEnd.setEnable(false);
-    btnQuizStart.setEnable(false);
-    btnQuizEnd.setEnable(false);
+    initAdminSocketListener();
+    initAnalysisBtns();
 
     btnAnalStart.click(function(e) {
         $(this).setEnable(false);
-        btnAnalEnd.setEnable(true);
-        btnQuizStart.setEnable(true);
-        btnQuizEnd.setEnable(false);
+        socket.emit('analysis', {step: 'a-start'});
     })
 
     btnQuizStart.click(function(e) {
         $(this).setEnable(false);
-        btnQuizEnd.setEnable(true);
-        btnAnalEnd.setEnable(false);
+        socket.emit('analysis', {step: 'q-start'});
     })
 
     btnQuizEnd.click(function(e) {
         $(this).setEnable(false);
-        btnQuizStart.setEnable(true);
-        btnAnalEnd.setEnable(true);
+        socket.emit('analysis', {step: 'q-end', idx: 0});
     })
 
     btnAnalEnd.click(function(e){
         $(this).setEnable(false);
-        btnAnalStart.setEnable(true);
-        btnQuizStart.setEnable(false);
-        btnQuizEnd.setEnable(false);
+        socket.emit('analysis', {step: 'a-end'});
+    })
+}
+
+function initAnalysisBtns() {
+    btnAnalStart.setEnable(true);
+    btnAnalEnd.setEnable(false);
+    btnQuizStart.setEnable(false);
+    btnQuizEnd.setEnable(false);
+}
+
+function initAdminSocketListener() {
+    socket.on('analysis', function(data) {
+        if( data.ret != 0 ) {
+            initAnalysisBtns();
+            showAdminMsg('통계 집계 순서에 오류가 있습니다');
+            return;
+        }
+        switch(data.step) {
+            case 'a-start':
+            {
+                if( data.ret == 0 ) {
+                    btnAnalEnd.setEnable(true);
+                    btnQuizStart.setEnable(true);
+                    btnQuizEnd.setEnable(false);
+                    addChat( "", false, '<div class="notice_font">시스템</div>', '<b style="color:red;">[Beta] 유저 통계를 시작합니다 ( 새로고침 시에 통계 자료가 날아갑니다 )</b>', false);
+                }
+                break;
+            }
+
+            case 'q-start':
+            {
+                if( data.ret == 0 ) {
+                    btnQuizEnd.setEnable(true);
+                    btnAnalEnd.setEnable(false);
+                    addChat( "", false, '<div class="notice_font">시스템</div>', '<b style="color:red;">[Beta] 퀴즈 투표 통계 집계 시작</b>', false);
+                }
+                break;
+            }
+
+            case 'q-end':
+            {
+                if( data.ret == 0 ) {
+                    btnQuizStart.setEnable(true);
+                    btnAnalEnd.setEnable(true);
+                    addChat( "", false, '<div class="notice_font">시스템</div>', '<b style="color:red;">[Beta] 퀴즈 투표 통계 집계 종료</b>', false);
+                }
+                break;
+            }
+
+            case 'a-end':
+            {
+                if( data.ret == 0 ) {
+                    console.log(data.list);
+                    btnAnalStart.setEnable(true);
+                    btnQuizStart.setEnable(false);
+                    btnQuizEnd.setEnable(false);
+                    var html = '';
+                    for(var i = 0 ; i < data.list.length ; ++i) {
+                        html += (i + 1) + '위 : ' + data.list[i].nick + ' / ' + data.list[i].collect + '</br>';
+                    }
+                    addChat( "", false, '<div class="notice_font">시스템</div>', '<b style="color:red;">[Beta] 유저 통계를 종료합니다</b></br>' + html, false);
+                }
+                break;
+            }
+        }
     })
 }

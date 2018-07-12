@@ -8,6 +8,7 @@ var Client = function(socket) {
     this.auth = -1;
     this.nick = '';
     this.ip = '';
+    this.logined = false;
     this.isAdmin = false;
 }
 

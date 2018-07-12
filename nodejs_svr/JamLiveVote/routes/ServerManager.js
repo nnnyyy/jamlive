@@ -6,6 +6,7 @@ var Client = require('./client');
 require('./StringFunction');
 var dbhelper = require('./dbhelper');
 var quizDataObj = require('./quizman');
+var quizAnalysis = require('./quizAnalysis');
 
 var VOTEPERTIME = 1000;
 var BANTIME = 4 * 60 * 1000;
@@ -321,6 +322,7 @@ ServerMan.prototype.register = function(socket) {
     });
 
     var logined = socket.request.session.username ? true : false;
+    client.logined = logined;
     if( logined ) {
         dbhelper.getActivePoint( socket.request.session.username, function(ret) {
             if( ret.ret == 0 ) {
@@ -349,6 +351,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
     socket.on('ban', onSockBan);
+    socket.on('analysis', onAnalysis);
     socket.on('memo', function(data) {
         servman.memo = data.memo;
         servman.io.sockets.emit('memo', {memo: data.memo });
@@ -491,6 +494,11 @@ function onSockVote(data) {
 
     if( client.isClickable() ) {
         servman.click(data.idx, !logined);
+
+        if( quizAnalysis.isQuizDataEngaged() ) {
+            quizAnalysis.vote(client, data.idx);
+        }
+
         if( servman.quizdata && !servman.quizdata.isEnd() ) {
             servman.quizdata.vote(data.idx);
         }
@@ -512,5 +520,54 @@ function onSockVote(data) {
         socket.emit('serv_msg', {msg: msg});
     }
 }
+
+function onAnalysis(data) {
+    var client = servman.getClient(this.id);
+    var socket = client.socket;
+    var logined = socket.request.session.username ? true : false;
+    var auth_state = logined ? socket.request.session.auth : -1;
+
+    if( !client.isAdmin ) {
+        return;
+    }
+
+    switch(data.step) {
+        case 'a-start':
+        {
+            var ret = quizAnalysis.run();
+            socket.emit('analysis', {step: data.step, ret: ret});
+            break;
+        }
+
+        case 'q-start':
+        {
+            var ret = quizAnalysis.quizStart();
+            socket.emit('analysis', {step: data.step, ret: ret});
+            break;
+        }
+
+        case 'q-end':
+        {
+            var ret = quizAnalysis.quizEnd(data.idx);
+            socket.emit('analysis', {step: data.step, ret: ret});
+            break;
+        }
+
+        case 'a-end':
+        {
+            var ret = quizAnalysis.end();
+            quizAnalysis.result.sort(function(item1, item2) {
+                return item2.collect - item1.collect;
+            })
+
+            if( quizAnalysis.result.length >= 5 ) {
+                quizAnalysis.result = quizAnalysis.result.slice(0, 5);
+            }
+            socket.emit('analysis', {step: data.step, ret: ret, list: quizAnalysis.result});
+            break;
+        }
+    }
+}
+
 
 module.exports = servman;
