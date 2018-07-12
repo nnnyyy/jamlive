@@ -1039,7 +1039,7 @@ function initAnalysis() {
     btnQuizEnd.click(function(e) {
         $(this).setEnable(false);
         var idx = $('input[name=quiz_answer]:checked').attr('value');
-        socket.emit('analysis', {step: 'q-end', idx: idx});
+        socket.emit('analysis', {step: 'q-end', idx: Number(idx)});
     })
 
     btnAnalEnd.click(function(e){
