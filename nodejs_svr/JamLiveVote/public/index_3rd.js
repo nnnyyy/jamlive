@@ -1038,7 +1038,8 @@ function initAnalysis() {
 
     btnQuizEnd.click(function(e) {
         $(this).setEnable(false);
-        socket.emit('analysis', {step: 'q-end', idx: 0});
+        var idx = $('input[name=quiz_answer]:checked').attr('value');
+        socket.emit('analysis', {step: 'q-end', idx: idx});
     })
 
     btnAnalEnd.click(function(e){
