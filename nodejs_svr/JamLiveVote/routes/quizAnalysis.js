@@ -16,6 +16,7 @@ var QuizAnalysis = function() {
     this.curQuizItem = null;
     this.collectUsers = new HashMap();
     this.result = [];
+    this.step = 0;
 }
 
 var obj = new QuizAnalysis();
@@ -24,6 +25,7 @@ QuizAnalysis.prototype.init = function() {
     this.isRunning = false;
     this.curQuizItem = null;
     this.collectUsers.clear();
+    this.step = 0;
 }
 
 QuizAnalysis.prototype.run = function() {
@@ -35,6 +37,7 @@ QuizAnalysis.prototype.run = function() {
 
         this.isRunning = true;
         this.result = [];
+        this.step = 1;
         return 0;
 
     }catch( e ) {
@@ -50,6 +53,7 @@ QuizAnalysis.prototype.quizStart = function() {
             return -1;
         }
         this.curQuizItem = new QuizItemForAnalysis();
+        this.step = 2;
         return 0;
     }catch( e ) {
         this.init();
@@ -67,6 +71,7 @@ QuizAnalysis.prototype.vote = function(client, idx) {
         if( !map.get(client) ) {
             map.set(client, 1);
         }
+
     }catch( e ) {
         this.init();
         return -1;
@@ -75,6 +80,7 @@ QuizAnalysis.prototype.vote = function(client, idx) {
 
 QuizAnalysis.prototype.quizEnd = function(collect) {
     try {
+        collect = Number(collect);
         if( !this.isQuizDataEngaged() ) {
             this.init();
             return -1;
@@ -93,6 +99,7 @@ QuizAnalysis.prototype.quizEnd = function(collect) {
         })
 
         this.curQuizItem = null;
+        this.step = 3;
         return 0;
     }catch( e ) {
         this.init();

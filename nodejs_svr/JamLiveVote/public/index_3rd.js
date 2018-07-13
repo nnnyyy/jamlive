@@ -336,6 +336,7 @@ function setSocketListener() {
         $('#btn-admin').setEnable(data.auth >= 50);
         setNickName( data.nick );
         setShowMemberVoteOnlyListener();
+        setAnalysisBtns(data.analstep);
     })
 }
 
@@ -1026,26 +1027,31 @@ function initAnalysis() {
     initAdminSocketListener();
     initAnalysisBtns();
 
-    btnAnalStart.click(function(e) {
-        $(this).setEnable(false);
-        socket.emit('analysis', {step: 'a-start'});
-    })
+    btnAnalStart.click(onAnalStart);
+    btnQuizStart.click(onQuizStart);
+    btnQuizEnd.click(onQuizEnd);
+    btnAnalEnd.click(onAnalEnd);
+}
 
-    btnQuizStart.click(function(e) {
-        $(this).setEnable(false);
-        socket.emit('analysis', {step: 'q-start'});
-    })
+function onAnalStart(e) {
+    $(this).setEnable(false);
+    socket.emit('analysis', {step: 'a-start'});
+}
 
-    btnQuizEnd.click(function(e) {
-        $(this).setEnable(false);
-        var idx = $('input[name=quiz_answer]:checked').attr('value');
-        socket.emit('analysis', {step: 'q-end', idx: Number(idx)});
-    })
+function onQuizStart(e) {
+    $(this).setEnable(false);
+    socket.emit('analysis', {step: 'q-start'});
+}
 
-    btnAnalEnd.click(function(e){
-        $(this).setEnable(false);
-        socket.emit('analysis', {step: 'a-end'});
-    })
+function onQuizEnd(e) {
+    $(this).setEnable(false);
+    var idx = $('input[name=quiz_answer]:checked').attr('value');
+    socket.emit('analysis', {step: 'q-end', idx: Number(idx)});
+}
+
+function onAnalEnd(e) {
+    $(this).setEnable(false);
+    socket.emit('analysis', {step: 'a-end'});
 }
 
 function initAnalysisBtns() {
@@ -1053,6 +1059,38 @@ function initAnalysisBtns() {
     btnAnalEnd.setEnable(false);
     btnQuizStart.setEnable(false);
     btnQuizEnd.setEnable(false);
+}
+
+function setAnalysisBtns(step) {
+    switch(step) {
+        case 0:
+            initAnalysisBtns();
+            break;
+
+        case 1:
+            //  분석 시작 상태
+            btnAnalStart.setEnable(false);
+            btnQuizStart.setEnable(true);
+            btnQuizEnd.setEnable(false);
+            btnAnalEnd.setEnable(true);
+            break;
+
+        case 2:
+            //  퀴즈 시작 상태
+            btnAnalStart.setEnable(false);
+            btnQuizStart.setEnable(false);
+            btnQuizEnd.setEnable(true);
+            btnAnalEnd.setEnable(false);
+            break;
+
+        case 3:
+            //  퀴즈 종료 상태
+            btnAnalStart.setEnable(false);
+            btnQuizStart.setEnable(true);
+            btnQuizEnd.setEnable(false);
+            btnAnalEnd.setEnable(false);
+            break;
+    }
 }
 
 function initAdminSocketListener() {

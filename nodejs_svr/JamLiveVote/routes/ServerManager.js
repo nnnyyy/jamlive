@@ -345,7 +345,7 @@ ServerMan.prototype.register = function(socket) {
 
     client.nick = nick;
 
-        socket.emit('myid', {socket: socket.id, isLogined: logined, auth: socket.request.session.auth, nick: client.nick });
+    socket.emit('myid', {socket: socket.id, isLogined: logined, auth: socket.request.session.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('memo', {memo: servman.memo });
     socket.on('vote', onSockVote);;
     socket.on('chat', onSockChat);
