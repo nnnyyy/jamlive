@@ -248,6 +248,16 @@ ServerMan.prototype.checkBaned = function( _ip ) {
 ServerMan.prototype.checkAllBaned = function() {
     var cur = new Date();
 
+    var hours = cur.getHours();
+
+    if( ( (hours >= 22 || hours < 12 ) || (hours >= 15 && hours < 20 ) ) && this.isAbleCreateQuizData() ) {
+        dbhelper.getRandomQuiz(function(result) {
+            if( result.ret == 0 ){
+                servman.createQuizData(result.quizdata);
+            }
+        });
+    }
+
     try {
         this.banUsers.forEach(function(value, key) {
             if( cur - value > BANTIME) {
@@ -362,7 +372,13 @@ ServerMan.prototype.createQuizData = function( _quizdata ) {
     if( this.quizdata && !this.quizdata.isEnd() ) {
         return;
     }
+    console.log('create Quiz');
     this.quizdata = new quizDataObj( _quizdata, this.io );
+}
+
+ServerMan.prototype.isAbleCreateQuizData = function() {
+    var cur = new Date();
+    return !this.quizdata || ( this.quizdata.isEnd() && ( cur - this.quizdata.tLastEnd >= 7000 ) );
 }
 
 function onSockBan(data) {

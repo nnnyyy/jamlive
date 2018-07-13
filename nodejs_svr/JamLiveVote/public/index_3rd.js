@@ -136,16 +136,23 @@ function onChat(data) {
 var tStartQuiz = 0;
 var idInterval = -1;
 var idTimeout = -1;
+var quizdata = null;
 function onQuiz(data) {
+    console.log('onQuiz : ' + data );
     $('.q_q').each(function(idx){
         $(this).css('background-color','transparent');
     })
     $('.quiz_wnd').css('display', 'inline-block');
+    quizdata = data.quizdata;
     $('.q_title').text(data.quizdata.question);
-    addChat( "", false, '<div class="notice_font">퀴즈</div>', data.quizdata.question, false);
+    var html = '';
     $('.q_q').each(function(idx) {
-        $(this).text((idx+1) + '. ' + data.quizdata.answer[idx]);
+        var t = (idx+1) + '. ' + data.quizdata.answer[idx];
+        html += (t + '</br>');
+        $(this).text(t);
     })
+
+    addChat( "", false, '<div class="notice_font">퀴즈</div>', data.quizdata.question + '</br>' + html, false);
 
     tStartQuiz = new Date();
 
@@ -158,12 +165,13 @@ function onQuiz(data) {
 }
 
 function onQuizRet(_data) {
-    console.log(_data);
+    if( !quizdata ) return;
+    console.log('onQuizRet : ' + _data);
     $('.q_q').each(function(idx){
         if( idx == _data.collect_idx ) {
             $(this).css('background-color','blue');
             var collect_rate = (_data.collect_cnt / _data.total_cnt) * 100.0;
-            addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+            addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 '+ quizdata.answer[idx]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>', false);
         }
     })
 
