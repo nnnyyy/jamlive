@@ -596,6 +596,51 @@ notice-nick {
   }
 }
 
+.popup_wnd {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 480px;
+  height: 600px;
+  margin-left: -240px;
+  margin-top: -300px;
+  text-align: center;
+  overflow: hidden;
+  z-index: 3;
+
+  div[name="top"] {
+    height: 30px;
+    background-color: $primary-color;
+    padding-left: 8px;
+    line-height: 30px;
+    text-align: left;
+
+    div[name="close"] {
+      float:right;
+      margin-right: 8px;
+      line-height: 30px;
+      cursor: pointer;
+    }
+  }
+
+
+  img[name="ads"] {
+    width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: $main-font-color;
+  }
+
+  div[name="go_reserv"] {
+    height: 50px;
+    background-color: $primary-color;
+    font-size: 20px;
+    line-height: 50px;
+  }
+}
+
 .opacity {
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;

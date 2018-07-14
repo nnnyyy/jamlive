@@ -378,6 +378,10 @@ function setBtnListener() {
         window.open('http://quiz.jamlive.net');
     })
 
+    $('#btn-popup-close').click(function(e) {
+        setVisible($('.popup_wnd'), false);
+    })
+
 
 
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
