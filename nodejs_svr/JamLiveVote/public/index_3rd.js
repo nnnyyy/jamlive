@@ -696,7 +696,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     } //  이미지
 
     if( $('#cb_s5').is(':checked')) {
-        searchWebGoogle(query);
+        searchWebGoogle(query, false);
         searched = true;
     } //  구글
 
@@ -707,6 +707,16 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searched = true;
     }
 
+    if( $('#cb_s7').is(':checked')) {
+        //$('#mid_quiz_search').css('display','inline-block');
+        //  국어
+        query = query.trim();
+        var aQueries = query.split(' ');
+        for( var i = 0 ; i < aQueries.length ; ++i ) {
+            searchWebGoogle(aQueries[i], true);
+        }
+        searched = true;
+    }
 
     if( !searched ) {
         //$('.search_article').html(htmlBackup);
@@ -739,12 +749,13 @@ function searchWeb( type, query ) {
     });
 }
 
-function searchWebGoogle( query ) {
+function searchWebGoogle( query, grammer) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({
-            query : query
+            query : query,
+            grammer : grammer
         }),
         contentType: 'application/json',
         url: '/searchgoogle',
@@ -958,8 +969,8 @@ function setShowMemberVoteOnlyListener() {
 }
 
 function setSearchCheckboxes() {
-    var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6'];
-    var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6')];
+    var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7'];
+    var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6'), $('#cb_s7')];
     var cbs_ret = new Array(cbs_name.length);
     $.each(cbs_name, function(idx, name) {
         cbs_ret[idx] = localStorage.getItem(name) || 1;

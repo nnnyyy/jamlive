@@ -285,8 +285,13 @@ exports.requestGoogle = function(req, res, next) {
         return;
     }
 
+    var grammer = req.body.grammer;
     var query = req.body.query
     query = query.trim();
+
+    if( grammer ) {
+        query = '국립국어원 on Twitter ' + query;
+    }
 
     var isGuest = false;
     if( !ServerManager.membersmap.get( req.session.username ) ) {
@@ -318,7 +323,8 @@ exports.requestGoogle = function(req, res, next) {
             if (!error && response.statusCode == 200) {
                 parcing(data, body);
                 if( isArray(data) && data.length > 0 ) {
-                    data = data.slice(0,4);
+                    if( grammer ) data = data.slice(0,1);
+                    else data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('google', query, data);
                     if( isGuest ) {
                         //data = data.slice(0,1);
