@@ -75,7 +75,7 @@ ServerMan.prototype.addSocket = function(socket) {
     }
 
     if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.request.session.username)) {
-        msg = '욕설 및 어뷰징 요소를 사요하여 영구 밴 당하셨습니다';
+        msg = '욕설 및 어뷰징 요소를 사용하여 영구 밴 당하셨습니다';
         socket.emit('serv_msg', {msg: msg});
         socket.disconnect();
         return false;
