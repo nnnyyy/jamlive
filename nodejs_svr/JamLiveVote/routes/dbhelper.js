@@ -3,6 +3,7 @@
  */
 var Log = require('./Log');
 var dbpool = require('./MySQL').init();
+var HashMap = require('hashmap');
 
 exports.signup = function(id, pw, nick, cb) {
     try {
@@ -139,6 +140,27 @@ exports.updateActivePoint = function( id, ap, cb ) {
         });
     }catch(err) {
         Log.logger.debug('DB Failed - updateActivePoint');
+        cb({ret: -1});
+    }
+}
+
+exports.getPermanentBanList = function(cb) {
+    try {
+        dbpool.query("select * from permanent_ban_list", function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = new HashMap();
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.set(d.ip_or_id, 1);
+            }
+
+            cb({ret: 0, list: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getPermanentBanList');
         cb({ret: -1});
     }
 }

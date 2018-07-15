@@ -50,6 +50,8 @@ var ServerMan = function() {
     this.banMap = new HashMap();
     this.uniqueip = new HashMap();
 
+    this.permanentBanList = new HashMap();
+
     this.banUsers = new HashMap();
     this.searchedByType = new HashMap();
     this.check_connections = new HashMap();
@@ -72,6 +74,13 @@ ServerMan.prototype.addSocket = function(socket) {
         ip = socket.handshake.headers['x-real-ip'];
     }
 
+    if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.request.session.username)) {
+        msg = '욕설 및 어뷰징 요소를 사요하여 영구 밴 당하셨습니다';
+        socket.emit('serv_msg', {msg: msg});
+        socket.disconnect();
+        return false;
+    }
+
     var cinfo = this.check_connections.get(ip);
     if( cinfo == null ) {
         cinfo = new ConnectUserInfo();
@@ -92,6 +101,8 @@ ServerMan.prototype.addSocket = function(socket) {
         this.membersmap.set(socket.request.session.username, true);
         servman.others.push({channel: "chat", data: {id: socket.id, nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false, auth: 99 }});
     }
+
+    return true;
 }
 
 ServerMan.prototype.removeSocket = function(socketid) {
@@ -126,6 +137,16 @@ ServerMan.prototype.getClient = function(socketid){
 
 ServerMan.prototype.setIO = function(io) {
     this.io = io;
+
+    dbhelper.getPermanentBanList(function(ret) {
+        if( ret.ret == 0 ) {
+            console.log('getPermanentBanList success : ' + ret.ret);
+            servman.permanentBanList = ret.list;
+        }
+        else {
+            console.log('getPermanentBanList error : ' + ret.ret);
+        }
+    });
 
     setInterval(function() {
         servman.broadcastVoteInfo();
@@ -317,7 +338,10 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
 
 
 ServerMan.prototype.register = function(socket) {
-    this.addSocket(socket);
+
+    if( !this.addSocket(socket) ) {
+        return;
+    }
     var client = servman.getClient(socket.id);
 
     socket.on('disconnect', function(){
