@@ -470,6 +470,10 @@ $vote-and-chat-width: 34%;
       z-index: 2;
 
       li.btn-search-ret-rank {
+        margin-top: 5px;
+        text-align: center;
+        width: 100%;
+        list-style: none;
         height: 32px;
         line-height: 32px;
       }

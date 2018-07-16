@@ -201,14 +201,14 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         return item2.cnt - item1.cnt;
     })
 
-    if( searchlist.length < 3 ) {
-        searchlist = [];
-    }
-    else {
-        searchlist = searchlist.slice(0, 5);
+    searchlist = searchlist.slice(0, 5);
+
+    var s = '';
+    for( var i = 0 ; i < searchlist.length ; ++i ) {
+        s += searchlist[i].query;
     }
 
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others, searchlist: searchlist });
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others, searchlist: searchlist, slhash: s.hashCode() });
     this.others = [];
 }
 
@@ -292,7 +292,7 @@ ServerMan.prototype.checkAllBaned = function() {
 
     try {
         this.searchQueryMap.forEach(function(value, key) {
-            if( cur - value.tLast > 8 * 1000 ) {
+            if( cur - value.tLast > 12 * 1000 ) {
                 servman.searchQueryMap.delete(key);
             }
         })
@@ -497,6 +497,9 @@ function onSockSearch(data) {
         var nick = client.nick;
         servman.addSearchQuery( data.msg );
         servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+    }
+    else {
+        servman.addSearchQuery( data.msg );
     }
 }
 

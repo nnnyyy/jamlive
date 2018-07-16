@@ -347,14 +347,17 @@ function setSocketListener() {
         setShowMemberVoteOnlyListener();
         setAnalysisBtns(data.analstep);
     });
-    socket.on('search-ret-rank', onSearchRetRank);
 }
 
-function onSearchRetRank( datalist ) {
+var slhash = '';
+function onSearchRetRank( datalist, hash ) {
     var searchRetRankList = $('#search-ret-rank-list');
-    searchRetRankList.empty();
 
-    if( datalist.length <= 0 ) {
+    var checked = localStorage.getItem('cb_searchTopFive') || 0;
+
+    if( datalist.length <= 0 || checked == 0) {
+        searchRetRankList.empty();
+        slhash = '';
         setVisible($('div[type="search-ret-rank"]'), false );
         return;
     }
@@ -362,9 +365,14 @@ function onSearchRetRank( datalist ) {
         setVisible($('div[type="search-ret-rank"]'), true );
     }
 
-    for( var i = 0 ; i < datalist.length ; ++i ) {
-        var html = '<li class="btn-search-ret-rank">' + datalist[i].query + '</li>';
-        searchRetRankList.append(html);
+    if( hash != slhash ) {
+        searchRetRankList.empty();
+        for( var i = 0 ; i < datalist.length ; ++i ) {
+            var html = '<li class="btn-search-ret-rank">' + datalist[i].query + '</li>';
+            searchRetRankList.append(html);
+        }
+
+        slhash = hash;
     }
 }
 
@@ -425,6 +433,18 @@ function setBtnListener() {
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         searchWebRoot(socket, $(this).text(), false);
     });
+
+    $(document).on('mouseover', '.btn-search-ret-rank', function (e) {
+        $(this).css('background-color', 'yellow');
+        $(this).css('color', 'blue');
+        e.preventDefault();
+    });
+
+    $(document).on('mouseout', '.btn-search-ret-rank', function (e) {
+        $(this).css('background-color', 'transparent');
+        $(this).css('color', 'white');
+        e.preventDefault();
+    });
 }
 
 function setMinVoteSliderListener() {
@@ -471,7 +491,7 @@ function setMinVoteSliderListener() {
 }
 
 function onProcessVoteData(data) {
-    onSearchRetRank(data.searchlist);
+    onSearchRetRank(data.searchlist, data.slhash);
     var votedata = data.vote_data;
     var users = votedata.users;
     $('vote_user_cnt').text(users);
@@ -816,6 +836,7 @@ function searchFromDB( query ) {
     });
 }
 
+var timerIDForDB = 0;
 function setSearchDB(data) {
     var items = data.quizdatalist;
     var queries = data.queries;
@@ -1037,6 +1058,23 @@ function setVoteMsgVisibleListener() {
         else {
             setMsgVisible('vote', true);
             localStorage.setItem('cb_votemsg', 0);
+        }
+    });
+}
+
+function setSearchTopFiveListener() {
+    var checked = localStorage.getItem('cb_searchTopFive') || 0;
+    $('#cb_top_five').attr('checked', checked == 1 ? true : false );
+
+    $('#cb_top_five').change(function() {
+        if( $(this).is(':checked') ) {
+            onSearchRetRank([], '');
+            localStorage.setItem('cb_searchTopFive', 1);
+
+        }
+        else {
+            onSearchRetRank([], '');
+            localStorage.setItem('cb_searchTopFive', 0);
         }
     });
 }
