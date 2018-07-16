@@ -269,9 +269,7 @@ ServerMan.prototype.checkBaned = function( _ip ) {
 ServerMan.prototype.checkAllBaned = function() {
     var cur = new Date();
 
-    var hours = cur.getHours();
-
-    if( ( (hours >= 22 || hours < 12 ) || (hours >= 15 && hours < 20 ) ) && this.isAbleCreateQuizData() ) {
+    if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
         dbhelper.getRandomQuiz(function(result) {
             if( result.ret == 0 ){
                 servman.createQuizData(result.quizdata);
@@ -436,10 +434,12 @@ function onSockBan(data) {
         return;
     }
 
+    toBanClient.activePoint -= 20;
+
     if( servman.banUser(toBanClient.ip, client.ip) ) {
         servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님을 신고 했습니다.', mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
         msg = '밴 신청 완료';
-        client.activePoint += 1;
+        client.activePoint += 3;
     }
     else {
         msg = '동일 유저에게 신고할 수 없습니다.';
@@ -499,7 +499,7 @@ function onSockChat(data) {
         var nick = client.nick;
         var auth_state = socket.request.session.auth;
 
-        if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#quiz") {
+        if( ( client.isAdmin || (auth_state && auth_state >= 1)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
                     servman.createQuizData(result.quizdata);
@@ -520,6 +520,12 @@ function onSockChat(data) {
     }
 }
 
+function isLiveQuizTime() {
+    var cur = new Date();
+    var hours = cur.getHours();
+    return !( (hours >= 22 || hours < 12 ) || (hours >= 15 && hours < 20 ) );
+}
+
 function onSockVote(data) {
     var client = servman.getClient(this.id);
     var socket = client.socket;
@@ -537,6 +543,7 @@ function onSockVote(data) {
 
         if( quizAnalysis.isQuizDataEngaged() ) {
             quizAnalysis.vote(client, data.idx);
+            client.activePoint += 1;
         }
 
         if( servman.quizdata && !servman.quizdata.isEnd() ) {
@@ -551,7 +558,9 @@ function onSockVote(data) {
 
         var nick = client.nick;
 
-        client.activePoint += 1;
+        if( isLiveQuizTime() ) {
+            client.activePoint += 2;
+        }
 
         servman.others.push({channel: "chat", data: {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip }})
     }

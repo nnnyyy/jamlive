@@ -391,6 +391,16 @@ function setBtnListener() {
         }
         e.preventDefault();
     });
+
+    $(document).on('mouseover', '.chat_item div[type="nick"]', function (e) {
+        $(this).css('background-color', 'yellow');
+        e.preventDefault();
+    });
+
+    $(document).on('mouseout', '.chat_item div[type="nick"]', function (e) {
+        $(this).css('background-color', 'white');
+        e.preventDefault();
+    });
 }
 
 function setMinVoteSliderListener() {

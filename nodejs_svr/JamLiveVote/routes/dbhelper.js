@@ -109,7 +109,6 @@ exports.search = function( query , cb ) {
 }
 
 exports.getActivePoint = function( id, cb ) {
-    console.log('11111');
     try {
         dbpool.query("CALL getActivePoint( ?, @point ); select @point;", [id], function(err, rows) {
             if(err) {
