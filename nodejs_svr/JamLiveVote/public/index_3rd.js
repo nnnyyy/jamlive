@@ -19,6 +19,7 @@ function init() {
     setVisible($('#ads-area-2'), true);
     setVisible($('.quiz_wnd') , false);
     setVisible($('#btn-admin'), false);
+    $('#search-ret-rank-list').empty();
 }
 
 function registerKeyEvent( socket ) {
@@ -345,7 +346,26 @@ function setSocketListener() {
         setNickName( data.nick );
         setShowMemberVoteOnlyListener();
         setAnalysisBtns(data.analstep);
-    })
+    });
+    socket.on('search-ret-rank', onSearchRetRank);
+}
+
+function onSearchRetRank( datalist ) {
+    var searchRetRankList = $('#search-ret-rank-list');
+    searchRetRankList.empty();
+
+    if( datalist.length <= 0 ) {
+        setVisible($('div[type="search-ret-rank"]'), false );
+        return;
+    }
+    else {
+        setVisible($('div[type="search-ret-rank"]'), true );
+    }
+
+    for( var i = 0 ; i < datalist.length ; ++i ) {
+        var html = '<li class="btn-search-ret-rank">' + datalist[i].query + '</li>';
+        searchRetRankList.append(html);
+    }
 }
 
 function setBtnListener() {
@@ -401,6 +421,10 @@ function setBtnListener() {
         $(this).css('background-color', 'white');
         e.preventDefault();
     });
+
+    $(document).on('click', '.btn-search-ret-rank', function(e) {
+        searchWebRoot(socket, $(this).text(), false);
+    });
 }
 
 function setMinVoteSliderListener() {
@@ -447,6 +471,7 @@ function setMinVoteSliderListener() {
 }
 
 function onProcessVoteData(data) {
+    onSearchRetRank(data.searchlist);
     var votedata = data.vote_data;
     var users = votedata.users;
     $('vote_user_cnt').text(users);

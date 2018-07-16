@@ -59,6 +59,7 @@ var ServerMan = function() {
     this.countslist = [];
 
     this.countsForGuest  = new HashMap();
+    this.searchQueryMap = new HashMap();
     this.countslistForGuest = [];
     this.others = [];
     this.memo = "";
@@ -195,7 +196,19 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         _countsForGuest[2] += value[2];
     })
 
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others })
+    var searchlist = this.searchQueryMap.values();
+    searchlist.sort(function(item1, item2) {
+        return item2.cnt - item1.cnt;
+    })
+
+    if( searchlist.length < 3 ) {
+        searchlist = [];
+    }
+    else {
+        searchlist = searchlist.slice(0, 5);
+    }
+
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others, searchlist: searchlist });
     this.others = [];
 }
 
@@ -278,6 +291,12 @@ ServerMan.prototype.checkAllBaned = function() {
     }
 
     try {
+        this.searchQueryMap.forEach(function(value, key) {
+            if( cur - value.tLast > 5 * 1000 ) {
+                servman.searchQueryMap.delete(key);
+            }
+        })
+
         this.banUsers.forEach(function(value, key) {
             if( cur - value > BANTIME) {
                 servman.banUsers.delete(key);
@@ -403,6 +422,17 @@ ServerMan.prototype.isAbleCreateQuizData = function() {
     return !this.quizdata || ( this.quizdata.isEnd() && ( cur - this.quizdata.tLastEnd >= 7000 ) );
 }
 
+ServerMan.prototype.addSearchQuery = function( query ) {
+    if( !this.searchQueryMap.get( query ) ) {
+        this.searchQueryMap.set( query, { query: query, cnt: 1, tLast: new Date() });
+    }
+    else {
+        var d = this.searchQueryMap.get( query );
+        d.cnt += 1;
+        d.tLast = new Date();
+    }
+}
+
 function onSockBan(data) {
     var client = servman.getClient(this.id);
     var toBanClient = servman.getClient(data.sockid);
@@ -465,6 +495,7 @@ function onSockSearch(data) {
 
     if( data.isBroadcast ){
         var nick = client.nick;
+        servman.addSearchQuery( data.msg );
         servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
     }
 }

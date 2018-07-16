@@ -378,6 +378,32 @@ article separator[role="chat-area"] {
   height: calc(100% - 180px - 100px - 65px);
   background-color: white;
 }
+article separator[role="chat-area"] div[type="search-ret-rank"] {
+  position: absolute;
+  top: 280px;
+  width: calc( 34% - 8px - 8px - 20px );
+  height: 300px;
+  padding: 8px;
+  opacity: 0.65;
+  background-color: #1b3440;
+  color: #ffffff;
+  z-index: 2;
+}
+article separator[role="chat-area"] div[type="search-ret-rank"] li.btn-search-ret-rank {
+  height: 32px;
+  line-height: 32px;
+}
+article separator[role="chat-area"] div[type="search-ret-rank"] div.h1 {
+  font-size: 20px;
+  text-align: center;
+}
+article separator[role="chat-area"] div[type="search-ret-rank"] div.s1 {
+  font-size: 14px;
+  text-align: center;
+}
+article separator[role="chat-area"] div[type="search-ret-rank"] .btn-search-ret-rank {
+  cursor: pointer;
+}
 article separator[role="chat-area"] div[type="chat-msg"] {
   width: 100%;
   height: calc( 100% - 32px );

@@ -418,14 +418,14 @@ article {
   }
 
 
-
+$vote-and-chat-width: 34%;
   separator[role="vote-and-chat"] {
     float: left;
     display: inline-block;
     margin: 0px;
     padding: 0px;
     overflow-y: hidden;
-    $width: 34%;
+    $width: $vote-and-chat-width;
     width: $width;
     height: 100%;
   }
@@ -457,6 +457,37 @@ article {
     $input-height: 32px;
     $margin: 8px;
     $padding: 10px;
+
+    div[type="search-ret-rank"] {
+      position: absolute;
+      top: $vote-graph-height + $ads-height;
+      width: calc( #{$vote-and-chat-width} - #{$margin} - #{$margin} - 20px );
+      height: 300px;
+      padding: 8px;
+      opacity: 0.65;
+      background-color: $primary-color;
+      color: $main-font-color;
+      z-index: 2;
+
+      li.btn-search-ret-rank {
+        height: 32px;
+        line-height: 32px;
+      }
+
+      div.h1 {
+        font-size: 20px;
+        text-align: center;
+      }
+
+      div.s1 {
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .btn-search-ret-rank {
+        cursor: pointer;
+      }
+    }
 
     div[type="chat-msg"] {
       width: 100%;
