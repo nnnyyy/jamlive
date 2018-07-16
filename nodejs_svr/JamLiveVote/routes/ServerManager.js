@@ -292,7 +292,7 @@ ServerMan.prototype.checkAllBaned = function() {
 
     try {
         this.searchQueryMap.forEach(function(value, key) {
-            if( cur - value.tLast > 5 * 1000 ) {
+            if( cur - value.tLast > 8 * 1000 ) {
                 servman.searchQueryMap.delete(key);
             }
         })
