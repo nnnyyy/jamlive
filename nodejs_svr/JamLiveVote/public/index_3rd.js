@@ -252,8 +252,6 @@ function onInputMsgKeyUp(e) {
     var code = (e.which ? e.which : e.keyCode );
     if( bTrigger ) {
         bTrigger = false;
-        if( $(this).val() != '/' && $(this).val() != '#')
-            $(this).val('');
         return;
     }
 
@@ -281,6 +279,7 @@ function onInputMsgKeyUp(e) {
     }
 }
 
+var reserved_key = '';
 function onGlobalKeyDown(e) {
     if( $('.ip-name').is(':focus') ) return;
     if( $('.ip-msg').is(':focus') ) return;
@@ -310,6 +309,7 @@ function onGlobalKeyDown(e) {
     }
     else {
         if( code != 27 ) {
+            reserved_key = code;
             $('.ip-msg').val('');
             $('.ip-msg').focus();
             bTrigger = true;
