@@ -222,6 +222,7 @@ function onInputMsgKeyPress(e) {
         }
 
         var isvote = -1;
+
         if( msg.search(/111+/g) != -1 || msg == "1") {
             vote(socket, {idx:0});
             isvote = 0;
@@ -257,6 +258,7 @@ function onInputMsgKeyUp(e) {
     }
 
     var isvote = -1;
+    /*
     if( msg.search(/111+/g) != -1 ) {
         vote(socket, {idx:0});
         isvote = 0;
@@ -269,7 +271,7 @@ function onInputMsgKeyUp(e) {
         vote(socket, {idx:2});
         isvote = 2;
     }
-
+*/
     if( isvote != -1 ) {
         $(this).val('');
     }
@@ -299,17 +301,11 @@ function onGlobalKeyDown(e) {
         var clicked = (idx+1);
         vote(socket, {idx: idx });
     }
-    else if( ( code >= 49 && code <= 51 ) ) {
-        var curTime = new Date();
-        if( curTime - tClick < 500 ) {
-            return;
-        }
-        tClick = curTime;
-
-        var idx = code - 49;
-
-        var nick = getNickName();
-        var clicked = (idx+1);
+    else if( code == 37 || code == 40 || code == 39 ) {
+        var idx = -1;
+        if( code == 37 ) idx = 0;
+        if( code == 40 ) idx = 1;
+        if( code == 39 ) idx = 2;
         vote(socket, {idx: idx });
     }
     else {
