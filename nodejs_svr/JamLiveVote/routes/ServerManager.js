@@ -422,13 +422,14 @@ ServerMan.prototype.isAbleCreateQuizData = function() {
     return !this.quizdata || ( this.quizdata.isEnd() && ( cur - this.quizdata.tLastEnd >= 7000 ) );
 }
 
-ServerMan.prototype.addSearchQuery = function( query ) {
+ServerMan.prototype.addSearchQuery = function( query, bCount ) {
     if( !this.searchQueryMap.get( query ) ) {
         this.searchQueryMap.set( query, { query: query, cnt: 1, tLast: new Date() });
     }
     else {
         var d = this.searchQueryMap.get( query );
-        d.cnt += 1;
+        if( bCount )
+            d.cnt += 1;
         d.tLast = new Date();
     }
 }
@@ -491,15 +492,17 @@ function onSockSearch(data) {
         return;
     }
 
-    client.activePoint += 1;
+    if( isLiveQuizTime() ) {
+        client.activePoint += 1;
+    }
 
     if( data.isBroadcast ){
         var nick = client.nick;
-        servman.addSearchQuery( data.msg );
+        servman.addSearchQuery( data.msg, true );
         servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
     }
     else {
-        servman.addSearchQuery( data.msg );
+        servman.addSearchQuery( data.msg, false );
     }
 }
 

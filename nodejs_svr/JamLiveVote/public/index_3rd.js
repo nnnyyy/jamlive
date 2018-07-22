@@ -307,6 +307,14 @@ function onGlobalKeyDown(e) {
         if( code == 39 ) idx = 2;
         vote(socket, {idx: idx });
     }
+    else if( code >= 49 && code <= 53 ) {
+        var idx = code - 49;
+        if( searchtop5queries.length <= idx ) {
+            return;
+        }
+
+        searchWebRoot(socket, searchtop5queries[idx], false);
+    }
     else {
         if( code != 27 ) {
             reserved_key = code;
@@ -346,6 +354,7 @@ function setSocketListener() {
 }
 
 var slhash = '';
+var searchtop5queries = [];
 function onSearchRetRank( datalist, hash ) {
     var searchRetRankList = $('#search-ret-rank-list');
 
@@ -353,6 +362,7 @@ function onSearchRetRank( datalist, hash ) {
 
     if( datalist.length <= 0 || checked == 0) {
         searchRetRankList.empty();
+        searchtop5queries = [];
         slhash = '';
         setVisible($('div[type="search-ret-rank"]'), false );
         return;
@@ -363,9 +373,11 @@ function onSearchRetRank( datalist, hash ) {
 
     if( hash != slhash ) {
         searchRetRankList.empty();
+        searchtop5queries = [];
         for( var i = 0 ; i < datalist.length ; ++i ) {
             var html = '<li class="btn-search-ret-rank">' + datalist[i].query + '</li>';
             searchRetRankList.append(html);
+            searchtop5queries.push(datalist[i].query);
         }
 
         slhash = hash;
