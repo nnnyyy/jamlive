@@ -30,14 +30,14 @@ function registerKeyEvent( socket ) {
 }
 
 function openUserMenu( name, sockid ) {
-    const user_menu = $('.user-menu');
+    var user_menu = $('.user-menu');
     user_menu.attr('sockid', sockid);
     user_menu.find('name').text(name);
     setVisible(user_menu, true);
 }
 
 function closeUserMenu() {
-    const user_menu = $('.user-menu');
+    var user_menu = $('.user-menu');
     setVisible(user_menu, false);
 }
 
@@ -409,13 +409,13 @@ function setBtnListener() {
     })
 
     $('#um-ban').click(function(e) {
-        const user_menu = $('.user-menu');
+        var user_menu = $('.user-menu');
         closeUserMenu();
         socket.emit('ban', {sockid: user_menu.attr('sockid')});
     });
 
     $('#um-like').click(function(e) {
-        const user_menu = $('.user-menu');
+        var user_menu = $('.user-menu');
         closeUserMenu();
         console.log('like');
         socket.emit('like', {sockid: user_menu.attr('sockid')});
