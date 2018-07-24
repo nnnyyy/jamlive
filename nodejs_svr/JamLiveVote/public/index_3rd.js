@@ -408,20 +408,20 @@ function setBtnListener() {
         setVisible($('.popup_wnd'), false);
     })
 
-    $('#um-ban').click(e => {
+    $('#um-ban').click(function(e) {
         const user_menu = $('.user-menu');
         closeUserMenu();
         socket.emit('ban', {sockid: user_menu.attr('sockid')});
     });
 
-    $('#um-like').click(e => {
+    $('#um-like').click(function(e) {
         const user_menu = $('.user-menu');
         closeUserMenu();
         console.log('like');
         socket.emit('like', {sockid: user_menu.attr('sockid')});
     })
 
-    $('#um-cancel').click(e => closeUserMenu() );
+    $('#um-cancel').click(function(e) { closeUserMenu() } );
 
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
         openUserMenu($(this).text(), $(this).attr('sockid') );
