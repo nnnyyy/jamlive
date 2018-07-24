@@ -753,6 +753,18 @@ function searchWebRoot( socket, query, isBroadcast ) {
     //$('#mid_quiz_search').html('');
     var nick = getNickName();
     socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
+
+    var queries = query.trim().split(' ');
+    var chinese = false;
+    var chienseQuery = '';
+    for( var i = 0 ; i < queries.length ; ++i ) {
+        if( queries[i] === "한자" ) {
+            chienseQuery = query.slice(0,query.indexOf(queries[i]));
+            chinese = true;
+            break;
+        }
+    }
+
     var searched = false;
     if( $('#cb_s0').is(':checked')) {
         searchWeb(0, query);
@@ -779,6 +791,10 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searchWebGoogle(query, false);
         searched = true;
     } //  구글
+
+    if( chinese ) {
+        searchWebNaver(chienseQuery, false);
+    }
 
 
     if( $('#cb_s6').is(':checked')) {
@@ -841,6 +857,21 @@ function searchWebGoogle( query, grammer) {
         url: '/searchgoogle',
         success: function(data) {
             setSearchRet(data, true, 2);
+        }
+    });
+}
+
+function searchWebNaver( query ) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+        }),
+        contentType: 'application/json',
+        url: '/searchnaver',
+        success: function(data) {
+            setSearchRet(data, true, 1);
         }
     });
 }
