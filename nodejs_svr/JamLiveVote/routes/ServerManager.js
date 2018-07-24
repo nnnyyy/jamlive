@@ -485,22 +485,23 @@ function onSockLike(data) {
         var logined = socket.request.session.username ? true : false;
         var auth_state = logined ? socket.request.session.auth : -1;
 
-        /*
          if( client.ip == toLikeClient.ip ) {
-         msg = '자신을 칭찬할 수 없습니다.';
+         msg = 'ㅋㅋㅋㅋ 그러지 맙시다';
          socket.emit('serv_msg', {msg: msg});
          return;
          }
-         */
-
 
         const msg = [
             `${toLikeClient.nick}님! 당신은 최고에요!`,
             `${toLikeClient.nick}님 덕분에 살았습니다`,
             `${toLikeClient.nick}님 사랑해요 ♡`,
+            `퀴즈의 지배자 ${toLikeClient.nick}님 ♡ㅅ♡`,
+            `${toLikeClient.nick}님 매우 칭찬해~`,
         ];
 
-        const curMsg = msg[Math.floor(Math.random() * 3)];
+        const curMsg = msg[Math.floor(Math.random() * 5)];
+
+        toLikeClient.activePoint += 2;
 
         servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
     }
@@ -549,18 +550,6 @@ function onSockChat(data) {
             this.disconnect();
             return;
         }
-        if( data.msg == "#1216" ) {
-            client.isAdmin = !client.isAdmin;
-            if( client.isAdmin ) {
-                servman.others.push({channel: "chat", data: {id: socket.id, nickname: '알림', msg: '~~사이트관리자 입장~~' , mode: "notice", isBaned: false, admin: false }});
-                adminClient = client;
-            }
-            else {
-                servman.others.push({channel: "chat", data: {id: socket.id, nickname: '알림', msg: '~~사이트관리자 퇴장~~' , mode: "notice", isBaned: false, admin: false }});
-                adminClient = null;
-            }
-            return;
-        }
 
         var logined = socket.request.session.username ? true : false;
         var nick = client.nick;
@@ -577,6 +566,11 @@ function onSockChat(data) {
 
         if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
             servman.io.sockets.emit('effect', {name: 'bbam'});
+            return;
+        }
+
+        if( data.msg == "ㅃㅃㅃ") {
+            servman.io.sockets.emit('emoticon', {nick: nick, name: 'bbam'});
             return;
         }
 

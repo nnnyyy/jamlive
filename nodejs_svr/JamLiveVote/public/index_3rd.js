@@ -46,6 +46,7 @@ function registerSocketEvent() {
     socket.on('serv_msg', onServMsg);
     socket.on('quiz', onQuiz);
     socket.on('quizret', onQuizRet);
+    socket.on('emoticon', onEmoticon);
     socket.on('memo', function(data) {
         $('div[type="memo"]').html(data.memo);
     })
@@ -169,6 +170,14 @@ function onQuizRet(_data) {
     setTimeout(function() {
         $('.quiz_wnd').css('display', 'none');
     }, 3000);
+}
+
+function onEmoticon(_data) {
+    switch( _data.name ) {
+        case "bbam":
+            addChat( "", false, _data.nick, '<img style="width:60px; height:60px;" src="/images/hong_shock.png"/>', false);
+            break;
+    }
 }
 
 function onInputMsgKeyPress(e) {
