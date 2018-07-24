@@ -6,6 +6,10 @@ $article-width: calc(100vw - #{$menu-width} );
 $chat-font-size: 14px;
 $sub-color: yellow;
 
+like {
+  color:green;
+}
+
 div.admin-nick {
   font-weight: bold;
   color: #510808;
@@ -606,6 +610,41 @@ notice-nick {
   font-size: 17px;
   opacity: 0;
   overflow: hidden;
+}
+
+.user-menu{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+  margin-top: -150px;
+  padding: 20px;
+  background-color: $primary-color;
+  color: $main-font-color;
+  text-align: center;
+  font-size: 17px;
+  overflow: hidden;
+  border-radius: 10px;
+  z-index: 5;
+
+  div[type="name"] {
+    height: 50px;
+  }
+
+  div[type="menu"] {
+    text-align: center;
+    div[type="btn"] {
+      cursor: pointer;
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      background-color: $main-font-color;
+      color: $primary-color;
+      margin: 4px auto;
+      border-radius: 10px;
+    }
+  }
 }
 
 .quiz_wnd{

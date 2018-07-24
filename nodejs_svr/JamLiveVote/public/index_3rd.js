@@ -19,6 +19,7 @@ function init() {
     setVisible($('#ads-area-2'), true);
     setVisible($('.quiz_wnd') , false);
     setVisible($('#btn-admin'), false);
+    closeUserMenu();
     $('#search-ret-rank-list').empty();
 }
 
@@ -26,29 +27,18 @@ function registerKeyEvent( socket ) {
     $('.ip-msg').keypress(onInputMsgKeyPress);
     $(document).keydown(onGlobalKeyDown);
     $('.ip-msg').keyup(onInputMsgKeyUp);
-
-    /*
-    $('.btn_vote').each(function(idx) {
-        $(this).click(function() {
-            var idx = $(this).attr('data');
-            vote(socket, {idx:idx});
-        });
-    })
-    */
 }
 
-function registerClickEvent( socket ) {
-    $(document).on('click', '.chat_name', function (e) {
-        var name = $(this).text();
-        if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
-            socket.emit('ban', {ip: $(this).attr('ip')});
-        }
-        e.preventDefault();
-    });
+function openUserMenu( name, sockid ) {
+    const user_menu = $('.user-menu');
+    user_menu.attr('sockid', sockid);
+    user_menu.find('name').text(name);
+    setVisible(user_menu, true);
+}
 
-    $('btn_logout').click(function(e) {
-        logout_test();
-    })
+function closeUserMenu() {
+    const user_menu = $('.user-menu');
+    setVisible(user_menu, false);
 }
 
 function registerSocketEvent() {
@@ -418,13 +408,29 @@ function setBtnListener() {
         setVisible($('.popup_wnd'), false);
     })
 
+    $('#um-ban').click(e => {
+        const user_menu = $('.user-menu');
+        closeUserMenu();
+        socket.emit('ban', {sockid: user_menu.attr('sockid')});
+    });
 
+    $('#um-like').click(e => {
+        const user_menu = $('.user-menu');
+        closeUserMenu();
+        console.log('like');
+        socket.emit('like', {sockid: user_menu.attr('sockid')});
+    })
+
+    $('#um-cancel').click(e => closeUserMenu() );
 
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
+        openUserMenu($(this).text(), $(this).attr('sockid') );
+        /*
         var name = $(this).text();
         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
             socket.emit('ban', {sockid: $(this).attr('sockid')});
         }
+        */
         e.preventDefault();
     });
 

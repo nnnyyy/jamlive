@@ -402,6 +402,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
     socket.on('ban', onSockBan);
+    socket.on('like', onSockLike);
     socket.on('analysis', onAnalysis);
     socket.on('memo', function(data) {
         servman.memo = data.memo;
@@ -443,15 +444,11 @@ function onSockBan(data) {
     var auth_state = logined ? socket.request.session.auth : -1;
     var msg = '';
 
-    console.log(client.ip  + ' : ' + toBanClient.ip );
-
     if( !logined ) {
         msg = '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.';
         socket.emit('serv_msg', {msg: msg});
         return;
     }
-
-    console.log(client.ip  + ' : ' + toBanClient.ip );
 
     if( client.ip == toBanClient.ip ) {
         msg = '자신을 신고할 수 없습니다.';
@@ -477,6 +474,39 @@ function onSockBan(data) {
     }
 
     socket.emit('serv_msg', {msg: msg});
+}
+
+function onSockLike(data) {
+    try {
+        var client = servman.getClient(this.id);
+        var toLikeClient = servman.getClient(data.sockid);
+        if( !toLikeClient ) return;
+        var socket = client.socket;
+        var logined = socket.request.session.username ? true : false;
+        var auth_state = logined ? socket.request.session.auth : -1;
+
+        /*
+         if( client.ip == toLikeClient.ip ) {
+         msg = '자신을 칭찬할 수 없습니다.';
+         socket.emit('serv_msg', {msg: msg});
+         return;
+         }
+         */
+
+
+        const msg = [
+            `${toLikeClient.nick}님! 당신은 최고에요!`,
+            `${toLikeClient.nick}님 덕분에 살았습니다`,
+            `${toLikeClient.nick}님 사랑해요 ♡`,
+        ];
+
+        const curMsg = msg[Math.floor(Math.random() * 3)];
+
+        servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+    }
+    catch(e){
+        console.log(`onSockLike exception : ${e}`);
+    }
 }
 
 function onSockSearch(data) {
