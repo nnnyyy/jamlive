@@ -163,6 +163,22 @@ exports.getPermanentBanList = function(cb) {
         cb({ret: -1});
     }
 }
+exports.updateBanUser = function( idorip, cb ) {
+    try {
+        dbpool.query("insert into permanent_ban_list values ('" + idorip + "')", function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - updateBanUser');
+        cb({ret: -1});
+    }
+}
 
 /*
  exports.buyItem = function(id, itemsn, cb) {

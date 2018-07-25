@@ -345,6 +345,7 @@ function setSocketListener() {
         myid = data.socket;
         isLogin = data.isLogined;
         setVisible($('#btn-admin'), data.auth >= 50);
+        setVisible($('.admin-component'), data.auth >= 50);
         $('#btn-admin').setEnable(data.auth >= 50);
         setNickName( data.nick );
         setShowMemberVoteOnlyListener();
@@ -421,6 +422,12 @@ function setBtnListener() {
         var user_menu = $('.user-menu');
         closeUserMenu();
         socket.emit('ban', {sockid: user_menu.attr('sockid')});
+    });
+
+    $('#um-permanentban').click(function(e) {
+        var user_menu = $('.user-menu');
+        closeUserMenu();
+        socket.emit('permanentban', {sockid: user_menu.attr('sockid')});
     });
 
     $('#um-like').click(function(e) {

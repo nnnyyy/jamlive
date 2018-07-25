@@ -402,6 +402,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
     socket.on('ban', onSockBan);
+    socket.on('permanentban', onSockPermanentBan);
     socket.on('like', onSockLike);
     socket.on('analysis', onAnalysis);
     socket.on('memo', function(data) {
@@ -474,6 +475,52 @@ function onSockBan(data) {
     }
 
     socket.emit('serv_msg', {msg: msg});
+}
+
+function onSockPermanentBan(data) {
+    try {
+        var client = servman.getClient(this.id);
+        var toBanClient = servman.getClient(data.sockid);
+        if( !toBanClient ) return;
+        var socket = client.socket;
+        var logined = socket.request.session.username ? true : false;
+        var auth_state = logined ? socket.request.session.auth : -1;
+        if( !client.isAdmin ) return;
+
+        if( !logined ) {
+            msg = '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
+        if( client.ip == toBanClient.ip ) {
+            msg = '자신을 신고할 수 없습니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
+        dbhelper.updateBanUser(toBanClient.ip, ret => console.log(`영구 밴 결과 : ${ret.ret}`));
+        if( toBanClient.socket.session.username ){
+            dbhelper.updateBanUser( toBanClient.socket.session.username, ret => {
+                console.log(`영구 밴 결과 : ${ret.ret}`);
+            } );
+        }
+
+        dbhelper.getPermanentBanList(function(ret) {
+            if( ret.ret == 0 ) {
+                console.log('getPermanentBanList success : ' + ret.ret);
+                servman.permanentBanList = ret.list;
+            }
+            else {
+                console.log('getPermanentBanList error : ' + ret.ret);
+            }
+        });
+
+        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+    }
+    catch(e) {
+        console.log(`onSockPermanentBan error - ${e}`);
+    }
 }
 
 function onSockLike(data) {
