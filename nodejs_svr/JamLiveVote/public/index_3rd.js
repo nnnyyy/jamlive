@@ -8,6 +8,12 @@ var isLogin = false;
 var timerID = -1;
 var timerIDForImageSearch = -1;
 
+var ChatValues = function() {
+    this.chatUI = $('.chat-ui');
+}
+
+var chatValueObj = new ChatValues();
+
 function setVisible(elem, visible) {
     elem.css('display', visible ? 'inline-block' : 'none');
 }
@@ -719,22 +725,24 @@ function addChat( mode, isbaned , name, msg, bStrip,auth, ip, sockid ) {
                 '</li>';
 
     var bAutoMoveToBottom = false;
-    var chatwndheight = $('.chat-ui').height();
+    var chatwndheight = chatValueObj.chatUI.height();
 
-    if( $('.chat-ui').find('li').length > 300 ) {
-        $('.chat-ui').find('li').eq(0).remove();
+    var list = chatValueObj.chatUI.find('li');
+
+    if( list.length > 300 ) {
+        list.eq(0).remove();
     }
 
-    if( ($('.chat-ui').get(0).scrollTop == ($('.chat-ui').get(0).scrollHeight - chatwndheight - 20/* padding */) ) ||
+    if( (chatValueObj.chatUI.get(0).scrollTop == (chatValueObj.chatUI.get(0).scrollHeight - chatwndheight - 20/* padding */) ) ||
         $('#cb_auto_scroll').is(':checked')) {
         bAutoMoveToBottom = true;
     }
 
-    $('.chat-ui').append(li);
+    chatValueObj.chatUI.append(li);
 
     //  끝 정렬
     if( bAutoMoveToBottom ) {
-        $('.chat-ui').scrollTop($('.chat-ui').get(0).scrollHeight);
+        chatValueObj.chatUI.scrollTop(chatValueObj.chatUI.get(0).scrollHeight);
     }
 
 }
