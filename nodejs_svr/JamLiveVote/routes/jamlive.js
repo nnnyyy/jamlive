@@ -192,6 +192,18 @@ function parcing(data, body) {
     })
 }
 
+function parcingDaum(data, body) {
+    const strContents = new Buffer(body);
+    const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
+    $('#webdocColl ul.list_info').find('li').each(function(idx){
+        const title = $(this).find('.mg_tit').eq(0).text();
+        const desc = $(this).find('.desc').eq(0).html();
+        console.log(`parcingDaum : ${title}, ${desc}`);
+
+        data.push({title: title, description: desc});
+    })
+}
+
 function parcingNaverChinese(data, body) {
     const strContents = new Buffer(body);
     const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
@@ -249,8 +261,8 @@ exports.searchex = function(req, res, next) {
         api_url += '&sort=sim';
     }
 
-    var clientids = ['zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl'];
-    var secrets = ['kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G'];
+    var clientids = ['zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl', 'NhTno6hxnZpTGZUPffvI', 'x8DQ2xYWaeQqVGDZzdL4'];
+    var secrets = ['kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G', 'foM4QTYU9U', 'vPCM314sAS'];
     var modcnt = clientids.length;
 
 
@@ -337,6 +349,72 @@ exports.requestGoogle = function(req, res, next) {
                 if( isArray(data) && data.length > 0 ) {
                     if( grammer ) data = data.slice(0,1);
                     else data = data.slice(0,4);
+                    ServerManager.setCachedSearchResult('google', query, data);
+                    if( isGuest ) {
+                        //data = data.slice(0,1);
+                    }
+                    res.json(data);
+                }
+                else {
+                    res.json([]);
+                }
+            } else {
+                console.log('google search failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                res.json([]);
+            }
+        });
+    }
+    catch(e){
+        console.log('request google error - ' + e);
+        res.json([]);
+    }
+
+
+}
+
+
+exports.requestDaumWeb = function(req, res, next) {
+    var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
+    var ipHashed = ip.hashCode().toString();
+    if( ServerManager.checkBaned(ipHashed) ) {
+        res.json([]);
+        return;
+    }
+
+    var query = req.body.query
+    query = query.trim();
+
+    var isGuest = false;
+    if( !ServerManager.membersmap.get( req.session.username ) ) {
+        isGuest = true;
+    }
+
+    var cached = ServerManager.getCachedSearchResult('google', query);
+    if( cached ) {
+        console.log('cached : ' + query);
+        if( isGuest ) {
+            //cached = cached.slice(0,1);
+        }
+        res.json(cached);
+        return;
+    }
+
+    var url = 'https://search.daum.net/search?w=web&DA=SBC&q=' +   encodeURI(query);
+
+    var options = {
+        url: url,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+        }
+        ,encoding: null
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            var data = [];
+            if (!error && response.statusCode == 200) {
+                parcingDaum(data, body);
+                if( isArray(data) && data.length > 0 ) {
+                    data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('google', query, data);
                     if( isGuest ) {
                         //data = data.slice(0,1);

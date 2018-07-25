@@ -25,6 +25,7 @@ function init() {
     setVisible($('#ads-area-2'), true);
     setVisible($('.quiz_wnd') , false);
     setVisible($('#btn-admin'), false);
+    setVisible($('.popup_wnd'), false);
     closeUserMenu();
     $('#search-ret-rank-list').empty();
 }
@@ -181,7 +182,7 @@ function onQuizRet(_data) {
 function onEmoticon(_data) {
     switch( _data.name ) {
         case "bbam":
-            addChat( "", false, _data.nick, '<img style="width:60px; height:60px;" src="/images/hong_shock.png"/>', false);
+            addChat( "", false, _data.nick, '<img style="width:60px; height:60px;" src="/images/hong_shock.png"/>', false, _data.auth);
             break;
     }
 }

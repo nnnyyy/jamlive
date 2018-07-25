@@ -617,7 +617,7 @@ function onSockChat(data) {
         }
 
         if( data.msg == "ㅃㅃㅃ") {
-            servman.io.sockets.emit('emoticon', {nick: nick, name: 'bbam'});
+            servman.io.sockets.emit('emoticon', {auth: auth_state, nick: nick, name: 'bbam'});
             return;
         }
 
