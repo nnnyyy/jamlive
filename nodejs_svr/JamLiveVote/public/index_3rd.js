@@ -8,6 +8,30 @@ var isLogin = false;
 var timerID = -1;
 var timerIDForImageSearch = -1;
 
+var RETRY_INTERVAL = 2000;
+var ConnectStateInfo = function() {
+    this.isConnected = false;
+    this.timeoutID = -1;
+}
+var connectStateInfo = new ConnectStateInfo();
+
+ConnectStateInfo.prototype.Connect = function() {
+    this.isConnected = true;
+    clearInterval( this.timeoutID );
+}
+
+ConnectStateInfo.prototype.Disconnect = function() {
+    this.isConnected = false;
+    setInterval(function() {
+        if( !connectStateInfo.isConnected ) {
+            $.get('/ping', function(data){
+                connectStateInfo.isConnected = true;
+                window.location.href = unescape(window.location.pathname);
+            })
+        }
+    }, RETRY_INTERVAL);
+}
+
 var ChatValues = function() {
     this.chatUI = $('.chat-ui');
 }
@@ -54,6 +78,8 @@ function registerSocketEvent() {
     socket.on('quiz', onQuiz);
     socket.on('quizret', onQuizRet);
     socket.on('emoticon', onEmoticon);
+    socket.on('connect', connectStateInfo.Connect );
+    socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('memo', function(data) {
         $('div[type="memo"]').html(data.memo);
     })
