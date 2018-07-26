@@ -57,7 +57,7 @@ ChatValues.prototype.FlushChat = function( mode ) {
 
         var list = chatValueObj.chatUI.find('li');
 
-        if( list.length > 100 ) {
+        if( list.length > 50 ) {
             list.eq(0).remove();
         }
 
