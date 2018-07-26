@@ -602,15 +602,6 @@ function onSockChat(data) {
         var nick = client.nick;
         var auth_state = socket.request.session.auth;
 
-        if( ( client.isAdmin || (auth_state && auth_state >= 1)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
-            dbhelper.getRandomQuiz(function(result) {
-                if( result.ret == 0 ){
-                    servman.createQuizData(result.quizdata);
-                }
-            });
-            return;
-        }
-
         if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
             servman.io.sockets.emit('effect', {name: 'bbam'});
             return;
