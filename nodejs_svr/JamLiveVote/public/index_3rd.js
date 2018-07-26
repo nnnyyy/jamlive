@@ -774,7 +774,7 @@ function addChat( mode, isbaned , name, msg, bStrip,auth, ip, sockid ) {
 
     var list = chatValueObj.chatUI.find('li');
 
-    if( list.length > 300 ) {
+    if( list.length > 100 ) {
         list.eq(0).remove();
     }
 
