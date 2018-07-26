@@ -464,6 +464,7 @@ function onSearchRetRank( datalist, hash ) {
 
         slhash = hash;
 
+        /*
         var duplicateMap = new Map();
 
         for( var i = 0 ; i < datalist.length ; ++i ) {
@@ -480,6 +481,7 @@ function onSearchRetRank( datalist, hash ) {
             getSearchArea(1).html(html);
             getSearchArea(2).html(html2);
         }
+        */
     }
 }
 
