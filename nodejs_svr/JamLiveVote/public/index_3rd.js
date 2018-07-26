@@ -36,6 +36,48 @@ var ChatValues = function() {
     this.chatUI = $('.chat-ui');
     this.searchRank = $('#search-ret-rank-list');
     this.lastSearchQuery = '';
+    //  5개나 2초동안 모으거나 투표 채팅일 경우 플러싱
+    this.chatBuffer = [];
+    this.bFlushByTimer = false;
+}
+
+ChatValues.prototype.setUpdateChat = function() {
+    setInterval(function() {
+        chatValueObj.bFlushByTimer = true;
+        chatValueObj.FlushChat();
+    }, 2000);
+}
+
+ChatValues.prototype.FlushChat = function( mode ) {
+    var tCur = new Date();
+    if( mode == "vote" || chatValueObj.chatBuffer.length >= 5 || chatValueObj.bFlushByTimer  ) {
+
+        var bAutoMoveToBottom = false;
+        var chatwndheight = chatValueObj.chatUI.height();
+
+        var list = chatValueObj.chatUI.find('li');
+
+        if( list.length > 100 ) {
+            list.eq(0).remove();
+        }
+
+        if( (chatValueObj.chatUI.get(0).scrollTop == (chatValueObj.chatUI.get(0).scrollHeight - chatwndheight - 20/* padding */) ) ||
+            $('#cb_auto_scroll').is(':checked')) {
+            bAutoMoveToBottom = true;
+        }
+
+        for( var i = 0 ; i < chatValueObj.chatBuffer.length ; ++i ) {
+            chatValueObj.chatUI.append(chatValueObj.chatBuffer[i]);
+        }
+
+        //  끝 정렬
+        if( bAutoMoveToBottom ) {
+            chatValueObj.chatUI.scrollTop(chatValueObj.chatUI.get(0).scrollHeight);
+        }
+
+        chatValueObj.chatBuffer = [];
+        chatValueObj.bFlushByTimer = false;
+    }
 }
 
 var chatValueObj = new ChatValues();
@@ -54,6 +96,7 @@ function init() {
     setVisible($('.popup_wnd'), false);
     closeUserMenu();
     $('#search-ret-rank-list').empty();
+    chatValueObj.setUpdateChat();
 }
 
 function registerKeyEvent( socket ) {
@@ -104,7 +147,7 @@ function onChat(data) {
         setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
     }
     else if( data.mode == "search") {
-
+        if( !isShowSearchChat() ) return;
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
@@ -769,27 +812,10 @@ function addChat( mode, isbaned , name, msg, bStrip,auth, ip, sockid ) {
                 '</div>' +
                 '</li>';
 
-    var bAutoMoveToBottom = false;
-    var chatwndheight = chatValueObj.chatUI.height();
 
-    var list = chatValueObj.chatUI.find('li');
+    chatValueObj.chatBuffer.push(li);
 
-    if( list.length > 100 ) {
-        list.eq(0).remove();
-    }
-
-    if( (chatValueObj.chatUI.get(0).scrollTop == (chatValueObj.chatUI.get(0).scrollHeight - chatwndheight - 20/* padding */) ) ||
-        $('#cb_auto_scroll').is(':checked')) {
-        bAutoMoveToBottom = true;
-    }
-
-    chatValueObj.chatUI.append(li);
-
-    //  끝 정렬
-    if( bAutoMoveToBottom ) {
-        chatValueObj.chatUI.scrollTop(chatValueObj.chatUI.get(0).scrollHeight);
-    }
-
+    chatValueObj.FlushChat( mode );
 }
 
 function initSearch() {
@@ -1114,6 +1140,14 @@ function isShowMemberVoteOnly() {
     }
 
     return false;
+}
+
+function isShowSearchChat() {
+    if($('#cb_notshowsearchchat').is(':checked')) {
+        return false;
+    }
+
+    return true;
 }
 
 function setShowMemberVoteOnlyListener() {
