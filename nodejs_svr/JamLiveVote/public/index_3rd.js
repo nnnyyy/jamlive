@@ -66,9 +66,12 @@ ChatValues.prototype.FlushChat = function( mode ) {
             bAutoMoveToBottom = true;
         }
 
+        var html = '';
         for( var i = 0 ; i < chatValueObj.chatBuffer.length ; ++i ) {
-            chatValueObj.chatUI.append(chatValueObj.chatBuffer[i]);
+            html += chatValueObj.chatBuffer[i];
         }
+
+        chatValueObj.chatUI.append(html);
 
         //  끝 정렬
         if( bAutoMoveToBottom ) {
