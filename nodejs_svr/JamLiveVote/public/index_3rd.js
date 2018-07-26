@@ -34,6 +34,8 @@ ConnectStateInfo.prototype.Disconnect = function() {
 
 var ChatValues = function() {
     this.chatUI = $('.chat-ui');
+    this.searchRank = $('#search-ret-rank-list');
+    this.lastSearchQuery = '';
 }
 
 var chatValueObj = new ChatValues();
@@ -163,7 +165,6 @@ var idInterval = -1;
 var idTimeout = -1;
 var quizdata = null;
 function onQuiz(data) {
-    console.log('onQuiz : ' + data );
     $('.q_q').each(function(idx){
         $(this).css('background-color','transparent');
     })
@@ -191,7 +192,7 @@ function onQuiz(data) {
 
 function onQuizRet(_data) {
     if( !quizdata ) return;
-    console.log('onQuizRet : ' + _data);
+
     $('.q_q').each(function(idx){
         if( idx == _data.collect_idx ) {
             $(this).css('background-color','blue');
@@ -389,7 +390,8 @@ function setSocketListener() {
 var slhash = '';
 var searchtop5queries = [];
 function onSearchRetRank( datalist, hash ) {
-    var searchRetRankList = $('#search-ret-rank-list');
+
+    var searchRetRankList = chatValueObj.searchRank;
 
     var checked = localStorage.getItem('cb_searchTopFive') || 0;
 
@@ -414,6 +416,23 @@ function onSearchRetRank( datalist, hash ) {
         }
 
         slhash = hash;
+
+        var duplicateMap = new Map();
+
+        for( var i = 0 ; i < datalist.length ; ++i ) {
+            var words = datalist[i].query.split(' ');
+            var html = getSearchArea(1).html();
+            var html2 = getSearchArea(2).html();
+            for( var w = 0 ; w < words.length ; ++w ) {
+                if( chatValueObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
+                if( duplicateMap.containsKey( words[w]) ) continue;
+                html = html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+                html2 = html2.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+                duplicateMap.put(words[w], 1);
+            }
+            getSearchArea(1).html(html);
+            getSearchArea(2).html(html2);
+        }
     }
 }
 
@@ -466,7 +485,6 @@ function setBtnListener() {
     $('#um-like').click(function(e) {
         var user_menu = $('.user-menu');
         closeUserMenu();
-        console.log('like');
         socket.emit('like', {sockid: user_menu.attr('sockid')});
     })
 
@@ -797,6 +815,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
 
     var queries = query.trim().split(' ');
+    chatValueObj.lastSearchQuery = query;
     var chinese = false;
     var chienseQuery = '';
     for( var i = 0 ; i < queries.length ; ++i ) {
@@ -945,7 +964,6 @@ function setSearchDB(data) {
         for( var i = queries.length - 1 ; i >= 0 ; --i) {
             queries[i] = queries[i].replace('%', '');
             queries[i] = queries[i].replace('%', '');
-            console.log(queries[i]);
             if( item1.question.toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
                 cnt1+= add;
             }
@@ -1331,7 +1349,6 @@ function initAdminSocketListener() {
             case 'a-end':
             {
                 if( data.ret == 0 ) {
-                    console.log(data.list);
                     btnAnalStart.setEnable(true);
                     btnQuizStart.setEnable(false);
                     btnQuizEnd.setEnable(false);
