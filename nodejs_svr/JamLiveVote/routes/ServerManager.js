@@ -621,6 +621,11 @@ function onSockChat(data) {
             return;
         }
 
+        if( data.msg == "ㄸㄸ") {
+            servman.io.sockets.emit('emoticon', {auth: auth_state, nick: nick, name: 'ddk'});
+            return;
+        }
+
         servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
     }
     catch(err) {

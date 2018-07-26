@@ -252,7 +252,11 @@ function onQuizRet(_data) {
 function onEmoticon(_data) {
     switch( _data.name ) {
         case "bbam":
-            addChat( "", false, _data.nick, '<img style="width:60px; height:60px;" src="/images/hong_shock.png"/>', false, _data.auth);
+            addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
+            break;
+
+        case "ddk":
+            addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
             break;
     }
 }
