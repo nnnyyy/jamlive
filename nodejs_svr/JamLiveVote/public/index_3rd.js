@@ -45,12 +45,12 @@ ChatValues.prototype.setUpdateChat = function() {
     setInterval(function() {
         chatValueObj.bFlushByTimer = true;
         chatValueObj.FlushChat();
-    }, 2000);
+    }, 1000);
 }
 
 ChatValues.prototype.FlushChat = function( mode ) {
     var tCur = new Date();
-    if( mode == "vote" || chatValueObj.chatBuffer.length >= 5 || chatValueObj.bFlushByTimer  ) {
+    if( mode == "vote" || chatValueObj.chatBuffer.length >= 3 || chatValueObj.bFlushByTimer  ) {
 
         var bAutoMoveToBottom = false;
         var chatwndheight = chatValueObj.chatUI.height();
