@@ -198,7 +198,6 @@ function parcingDaum(data, body) {
     $('#webdocColl ul.list_info').find('li').each(function(idx){
         const title = $(this).find('.mg_tit').eq(0).text();
         const desc = $(this).find('.desc').eq(0).html();
-        console.log(`parcingDaum : ${title}, ${desc}`);
 
         data.push({title: title, description: desc});
     })
@@ -210,7 +209,6 @@ function parcingNaverChinese(data, body) {
     $('.kr_dic_section ul.lst_krdic').find('li').each(function(idx){
         const title = $(this).find('p').eq(0).find('.c_b').text() + $(this).find('p').eq(0).find('.word_class2').text();
         const desc = $(this).find('p').eq(1).html();
-        console.log(`naverchinese : ${title}, ${desc}`);
 
         data.push({title: title, description: desc});
     })
