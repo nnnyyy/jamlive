@@ -282,13 +282,7 @@ ServerMan.prototype.checkBaned = function( _ip ) {
 ServerMan.prototype.checkAllBaned = function() {
     var cur = new Date();
 
-    if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
-        dbhelper.getRandomQuiz(function(result) {
-            if( result.ret == 0 ){
-                servman.createQuizData(result.quizdata);
-            }
-        });
-    }
+    
 
     try {
         this.searchQueryMap.forEach(function(value, key) {
