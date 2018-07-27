@@ -656,9 +656,19 @@ function onSockVote(data) {
     }
 
     if( !logined ) {
-        var msg = '손님은 투표와 검색이 제한이 있습니다';
-        socket.emit('serv_msg', {msg: msg});
-        return;
+        var _counts = [0,0,0];
+        servman.counts.forEach(function(value, key) {
+            _counts[0] += value[0];
+            _counts[1] += value[1];
+            _counts[2] += value[2];
+        })
+
+        var total = _counts[0] + _counts[1] + _counts[2];
+        if( total <= 0 ) {
+            var msg = '손님은 회원 투표 전까지 투표 불가능합니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
     }
 
     if( client.isClickable() ) {
