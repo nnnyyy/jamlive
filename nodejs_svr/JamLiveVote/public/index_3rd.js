@@ -41,6 +41,7 @@ var ChatValues = function() {
     this.bFlushByTimer = false;
     this.searchArea1 = $('#search-area-1');
     this.searchArea2 = $('#search-area-2');
+    this.sockid = '';
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -157,35 +158,6 @@ function onChat(data) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
         addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
-        if( data.id != myid && isAutoSearchChecked() ) {
-            var tCur = new Date();
-            if( tCur - tAutoSearchFreeze <= 5000) {
-                return;
-            }
-
-            if( tCur - tLast > 1500 ) {
-                autoSearchWordMap.clear();
-            }
-
-            tLast = tCur;
-
-            var arr = data.msg.substr(5).split(' ');
-            for( var i = 0 ; i < arr.length ; ++i ) {
-                autoSearchWordMap.put(arr[i], 1);
-            }
-
-            if( autoSearchWordMap.size() >= 3){
-                var s = '';
-                var aKeys = autoSearchWordMap.keys();
-                for( var i = 0 ; i < aKeys.length ; ++i  ) {
-                    s += aKeys[i];
-                    s += ' ';
-                }
-                autoSearchWordMap.clear();
-                tAutoSearchFreeze = tCur;
-                searchWebRoot(this, s, false);
-            }
-        }
     }
     else if ( data.mode == "notice") {
         addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
@@ -428,7 +400,7 @@ function setNickName( nick ) {
 function setSocketListener() {
     socket.on('vote_data', onProcessVoteData);
     socket.on('myid', function(data) {
-        myid = data.socket;
+        chatValueObj.sockid = data.socket;
         isLogin = data.isLogined;
         setVisible($('#btn-admin'), data.auth >= 50);
         setVisible($('.admin-component'), data.auth >= 50);
@@ -937,7 +909,8 @@ function searchWeb( type, query ) {
         dataType: 'json',
         data: JSON.stringify({
             query : query,
-            type: type
+            type: type,
+            sockid: chatValueObj.sockid,
         }),
         contentType: 'application/json',
         url: '/searchex',
@@ -977,6 +950,7 @@ function searchWebNaver( query ) {
         dataType: 'json',
         data: JSON.stringify({
             query : query,
+            sockid: chatValueObj.sockid
         }),
         contentType: 'application/json',
         url: '/searchnaver',
@@ -992,7 +966,8 @@ function searchFromDB( query ) {
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({
-            query : query
+            query : query,
+            sockid: chatValueObj.sockid
         }),
         contentType: 'application/json',
         url: '/searchdb',

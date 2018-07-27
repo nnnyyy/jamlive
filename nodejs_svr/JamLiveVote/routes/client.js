@@ -43,4 +43,10 @@ Client.prototype.isBanedIP = function( hashcode ) {
     
 }
 
+Client.prototype.isLogined = function() {
+    var socket = this.socket;
+    var logined = socket.request.session.username ? true : false;
+    return logined;
+}
+
 module.exports = Client;

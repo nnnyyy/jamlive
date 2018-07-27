@@ -229,7 +229,13 @@ exports.searchex = function(req, res, next) {
     }
 
     var isGuest = false;
-    if( !ServerManager.membersmap.get( req.session.username ) ) {
+    var client = ServerManager.getClient(req.body.sockid);
+    if( !client ) {
+        console.log('Error - client not found');
+        return;
+    }
+
+    if( !client.isLogined() ) {
         isGuest = true;
     }
 
@@ -281,7 +287,7 @@ exports.searchex = function(req, res, next) {
                     else data = data.slice(0,4);
                     ServerManager.setCachedSearchResult(sType, query, data);
                     if( isGuest ) {
-                        //data = data.slice(0,1);
+                        data = data.slice(0,1);
                     }
                     res.json(data);
                 }
@@ -383,7 +389,13 @@ exports.requestDaumWeb = function(req, res, next) {
     query = query.trim();
 
     var isGuest = false;
-    if( !ServerManager.membersmap.get( req.session.username ) ) {
+    var client = ServerManager.getClient(req.body.sockid);
+    if( !client ) {
+        console.log('Error - client not found');
+        return;
+    }
+
+    if( !client.isLogined() ) {
         isGuest = true;
     }
 
@@ -415,7 +427,7 @@ exports.requestDaumWeb = function(req, res, next) {
                     data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('google', query, data);
                     if( isGuest ) {
-                        //data = data.slice(0,1);
+                        data = data.slice(0,1);
                     }
                     res.json(data);
                 }
@@ -448,7 +460,13 @@ exports.requestNaver = function(req, res, next) {
     query = query.trim();
 
     var isGuest = false;
-    if( !ServerManager.membersmap.get( req.session.username ) ) {
+    var client = ServerManager.getClient(req.body.sockid);
+    if( !client ) {
+        console.log('Error - client not found');
+        return;
+    }
+
+    if( !client.isLogined() ) {
         isGuest = true;
     }
 
@@ -480,7 +498,7 @@ exports.requestNaver = function(req, res, next) {
                     data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('naver_chinese', query, data);
                     if( isGuest ) {
-                        //data = data.slice(0,1);
+                        data = data.slice(0,1);
                     }
                     res.json(data);
                 }

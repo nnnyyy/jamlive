@@ -569,6 +569,11 @@ function onSockSearch(data) {
         return;
     }
 
+    if( !client.isLogined() ) {
+        var msg = '손님은 검색 결과가 항목당 1개만 표시됩니다.';
+        socket.emit('serv_msg', {msg: msg});
+    }
+
     if( isLiveQuizTime() ) {
         client.activePoint += 1;
     }
@@ -646,6 +651,12 @@ function onSockVote(data) {
 
     if( auth_state < 1 && servman.checkBaned( client.ip ) ) {
         var msg = '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.';
+        socket.emit('serv_msg', {msg: msg});
+        return;
+    }
+
+    if( !logined ) {
+        var msg = '손님은 투표와 검색이 제한이 있습니다';
         socket.emit('serv_msg', {msg: msg});
         return;
     }

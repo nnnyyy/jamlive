@@ -135,4 +135,30 @@ div#settings div[type="btn"] {
   color: #ffffff;
 }
 
+.admin_msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90vw;
+  min-height: 60px;
+  margin-left: -45vw;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: 11px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.opacity {
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.non_opacity {
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+
 /*# sourceMappingURL=style_mobile.css.map */

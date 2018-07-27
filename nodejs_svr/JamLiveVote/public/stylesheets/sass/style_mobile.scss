@@ -167,3 +167,35 @@ div#settings {
     color: $main-font-color;
   }
 }
+
+.admin_msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90vw;
+  min-height: 60px;
+  margin-left: -45vw;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: $font-chat-size;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.opacity {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.non_opacity {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}

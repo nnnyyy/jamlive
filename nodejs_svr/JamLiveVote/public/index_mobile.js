@@ -16,6 +16,9 @@ var GlobalValue = function() {
     this.settingsUI = $('#settings');
     this.myid = '';
     this.isLogin = false;
+
+    this.adminMsg = $('.admin_msg');
+    this.animOpacityTimerID = -1;
 }
 
 GlobalValue.prototype.init = function(socket) {
@@ -145,6 +148,23 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
     }
 }
 
+function showAdminMsg(msg) {
+    if( global.animOpacityTimerID != -1 ) {
+        clearTimeout(global.animOpacityTimerID);
+        global.animOpacityTimerID = -1;
+        global.adminMsg.removeClass('opacity');
+        global.adminMsg.addClass('non_opacity');
+    }
+    global.adminMsg.addClass('opacity');
+    global.adminMsg.removeClass('non_opacity');
+    global.adminMsg.html(msg);
+    global.adminMsg.css('opacity', '0.85');
+    global.animOpacityTimerID = setTimeout(function() {
+        global.adminMsg.css('opacity', '0');
+    }, 7000);
+
+}
+
 GlobalValue.prototype.onEmoticon = function( _data ) {
     switch( _data.name ) {
         case "bbam":
@@ -165,6 +185,10 @@ GlobalValue.prototype.onMyID = function(data) {
 
     setNickName( data.nick );
     setShowMemberVoteOnlyListener();
+}
+
+GlobalValue.prototype.onServMsg = function(data) {
+    showAdminMsg(data.msg);
 }
 
 GlobalValue.prototype.addChat = function( mode, isbaned , name, msg, bStrip,auth, ip, sockid ) {
@@ -425,4 +449,5 @@ function registerSocketListener(g) {
     g.socket.on('vote_data', g.onProcessVoteData);
     g.socket.on('emoticon', g.onEmoticon);
     g.socket.on('myid', g.onMyID);
+    g.socket.on('serv_msg', g.onServMsg);
 }
