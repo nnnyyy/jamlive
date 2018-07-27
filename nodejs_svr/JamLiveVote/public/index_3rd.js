@@ -870,6 +870,10 @@ function searchWebRoot( socket, query, isBroadcast ) {
         }
     }
 
+    if( $('#cb_s7').is(':checked') ) {
+        chinese = true;
+    }
+
     var searched = false;
     if( $('#cb_s0').is(':checked')) {
         searchWeb(0, query);
@@ -907,7 +911,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searchFromDB(query);
         searched = true;
     }
-
+/*
     if( $('#cb_s7').is(':checked')) {
         //$('#mid_quiz_search').css('display','inline-block');
         //  국어
@@ -918,7 +922,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
         }
         searched = true;
     }
-
+*/
     if( !searched ) {
         //$('.search_article').html(htmlBackup);
         $('#sd_ret').css('display','none');
