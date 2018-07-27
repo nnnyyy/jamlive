@@ -60,7 +60,7 @@ GlobalValue.prototype.onChat = function( data ) {
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-        addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+        global.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "notice") {
         global.addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
