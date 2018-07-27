@@ -282,7 +282,13 @@ ServerMan.prototype.checkBaned = function( _ip ) {
 ServerMan.prototype.checkAllBaned = function() {
     var cur = new Date();
 
-    
+    if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
+        dbhelper.getRandomQuiz(function(result) {
+            if( result.ret == 0 ){
+                servman.createQuizData(result.quizdata);
+            }
+        });
+    }
 
     try {
         this.searchQueryMap.forEach(function(value, key) {
@@ -409,7 +415,6 @@ ServerMan.prototype.createQuizData = function( _quizdata ) {
     if( this.quizdata && !this.quizdata.isEnd() ) {
         return;
     }
-    console.log('create Quiz');
     this.quizdata = new quizDataObj( _quizdata, this.io );
 }
 
@@ -596,6 +601,15 @@ function onSockChat(data) {
         var nick = client.nick;
         var auth_state = socket.request.session.auth;
 
+        if( ( client.isAdmin || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
+            dbhelper.getRandomQuiz(function(result) {
+                if( result.ret == 0 ){
+                    servman.createQuizData(result.quizdata);
+                }
+            });
+            return;
+        }
+
         if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
             servman.io.sockets.emit('effect', {name: 'bbam'});
             return;
@@ -621,7 +635,7 @@ function onSockChat(data) {
 function isLiveQuizTime() {
     var cur = new Date();
     var hours = cur.getHours();
-    return !( (hours >= 22 || hours < 12 ) || (hours >= 15 && hours < 20 ) );
+    return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 19 ) );
 }
 
 function onSockVote(data) {
