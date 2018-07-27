@@ -39,6 +39,8 @@ var ChatValues = function() {
     //  5개나 2초동안 모으거나 투표 채팅일 경우 플러싱
     this.chatBuffer = [];
     this.bFlushByTimer = false;
+    this.searchArea1 = $('#search-area-1');
+    this.searchArea2 = $('#search-area-2');
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -467,24 +469,29 @@ function onSearchRetRank( datalist, hash ) {
 
         slhash = hash;
 
-        /*
+
         var duplicateMap = new Map();
 
+        var html = getSearchArea(1).html();
+        var html2 = getSearchArea(2).html();
+
+        var bChanged = false;
         for( var i = 0 ; i < datalist.length ; ++i ) {
             var words = datalist[i].query.split(' ');
-            var html = getSearchArea(1).html();
-            var html2 = getSearchArea(2).html();
             for( var w = 0 ; w < words.length ; ++w ) {
                 if( chatValueObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
                 if( duplicateMap.containsKey( words[w]) ) continue;
                 html = html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
                 html2 = html2.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
                 duplicateMap.put(words[w], 1);
+                bChanged = true;
             }
+        }
+
+        if( bChanged ) {
             getSearchArea(1).html(html);
             getSearchArea(2).html(html2);
         }
-        */
     }
 }
 
@@ -1130,10 +1137,10 @@ function setSearchRet(items, first, where) {
 
 function getSearchArea(where) {
     if( where == 1 ) {
-        return $('#search-area-1');
+        return chatValueObj.searchArea1;
     }
     else {
-        return $('#search-area-2');
+        return chatValueObj.searchArea2;
     }
 }
 
