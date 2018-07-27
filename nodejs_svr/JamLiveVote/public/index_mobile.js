@@ -39,11 +39,9 @@ GlobalValue.prototype.init = function(socket) {
 
 GlobalValue.prototype.onChat = function( data ) {
     if( data.mode == "vote" ) {
-        console.log(data);
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-
 
         if( isShowMemberVoteOnly() &&
             ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
