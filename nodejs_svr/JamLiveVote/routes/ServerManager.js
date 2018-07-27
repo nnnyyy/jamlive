@@ -674,7 +674,7 @@ function onSockVote(data) {
             client.activePoint += 2;
         }
 
-        servman.others.push({channel: "chat", data: {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip }})
+        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
     }
     else {
         var msg = '투표한지 얼마 안됐어요. 나중에 시도하세요.';

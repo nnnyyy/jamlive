@@ -9,7 +9,7 @@ var Auth = require('./Auth');
 /* GET home page. */
 router.use( Log.logging );
 router.get('/', function(req, res, next) {
-  res.render('index_new', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick});
+  res.render('index', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick});
 });
 
 router.get('/new', function(req,res, next) {
