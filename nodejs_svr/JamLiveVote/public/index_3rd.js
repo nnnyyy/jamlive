@@ -863,7 +863,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     var chinese = false;
     var chienseQuery = '';
     for( var i = 0 ; i < queries.length ; ++i ) {
-        if( queries[i] === "한자" ) {
+        if( queries[i] === "한자" || queries[i] === "맞춤법" || queries[i] === "맞" || queries[i] === "맞춤") {
             chienseQuery = query.slice(0,query.indexOf(queries[i]));
             chinese = true;
             break;
