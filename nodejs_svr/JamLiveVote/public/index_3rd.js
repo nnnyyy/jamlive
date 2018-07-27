@@ -871,6 +871,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     }
 
     if( $('#cb_s7').is(':checked') ) {
+        chienseQuery = query;
         chinese = true;
     }
 
