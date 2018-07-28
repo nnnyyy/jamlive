@@ -592,6 +592,7 @@ function onSockChat(data) {
     var client = servman.getClient(this.id);
     var socket = client.socket;
     try {
+        var mode = 'chat';
         var isBaned = false;
         if( servman.checkBaned( client.ip ) ) {
             isBaned = true;
@@ -602,7 +603,7 @@ function onSockChat(data) {
             return;
         }
 
-        var logined = socket.request.session.username ? true : false;
+        var logined = client.isLogined();
         var nick = client.nick;
         var auth_state = socket.request.session.auth;
 
@@ -630,7 +631,20 @@ function onSockChat(data) {
             return;
         }
 
-        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: data.msg, mode: "chat", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        if( !logined ) {
+            const msg = [
+                `(속닥속닥) 무언가 말하고 있습니다...`,
+                `(속닥속닥) 무슨 말을 하고 있는걸까요...`,
+                `(속닥속닥) 제 말이 들리시나요..`,
+                `(속닥속닥) 답답하네요 ㅠ`,
+                `(속닥속닥) 가입을 해야겠어요..`,
+            ];
+
+            const curMsg = msg[Math.floor(Math.random() * 5)];
+            data.msg = curMsg;
+        }
+
+        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: data.msg, mode: mode, isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
     }
     catch(err) {
         console.error(err);
