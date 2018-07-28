@@ -124,7 +124,15 @@ div#fix-btn-area {
   bottom: $vote-btn-height;
   margin-top: -10px;
   width: 60px;
-  height: 120px;
+  height: 145px;
+  color: $primary-color;
+  text-align: center;
+
+  div[type="conn-cnt"] {
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+  }
 
   div[type="btn"] {
     height: 60px;

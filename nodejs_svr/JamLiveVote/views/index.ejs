@@ -64,6 +64,7 @@
     <div type="vote-btn" value="2">3번</div>
 </div>
 <div id="fix-btn-area">
+    <div type="conn-cnt">0명</div>
     <div type="btn" id="btn-settings"><img src="/images/btn_settings.png"/></div>
     <% if( !username ) {%>
     <div type="btn" id="btn-login"><img src="/images/btn_login.png"/></div>
@@ -77,7 +78,7 @@
     <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>고정닉 투표 결과만 보기(로그인시)</div>
     <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
     <div class="min_vote_slider"></div>
-    <div type="checkbox"><input type="checkbox" id="cb_auto_scroll"/>강제 자동 스크롤 on/off</div>
+    <div type="checkbox"><input type="checkbox" id="cb_auto_scroll" checked/>강제 자동 스크롤 on/off</div>
     <div type="checkbox"><input type="checkbox" id="cb_notshowsearchchat"/>검색 채팅 안받기</div>
     <div type="btn" id="btn-close-settings">닫기</div>
 </div>

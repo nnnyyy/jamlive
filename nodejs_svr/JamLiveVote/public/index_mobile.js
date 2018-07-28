@@ -87,7 +87,7 @@ GlobalValue.prototype.onChat = function( data ) {
 GlobalValue.prototype.onProcessVoteData = function( data ) {
     var votedata = data.vote_data;
     var users = votedata.users;
-    //$('vote_user_cnt').text(users);
+    $('[type="conn-cnt"]').text(users + '명');
     //$('vote_except').text(votedata.bans);
 
     var total = [0,0,0];
