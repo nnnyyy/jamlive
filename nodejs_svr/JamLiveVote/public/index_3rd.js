@@ -834,15 +834,17 @@ function searchWebRoot( socket, query, isBroadcast ) {
     chatValueObj.lastSearchQuery = query;
     var chinese = false;
     var chienseQuery = '';
+    var chineseSubType = '';
     for( var i = 0 ; i < queries.length ; ++i ) {
-        if( queries[i] === "한자" || queries[i] === "맞춤법" || queries[i] === "맞" || queries[i] === "맞춤") {
+        if( queries[i] === "한자") {
             chienseQuery = query.slice(0,query.indexOf(queries[i]));
+            chineseSubType = 'chinese_only';
             chinese = true;
             break;
         }
     }
 
-    if( $('#cb_s7').is(':checked') ) {
+    if( !chinese && $('#cb_s7').is(':checked') ) {
         chienseQuery = query;
         chinese = true;
     }
@@ -875,7 +877,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     } //  구글
 
     if( chinese ) {
-        searchWebNaver(chienseQuery, false);
+        searchWebNaver(chienseQuery, chineseSubType);
     }
 
 
@@ -934,6 +936,7 @@ function searchWebGoogle( query, grammer) {
         dataType: 'json',
         data: JSON.stringify({
             query : query,
+            sockid: chatValueObj.sockid,
             grammer : grammer
         }),
         contentType: 'application/json',
@@ -944,18 +947,20 @@ function searchWebGoogle( query, grammer) {
     });
 }
 
-function searchWebNaver( query ) {
+function searchWebNaver( query, subtype ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({
             query : query,
+            subtype: subtype,
             sockid: chatValueObj.sockid
         }),
         contentType: 'application/json',
         url: '/searchnaver',
         success: function(data) {
-            setSearchRet(data, true, 1);
+            setSearchRet(data.data, true, 1);
+            setSearchRet(data.hdata, true, 2);
         }
     });
 }
@@ -1092,7 +1097,7 @@ function setSearchRet(items, first, where) {
         var div = '<div class="search_ret_root">' +
             '<div class="search_ret_title">' +
             item.title +
-            '</div><div class="search_ret_desc">' +
+            '</div><div class="search_ret_desc" style="font-size: 12px; line-height: 20px;">' +
             (item.description) +
             '</div><div class="separator"></div>' +
             '</div>';

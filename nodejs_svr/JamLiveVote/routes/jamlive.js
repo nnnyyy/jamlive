@@ -203,7 +203,7 @@ function parcingDaum(data, body) {
     })
 }
 
-function parcingNaverChinese(data, body) {
+function parcingNaverChinese(data, hdata, body) {
     const strContents = new Buffer(body);
     const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
     $('.kr_dic_section ul.lst_krdic').find('li').each(function(idx){
@@ -211,6 +211,14 @@ function parcingNaverChinese(data, body) {
         const desc = $(this).find('p').eq(1).html();
 
         data.push({title: title, description: desc});
+    })
+
+    $('.hanja_dic_section .dic_search_result').find('dt').each(function(idx) {
+        hdata.push({ title: $(this).text().trim(), description: '' });
+    })
+
+    $('.hanja_dic_section .dic_search_result').find('dd').each(function(idx) {
+        hdata[idx].description = $(this).text().trim();
     })
 }
 
@@ -231,7 +239,7 @@ exports.searchex = function(req, res, next) {
     var isGuest = false;
     var client = ServerManager.getClient(req.body.sockid);
     if( !client ) {
-        console.log('Error - client not found');
+        console.log(`[searchex] Error - client not found ( ${req.body.sockid}`);
         return;
     }
 
@@ -391,7 +399,7 @@ exports.requestDaumWeb = function(req, res, next) {
     var isGuest = false;
     var client = ServerManager.getClient(req.body.sockid);
     if( !client ) {
-        console.log('Error - client not found');
+        console.log('[requestDaumWeb] Error - client not found');
         return;
     }
 
@@ -471,12 +479,14 @@ exports.requestNaver = function(req, res, next) {
     }
 
     var cached = ServerManager.getCachedSearchResult('naver_chinese', query);
-    if( cached ) {
+    var cached_h = ServerManager.getCachedSearchResult('naver_chinese_h', query);
+    if( cached || cached_h ) {
         console.log('cached : ' + query);
         if( isGuest ) {
-            //cached = cached.slice(0,1);
+            cached = cached.slice(0,1);
+            cached_h = cached_h.slice(0,1);
         }
-        res.json(cached);
+        res.json({ data: cached, hdata: cached_h });
         return;
     }
 
@@ -492,15 +502,18 @@ exports.requestNaver = function(req, res, next) {
     try {
         request.get(options, function (error, response, body) {
             var data = [];
+            var hanja_data = [];
             if (!error && response.statusCode == 200) {
-                parcingNaverChinese(data, body);
+                parcingNaverChinese(data, hanja_data, body);
                 if( isArray(data) && data.length > 0 ) {
                     data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('naver_chinese', query, data);
+                    ServerManager.setCachedSearchResult('naver_chinese_h', query, hanja_data);
                     if( isGuest ) {
                         data = data.slice(0,1);
+                        hanja_data = hanja_data.slice(0,1);
                     }
-                    res.json(data);
+                    res.json({data: data, hdata: hanja_data });
                 }
                 else {
                     res.json([]);
