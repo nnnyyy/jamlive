@@ -286,7 +286,7 @@ ServerMan.prototype.checkAllBaned = function() {
         if( day < 0 ) day = 6;
 
         if (    servman.nextQuizShowdata.weekday != day ||
-                cur - todayQuizDate > 0
+            (servman.nextQuizShowdata.weekday == day && cur - todayQuizDate > 0 )
         ) {
             dbhelper.getNextQuizshowTime(function(ret) {
                 servman.nextQuizShowdata = ret.data;
