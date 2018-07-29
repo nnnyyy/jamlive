@@ -534,7 +534,7 @@ function onSockPermanentBan(data) {
             msg = `${toBanClient.nick} 영구밴 완료!`;
             socket.emit('serv_msg', {msg: msg});
         });
-        if( toBanClient.socket.session.username ){
+        if( toBanClient.isLogined() && toBanClient.socket.session.username ){
             dbhelper.updateBanUser( toBanClient.socket.session.username, ret => {
                 msg = `${toBanClient.nick} 영구밴 완료!`;
                 socket.emit('serv_msg', {msg: msg});
