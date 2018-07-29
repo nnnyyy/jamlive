@@ -129,6 +129,7 @@ function registerSocketEvent() {
     socket.on('quiz', onQuiz);
     socket.on('quizret', onQuizRet);
     socket.on('emoticon', onEmoticon);
+    socket.on('next-quiz', onNextQuiz);
     socket.on('connect', connectStateInfo.Connect );
     socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('memo', function(data) {
@@ -236,6 +237,15 @@ function onEmoticon(_data) {
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
             break;
     }
+}
+
+function onNextQuiz(data) {
+    var weekdayname = ['월요일', '화요일','수요일','목요일','금요일','토요일','일요일'];
+    var tTime = new Date('1980-01-01T' + data.data.time);
+    console.log(tTime);
+    var qinfo = data.data.name + ' ' + tTime.getHours() + '시 ' + tTime.getMinutes().toString().padStart(2,"0") + '분';
+    $('.weekday').text(weekdayname[data.data.weekday]);
+    $('.quizinfo').text(qinfo);
 }
 
 function onInputMsgKeyPress(e) {

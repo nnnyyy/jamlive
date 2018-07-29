@@ -63,6 +63,7 @@ var ServerMan = function() {
     this.countslistForGuest = [];
     this.others = [];
     this.memo = "";
+    this.nextQuizShowdata = {};
 }
 
 var servman = new ServerMan();
@@ -148,6 +149,11 @@ ServerMan.prototype.setIO = function(io) {
             console.log('getPermanentBanList error : ' + ret.ret);
         }
     });
+
+    dbhelper.getNextQuizshowTime(function(ret) {
+        servman.nextQuizShowdata = ret.data;
+        //console.log(`dd : ${}`);
+    })
 
     setInterval(function() {
         servman.broadcastVoteInfo();
@@ -282,15 +288,34 @@ ServerMan.prototype.checkBaned = function( _ip ) {
 ServerMan.prototype.checkAllBaned = function() {
     var cur = new Date();
 
-    if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
-        dbhelper.getRandomQuiz(function(result) {
-            if( result.ret == 0 ){
-                servman.createQuizData(result.quizdata);
-            }
-        });
-    }
-
     try {
+        //  자동 퀴즈쇼 모드
+        if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
+            dbhelper.getRandomQuiz(function(result) {
+                if( result.ret == 0 ){
+                    servman.createQuizData(result.quizdata);
+                }
+            });
+        }
+
+        //  다음 라이브 퀴즈쇼 업데이트
+        var month = (cur.getMonth()+1).toString().padStart(2, "0");
+        var day = cur.getDate().toString().padStart(2, "0");
+        var first = `${cur.getFullYear()}-${month}-${day}T`;
+        var todayQuizDate = new Date(first + servman.nextQuizShowdata.time );
+        var day = cur.getDay() - 1;
+        if( day < 0 ) day = 6;
+
+        if (    servman.nextQuizShowdata.weekday != day ||
+                cur - todayQuizDate > 0
+        ) {
+            dbhelper.getNextQuizshowTime(function(ret) {
+                servman.nextQuizShowdata = ret.data;
+                console.log('??');
+                servman.io.sockets.emit('next-quiz', {data: servman.nextQuizShowdata});
+            })
+        }
+
         this.searchQueryMap.forEach(function(value, key) {
             if( cur - value.tLast > 12 * 1000 ) {
                 servman.searchQueryMap.delete(key);
@@ -397,6 +422,7 @@ ServerMan.prototype.register = function(socket) {
     client.nick = nick;
 
     socket.emit('myid', {socket: socket.id, isLogined: logined, auth: socket.request.session.auth, nick: client.nick, analstep: quizAnalysis.step });
+    socket.emit('next-quiz', { data: servman.nextQuizShowdata });
     socket.emit('memo', {memo: servman.memo });
     socket.on('vote', onSockVote);;
     socket.on('chat', onSockChat);
@@ -456,6 +482,12 @@ function onSockBan(data) {
         return;
     }
 
+    if( servman.checkBaned(client.ip) ) {
+        msg = '밴유저는 다른 유저를 밴 할 수 없습니다.';
+        socket.emit('serv_msg', {msg: msg});
+        return;
+    }
+
     if( servman.checkBaned( toBanClient.ip ) ) {
         msg = '이미 밴 되어 있습니다.';
         socket.emit('serv_msg', {msg: msg});
@@ -498,10 +530,14 @@ function onSockPermanentBan(data) {
             return;
         }
 
-        dbhelper.updateBanUser(toBanClient.ip, ret => console.log(`영구 밴 결과 : ${ret.ret}`));
+        dbhelper.updateBanUser(toBanClient.ip, ret => {
+            msg = `${toBanClient.nick} 영구밴 완료!`;
+            socket.emit('serv_msg', {msg: msg});
+        });
         if( toBanClient.socket.session.username ){
             dbhelper.updateBanUser( toBanClient.socket.session.username, ret => {
-                console.log(`영구 밴 결과 : ${ret.ret}`);
+                msg = `${toBanClient.nick} 영구밴 완료!`;
+                socket.emit('serv_msg', {msg: msg});
             } );
         }
 

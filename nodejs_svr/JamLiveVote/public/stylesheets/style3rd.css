@@ -326,7 +326,8 @@ article separator[role="search-ret-2"] {
   height: 100%;
 }
 article separator[role="search-ret-2"] img[type="shortcut"] {
-  width: 100%;
+  width: 90%;
+  margin: 10px auto;
 }
 article separator[role="search-ret-2"] div[type="search-area-2"] {
   width: 100%;
@@ -354,6 +355,28 @@ article separator[role="search-ret-2"] div[type="ads-area-2"] div[type="sub-titl
   color: #1b3440;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+article separator[role="search-ret-2"] div[type="next-quiz-time-left"] {
+  width: 400px;
+  height: 70px;
+  background-color: #1b3440;
+  margin: 0 auto;
+  text-align: center;
+  padding: 0px 10px 0px 10px;
+  border-radius: 10px;
+  line-height: 35px;
+  font-size: 20px;
+}
+article separator[role="search-ret-2"] div[type="next-quiz-time-left"] div.h1 {
+  color: #ffffff;
+}
+article separator[role="search-ret-2"] div[type="next-quiz-time-left"] div.h2 {
+  color: yellow;
+}
+article separator[role="search-ret-2"] .memo-area {
+  margin: 8px;
+  width: 80%;
+  height: 100px;
 }
 article separator[role="search-ret-2"] div[type="caution"] {
   text-align: left;
@@ -562,7 +585,8 @@ notice-nick {
   text-align: center;
   font-size: 17px;
   overflow: hidden;
-  opacity: 0.9;
+  border-radius: 8px;
+  opacity: 0.8;
   z-index: 1;
 }
 .quiz_wnd .q_title {

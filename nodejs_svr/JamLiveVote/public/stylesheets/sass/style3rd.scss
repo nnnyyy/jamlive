@@ -384,7 +384,8 @@ article {
     //background-color: green;
 
     img[type="shortcut"] {
-      width: 100%;
+      width: 90%;
+      margin: 10px auto;
     }
 
     div[type="search-area-2"] {
@@ -417,6 +418,32 @@ article {
         margin-top: 5px;
         margin-bottom: 5px;
       }
+    }
+
+    //  다음 퀴즈쇼 남은 시간 표시
+    div[type="next-quiz-time-left"] {
+      width: 400px;
+      height: 70px;
+      background-color: $primary-color;
+      margin: 0 auto;
+      text-align: center;
+      padding: 0px 10px 0px 10px;
+      border-radius: 10px;
+      line-height: 35px;
+      font-size: 20px;
+      div.h1 {
+        color: $main-font-color;
+      }
+
+      div.h2 {
+        color: $sub-color;
+      }
+    }
+
+    .memo-area {
+      margin: 8px;
+      width: 80%;
+      height: 100px;
     }
 
     div[type="caution"] {
@@ -667,7 +694,8 @@ notice-nick {
   text-align: center;
   font-size: 17px;
   overflow: hidden;
-  opacity: 0.9;
+  border-radius: 8px;
+  opacity: 0.8;
   z-index: 1;
 
   .q_title {

@@ -143,6 +143,32 @@ exports.updateActivePoint = function( id, ap, cb ) {
     }
 }
 
+exports.getNextQuizshowTime = function( cb ) {
+    try {
+        dbpool.query("select * from quiz_time_table where startweek = weekday(now()) and starttime >= now() order by starttime limit 1", function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+
+            var data = { ret: -1, name: '없습니다', weekday: 0, time: '00:00:00' }
+
+            for( var i  = 0; i < rows.length ; ++i ) {
+                console.log(rows[i]);
+                data.ret = 0;
+                data.name = rows[i].name;
+                data.time = rows[i].starttime;
+                data.weekday = rows[i].startweek;
+            }
+
+            cb({ret: 0, data: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getPermanentBanList');
+        cb({ret: -1});
+    }
+}
+
 exports.getPermanentBanList = function(cb) {
     try {
         dbpool.query("select * from permanent_ban_list", function(err, rows) {
