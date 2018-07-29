@@ -6,6 +6,7 @@ $graph-height: 100px;
 $article-width: calc(100vw - #{$menu-width} );
 $font-title-size: 18px;
 $font-chat-size: 11px;
+$font-quiz-text: 13px;
 $font-large: 15px;
 $sub-color: yellow;
 
@@ -204,7 +205,7 @@ div#settings {
   background-color: $primary-color;
   color: $main-font-color;
   text-align: center;
-  font-size: $font-chat-size;
+  font-size: $font-quiz-text;
   overflow: hidden;
   z-index: 3;
   border-radius: 8px;
