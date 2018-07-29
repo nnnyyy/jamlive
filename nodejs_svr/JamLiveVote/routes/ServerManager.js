@@ -552,6 +552,8 @@ function onSockPermanentBan(data) {
         });
 
         servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+
+        toBanClient.socket.disconnect();
     }
     catch(e) {
         console.log(`onSockPermanentBan error - ${e}`);
