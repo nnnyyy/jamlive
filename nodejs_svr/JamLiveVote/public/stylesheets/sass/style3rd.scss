@@ -394,22 +394,24 @@ article {
       overflow-y: scroll;
     }
 
+    div[type="title"] {
+      text-align: center;
+      width: 100%;
+      font-size: 24px;
+      color: $primary-color;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
     div[type="ads-area-2"] {
       text-align: center;
       width: 100%;
       overflow-y: hidden;
       top: 0;
       left: 0;
+      margin-top: 10px;
       //background-color: #7c2929;
       z-index: 2;
-
-      div[type="title"] {
-        width: 100%;
-        font-size: 24px;
-        color: $primary-color;
-        margin-top: 8px;
-        margin-bottom: 8px;
-      }
 
       div[type="sub-title"] {
         width: 100%;

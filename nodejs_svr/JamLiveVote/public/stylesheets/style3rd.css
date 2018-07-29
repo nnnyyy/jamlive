@@ -334,20 +334,22 @@ article separator[role="search-ret-2"] div[type="search-area-2"] {
   height: 100%;
   overflow-y: scroll;
 }
+article separator[role="search-ret-2"] div[type="title"] {
+  text-align: center;
+  width: 100%;
+  font-size: 24px;
+  color: #1b3440;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
 article separator[role="search-ret-2"] div[type="ads-area-2"] {
   text-align: center;
   width: 100%;
   overflow-y: hidden;
   top: 0;
   left: 0;
+  margin-top: 10px;
   z-index: 2;
-}
-article separator[role="search-ret-2"] div[type="ads-area-2"] div[type="title"] {
-  width: 100%;
-  font-size: 24px;
-  color: #1b3440;
-  margin-top: 8px;
-  margin-bottom: 8px;
 }
 article separator[role="search-ret-2"] div[type="ads-area-2"] div[type="sub-title"] {
   width: 100%;
