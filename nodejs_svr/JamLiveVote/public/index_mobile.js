@@ -500,4 +500,8 @@ function registerSocketListener(g) {
     g.socket.on('serv_msg', g.onServMsg);
     g.socket.on('quiz', g.onQuiz);
     g.socket.on('quizret', g.onQuizRet);
+    g.socket.on('reconn-server', function(data) {
+        window.location.href = 'http://' + data.url;
+        return;
+    });
 }

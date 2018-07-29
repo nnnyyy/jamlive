@@ -421,6 +421,11 @@ ServerMan.prototype.register = function(socket) {
 
     client.nick = nick;
 
+    if( this.socketmap.count() > 400 && ( !logined || socket.request.session.auth <= 1 ) ) {
+        socket.emit('reconn-server', {url: 'ch2.jamlive.net'});
+        return;
+    }
+
     socket.emit('myid', {socket: socket.id, isLogined: logined, auth: socket.request.session.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
     socket.emit('memo', {memo: servman.memo });

@@ -139,6 +139,11 @@ function registerSocketEvent() {
     socket.on('memo', function(data) {
         $('div[type="memo"]').html(data.memo);
     })
+
+    socket.on('reconn-server', function(data) {
+        window.location.href = 'http://' + data.url;
+        return;
+    });
 }
 
 function onChat(data) {

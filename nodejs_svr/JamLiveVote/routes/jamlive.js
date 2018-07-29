@@ -237,15 +237,6 @@ exports.searchex = function(req, res, next) {
     }
 
     var isGuest = false;
-    var client = ServerManager.getClient(req.body.sockid);
-    if( !client ) {
-        console.log(`[searchex] Error - client not found ( ${req.body.sockid}`);
-        return;
-    }
-
-    if( !client.isLogined() ) {
-        isGuest = true;
-    }
 
     var sType = 'encyc';
     switch(type) {
@@ -330,19 +321,6 @@ exports.requestGoogle = function(req, res, next) {
     }
 
     var isGuest = false;
-    if( !ServerManager.membersmap.get( req.session.username ) ) {
-        isGuest = true;
-    }
-
-    var cached = ServerManager.getCachedSearchResult('google', query);
-    if( cached ) {
-        console.log('cached : ' + query);
-        if( isGuest ) {
-            //cached = cached.slice(0,1);
-        }
-        res.json(cached);
-        return;
-    }
 
     var url = 'https://www.google.co.kr/search?q=' +   encodeURI(query);
 
@@ -397,15 +375,6 @@ exports.requestDaumWeb = function(req, res, next) {
     query = query.trim();
 
     var isGuest = false;
-    var client = ServerManager.getClient(req.body.sockid);
-    if( !client ) {
-        console.log('[requestDaumWeb] Error - client not found');
-        return;
-    }
-
-    if( !client.isLogined() ) {
-        isGuest = true;
-    }
 
     var cached = ServerManager.getCachedSearchResult('google', query);
     if( cached ) {
@@ -468,15 +437,6 @@ exports.requestNaver = function(req, res, next) {
     query = query.trim();
 
     var isGuest = false;
-    var client = ServerManager.getClient(req.body.sockid);
-    if( !client ) {
-        console.log('Error - client not found');
-        return;
-    }
-
-    if( !client.isLogined() ) {
-        isGuest = true;
-    }
 
     var cached = ServerManager.getCachedSearchResult('naver_chinese', query);
     var cached_h = ServerManager.getCachedSearchResult('naver_chinese_h', query);
