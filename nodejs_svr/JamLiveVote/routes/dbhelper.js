@@ -154,7 +154,6 @@ exports.getNextQuizshowTime = function( cb ) {
             var data = { ret: -1, name: '없습니다', weekday: 0, time: '00:00:00' }
 
             for( var i  = 0; i < rows.length ; ++i ) {
-                console.log(rows[i]);
                 data.ret = 0;
                 data.name = rows[i].name;
                 data.time = rows[i].starttime;
