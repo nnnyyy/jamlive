@@ -8,8 +8,6 @@ var Client = function(socket) {
     this.auth = -1;
     this.nick = '';
     this.ip = '';
-    this.logined = false;
-    this.isAdmin = false;
 }
 
 Client.prototype.isClickable = function() {
@@ -38,9 +36,8 @@ Client.prototype.isSearchable = function() {
     return (cur - this.tLastClick) > 10 * 1000;
 }
 
-
-Client.prototype.isBanedIP = function( hashcode ) {
-    
+Client.prototype.isAdmin = function() {
+    return this.auth >= 50;
 }
 
 Client.prototype.isLogined = function() {

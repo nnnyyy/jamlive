@@ -145,13 +145,6 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
             offset: 20
         }
     });
-
-    var others = data.others;
-    for( var i = 0 ; i < others.length ; ++i ) {
-        if( others[i].channel == "chat" ) {
-            global.onChat(others[i].data);
-        }
-    }
 }
 
 function showAdminMsg(msg) {

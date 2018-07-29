@@ -46,22 +46,17 @@ BanUserInfo.prototype.isAbleBan = function() {
 
 var ServerMan = function() {
     this.socketmap = new HashMap();
-    this.membersmap = new HashMap();
     this.banMap = new HashMap();
-    this.uniqueip = new HashMap();
-
     this.permanentBanList = new HashMap();
 
     this.banUsers = new HashMap();
     this.searchedByType = new HashMap();
-    this.check_connections = new HashMap();
     this.counts = new HashMap();
     this.countslist = [];
 
     this.countsForGuest  = new HashMap();
     this.searchQueryMap = new HashMap();
     this.countslistForGuest = [];
-    this.others = [];
     this.memo = "";
     this.nextQuizShowdata = {};
 }
@@ -69,67 +64,53 @@ var ServerMan = function() {
 var servman = new ServerMan();
 
 ServerMan.prototype.addSocket = function(socket) {
-    var cur = new Date();
+    try {
+        var cur = new Date();
 
-    var ip = socket.handshake.address.substr(7);
-    if( socket.handshake.headers['x-real-ip'] != null ) {
-        ip = socket.handshake.headers['x-real-ip'];
-    }
-
-    if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.request.session.username)) {
-        msg = '욕설 및 어뷰징 요소를 사용하여 영구 밴 당하셨습니다';
-        socket.emit('serv_msg', {msg: msg});
-        socket.disconnect();
-        return false;
-    }
-
-    var cinfo = this.check_connections.get(ip);
-    if( cinfo == null ) {
-        cinfo = new ConnectUserInfo();
-        this.check_connections.set(ip, cinfo);
-    }
-    else {
-        cinfo.tLast = new Date();
-        cinfo.nCnt++;
-        if( cinfo.nCnt >= 10 ) {
+        var ip = socket.handshake.address.substr(7);
+        if( socket.handshake.headers['x-real-ip'] != null ) {
+            ip = socket.handshake.headers['x-real-ip'];
         }
-    }
 
-    var client = new Client(socket);
-    client.ip = ip;
-    this.socketmap.set(socket.id, client);
+        if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.request.session.username)) {
+            msg = '욕설 및 어뷰징 요소를 사용하여 영구 밴 당하셨습니다';
+            socket.emit('serv_msg', {msg: msg});
+            socket.disconnect();
+            return false;
+        }
 
-    if( socket.request.session.username ) {
-        this.membersmap.set(socket.request.session.username, true);
-        servman.others.push({channel: "chat", data: {id: socket.id, nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false, auth: 99 }});
+        var client = new Client(socket);
+        client.ip = ip;
+        this.socketmap.set(socket.id, client);
+
+        if( client.isLogined() ) {
+            servman.io.sockets.emit('chat', {id: socket.id, nickname: '알림', msg: socket.request.session.usernick + '님의 입장' , mode: "notice", isBaned: false, admin: false, auth: 99 });
+        }
+    }catch(e) {
+        console.log(`addsocket Error - ${e}`);
+        return false;
     }
 
     return true;
 }
 
 ServerMan.prototype.removeSocket = function(socketid) {
-    var client = this.socketmap.get(socketid);
-    var socket = client.socket;
-    if( client == null ) {
-        console.log('Error');
-        return;
-    }
+    try {
+        var client = this.socketmap.get(socketid);
+        var socket = client.socket;
+        if( !client ) {
+            console.log('Error - Remove Socket');
+            return;
+        }
 
-    this.socketmap.delete(socketid);
-    this.uniqueip.delete(socket.handshake.address);
+        this.socketmap.delete(socketid);
 
-    var ip = socket.handshake.address.substr(7);
-    if( socket.handshake.headers['x-real-ip'] != null ) {
-        ip = socket.handshake.headers['x-real-ip'];
+        if( client.isLogined() ) {
+            servman.io.sockets.emit('chat', {id: socket.id, nickname: '알림', msg: socket.request.session.usernick + '님의 퇴장' , mode: "notice", isBaned: false, admin: false, auth: 99 });
+        }
     }
-    ip = ip.substr(0, ip.lastIndexOf('.') + 1) + 'xx';
-    if( client.isAdmin ) {
-        ip = 'secret';
-    }
-
-    if( socket.request.session.username ) {
-        this.membersmap.delete(socket.request.session.username);
-        servman.others.push({channel: "chat", data: {id: socket.id, nickname: '알림', msg: socket.request.session.usernick + '님의 퇴장' , mode: "notice", isBaned: false, admin: false, auth: 99 }});
+    catch(e) {
+        console.log(`removeSocket Error - ${e}`);
     }
 }
 
@@ -152,7 +133,6 @@ ServerMan.prototype.setIO = function(io) {
 
     dbhelper.getNextQuizshowTime(function(ret) {
         servman.nextQuizShowdata = ret.data;
-        //console.log(`dd : ${}`);
     })
 
     setInterval(function() {
@@ -214,8 +194,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         s += searchlist[i].query;
     }
 
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, others: this.others, searchlist: searchlist, slhash: s.hashCode() });
-    this.others = [];
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode() });
 }
 
 ServerMan.prototype.click = function(idx, isGuest) {
@@ -311,7 +290,6 @@ ServerMan.prototype.checkAllBaned = function() {
         ) {
             dbhelper.getNextQuizshowTime(function(ret) {
                 servman.nextQuizShowdata = ret.data;
-                console.log('??');
                 servman.io.sockets.emit('next-quiz', {data: servman.nextQuizShowdata});
             })
         }
@@ -334,12 +312,6 @@ ServerMan.prototype.checkAllBaned = function() {
                     cachedSearchData.searched.delete(key2);
                 }
             });
-        })
-
-        this.check_connections.forEach(function(val, key) {
-            if( cur - val.tLast > 3 * 60 * 1000 ) {
-                servman.check_connections.delete(key);
-            }
         })
     }catch(e) {
         console.log('checkAllBaned error : ' + e);
@@ -387,19 +359,17 @@ ServerMan.prototype.register = function(socket) {
     var client = servman.getClient(socket.id);
 
     socket.on('disconnect', function(){
-        var logined = this.request.session.username ? true : false;
+        servman.removeSocket(this.id);
         var client = servman.getClient(this.id);
-        if( logined && client ) {
+        if( client && client.isLogined() ) {
             //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
             dbhelper.updateActivePoint( this.request.session.username, client.activePoint, function(ret) {
             });
         }
-        servman.removeSocket(this.id);
     });
 
-    var logined = socket.request.session.username ? true : false;
-    client.logined = logined;
-    if( logined ) {
+    if( client.isLogined() ) {
+        client.auth = socket.request.session.auth;
         dbhelper.getActivePoint( socket.request.session.username, function(ret) {
             if( ret.ret == 0 ) {
                 //  완료 처리 해줘
@@ -408,25 +378,20 @@ ServerMan.prototype.register = function(socket) {
         })
     }
 
-
-    if( logined && socket.request.session.auth >= 50 ) {
-        client.isAdmin = true;
-    }
-
     var rd = Math.floor(Math.random() * 500);
     var nick = socket.request.session.usernick;
-    if( !logined ){
+    if( !client.isLogined() ){
         nick = '손님' + rd;
     }
 
     client.nick = nick;
 
-    if( this.socketmap.count() > 400 && ( !logined || socket.request.session.auth <= 1 ) ) {
+    if( this.socketmap.count() > 400 && ( !client.isLogined() || socket.request.session.auth <= 1 ) ) {
         socket.emit('reconn-server', {url: 'ch2.jamlive.net'});
         return;
     }
 
-    socket.emit('myid', {socket: socket.id, isLogined: logined, auth: socket.request.session.auth, nick: client.nick, analstep: quizAnalysis.step });
+    socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
     socket.emit('memo', {memo: servman.memo });
     socket.on('vote', onSockVote);;
@@ -471,11 +436,9 @@ function onSockBan(data) {
     var toBanClient = servman.getClient(data.sockid);
     if( !toBanClient ) return;
     var socket = client.socket;
-    var logined = socket.request.session.username ? true : false;
-    var auth_state = logined ? socket.request.session.auth : -1;
     var msg = '';
 
-    if( !logined ) {
+    if( !client.isLogined() ) {
         msg = '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.';
         socket.emit('serv_msg', {msg: msg});
         return;
@@ -499,10 +462,13 @@ function onSockBan(data) {
         return;
     }
 
-    toBanClient.activePoint -= 20;
+    toBanClient.activePoint -= 10;
+    if( toBanClient.activePoint <= 0 ) {
+        toBanClient.activePoint = 0;
+    }
 
     if( servman.banUser(toBanClient.ip, client.ip) ) {
-        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님을 신고 했습니다.', mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님을 신고 했습니다.', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: client.auth, ip: client.ip });
         msg = '밴 신청 완료';
         client.activePoint += 3;
     }
@@ -519,11 +485,9 @@ function onSockPermanentBan(data) {
         var toBanClient = servman.getClient(data.sockid);
         if( !toBanClient ) return;
         var socket = client.socket;
-        var logined = socket.request.session.username ? true : false;
-        var auth_state = logined ? socket.request.session.auth : -1;
-        if( !client.isAdmin ) return;
+        if( !client.isAdmin() ) return;
 
-        if( !logined ) {
+        if( !client.isLogined() ) {
             msg = '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.';
             socket.emit('serv_msg', {msg: msg});
             return;
@@ -556,7 +520,7 @@ function onSockPermanentBan(data) {
             }
         });
 
-        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
 
         toBanClient.socket.disconnect();
     }
@@ -592,7 +556,7 @@ function onSockLike(data) {
 
         toLikeClient.activePoint += 2;
 
-        servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
     catch(e){
         console.log(`onSockLike exception : ${e}`);
@@ -606,6 +570,7 @@ function onSockSearch(data) {
     var auth_state = logined ? socket.request.session.auth : -1;
 
     var isBaned = false;
+    /*
     if( auth_state < 1 && servman.checkBaned( client.ip ) ) {
         var msg = '다수의 신고로 인해 일시적으로 검색기능 사용이 불가합니다.';
         socket.emit('serv_msg', {msg: msg});
@@ -616,6 +581,7 @@ function onSockSearch(data) {
         var msg = '손님은 검색 결과가 항목당 1개만 표시됩니다.';
         socket.emit('serv_msg', {msg: msg});
     }
+    */
 
     if( isLiveQuizTime() ) {
         client.activePoint += 1;
@@ -624,7 +590,7 @@ function onSockSearch(data) {
     if( data.isBroadcast ){
         var nick = client.nick;
         servman.addSearchQuery( data.msg, true );
-        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[검색] ' + data.msg, mode: "search", isBaned: isBaned, admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
     else {
         servman.addSearchQuery( data.msg, false );
@@ -650,7 +616,7 @@ function onSockChat(data) {
         var nick = client.nick;
         var auth_state = socket.request.session.auth;
 
-        if( ( client.isAdmin || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
+        if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
                     servman.createQuizData(result.quizdata);
@@ -659,7 +625,7 @@ function onSockChat(data) {
             return;
         }
 
-        if( ( client.isAdmin || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
+        if( ( client.isAdmin() || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
             servman.io.sockets.emit('effect', {name: 'bbam'});
             return;
         }
@@ -687,7 +653,7 @@ function onSockChat(data) {
             data.msg = curMsg;
         }
 
-        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: data.msg, mode: mode, isBaned: isBaned, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: data.msg, mode: mode, isBaned: isBaned, admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
     catch(err) {
         console.error(err);
@@ -703,16 +669,14 @@ function isLiveQuizTime() {
 function onSockVote(data) {
     var client = servman.getClient(this.id);
     var socket = client.socket;
-    var logined = socket.request.session.username ? true : false;
-    var auth_state = logined ? socket.request.session.auth : -1;
 
-    if( auth_state < 1 && servman.checkBaned( client.ip ) ) {
+    if( client.auth < 1 && servman.checkBaned( client.ip ) ) {
         var msg = '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.';
         socket.emit('serv_msg', {msg: msg});
         return;
     }
 
-    if( !logined ) {
+    if( !client.isLogined() ) {
         var _counts = [0,0,0];
         servman.counts.forEach(function(value, key) {
             _counts[0] += value[0];
@@ -729,7 +693,7 @@ function onSockVote(data) {
     }
 
     if( client.isClickable() ) {
-        servman.click(data.idx, !logined);
+        servman.click(data.idx, !client.isLogined());
 
         if( quizAnalysis.isQuizDataEngaged() ) {
             quizAnalysis.vote(client, data.idx);
@@ -752,7 +716,7 @@ function onSockVote(data) {
             client.activePoint += 2;
         }
 
-        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin, isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
     }
     else {
         var msg = '투표한지 얼마 안됐어요. 나중에 시도하세요.';
@@ -766,7 +730,7 @@ function onAnalysis(data) {
     var logined = socket.request.session.username ? true : false;
     var auth_state = logined ? socket.request.session.auth : -1;
 
-    if( !client.isAdmin ) {
+    if( !client.isAdmin() ) {
         return;
     }
 

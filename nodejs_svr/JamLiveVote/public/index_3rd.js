@@ -676,13 +676,6 @@ function onProcessVoteData(data) {
             offset: 20
         }
     });
-
-    var others = data.others;
-    for( var i = 0 ; i < others.length ; ++i ) {
-        if( others[i].channel == "chat" ) {
-            onChat(others[i].data);
-        }
-    }
 }
 
 function onServMsg(data) {
