@@ -1094,9 +1094,13 @@ function setSearchRet(items, first, where) {
     var html = '';
     for( var i = 0 ; i < items.length ; ++i) {
         var item = items[i];
+        var hidx = item.description.indexOf('[총획]');
+        var hidxend = item.description.indexOf('[난이도]');
+        if( hidxend == -1 ) hidxend = hidx + 20;
+        var hinfo = '<b>' + item.description.slice(hidx, hidxend).trim() + '</b>';
         var div = '<div class="search_ret_root">' +
             '<div class="search_ret_title">' +
-            item.title +
+            item.title + ' ' + hinfo +
             '</div><div class="search_ret_desc" style="font-size: 12px; line-height: 20px;">' +
             (item.description) +
             '</div><div class="separator"></div>' +
