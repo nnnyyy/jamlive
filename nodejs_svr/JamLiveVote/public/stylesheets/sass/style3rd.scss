@@ -324,7 +324,7 @@ article {
     display: inline-block;
     margin: 0px;
     padding: 0px;
-    overflow-y: hidden;
+    overflow-y: auto;
     $width: 33%;
     min-width: 200px;
     width: $width;
@@ -339,11 +339,18 @@ article {
     div[type="ads-area-1"] {
       text-align: center;
       width: 100%;
-      overflow-y: hidden;
       top: 0;
       left: 0;
       //background-color: #7c2929;
       z-index: 2;
+
+      div.ads-1 {
+        float: left;
+      }
+
+      div.ads-2 {
+        float: left;
+      }
 
       div[type="title"] {
         width: 100%;
@@ -368,6 +375,7 @@ article {
       margin-left: 12px;
       margin-right: 12px;
       color: $primary-color;
+      overflow-y: auto;
     }
   }
 
@@ -427,7 +435,7 @@ article {
       width: 400px;
       height: 70px;
       background-color: $primary-color;
-      margin: 0 auto;
+      margin: 8px auto;
       text-align: center;
       padding: 0px 10px 0px 10px;
       border-radius: 10px;
@@ -449,11 +457,27 @@ article {
     }
 
     div[type="caution"] {
-      text-align: left;
-      font-size: 20px;
-      color: red;
-      font-weight: bold;
-      line-height: 35px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 26px;
+      margin: 5px 10px;
+      padding: 3px 0px;
+      border-radius: 10px;
+      background-color: #ffc520;
+
+      [type="title"] {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      [type="normal"] {
+        color: $primary-color;
+      }
+
+      [type="red"] {
+        font-weight: bold;
+        background-color: black;
+        color: red;
+      }
     }
 
     memo-area {

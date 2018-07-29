@@ -42,6 +42,8 @@ var ChatValues = function() {
     this.searchArea1 = $('#search-area-1');
     this.searchArea2 = $('#search-area-2');
     this.sockid = '';
+
+    this.memoArea = $('div[type="memo"]');
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -825,6 +827,8 @@ function initSearch() {
     $('#search-area-2').html('');
     $('#search-area-2').css('display','inline-block');
     $('#ads-area-2').css('display','none');
+    setVisible(chatValueObj.memoArea, false);
+    chatValueObj.searchArea1.css('overflow-y', 'hidden');
 }
 
 function restoreSearch() {
@@ -832,6 +836,8 @@ function restoreSearch() {
     $('#ads-area-1').css('display','inline-block');
     $('#search-area-2').css('display','none');
     $('#ads-area-2').css('display','inline-block');
+    setVisible(chatValueObj.memoArea, true);
+    chatValueObj.searchArea1.css('overflow-y', 'auto');
 }
 
 function searchWebRoot( socket, query, isBroadcast ) {
@@ -1097,7 +1103,7 @@ function setSearchRetImage(items, first) {
 
 function setSearchRet(items, first, where) {
     var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
-    if( items.length > ret_cnt_val) {
+    if( items && items.length > ret_cnt_val) {
         items = items.slice( 0, ret_cnt_val );
     }
 

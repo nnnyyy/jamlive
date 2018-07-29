@@ -276,7 +276,7 @@ article separator[role="search-ret-1"] {
   display: inline-block;
   margin: 0px;
   padding: 0px;
-  overflow-y: hidden;
+  overflow-y: auto;
   min-width: 200px;
   width: 33%;
   height: 100%;
@@ -289,10 +289,15 @@ article separator[role="search-ret-1"] div[type="search-area-1"] {
 article separator[role="search-ret-1"] div[type="ads-area-1"] {
   text-align: center;
   width: 100%;
-  overflow-y: hidden;
   top: 0;
   left: 0;
   z-index: 2;
+}
+article separator[role="search-ret-1"] div[type="ads-area-1"] div.ads-1 {
+  float: left;
+}
+article separator[role="search-ret-1"] div[type="ads-area-1"] div.ads-2 {
+  float: left;
 }
 article separator[role="search-ret-1"] div[type="ads-area-1"] div[type="title"] {
   width: 100%;
@@ -314,6 +319,7 @@ article separator[role="search-ret-1"] div[type="memo"] {
   margin-left: 12px;
   margin-right: 12px;
   color: #1b3440;
+  overflow-y: auto;
 }
 article separator[role="search-ret-2"] {
   float: left;
@@ -362,7 +368,7 @@ article separator[role="search-ret-2"] div[type="next-quiz-time-left"] {
   width: 400px;
   height: 70px;
   background-color: #1b3440;
-  margin: 0 auto;
+  margin: 8px auto;
   text-align: center;
   padding: 0px 10px 0px 10px;
   border-radius: 10px;
@@ -381,11 +387,25 @@ article separator[role="search-ret-2"] .memo-area {
   height: 100px;
 }
 article separator[role="search-ret-2"] div[type="caution"] {
-  text-align: left;
+  text-align: center;
+  font-size: 16px;
+  line-height: 26px;
+  margin: 5px 10px;
+  padding: 3px 0px;
+  border-radius: 10px;
+  background-color: #ffc520;
+}
+article separator[role="search-ret-2"] div[type="caution"] [type="title"] {
   font-size: 20px;
-  color: red;
   font-weight: bold;
-  line-height: 35px;
+}
+article separator[role="search-ret-2"] div[type="caution"] [type="normal"] {
+  color: #1b3440;
+}
+article separator[role="search-ret-2"] div[type="caution"] [type="red"] {
+  font-weight: bold;
+  background-color: black;
+  color: red;
 }
 article separator[role="search-ret-2"] memo-area {
   width: 80%;
