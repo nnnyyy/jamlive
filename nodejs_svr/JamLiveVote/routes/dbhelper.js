@@ -145,7 +145,7 @@ exports.updateActivePoint = function( id, ap, cb ) {
 
 exports.getNextQuizshowTime = function( cb ) {
     try {
-        dbpool.query("select * from quiz_time_table where startweek = weekday(now()) and starttime >= now() order by starttime limit 1", function(err, rows) {
+        dbpool.query("select * from quiz_time_table where (( startweek = weekday(now()) ) and starttime >= now()) or (( startweek = weekday(now() + interval 1 day) ) and starttime >= '00:00:00')  order by starttime limit 1", function(err, rows) {
             if(err) {
                 cb({ret: -1});
                 return;
@@ -205,48 +205,3 @@ exports.updateBanUser = function( idorip, cb ) {
         cb({ret: -1});
     }
 }
-
-/*
- exports.buyItem = function(id, itemsn, cb) {
- // 가챠 종류와 일반 아이템 종류를 구분하자.
- dbpool.query('CALL  BuyItem(?,?,@ret); select @ret;', [id, itemsn], function(err, rows) {
- if(err) {
- cb({ret: -99});
- return;
- }
-
- console.log(rows);
- var ret = rows[rows.length - 1][0]['@ret'];
- console.log("buyitem : " + ret);
- cb({ret: ret});
- });
- }
-
-exports.getCouponList = function(id, cb) {
-    dbpool.query('CALL GetCouponList(?)', [id], function(err,rows,fields) {
-        if(err) {
-            cb({ret:-1, err:err});
-            return;
-        }
-
-        var aData = rows[0];
-        var result = [];
-        for(var i = 0 ; i < aData.length ; ++i) {
-            var data = aData[i];
-            result.push({
-                sn: data.sn,
-                name: data.name,
-                iconpath: data.iconpath,
-                type: data.type,
-                reward: data.reward,
-                link: data.link,
-                desc: data.desc
-            });
-        }
-
-        console.log(rows);
-
-        cb({ret:0, list:result});
-    });
-}
-*/
