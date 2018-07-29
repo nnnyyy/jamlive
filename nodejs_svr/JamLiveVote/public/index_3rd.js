@@ -22,6 +22,7 @@ ConnectStateInfo.prototype.Connect = function() {
 
 ConnectStateInfo.prototype.Disconnect = function() {
     this.isConnected = false;
+    /*
     setInterval(function() {
         if( !connectStateInfo.isConnected ) {
             $.get('/ping', function(data){
@@ -30,6 +31,7 @@ ConnectStateInfo.prototype.Disconnect = function() {
             })
         }
     }, RETRY_INTERVAL);
+    */
 }
 
 var ChatValues = function() {
@@ -163,7 +165,7 @@ function onChat(data) {
         addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "notice") {
-        addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
+        //addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "ban") {
         addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
