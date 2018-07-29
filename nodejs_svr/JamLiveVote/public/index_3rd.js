@@ -46,6 +46,8 @@ var ChatValues = function() {
     this.sockid = '';
 
     this.memoArea = $('div[type="memo"]');
+
+    this.cbNoticeDisable = $('#cb-notice-disable');
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -170,7 +172,8 @@ function onChat(data) {
         addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "notice") {
-        //addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
+        if( isDisableNoticeShow() ) return;
+        addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "ban") {
         addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
@@ -1171,6 +1174,29 @@ function isShowSearchChat() {
     }
 
     return true;
+}
+
+function isDisableNoticeShow() {
+    if(chatValueObj.cbNoticeDisable.is(':checked')) {
+        return true;
+    }
+
+    return false;
+}
+
+function setDisableNoticeShow() {
+    var bDisable = localStorage.getItem('cb-notice-disable') || 0;
+
+    chatValueObj.cbNoticeDisable.attr('checked', bDisable == 1 ? true : false );
+
+    chatValueObj.cbNoticeDisable.change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb-notice-disable', 1);
+        }
+        else {
+            localStorage.setItem('cb-notice-disable', 0);
+        }
+    })
 }
 
 function setShowMemberVoteOnlyListener() {
