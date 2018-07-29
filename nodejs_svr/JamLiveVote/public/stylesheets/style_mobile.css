@@ -158,6 +158,39 @@ div#settings div[type="btn"] {
   overflow: hidden;
 }
 
+.quiz_wnd {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 88vw;
+  margin-left: -44vw;
+  margin-top: -150px;
+  padding: 0px;
+  background-color: #1b3440;
+  color: #ffffff;
+  text-align: center;
+  font-size: 11px;
+  overflow: hidden;
+  z-index: 3;
+  border-radius: 8px;
+}
+.quiz_wnd .q_title {
+  text-align: left;
+  margin: 10px;
+  min-height: 35px;
+}
+.quiz_wnd .q_q {
+  margin: 8px;
+  text-align: left;
+}
+.quiz_wnd time {
+  color: yellow;
+  font-size: 15px;
+  margin-bottom: 8px;
+  line-height: 30px;
+  height: 30px;
+}
+
 .opacity {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;

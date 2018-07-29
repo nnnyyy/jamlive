@@ -19,6 +19,11 @@ var GlobalValue = function() {
 
     this.adminMsg = $('.admin_msg');
     this.animOpacityTimerID = -1;
+
+    this.quizWnd = $('.quiz_wnd');
+    this.idInterval = new Date();
+    this.quizData =  null;
+
 }
 
 GlobalValue.prototype.init = function(socket) {
@@ -28,6 +33,7 @@ GlobalValue.prototype.init = function(socket) {
     registerSocketListener(this);
 
     setVisible(this.settingsUI, false);
+    setVisible(this.quizWnd, false);
 
     setShowMemberVoteOnlyListener();
     setMinVoteSliderListener();
@@ -189,6 +195,48 @@ GlobalValue.prototype.onMyID = function(data) {
 
 GlobalValue.prototype.onServMsg = function(data) {
     showAdminMsg(data.msg);
+}
+
+GlobalValue.prototype.onQuiz = function(data) {
+    $('.q_q').each(function(idx){
+        $(this).css('background-color','transparent');
+    })
+    setVisible(global.quizWnd, true);
+    global.quizdata = data.quizdata;
+    $('.q_title').text(data.quizdata.question);
+    var html = '';
+    $('.q_q').each(function(idx) {
+        var t = (idx+1) + '. ' + data.quizdata.answer[idx];
+        html += (t + '</br>');
+        $(this).text(t);
+    })
+
+    global.addChat( "", false, '<div class="notice_font">퀴즈</div>', data.quizdata.question + '</br>' + html, false);
+
+    tStartQuiz = new Date();
+
+    clearInterval(global.idInterval);
+    global.idInterval = setInterval(function() {
+        var remain = Math.floor((11000 - (Date.now() - tStartQuiz)) / 1000);
+        if( remain <= 0 ) remain = 0;
+        $('time').text(remain);
+    }, 100);
+}
+
+GlobalValue.prototype.onQuizRet = function(_data) {
+    if( !global.quizdata ) return;
+
+    $('.q_q').each(function(idx){
+        if( idx == _data.collect_idx ) {
+            $(this).css('background-color','blue');
+            var collect_rate = (_data.collect_cnt / _data.total_cnt) * 100.0;
+            global.addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[idx] + '">' + (idx+1) + '번 '+ global.quizdata.answer[idx]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+        }
+    })
+
+    setTimeout(function() {
+        setVisible(global.quizWnd, false);
+    }, 3000);
 }
 
 GlobalValue.prototype.addChat = function( mode, isbaned , name, msg, bStrip,auth, ip, sockid ) {
@@ -450,4 +498,6 @@ function registerSocketListener(g) {
     g.socket.on('emoticon', g.onEmoticon);
     g.socket.on('myid', g.onMyID);
     g.socket.on('serv_msg', g.onServMsg);
+    g.socket.on('quiz', g.onQuiz);
+    g.socket.on('quizret', g.onQuizRet);
 }
