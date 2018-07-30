@@ -667,60 +667,65 @@ function isLiveQuizTime() {
 }
 
 function onSockVote(data) {
-    var client = servman.getClient(this.id);
-    var socket = client.socket;
+    try {
+        var client = servman.getClient(this.id);
+        var socket = client.socket;
 
-    if( client.auth < 1 && servman.checkBaned( client.ip ) ) {
-        var msg = '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.';
-        socket.emit('serv_msg', {msg: msg});
-        return;
-    }
-
-    if( !client.isLogined() ) {
-        var _counts = [0,0,0];
-        servman.counts.forEach(function(value, key) {
-            _counts[0] += value[0];
-            _counts[1] += value[1];
-            _counts[2] += value[2];
-        })
-
-        var total = _counts[0] + _counts[1] + _counts[2];
-        if( isLiveQuizTime() && total <= 0 ) {
-            var msg = '손님은 회원 투표 전까지 투표 불가능합니다.';
+        if( client.auth < 1 && servman.checkBaned( client.ip ) ) {
+            var msg = '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.';
             socket.emit('serv_msg', {msg: msg});
             return;
         }
+
+        if( !client.isLogined() ) {
+            var _counts = [0,0,0];
+            servman.counts.forEach(function(value, key) {
+                _counts[0] += value[0];
+                _counts[1] += value[1];
+                _counts[2] += value[2];
+            })
+
+            var total = _counts[0] + _counts[1] + _counts[2];
+            if( isLiveQuizTime() && total <= 0 ) {
+                var msg = '손님은 회원 투표 전까지 투표 불가능합니다.';
+                socket.emit('serv_msg', {msg: msg});
+                return;
+            }
+        }
+
+        if( client.isClickable() ) {
+            servman.click(data.idx, !client.isLogined());
+
+            if( quizAnalysis.isQuizDataEngaged() ) {
+                quizAnalysis.vote(client, data.idx);
+                client.activePoint += 1;
+            }
+
+            if( servman.quizdata && !servman.quizdata.isEnd() ) {
+                servman.quizdata.vote(data.idx);
+            }
+            if( socket.request.session.username && socket.request.session.auth >= 1 ) {
+                servman.click(data.idx, !client.isLogined());
+            }
+            client.tLastClick = new Date();
+
+            var number = Number(data.idx) + 1;
+
+            var nick = client.nick;
+
+            if( isLiveQuizTime() ) {
+                client.activePoint += 2;
+            }
+
+            servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
+        }
+        else {
+            var msg = '투표한지 얼마 안됐어요. 나중에 시도하세요.';
+            socket.emit('serv_msg', {msg: msg});
+        }
     }
-
-    if( client.isClickable() ) {
-        servman.click(data.idx, !client.isLogined());
-
-        if( quizAnalysis.isQuizDataEngaged() ) {
-            quizAnalysis.vote(client, data.idx);
-            client.activePoint += 1;
-        }
-
-        if( servman.quizdata && !servman.quizdata.isEnd() ) {
-            servman.quizdata.vote(data.idx);
-        }
-        if( socket.request.session.username && socket.request.session.auth >= 1 ) {
-            servman.click(data.idx, !logined);
-        }
-        client.tLastClick = new Date();
-
-        var number = Number(data.idx) + 1;
-
-        var nick = client.nick;
-
-        if( isLiveQuizTime() ) {
-            client.activePoint += 2;
-        }
-
-        servman.io.sockets.emit('chat', {sockid: socket.id, id: this.id, nickname: nick, msg: '[투표] ' + number, mode: "vote", vote: data.idx, isBaned: false, admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
-    }
-    else {
-        var msg = '투표한지 얼마 안됐어요. 나중에 시도하세요.';
-        socket.emit('serv_msg', {msg: msg});
+    catch(e) {
+        console.log(`onSockVote - Error ${e}`);
     }
 }
 
