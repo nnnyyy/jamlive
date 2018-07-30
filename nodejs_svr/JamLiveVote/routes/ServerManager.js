@@ -468,7 +468,7 @@ function onSockBan(data) {
     }
 
     if( servman.banUser(toBanClient.ip, client.ip) ) {
-        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님을 신고 했습니다.', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: client.auth, ip: client.ip });
+        servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님을 신고 했습니다.', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
         msg = '밴 신청 완료';
         client.activePoint += 3;
     }
