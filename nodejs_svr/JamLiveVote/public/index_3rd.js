@@ -240,6 +240,7 @@ function onQuizRet(_data) {
 }
 
 function onEmoticon(_data) {
+    console.log('emoticon : ' + _data.name);
     switch( _data.name ) {
         case "bbam":
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
@@ -247,6 +248,10 @@ function onEmoticon(_data) {
 
         case "ddk":
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
+            break;
+
+        case "yeee":
+            addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/yeee.png"/>', false, _data.auth);
             break;
     }
 }
@@ -273,6 +278,21 @@ function onInputMsgKeyPress(e) {
 
         if( strip(msg).length <= 0 ) {
             return;
+        }
+
+        var mode = "";
+        var emoticon = "";
+        if( msg == "ㅃㅃㅃ" ) {
+            mode = "emoticon";
+            emoticon = "bbam";
+        }
+        else if( msg == "ㄸㄸ") {
+            mode = "emoticon";
+            emoticon = "ddk";
+        }
+        else if( msg == "예~") {
+            mode = "emoticon";
+            emoticon = "yeee";
         }
 
         if( msg == '@memo') {
@@ -321,7 +341,7 @@ function onInputMsgKeyPress(e) {
         }
 
         nick = nick.substr(0,14);
-        socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote });
+        socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote, mode: mode, emoticon: emoticon });
         $(this).val('');
     }
 }

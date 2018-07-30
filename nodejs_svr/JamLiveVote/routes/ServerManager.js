@@ -625,18 +625,9 @@ function onSockChat(data) {
             return;
         }
 
-        if( ( client.isAdmin() || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
-            servman.io.sockets.emit('effect', {name: 'bbam'});
-            return;
-        }
-
-        if( data.msg == "ㅃㅃㅃ") {
-            servman.io.sockets.emit('emoticon', {auth: auth_state, nick: nick, name: 'bbam'});
-            return;
-        }
-
-        if( data.msg == "ㄸㄸ") {
-            servman.io.sockets.emit('emoticon', {auth: auth_state, nick: nick, name: 'ddk'});
+        if( data.mode == "emoticon" ) {
+            console.log(data);
+            servman.io.sockets.emit('emoticon', {nick: nick, name: data.emoticon});
             return;
         }
 
