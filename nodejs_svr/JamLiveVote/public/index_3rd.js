@@ -890,28 +890,34 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
     var searched = false;
     if( $('#cb_s0').is(':checked')) {
-        searchWeb(0, query);
+        var where = $('input[name=radio_s0]:checked').attr('value');
+        searchWeb(0, query, where);
         searched = true;
     } //  백과사전
     if( $('#cb_s1').is(':checked')) {
-        searchWeb(1, query);
+        var where = $('input[name=radio_s1]:checked').attr('value');
+        searchWeb(1, query, where);
         searched = true;
     } //  지시인
     if( $('#cb_s2').is(':checked')) {
-        searchWeb(2, query);
+        var where = $('input[name=radio_s2]:checked').attr('value');
+        searchWeb(2, query, where);
         searched = true;
     } //  블로그
     if( $('#cb_s3').is(':checked')) {
-        searchWeb(3, query);
+        var where = $('input[name=radio_s3]:checked').attr('value');
+        searchWeb(3, query, where);
         searched = true;
     } //  뉴스
     if( $('#cb_s4').is(':checked')) {
-        searchWeb(4, query);
+        var where = $('input[name=radio_s4]:checked').attr('value');
+        searchWeb(4, query, where);
         searched = true;
     } //  이미지
 
     if( $('#cb_s5').is(':checked')) {
-        searchWebGoogle(query, false);
+        var where = $('input[name=radio_s5]:checked').attr('value');
+        searchWebGoogle(query, false, where);
         searched = true;
     } //  구글
 
@@ -921,8 +927,8 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
 
     if( $('#cb_s6').is(':checked')) {
-        //$('#mid_quiz_search').css('display','inline-block');
-        searchFromDB(query);
+        var where = $('input[name=radio_s6]:checked').attr('value');
+        searchFromDB(query, where);
         searched = true;
     }
 /*
@@ -944,7 +950,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     }
 }
 
-function searchWeb( type, query ) {
+function searchWeb( type, query, where ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -956,9 +962,6 @@ function searchWeb( type, query ) {
         contentType: 'application/json',
         url: '/searchex',
         success: function(data) {
-            var where = 1;
-            if( type == 0 ) where = 2;
-
             if( type != 4 ) {
                 setSearchRet(data, false, where);
             }
@@ -969,7 +972,7 @@ function searchWeb( type, query ) {
     });
 }
 
-function searchWebGoogle( query, grammer) {
+function searchWebGoogle( query, grammer, where) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -981,7 +984,7 @@ function searchWebGoogle( query, grammer) {
         contentType: 'application/json',
         url: '/searchgoogle',
         success: function(data) {
-            setSearchRet(data, true, 2);
+            setSearchRet(data, true, where);
         }
     });
 }
@@ -1245,8 +1248,13 @@ function setShowMemberVoteOnlyListener() {
 
 function setSearchCheckboxes() {
     var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7'];
+    var rbs_name = ['sb0', 'sb1', 'sb2', 'sb3', 'sb4', 'sb5', 'sb6', 'sb7'];
     var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6'), $('#cb_s7')];
+
+    var rbs = [$('input[name=radio_s0]'), $('input[name=radio_s1]'), $('input[name=radio_s2]'), $('input[name=radio_s3]'),
+        $('input[name=radio_s4]'), $('input[name=radio_s5]'), $('input[name=radio_s6]'), $('input[name=radio_s7]')];
     var cbs_ret = new Array(cbs_name.length);
+    var rbs_ret = new Array(rbs_name.length);
     $.each(cbs_name, function(idx, name) {
         cbs_ret[idx] = localStorage.getItem(name) || 1;
     });
@@ -1260,6 +1268,17 @@ function setSearchCheckboxes() {
             else {
                 localStorage.setItem(cbs_name[idx], 0);
             }
+        })
+    })
+
+    $.each(rbs_name, function(idx, name) {
+        rbs_ret[idx] = localStorage.getItem(name) || 1;
+    })
+
+    $.each(rbs, function(idx, item) {
+        item.eq(rbs_ret[idx]-1).attr('checked', true);
+        item.change(function() {
+            localStorage.setItem(rbs_name[idx], this.value);
         })
     })
 }

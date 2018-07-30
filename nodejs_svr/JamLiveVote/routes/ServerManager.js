@@ -614,7 +614,7 @@ function onSockChat(data) {
 
         var logined = client.isLogined();
         var nick = client.nick;
-        var auth_state = socket.request.session.auth;
+        var auth_state = client.auth;
 
         if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
             dbhelper.getRandomQuiz(function(result) {
@@ -626,8 +626,7 @@ function onSockChat(data) {
         }
 
         if( data.mode == "emoticon" ) {
-            console.log(data);
-            servman.io.sockets.emit('emoticon', {nick: nick, name: data.emoticon});
+            servman.io.sockets.emit('emoticon', {auth: client.auth, nick: nick, name: data.emoticon});
             return;
         }
 
