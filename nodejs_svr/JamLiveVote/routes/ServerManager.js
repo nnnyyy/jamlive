@@ -386,7 +386,7 @@ ServerMan.prototype.register = function(socket) {
 
     client.nick = nick;
 
-    if( this.socketmap.count() > 400 && ( !client.isLogined() || socket.request.session.auth <= 1 ) ) {
+    if( this.socketmap.count() > 500 && ( !client.isLogined() || socket.request.session.auth <= 1 ) ) {
         socket.emit('reconn-server', {url: 'ch2.jamlive.net'});
         return;
     }
