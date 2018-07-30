@@ -380,11 +380,11 @@ function onInputMsgKeyUp(e) {
 
 var reserved_key = '';
 function onGlobalKeyDown(e) {
+    var code = (e.which ? e.which : e.keyCode );
+
     if( $('.ip-name').is(':focus') ) return;
     if( $('.ip-msg').is(':focus') ) return;
     if( $('.memo-area').is(':focus')) return;
-
-    var code = (e.which ? e.which : e.keyCode );
 
     if( (code >= 97 && code <= 99) ) {
         var curTime = new Date();
@@ -922,7 +922,8 @@ function searchWebRoot( socket, query, isBroadcast ) {
     } //  구글
 
     if( chinese ) {
-        searchWebNaver(chienseQuery, chineseSubType);
+        var where = $('input[name=radio_s7]:checked').attr('value');
+        searchWebNaver(chienseQuery, chineseSubType, where);
     }
 
 
@@ -989,7 +990,7 @@ function searchWebGoogle( query, grammer, where) {
     });
 }
 
-function searchWebNaver( query, subtype ) {
+function searchWebNaver( query, subtype, where ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -1001,14 +1002,16 @@ function searchWebNaver( query, subtype ) {
         contentType: 'application/json',
         url: '/searchnaver',
         success: function(data) {
-            setSearchRet(data.data, true, 1);
-            setSearchRet(data.hdata, true, 2);
+            data.data = data.data.slice(0,2);
+            data.hdata = data.hdata.slice(0,2);
+            setSearchRet(data.data, true, where);
+            setSearchRet(data.hdata, true, where);
         }
     });
 }
 
 
-function searchFromDB( query ) {
+function searchFromDB( query, where ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -1019,13 +1022,13 @@ function searchFromDB( query ) {
         contentType: 'application/json',
         url: '/searchdb',
         success: function(data) {
-            setSearchDB(data);
+            setSearchDB(data, where);
         }
     });
 }
 
 var timerIDForDB = 0;
-function setSearchDB(data) {
+function setSearchDB(data, where) {
     var items = data.quizdatalist;
     var queries = data.queries;
 
@@ -1093,7 +1096,7 @@ function setSearchDB(data) {
         htmlforleft = html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
     }
 
-    getSearchArea(2).prepend(htmlforleft);
+    getSearchArea(where).prepend(htmlforleft);
 
     clearTimeout(timerIDForDB);
     timerIDForDB = setTimeout(function() {
@@ -1143,7 +1146,7 @@ function setSearchRet(items, first, where) {
         var div = '<div class="search_ret_root">' +
             '<div class="search_ret_title">' +
             item.title + ' ' + hinfo +
-            '</div><div class="search_ret_desc" style="font-size: 12px; line-height: 20px;">' +
+            '</div><div class="search_ret_desc">' +
             (item.description) +
             '</div><div class="separator"></div>' +
             '</div>';
