@@ -145,7 +145,7 @@ exports.updateActivePoint = function( id, ap, cb ) {
 
 exports.getNextQuizshowTime = function( cb ) {
     try {
-        dbpool.query("select * from quiz_time_table where (( startweek = weekday(now()) ) and starttime >= now()) or (( startweek = weekday(now() + interval 1 day) ) and starttime >= '00:00:00')  order by starttime limit 1", function(err, rows) {
+        dbpool.query("select * from quiz_time_table where (( startweek = weekday(now()) ) and starttime >= now()) or (( startweek = weekday(now() + interval 1 day) ) and starttime >= '00:00:00')  order by startweek, starttime limit 1", function(err, rows) {
             if(err) {
                 cb({ret: -1});
                 return;

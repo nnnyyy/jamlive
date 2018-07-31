@@ -259,7 +259,7 @@ article .search_ret_title b {
 article .search_ret_desc {
   font-size: 14px;
   margin-bottom: 4px;
-  line-height: 25px;
+  line-height: 22px;
 }
 article .search_ret_desc b {
   font-size: 16px;
@@ -276,7 +276,7 @@ article separator[role="search-ret-1"] {
   display: inline-block;
   margin: 0px;
   padding: 0px;
-  overflow-y: auto;
+  overflow-y: hidden;
   min-width: 200px;
   width: 33%;
   height: 100%;
@@ -284,7 +284,7 @@ article separator[role="search-ret-1"] {
 article separator[role="search-ret-1"] div[type="search-area-1"] {
   width: 100%;
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 article separator[role="search-ret-1"] div[type="ads-area-1"] {
   text-align: center;

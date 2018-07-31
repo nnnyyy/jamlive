@@ -614,7 +614,7 @@ function onSockChat(data) {
 
         var logined = client.isLogined();
         var nick = client.nick;
-        var auth_state = socket.request.session.auth;
+        var auth_state = client.auth;
 
         if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
             dbhelper.getRandomQuiz(function(result) {
@@ -625,18 +625,8 @@ function onSockChat(data) {
             return;
         }
 
-        if( ( client.isAdmin() || (auth_state && auth_state >= 1)) && data.msg == "#bbam") {
-            servman.io.sockets.emit('effect', {name: 'bbam'});
-            return;
-        }
-
-        if( data.msg == "ㅃㅃㅃ") {
-            servman.io.sockets.emit('emoticon', {auth: auth_state, nick: nick, name: 'bbam'});
-            return;
-        }
-
-        if( data.msg == "ㄸㄸ") {
-            servman.io.sockets.emit('emoticon', {auth: auth_state, nick: nick, name: 'ddk'});
+        if( data.mode == "emoticon" ) {
+            servman.io.sockets.emit('emoticon', {auth: client.auth, nick: nick, name: data.emoticon});
             return;
         }
 

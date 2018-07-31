@@ -240,6 +240,7 @@ function onQuizRet(_data) {
 }
 
 function onEmoticon(_data) {
+    console.log('emoticon : ' + _data.name);
     switch( _data.name ) {
         case "bbam":
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
@@ -247,6 +248,10 @@ function onEmoticon(_data) {
 
         case "ddk":
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
+            break;
+
+        case "yeee":
+            addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/yeee.png"/>', false, _data.auth);
             break;
     }
 }
@@ -273,6 +278,21 @@ function onInputMsgKeyPress(e) {
 
         if( strip(msg).length <= 0 ) {
             return;
+        }
+
+        var mode = "";
+        var emoticon = "";
+        if( msg == "ㅃㅃㅃ" ) {
+            mode = "emoticon";
+            emoticon = "bbam";
+        }
+        else if( msg == "ㄸㄸ") {
+            mode = "emoticon";
+            emoticon = "ddk";
+        }
+        else if( msg == "예~") {
+            mode = "emoticon";
+            emoticon = "yeee";
         }
 
         if( msg == '@memo') {
@@ -321,7 +341,7 @@ function onInputMsgKeyPress(e) {
         }
 
         nick = nick.substr(0,14);
-        socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote });
+        socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote, mode: mode, emoticon: emoticon });
         $(this).val('');
     }
 }
@@ -360,11 +380,11 @@ function onInputMsgKeyUp(e) {
 
 var reserved_key = '';
 function onGlobalKeyDown(e) {
+    var code = (e.which ? e.which : e.keyCode );
+
     if( $('.ip-name').is(':focus') ) return;
     if( $('.ip-msg').is(':focus') ) return;
     if( $('.memo-area').is(':focus')) return;
-
-    var code = (e.which ? e.which : e.keyCode );
 
     if( (code >= 97 && code <= 99) ) {
         var curTime = new Date();
@@ -870,39 +890,46 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
     var searched = false;
     if( $('#cb_s0').is(':checked')) {
-        searchWeb(0, query);
+        var where = $('input[name=radio_s0]:checked').attr('value');
+        searchWeb(0, query, where);
         searched = true;
     } //  백과사전
     if( $('#cb_s1').is(':checked')) {
-        searchWeb(1, query);
+        var where = $('input[name=radio_s1]:checked').attr('value');
+        searchWeb(1, query, where);
         searched = true;
     } //  지시인
     if( $('#cb_s2').is(':checked')) {
-        searchWeb(2, query);
+        var where = $('input[name=radio_s2]:checked').attr('value');
+        searchWeb(2, query, where);
         searched = true;
     } //  블로그
     if( $('#cb_s3').is(':checked')) {
-        searchWeb(3, query);
+        var where = $('input[name=radio_s3]:checked').attr('value');
+        searchWeb(3, query, where);
         searched = true;
     } //  뉴스
     if( $('#cb_s4').is(':checked')) {
-        searchWeb(4, query);
+        var where = $('input[name=radio_s4]:checked').attr('value');
+        searchWeb(4, query, where);
         searched = true;
     } //  이미지
 
     if( $('#cb_s5').is(':checked')) {
-        searchWebGoogle(query, false);
+        var where = $('input[name=radio_s5]:checked').attr('value');
+        searchWebGoogle(query, false, where);
         searched = true;
     } //  구글
 
     if( chinese ) {
-        searchWebNaver(chienseQuery, chineseSubType);
+        var where = $('input[name=radio_s7]:checked').attr('value');
+        searchWebNaver(chienseQuery, chineseSubType, where);
     }
 
 
     if( $('#cb_s6').is(':checked')) {
-        //$('#mid_quiz_search').css('display','inline-block');
-        searchFromDB(query);
+        var where = $('input[name=radio_s6]:checked').attr('value');
+        searchFromDB(query, where);
         searched = true;
     }
 /*
@@ -924,7 +951,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     }
 }
 
-function searchWeb( type, query ) {
+function searchWeb( type, query, where ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -936,9 +963,6 @@ function searchWeb( type, query ) {
         contentType: 'application/json',
         url: '/searchex',
         success: function(data) {
-            var where = 1;
-            if( type == 0 ) where = 2;
-
             if( type != 4 ) {
                 setSearchRet(data, false, where);
             }
@@ -949,7 +973,7 @@ function searchWeb( type, query ) {
     });
 }
 
-function searchWebGoogle( query, grammer) {
+function searchWebGoogle( query, grammer, where) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -961,12 +985,12 @@ function searchWebGoogle( query, grammer) {
         contentType: 'application/json',
         url: '/searchgoogle',
         success: function(data) {
-            setSearchRet(data, true, 2);
+            setSearchRet(data, true, where);
         }
     });
 }
 
-function searchWebNaver( query, subtype ) {
+function searchWebNaver( query, subtype, where ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -978,14 +1002,16 @@ function searchWebNaver( query, subtype ) {
         contentType: 'application/json',
         url: '/searchnaver',
         success: function(data) {
-            setSearchRet(data.data, true, 1);
-            setSearchRet(data.hdata, true, 2);
+            data.data = data.data.slice(0,2);
+            data.hdata = data.hdata.slice(0,2);
+            setSearchRet(data.data, true, where);
+            setSearchRet(data.hdata, true, where);
         }
     });
 }
 
 
-function searchFromDB( query ) {
+function searchFromDB( query, where ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -996,13 +1022,13 @@ function searchFromDB( query ) {
         contentType: 'application/json',
         url: '/searchdb',
         success: function(data) {
-            setSearchDB(data);
+            setSearchDB(data, where);
         }
     });
 }
 
 var timerIDForDB = 0;
-function setSearchDB(data) {
+function setSearchDB(data, where) {
     var items = data.quizdatalist;
     var queries = data.queries;
 
@@ -1070,7 +1096,7 @@ function setSearchDB(data) {
         htmlforleft = html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
     }
 
-    getSearchArea(2).prepend(htmlforleft);
+    getSearchArea(where).prepend(htmlforleft);
 
     clearTimeout(timerIDForDB);
     timerIDForDB = setTimeout(function() {
@@ -1120,7 +1146,7 @@ function setSearchRet(items, first, where) {
         var div = '<div class="search_ret_root">' +
             '<div class="search_ret_title">' +
             item.title + ' ' + hinfo +
-            '</div><div class="search_ret_desc" style="font-size: 12px; line-height: 20px;">' +
+            '</div><div class="search_ret_desc">' +
             (item.description) +
             '</div><div class="separator"></div>' +
             '</div>';
@@ -1225,8 +1251,13 @@ function setShowMemberVoteOnlyListener() {
 
 function setSearchCheckboxes() {
     var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7'];
+    var rbs_name = ['sb0', 'sb1', 'sb2', 'sb3', 'sb4', 'sb5', 'sb6', 'sb7'];
     var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6'), $('#cb_s7')];
+
+    var rbs = [$('input[name=radio_s0]'), $('input[name=radio_s1]'), $('input[name=radio_s2]'), $('input[name=radio_s3]'),
+        $('input[name=radio_s4]'), $('input[name=radio_s5]'), $('input[name=radio_s6]'), $('input[name=radio_s7]')];
     var cbs_ret = new Array(cbs_name.length);
+    var rbs_ret = new Array(rbs_name.length);
     $.each(cbs_name, function(idx, name) {
         cbs_ret[idx] = localStorage.getItem(name) || 1;
     });
@@ -1240,6 +1271,17 @@ function setSearchCheckboxes() {
             else {
                 localStorage.setItem(cbs_name[idx], 0);
             }
+        })
+    })
+
+    $.each(rbs_name, function(idx, name) {
+        rbs_ret[idx] = localStorage.getItem(name) || 1;
+    })
+
+    $.each(rbs, function(idx, item) {
+        item.eq(rbs_ret[idx]-1).attr('checked', true);
+        item.change(function() {
+            localStorage.setItem(rbs_name[idx], this.value);
         })
     })
 }
