@@ -539,7 +539,7 @@ function onSockLike(data) {
         var auth_state = logined ? socket.request.session.auth : -1;
 
          if( client.ip == toLikeClient.ip ) {
-         msg = 'ㅋㅋㅋㅋ 그러지 맙시다';
+         var msg = '스스로 칭찬 불가능';
          socket.emit('serv_msg', {msg: msg});
          return;
          }
