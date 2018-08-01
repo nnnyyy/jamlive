@@ -264,9 +264,14 @@ function onEmoticon(_data) {
 function onNextQuiz(data) {
     var weekdayname = ['월요일', '화요일','수요일','목요일','금요일','토요일','일요일'];
     var tTime = new Date('1980-01-01T' + data.data.time);
-    console.log(tTime);
+    var tCur = new Date();
+    var bToday = false;
+    if( data.data.weekday === ( tCur.getDay() - 1 )) {
+        bToday = true;
+    }
+
     var qinfo = data.data.name + ' ' + tTime.getHours() + '시 ' + tTime.getMinutes().toString() + '분';
-    $('.weekday').text(weekdayname[data.data.weekday]);
+    $('.weekday').text(bToday? '오.늘.' : weekdayname[data.data.weekday]);
     $('.quizinfo').text(qinfo);
 }
 

@@ -432,15 +432,12 @@ article {
 
     //  다음 퀴즈쇼 남은 시간 표시
     div[type="next-quiz-time-left"] {
-      width: 400px;
-      height: 70px;
+      width: 100%;
       background-color: $primary-color;
-      margin: 8px auto;
       text-align: center;
       padding: 0px 10px 0px 10px;
-      border-radius: 10px;
-      line-height: 35px;
-      font-size: 20px;
+      line-height: 40px;
+      font-size: 25px;
       div.h1 {
         color: $main-font-color;
       }
@@ -457,13 +454,12 @@ article {
     }
 
     div[type="caution"] {
+      width: 100%;
       text-align: center;
       font-size: 16px;
       line-height: 26px;
-      margin: 5px 10px;
+      margin: 0px 0px;
       padding: 3px 0px;
-      border-radius: 10px;
-      background-color: #ffc520;
 
       [type="title"] {
         font-size: 20px;
@@ -475,7 +471,7 @@ article {
 
       [type="red"] {
         font-weight: bold;
-        background-color: black;
+        background-color: #ffc520;
         color: red;
       }
     }
