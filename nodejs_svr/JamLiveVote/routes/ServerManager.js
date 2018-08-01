@@ -617,14 +617,14 @@ function onSockChat(data) {
         var auth_state = client.auth;
 
         if( servman.checkBaned(client.ip) ) {
-            var msg = '밴유저는 채팅 참여가 불가능합니다.';
-            socket.emit('serv_msg', {msg: msg});
+            //var msg = '밴유저는 채팅 참여가 불가능합니다.';
+            //socket.emit('serv_msg', {msg: msg});
             return;
         }
 
         if( !client.isAbleChat() ) {
-            var msg = '여유를 가지고 채팅 해 주세요.';
-            socket.emit('serv_msg', {msg: msg});
+            //var msg = '여유를 가지고 채팅 해 주세요.';
+            //socket.emit('serv_msg', {msg: msg});
             return;
         }
 
