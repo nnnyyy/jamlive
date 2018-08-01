@@ -45,7 +45,9 @@ var ChatValues = function() {
     this.searchArea2 = $('#search-area-2');
     this.sockid = '';
 
+    this.memoWnd = $('div#hint-wnd');
     this.memoArea = $('div[type="memo"]');
+    setVisible(this.memoWnd, false);
 
     this.cbNoticeDisable = $('#cb-notice-disable');
 }
@@ -92,10 +94,21 @@ ChatValues.prototype.FlushChat = function( mode ) {
     }
 }
 
+ChatValues.prototype.updateMemo = function() {
+    var memo = '<b>' + this.memoProvider + '님의 힌트 제공</b><br><br>' + this.memo;
+    this.memoArea.html(this.memoProvider ? memo : '');
+}
+
 var chatValueObj = new ChatValues();
 
 function setVisible(elem, visible) {
     elem.css('display', visible ? 'inline-block' : 'none');
+}
+
+function getVisible(elem) {
+    if( elem.css('display') === 'none' ) return false;
+
+    return true;
 }
 
 function init() {
@@ -108,6 +121,9 @@ function init() {
     setVisible($('.popup_wnd'), false);
     closeUserMenu();
     $('#search-ret-rank-list').empty();
+
+    setVisible($('.wnd-func-key'), false);
+
     chatValueObj.setUpdateChat();
 }
 
@@ -139,7 +155,9 @@ function registerSocketEvent() {
     socket.on('connect', connectStateInfo.Connect );
     socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('memo', function(data) {
-        $('div[type="memo"]').html(data.memo);
+        chatValueObj.memo = data.memo;
+        chatValueObj.memoProvider = data.memo_provider;
+        chatValueObj.updateMemo();
     })
 
     socket.on('reconn-server', function(data) {
@@ -306,12 +324,6 @@ function onInputMsgKeyPress(e) {
         }
 
         if( msg == '@memo') {
-            var memo = $('.memo-area').val();
-
-            memo = memo.replace(/(?:\r\n|\r|\n)/g, '<br />');
-            socket.emit('memo', {memo: memo });
-            //$('div[type="memo"]').html(memo);
-            $(this).val('');
             return;
         }
 
@@ -573,6 +585,11 @@ function setBtnListener() {
 
     $('#um-cancel').click(function(e) { closeUserMenu() } );
 
+    $('#open-memo-wnd').click(onBtnOpenMemoWnd);
+    $('#btn-show-func').click(onBtnShowFunc);
+    $('.btn-memo').click(onBtnMemo);
+    $('.btn-memo-cancel').click(onBtnMemoCancel);
+
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
         openUserMenu($(this).text(), $(this).attr('sockid') );
         /*
@@ -807,6 +824,37 @@ function onBtnAdmin(e) {
     }, 300, function() {
         // Animation complete.
     });
+}
+
+function onBtnOpenMemoWnd(e) {
+    e.stopPropagation();
+
+    $('.memo-area').val(chatValueObj.memo.replace(/<br>/gi,'\n'));
+
+    setVisible(chatValueObj.memoWnd, true);
+}
+
+function onBtnShowFunc(e) {
+    e.stopPropagation();
+
+    var bVisible = getVisible($('.wnd-func-key'));
+    setVisible($('.wnd-func-key'), !bVisible);
+}
+
+function onBtnMemo(e) {
+    e.stopPropagation();
+
+    var memo = $('.memo-area').val();
+    memo = memo.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    socket.emit('memo', {memo: memo });
+
+    setVisible(chatValueObj.memoWnd, false);
+}
+
+function onBtnMemoCancel(e) {
+    e.stopPropagation();
+
+    setVisible(chatValueObj.memoWnd, false);
 }
 
 function getGradeImage( auth, isbaned ) {

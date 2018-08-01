@@ -60,6 +60,7 @@ var ServerMan = function() {
     this.searchQueryMap = new HashMap();
     this.countslistForGuest = [];
     this.memo = "";
+    this.memo_provider = '';
     this.nextQuizShowdata = {};
 }
 
@@ -392,7 +393,7 @@ ServerMan.prototype.register = function(socket) {
 
     socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
-    socket.emit('memo', {memo: servman.memo });
+    socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
     socket.on('vote', onSockVote);;
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
@@ -401,8 +402,14 @@ ServerMan.prototype.register = function(socket) {
     socket.on('like', onSockLike);
     socket.on('analysis', onAnalysis);
     socket.on('memo', function(data) {
+        var client = servman.getClient(this.id);
+        if( client.auth < 2 ) {
+            sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
+            return;
+        }
         servman.memo = data.memo;
-        servman.io.sockets.emit('memo', {memo: data.memo });
+        servman.memo_provider = client.nick;
+        servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
     })
 }
 
