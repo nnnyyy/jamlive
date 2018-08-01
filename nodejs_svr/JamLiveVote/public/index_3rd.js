@@ -143,7 +143,12 @@ function registerSocketEvent() {
     })
 
     socket.on('reconn-server', function(data) {
-        window.location.href = 'http://' + data.url;
+        if( !data.logined ) {
+            window.location.href = '/signin';
+        }
+        else {
+            window.location.href = 'http://' + data.url;
+        }
         return;
     });
 }

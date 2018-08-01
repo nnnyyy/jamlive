@@ -8,6 +8,7 @@ var Client = function(socket) {
     this.auth = -1;
     this.nick = '';
     this.ip = '';
+    this.tLastChat = 0;
 }
 
 Client.prototype.isClickable = function() {
@@ -44,6 +45,11 @@ Client.prototype.isLogined = function() {
     var socket = this.socket;
     var logined = socket.request.session.username ? true : false;
     return logined;
+}
+
+Client.prototype.isAbleChat = function() {
+    const tCur = new Date();
+    return (tCur - this.tLastChat >= 950);
 }
 
 module.exports = Client;

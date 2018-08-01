@@ -278,8 +278,8 @@ ServerMan.prototype.checkAllBaned = function() {
         }
 
         //  다음 라이브 퀴즈쇼 업데이트
-        var month = (cur.getMonth()+1).toString().padStart(2, "0");
-        var day = cur.getDate().toString().padStart(2, "0");
+        var month = (cur.getMonth()+1).toString().pad(2);
+        var day = cur.getDate().toString().pad(2);
         var first = `${cur.getFullYear()}-${month}-${day}T`;
         var todayQuizDate = new Date(first + servman.nextQuizShowdata.time );
         var day = cur.getDay() - 1;
@@ -386,8 +386,8 @@ ServerMan.prototype.register = function(socket) {
 
     client.nick = nick;
 
-    if( this.socketmap.count() > 500 && ( !client.isLogined() || socket.request.session.auth <= 1 ) ) {
-        //socket.emit('reconn-server', {url: 'ch2.jamlive.net'});
+    if( this.socketmap.count() > 500 && ( !client.isLogined() || socket.request.session.auth <= 0 ) ) {
+        socket.emit('reconn-server', {logined: client.isLogined(), url: 'http://databucket.duckdns.org:5647/new'});
         return;
     }
 
@@ -615,6 +615,20 @@ function onSockChat(data) {
         var logined = client.isLogined();
         var nick = client.nick;
         var auth_state = client.auth;
+
+        if( servman.checkBaned(client.ip) ) {
+            var msg = '밴유저는 채팅 참여가 불가능합니다.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
+        if( !client.isAbleChat() ) {
+            var msg = '여유를 가지고 채팅 해 주세요.';
+            socket.emit('serv_msg', {msg: msg});
+            return;
+        }
+
+        client.tLastChat = new Date();
 
         if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
             dbhelper.getRandomQuiz(function(result) {

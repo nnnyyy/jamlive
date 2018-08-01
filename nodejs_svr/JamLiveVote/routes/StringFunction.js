@@ -11,3 +11,8 @@ String.prototype.hashCode = function() {
     }
     return hash;
 };
+
+
+String.prototype.pad = function( width ){
+    return this.length >= width ? this : new Array(width - this.length + 1).join('0') + this;
+}
