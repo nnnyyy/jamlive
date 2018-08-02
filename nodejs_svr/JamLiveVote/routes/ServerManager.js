@@ -540,7 +540,7 @@ function onSockLike(data) {
         var auth_state = logined ? socket.request.session.auth : -1;
 
          if( client.ip == toLikeClient.ip ) {
-             sendServerMsg(client, '스스로 칭찬 불가능');
+             sendServerMsg(client.socket, '스스로 칭찬 불가능');
          return;
          }
 
