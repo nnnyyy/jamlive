@@ -546,11 +546,19 @@ function setBtnListener() {
     });
 
     $('#btn-svr1').click(function(e) {
-        window.location.href = 'http://jamlive.net';
+        window.location.href = 'http://databucket.duckdns.org:4650';
     });
 
     $('#btn-svr2').click(function(e) {
-        window.location.href = 'http://ch2.jamlive.net';
+        window.location.href = 'http://databucket.duckdns.org:5647';
+    });
+
+    $('#btn-svr3').click(function(e) {
+        window.location.href = 'http://databucket.duckdns.org:6647';
+    });
+
+    $('#btn-svr4').click(function(e) {
+        window.location.href = 'http://databucket.duckdns.org:7647';
     });
 
     $('#btn-logout').click(function(e) {
