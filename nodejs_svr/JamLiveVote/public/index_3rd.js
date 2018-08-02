@@ -8,7 +8,7 @@ var isLogin = false;
 var timerID = -1;
 var timerIDForImageSearch = -1;
 
-var RETRY_INTERVAL = 2000;
+var RETRY_INTERVAL = 4000;
 var ConnectStateInfo = function() {
     this.isConnected = false;
     this.timeoutID = -1;
@@ -167,6 +167,10 @@ function registerSocketEvent() {
     })
 
     socket.on('reconn-server', function(data) {
+        if( data.reason == 'baned') {
+            alert('이용 자격이 없음이 확인되어 영구밴 당하셨습니다.');
+            window.location.href = 'jamlive.net';
+        }
         if( !data.logined ) {
             window.location.href = '/signin';
         }

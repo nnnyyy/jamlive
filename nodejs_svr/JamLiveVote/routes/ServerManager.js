@@ -74,8 +74,7 @@ ServerMan.prototype.addSocket = function(socket) {
         }
 
         if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.request.session.username)) {
-            sendServerMsg(socket, '욕설 및 어뷰징 요소를 사용하여 영구 밴 당하셨습니다');
-            socket.disconnect();
+            socket.emit('reconn-server', {reason: 'baned', logined: true, url: 'jamlive.net'});
             return false;
         }
 
@@ -359,11 +358,12 @@ ServerMan.prototype.register = function(socket) {
     var client = servman.getClient(socket.id);
 
     socket.on('disconnect', function(){
-        servman.removeSocket(this.id);
         var client = servman.getClient(this.id);
+        servman.removeSocket(this.id);
         if( client && client.isLogined() ) {
             //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
             dbhelper.updateActivePoint( this.request.session.username, client.activePoint, function(ret) {
+                console.log(`${client.nick} - updateActivePoint ret ${ret}`);
             });
         }
     });
@@ -374,6 +374,11 @@ ServerMan.prototype.register = function(socket) {
             if( ret.ret == 0 ) {
                 //  완료 처리 해줘
                 client.activePoint = ret.point;
+                console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
+
+            }
+            else {
+                console.log(`${client.nick} - getActivePoint Error ( ${ret.ret} )`);
             }
         })
     }
@@ -499,28 +504,44 @@ function onSockPermanentBan(data) {
         }
 
         if( client.ip == toBanClient.ip ) {
-            sendServerMsg(socket, '자신을 신고할 수 없습니다.');
-            return;
+            //sendServerMsg(socket, '자신을 신고할 수 없습니다.');
+            //return;
         }
 
         dbhelper.updateBanUser(toBanClient.ip, ret => {
             sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
+            toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
+            chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.nick}님을 영구밴 시켰습니다`, false);
+            console.log('permanent ban success');
+
+            dbhelper.getPermanentBanList(function(ret) {
+                if( ret.ret == 0 ) {
+                    console.log('getPermanentBanList success : ' + ret.ret);
+                    servman.permanentBanList = ret.list;
+                }
+                else {
+                    console.log('getPermanentBanList error : ' + ret.ret);
+                }
+            });
         });
         if( toBanClient.isLogined() && toBanClient.socket.session.username ){
             dbhelper.updateBanUser( toBanClient.socket.session.username, ret => {
                 sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
+                toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
+                chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.nick}님을 영구밴 시켰습니다`, false);
+                console.log('permanent ban success - - ');
+
+                dbhelper.getPermanentBanList(function(ret) {
+                    if( ret.ret == 0 ) {
+                        console.log('getPermanentBanList success : ' + ret.ret);
+                        servman.permanentBanList = ret.list;
+                    }
+                    else {
+                        console.log('getPermanentBanList error : ' + ret.ret);
+                    }
+                });
             } );
         }
-
-        dbhelper.getPermanentBanList(function(ret) {
-            if( ret.ret == 0 ) {
-                console.log('getPermanentBanList success : ' + ret.ret);
-                servman.permanentBanList = ret.list;
-            }
-            else {
-                console.log('getPermanentBanList error : ' + ret.ret);
-            }
-        });
 
         //servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
 

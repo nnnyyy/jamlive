@@ -190,7 +190,7 @@ exports.getPermanentBanList = function(cb) {
 }
 exports.updateBanUser = function( idorip, cb ) {
     try {
-        dbpool.query("insert into permanent_ban_list values ('" + idorip + "')", function(err, rows) {
+        dbpool.query(`insert into permanent_ban_list ( ip_or_id ) values ('${idorip}')`, function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 cb({ret: -99});

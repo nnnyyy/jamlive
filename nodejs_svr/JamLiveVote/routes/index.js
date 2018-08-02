@@ -32,7 +32,6 @@ router.post('/searchuser', function(req, res, next) {
 router.post('/login', Auth.login);
 router.post('/logout', Auth.logout);
 router.get('/signin', function(req, res, next) {
-  console.log(req.session.username);
   res.render('login', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick});
 })
 router.get('/signup', function(req, res, next) {
