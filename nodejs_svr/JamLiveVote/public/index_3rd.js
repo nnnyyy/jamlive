@@ -50,6 +50,10 @@ var ChatValues = function() {
     setVisible(this.memoWnd, false);
 
     this.cbNoticeDisable = $('#cb-notice-disable');
+
+    this.bQuizEnable = true;
+
+    this.wndSearchUser = $('.wnd-search-user');
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -123,8 +127,10 @@ function init() {
     $('#search-ret-rank-list').empty();
 
     setVisible($('.wnd-func-key'), false);
+    setVisible(chatValueObj.wndSearchUser, false);
 
     chatValueObj.setUpdateChat();
+    setEventListener();
 }
 
 function registerKeyEvent( socket ) {
@@ -169,6 +175,29 @@ function registerSocketEvent() {
         }
         return;
     });
+}
+
+function setEventListener() {
+    $('#ip-search-user-name').keydown(function() {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                query : $(this).val(),
+            }),
+            contentType: 'application/json',
+            url: '/searchuser',
+            success: function(data) {
+                console.log(data);
+                if( data.data.ret != 0 ) {
+                    $('#search-user-ret').text('검색결과가 없습니다.');
+                }
+                else {
+                    $('#search-user-ret').text(data.data.nick + ' 님의 포인트는 ' + data.data.active_point + ' 입니다');
+                }
+            }
+        });
+    })
 }
 
 function onChat(data) {
@@ -221,6 +250,7 @@ var idInterval = -1;
 var idTimeout = -1;
 var quizdata = null;
 function onQuiz(data) {
+    if( !chatValueObj.bQuizEnable ) return;
     $('.q_q').each(function(idx){
         $(this).css('background-color','transparent');
     })
@@ -248,6 +278,7 @@ function onQuiz(data) {
 
 function onQuizRet(_data) {
     if( !quizdata ) return;
+    if( !chatValueObj.bQuizEnable ) return;
 
     $('.q_q').each(function(idx){
         if( idx == _data.collect_idx ) {
@@ -407,6 +438,7 @@ function onGlobalKeyDown(e) {
     if( $('.ip-name').is(':focus') ) return;
     if( $('.ip-msg').is(':focus') ) return;
     if( $('.memo-area').is(':focus')) return;
+    if( $('#ip-search-user-name').is(':focus') ) return;
 
     if( (code >= 97 && code <= 99) ) {
         var curTime = new Date();
@@ -595,6 +627,8 @@ function setBtnListener() {
 
     $('#open-memo-wnd').click(onBtnOpenMemoWnd);
     $('#btn-show-func').click(onBtnShowFunc);
+    $('#btn-no-quiz').click(onBtnNoQuiz);
+    $('#btn-search-user').click(onBtnSearchUser);
     $('.btn-memo').click(onBtnMemo);
     $('.btn-memo-cancel').click(onBtnMemoCancel);
 
@@ -863,6 +897,23 @@ function onBtnMemoCancel(e) {
     e.stopPropagation();
 
     setVisible(chatValueObj.memoWnd, false);
+}
+
+function onBtnNoQuiz(e) {
+    e.stopPropagation();
+
+    setVisible($('.quiz_wnd'), false);
+    clearInterval(idInterval);
+
+    chatValueObj.bQuizEnable = !chatValueObj.bQuizEnable;
+    $('#btn-no-quiz').text(chatValueObj.bQuizEnable? '퀴즈 끄기' : '퀴즈 켜기');
+}
+
+function onBtnSearchUser(e) {
+    e.stopPropagation();
+
+    var bVisible = getVisible(chatValueObj.wndSearchUser);
+    setVisible(chatValueObj.wndSearchUser, !bVisible);
 }
 
 function getGradeImage( auth, isbaned ) {

@@ -119,13 +119,18 @@
         <div type="line"></div>
         <div type="sub-menu">
             <menu-item class="menu-item" id="btn-show-func">기능키 설명</menu-item> |
-            <menu-item class="menu-item">회원정보 검색</menu-item> |
-            <menu-item class="menu-item" id="open-memo-wnd">힌트 입력창</menu-item>
+            <menu-item class="menu-item" id="btn-search-user">회원정보 검색</menu-item> |
+            <menu-item class="menu-item" id="open-memo-wnd">힌트 입력창</menu-item> |
+            <menu-item class="menu-item" id="btn-no-quiz">퀴즈 끄기</menu-item>
         </div>
         <div type="line"></div>
         <div class="wnd-func-key">
             <img src="/images/shortcut.png" style="width:100%"/>
             채팅창에서 ESC 누르면 투표를 할 수 있는 모드로 변경됩니다.
+        </div>
+        <div class="wnd-search-user">
+            유저명 : <input type="text" value="" id="ip-search-user-name"/>
+            <div id="search-user-ret"></div>
         </div>
         <ins class="kakao_ad_area" style="display:none;"
              data-ad-unit    = "DAN-tofpljkyvq06"

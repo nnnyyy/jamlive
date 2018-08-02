@@ -4,7 +4,7 @@ var Log = require('./Log');
 var router = express.Router();
 var config = require('../config');
 var Auth = require('./Auth');
-
+var dbhelper = require('./dbhelper');
 
 /* GET home page. */
 router.use( Log.logging );
@@ -24,6 +24,11 @@ router.post('/searchex', JamLive.searchex );
 router.post('/searchgoogle', JamLive.requestDaumWeb);
 router.post('/searchnaver', JamLive.requestNaver);
 router.post('/searchdb', JamLive.requestDB)
+router.post('/searchuser', function(req, res, next) {
+  dbhelper.searchUser(req.body.query, function(ret) {
+    res.json(ret);
+  })
+})
 router.post('/login', Auth.login);
 router.post('/logout', Auth.logout);
 router.get('/signin', function(req, res, next) {

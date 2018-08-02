@@ -389,6 +389,11 @@ article {
     article separator[role="search-ret-2"] memo-area {
       width: 80%;
       height: 200px; }
+    article separator[role="search-ret-2"] .wnd-search-user {
+      width: 100%;
+      margin: 8px; }
+      article separator[role="search-ret-2"] .wnd-search-user #search-user-ret {
+        margin: 8px 0; }
   article separator[role="vote-and-chat"] {
     float: left;
     display: inline-block;

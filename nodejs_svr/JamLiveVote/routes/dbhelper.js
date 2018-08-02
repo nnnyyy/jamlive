@@ -204,3 +204,27 @@ exports.updateBanUser = function( idorip, cb ) {
         cb({ret: -1});
     }
 }
+
+exports.searchUser = function( nick, cb ) {
+    try {
+        dbpool.query(`select a.nick, b.ap from account a, active_point b where a.id = b.id and a.nick = '${nick}'`, function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            var data = { ret: -1, nick: '', active_point: 0 }
+
+            for( var i  = 0; i < rows.length ; ++i ) {
+                data.ret = 0;
+                data.nick = rows[i].nick;
+                data.active_point = rows[i].ap;
+            }
+
+            cb({ret: 0, data: data});
+        });
+    }catch( err ) {
+        console.log(`[db] search user error - ${err}`);
+    }
+}

@@ -564,31 +564,36 @@ function onSockLike(data) {
 }
 
 function onSockSearch(data) {
-    var client = servman.getClient(this.id);
-    var socket = client.socket;
-    var logined = socket.request.session.username ? true : false;
-    var auth_state = logined ? socket.request.session.auth : -1;
+    try {
+        var client = servman.getClient(this.id);
+        var socket = client.socket;
+        var logined = socket.request.session.username ? true : false;
+        var auth_state = logined ? socket.request.session.auth : -1;
 
-    var isBaned = false;
+        var isBaned = false;
 
-    if( isLiveQuizTime() ) {
-        client.activePoint += 1;
-    }
+        if( isLiveQuizTime() ) {
+            client.activePoint += 1;
+        }
 
-    if( data.isBroadcast ) {
-        var nick = client.nick;
-        servman.addSearchQuery( data.msg, true );
-        chatMan.Broadcast(servman.io, client, 'search', `[검색] ${data.msg}`, isBaned);
-    }
-    else {
-        servman.addSearchQuery( data.msg, false );
+        if( data.isBroadcast ) {
+            var nick = client.nick;
+            servman.addSearchQuery( data.msg, true );
+            chatMan.Broadcast(servman.io, client, 'search', `[검색] ${data.msg}`, isBaned);
+        }
+        else {
+            servman.addSearchQuery( data.msg, false );
+        }
+    }catch( e ) {
+        console.log(`onSockSearch Error - ${e}`);
     }
 }
 
 function onSockChat(data) {
-    var client = servman.getClient(this.id);
-    var socket = client.socket;
     try {
+        var client = servman.getClient(this.id);
+        var socket = client.socket;
+
         var mode = 'chat';
         var isBaned = false;
         if( servman.checkBaned( client.ip ) ) {
@@ -765,7 +770,12 @@ function onAnalysis(data) {
 }
 
 function sendServerMsg( socket, msg ) {
-    socket.emit('serv_msg', {msg: msg});
+    try {
+        socket.emit('serv_msg', {msg: msg});
+    }
+    catch(e) {
+        console.log(`sendServerMsg Error - ${e}`);
+    }
 }
 
 
