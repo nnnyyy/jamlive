@@ -1,7 +1,7 @@
 /**
  * Created by nnnyy on 2018-07-06.
  */
-var socket = io();
+var socket = null;
 var bTrigger = false;
 var tClick = 0;
 var isLogin = false;
@@ -116,6 +116,7 @@ function getVisible(elem) {
 }
 
 function init() {
+    socket = io({ transports: ['websocket', 'polling'], upgrade: false});
     setVisible($('#search-area-1'), false);
     setVisible($('#ads-area-1'), true);
     setVisible($('#search-area-2'), false);
@@ -500,6 +501,7 @@ function setNickName( nick ) {
 function setSocketListener() {
     socket.on('vote_data', onProcessVoteData);
     socket.on('myid', function(data) {
+        console.log(data);
         chatValueObj.sockid = data.socket;
         isLogin = data.isLogined;
         setVisible($('#btn-admin'), data.auth >= 50);

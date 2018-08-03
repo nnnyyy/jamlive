@@ -48,6 +48,8 @@ var io = require('socket.io')(server,
       transports: ['websocket','polling']
     });
 
+var sharedsession = require("express-socket.io-session");
+io.use(sharedsession(app.session));
 require('../routes/io')(io);
 /**
  * Listen on provided port, on all network interfaces.
@@ -56,10 +58,6 @@ require('../routes/io')(io);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
-io.use(function(socket, next) {
-  app.session(socket.request, socket.request.res, next);
-})
 
 /**
  * Normalize a port into a number, string, or false.

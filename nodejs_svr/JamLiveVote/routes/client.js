@@ -13,7 +13,7 @@ var Client = function(socket) {
 
 Client.prototype.isClickable = function() {
     var cur = new Date();
-    var _auth = this.socket.request.session.username ? this.socket.request.session.auth : -1;
+    var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.auth : -1;
     if( _auth >= 1 ) {
         return (cur - this.tLastClick) > 1000;
     }
@@ -26,7 +26,7 @@ Client.prototype.isClickable = function() {
 
 Client.prototype.isSearchable = function() {
     var cur = new Date();
-    var _auth = this.socket.request.session.username ? this.socket.request.session.auth : -1;
+    var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.auth : -1;
     if( _auth >= 1 ) {
         return true;
     }
@@ -43,7 +43,7 @@ Client.prototype.isAdmin = function() {
 
 Client.prototype.isLogined = function() {
     var socket = this.socket;
-    var logined = socket.request.session.username ? true : false;
+    var logined = socket.handshake.session.username ? true : false;
     return logined;
 }
 

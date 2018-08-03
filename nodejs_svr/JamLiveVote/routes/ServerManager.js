@@ -66,6 +66,75 @@ var ServerMan = function() {
 
 var servman = new ServerMan();
 
+ServerMan.prototype.register = function(socket) {
+
+    if( !this.addSocket(socket) ) {
+        return;
+    }
+    var client = servman.getClient(socket.id);
+
+    socket.on('disconnect', function(){
+        var client = servman.getClient(this.id);
+        servman.removeSocket(this.id);
+        if( client && client.isLogined() ) {
+            //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
+            dbhelper.updateActivePoint( this.request.session.username, client.activePoint, function(ret) {
+                console.log(`${client.nick} - updateActivePoint ret ${ret}`);
+            });
+        }
+    });
+
+    if( client.isLogined() ) {
+        client.auth = socket.handshake.session.auth;
+        dbhelper.getActivePoint( socket.handshake.session.username, function(ret) {
+            if( ret.ret == 0 ) {
+                //  완료 처리 해줘
+                client.activePoint = ret.point;
+                console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
+
+            }
+            else {
+                console.log(`${client.nick} - getActivePoint Error ( ${ret.ret} )`);
+            }
+        })
+    }
+
+    var rd = Math.floor(Math.random() * 500);
+    var nick = socket.handshake.session.usernick;
+    if( !client.isLogined() ){
+        nick = '손님' + rd;
+    }
+
+    client.nick = nick;
+
+    if( this.socketmap.count() > 500 && ( !client.isLogined() || socket.handshake.session.auth <= 0 ) ) {
+        socket.emit('reconn-server', {logined: client.isLogined(), url: 'http://databucket.duckdns.org:5647/new'});
+        return;
+    }
+
+    socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
+    socket.emit('next-quiz', { data: servman.nextQuizShowdata });
+    socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+    socket.on('vote', onSockVote);;
+    socket.on('chat', onSockChat);
+    socket.on('search', onSockSearch);
+    socket.on('ban', onSockBan);
+    socket.on('permanentban', onSockPermanentBan);
+    socket.on('like', onSockLike);
+    socket.on('analysis', onAnalysis);
+    socket.on('memo', function(data) {
+        var client = servman.getClient(this.id);
+        if( client.auth < 2 ) {
+            sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
+            return;
+        }
+        servman.memo = data.memo;
+        servman.memo_provider = client.nick;
+        servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+    })
+}
+
+
 ServerMan.prototype.addSocket = function(socket) {
     try {
         let ip = socket.handshake.address.substr(7);
@@ -73,7 +142,7 @@ ServerMan.prototype.addSocket = function(socket) {
             ip = socket.handshake.headers['x-real-ip'];
         }
 
-        if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.request.session.username)) {
+        if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.handshake.session.username)) {
             socket.emit('reconn-server', {reason: 'baned', logined: true, url: 'jamlive.net'});
             return false;
         }
@@ -83,7 +152,7 @@ ServerMan.prototype.addSocket = function(socket) {
         this.socketmap.set(socket.id, client);
 
         if( client.isLogined() ) {
-            chatMan.Notice( servman.io, client, socket.request.session.usernick + '님의 입장' );
+            chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 입장' );
         }
     }catch(e) {
         console.log(`addsocket Error - ${e}`);
@@ -105,7 +174,7 @@ ServerMan.prototype.removeSocket = function(socketid) {
         this.socketmap.delete(socketid);
 
         if( client.isLogined() ) {
-            chatMan.Notice( servman.io, client, socket.request.session.usernick + '님의 퇴장' );
+            chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 퇴장' );
         }
     }
     catch(e) {
@@ -349,75 +418,6 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
     cachedType.searched.set(query, {data: data, tLast: new Date()});
 }
 
-
-ServerMan.prototype.register = function(socket) {
-
-    if( !this.addSocket(socket) ) {
-        return;
-    }
-    var client = servman.getClient(socket.id);
-
-    socket.on('disconnect', function(){
-        var client = servman.getClient(this.id);
-        servman.removeSocket(this.id);
-        if( client && client.isLogined() ) {
-            //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
-            dbhelper.updateActivePoint( this.request.session.username, client.activePoint, function(ret) {
-                console.log(`${client.nick} - updateActivePoint ret ${ret}`);
-            });
-        }
-    });
-
-    if( client.isLogined() ) {
-        client.auth = socket.request.session.auth;
-        dbhelper.getActivePoint( socket.request.session.username, function(ret) {
-            if( ret.ret == 0 ) {
-                //  완료 처리 해줘
-                client.activePoint = ret.point;
-                console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
-
-            }
-            else {
-                console.log(`${client.nick} - getActivePoint Error ( ${ret.ret} )`);
-            }
-        })
-    }
-
-    var rd = Math.floor(Math.random() * 500);
-    var nick = socket.request.session.usernick;
-    if( !client.isLogined() ){
-        nick = '손님' + rd;
-    }
-
-    client.nick = nick;
-
-    if( this.socketmap.count() > 500 && ( !client.isLogined() || socket.request.session.auth <= 0 ) ) {
-        socket.emit('reconn-server', {logined: client.isLogined(), url: 'http://databucket.duckdns.org:5647/new'});
-        return;
-    }
-
-    socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
-    socket.emit('next-quiz', { data: servman.nextQuizShowdata });
-    socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
-    socket.on('vote', onSockVote);;
-    socket.on('chat', onSockChat);
-    socket.on('search', onSockSearch);
-    socket.on('ban', onSockBan);
-    socket.on('permanentban', onSockPermanentBan);
-    socket.on('like', onSockLike);
-    socket.on('analysis', onAnalysis);
-    socket.on('memo', function(data) {
-        var client = servman.getClient(this.id);
-        if( client.auth < 2 ) {
-            sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
-            return;
-        }
-        servman.memo = data.memo;
-        servman.memo_provider = client.nick;
-        servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
-    })
-}
-
 ServerMan.prototype.createQuizData = function( _quizdata ) {
     if( this.quizdata && !this.quizdata.isEnd() ) {
         return;
@@ -557,8 +557,8 @@ function onSockLike(data) {
         var toLikeClient = servman.getClient(data.sockid);
         if( !toLikeClient ) return;
         var socket = client.socket;
-        var logined = socket.request.session.username ? true : false;
-        var auth_state = logined ? socket.request.session.auth : -1;
+        var logined = socket.handshake.session.username ? true : false;
+        var auth_state = logined ? socket.handshake.session.auth : -1;
 
          if( client.ip == toLikeClient.ip ) {
              sendServerMsg(client.socket, '스스로 칭찬 불가능');
@@ -588,8 +588,8 @@ function onSockSearch(data) {
     try {
         var client = servman.getClient(this.id);
         var socket = client.socket;
-        var logined = socket.request.session.username ? true : false;
-        var auth_state = logined ? socket.request.session.auth : -1;
+        var logined = socket.handshake.session.username ? true : false;
+        var auth_state = logined ? socket.handshake.session.auth : -1;
 
         var isBaned = false;
 
@@ -718,7 +718,7 @@ function onSockVote(data) {
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
                 servman.quizdata.vote(data.idx);
             }
-            if( socket.request.session.username && socket.request.session.auth >= 1 ) {
+            if( socket.handshake.session.username && socket.handshake.session.auth >= 1 ) {
                 servman.click(data.idx, !client.isLogined());
             }
             client.tLastClick = new Date();
@@ -745,8 +745,8 @@ function onSockVote(data) {
 function onAnalysis(data) {
     var client = servman.getClient(this.id);
     var socket = client.socket;
-    var logined = socket.request.session.username ? true : false;
-    var auth_state = logined ? socket.request.session.auth : -1;
+    var logined = socket.handshake.session.username ? true : false;
+    var auth_state = logined ? socket.handshake.session.auth : -1;
 
     if( !client.isAdmin() ) {
         return;
