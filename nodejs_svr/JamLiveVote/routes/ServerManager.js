@@ -79,7 +79,7 @@ ServerMan.prototype.register = function(socket) {
         if( client && client.isLogined() ) {
             //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
             dbhelper.updateActivePoint( this.handshake.session.username, client.activePoint, function(ret) {
-                console.log(`${client.nick} - updateActivePoint ret ${ret}`);
+                //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
             });
         }
     });
@@ -90,11 +90,11 @@ ServerMan.prototype.register = function(socket) {
             if( ret.ret == 0 ) {
                 //  완료 처리 해줘
                 client.activePoint = ret.point;
-                console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
+                //console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
 
             }
             else {
-                console.log(`${client.nick} - getActivePoint Error ( ${ret.ret} )`);
+                //console.log(`${client.nick} - getActivePoint Error ( ${ret.ret} )`);
             }
         })
     }

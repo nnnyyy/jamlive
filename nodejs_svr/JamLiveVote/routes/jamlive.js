@@ -249,7 +249,7 @@ exports.searchex = function(req, res, next) {
 
     var cached = ServerManager.getCachedSearchResult(sType, query);
     if( cached ) {
-        console.log('cached : ' + query);
+        //console.log('cached : ' + query);
         if( isGuest ) {
             //cached = cached.slice(0,1);
         }
@@ -378,7 +378,7 @@ exports.requestDaumWeb = function(req, res, next) {
 
     var cached = ServerManager.getCachedSearchResult('google', query);
     if( cached ) {
-        console.log('cached : ' + query);
+        //console.log('cached : ' + query);
         if( isGuest ) {
             //cached = cached.slice(0,1);
         }
@@ -441,7 +441,7 @@ exports.requestNaver = function(req, res, next) {
     var cached = ServerManager.getCachedSearchResult('naver_chinese', query);
     var cached_h = ServerManager.getCachedSearchResult('naver_chinese_h', query);
     if( cached || cached_h ) {
-        console.log('cached : ' + query);
+        //console.log('cached : ' + query);
         if( isGuest ) {
             cached = cached.slice(0,1);
             cached_h = cached_h.slice(0,1);
