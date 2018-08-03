@@ -494,7 +494,18 @@ function registerSocketListener(g) {
     g.socket.on('quiz', g.onQuiz);
     g.socket.on('quizret', g.onQuizRet);
     g.socket.on('reconn-server', function(data) {
-        window.location.href = 'http://' + data.url;
+        if( data.reason == 'baned') {
+            alert('이용 자격이 없음이 확인되어 영구밴 당하셨습니다.');
+            window.location.href = 'jamlive.net';
+        }
+        if( !data.logined ) {
+            window.location.href = '/signin';
+        }
+        else {
+            window.location.href = 'http://' + data.url;
+        }
         return;
     });
+
+
 }

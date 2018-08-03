@@ -100,7 +100,7 @@
             return;
         }
 
-        var socket = io();
+        var socket = io({ transports: ['websocket', 'polling'], upgrade: false});
         global.init(socket);
     });
 </script>
