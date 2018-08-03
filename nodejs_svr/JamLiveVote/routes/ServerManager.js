@@ -78,7 +78,7 @@ ServerMan.prototype.register = function(socket) {
         servman.removeSocket(this.id);
         if( client && client.isLogined() ) {
             //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
-            dbhelper.updateActivePoint( this.request.session.username, client.activePoint, function(ret) {
+            dbhelper.updateActivePoint( this.handshake.session.username, client.activePoint, function(ret) {
                 console.log(`${client.nick} - updateActivePoint ret ${ret}`);
             });
         }
