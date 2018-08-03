@@ -635,6 +635,7 @@ function setBtnListener() {
     $('#btn-show-func').click(onBtnShowFunc);
     $('#btn-no-quiz').click(onBtnNoQuiz);
     $('#btn-search-user').click(onBtnSearchUser);
+    $('#btn-close-search-user').click(onBtnCloseSearchUser);
     $('.btn-memo').click(onBtnMemo);
     $('.btn-memo-cancel').click(onBtnMemoCancel);
 
@@ -920,6 +921,11 @@ function onBtnSearchUser(e) {
 
     var bVisible = getVisible(chatValueObj.wndSearchUser);
     setVisible(chatValueObj.wndSearchUser, !bVisible);
+}
+
+function onBtnCloseSearchUser(e) {
+    e.stopPropagation();
+    setVisible(chatValueObj.wndSearchUser, false);
 }
 
 function getGradeImage( auth, isbaned ) {

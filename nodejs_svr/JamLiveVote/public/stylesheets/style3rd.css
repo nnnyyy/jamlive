@@ -111,6 +111,37 @@ div#hint-wnd {
     line-height: 30px;
     cursor: pointer; }
 
+.wnd-search-user {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  top: 50%;
+  left: 50%;
+  margin-top: -200px;
+  margin-left: -200px;
+  border: 2px dotted #1b3440;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #1b3440;
+  z-index: 99; }
+  .wnd-search-user .top {
+    margin: 8px auto;
+    text-align: center; }
+  .wnd-search-user #search-user-ret {
+    margin: 8px 0; }
+  .wnd-search-user #btn-close-search-user {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #1b3440;
+    color: yellow;
+    font-size: 20px;
+    text-align: center;
+    line-height: 60px;
+    cursor: pointer; }
+
 wnd[role="settings"] {
   position: fixed;
   top: 0;
@@ -391,11 +422,6 @@ article {
     article separator[role="search-ret-2"] memo-area {
       width: 80%;
       height: 200px; }
-    article separator[role="search-ret-2"] .wnd-search-user {
-      width: 100%;
-      margin: 8px; }
-      article separator[role="search-ret-2"] .wnd-search-user #search-user-ret {
-        margin: 8px 0; }
   article separator[role="vote-and-chat"] {
     float: left;
     display: inline-block;
@@ -554,11 +580,11 @@ notice-nick {
 
 .quiz_wnd {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 100%;
   width: 26vw;
-  margin-left: -13vw;
-  margin-top: -150px;
+  margin-left: -27vw;
+  margin-top: 10px;
   padding: 20px;
   background-color: #1b3440;
   color: #F5F1D5;
@@ -566,7 +592,7 @@ notice-nick {
   font-size: 17px;
   overflow: hidden;
   border-radius: 8px;
-  opacity: 0.8;
+  opacity: 0.9;
   z-index: 1; }
   .quiz_wnd .q_title {
     text-align: left;
