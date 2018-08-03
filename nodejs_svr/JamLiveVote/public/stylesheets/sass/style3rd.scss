@@ -376,8 +376,8 @@ article {
     //background-color: red;
     div[type="search-area-1"] {
       width: 100%;
-      height: 100%;
-      overflow-y: auto;
+      height: 100vh;
+      overflow-y: scroll;
     }
 
     div[type="ads-area-1"] {
@@ -415,6 +415,8 @@ article {
 
     div[type="memo"] {
       text-align: left;
+      width: calc(100% - 24px);
+      height: 60%;
       margin-top: 20px;
       margin-left: 12px;
       margin-right: 12px;

@@ -126,6 +126,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('analysis', onAnalysis);
     socket.on('memo', function(data) {
         var client = servman.getClient(this.id);
+        if( !client ) return;
         if( client.auth < 2 ) {
             sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
             return;
@@ -447,6 +448,7 @@ ServerMan.prototype.addSearchQuery = function( query, bCount ) {
 function onSockBan(data) {
     try {
         var client = servman.getClient(this.id);
+        if( !client ) return;
         var toBanClient = servman.getClient(data.sockid);
         if( !toBanClient ) return;
         var socket = client.socket;
@@ -495,6 +497,7 @@ function onSockBan(data) {
 function onSockPermanentBan(data) {
     try {
         var client = servman.getClient(this.id);
+        if( !client ) return;
         var toBanClient = servman.getClient(data.sockid);
         if( !toBanClient ) return;
         var socket = client.socket;
@@ -556,6 +559,7 @@ function onSockPermanentBan(data) {
 function onSockLike(data) {
     try {
         var client = servman.getClient(this.id);
+        if( !client ) return;
         var toLikeClient = servman.getClient(data.sockid);
         if( !toLikeClient ) return;
         var socket = client.socket;
@@ -589,6 +593,7 @@ function onSockLike(data) {
 function onSockSearch(data) {
     try {
         var client = servman.getClient(this.id);
+        if( !client ) return;
         var socket = client.socket;
         var logined = socket.handshake.session.username ? true : false;
         var auth_state = logined ? socket.handshake.session.auth : -1;
@@ -615,6 +620,7 @@ function onSockSearch(data) {
 function onSockChat(data) {
     try {
         var client = servman.getClient(this.id);
+        if( !client ) return;
         var socket = client.socket;
 
         var mode = 'chat';
@@ -750,6 +756,7 @@ function onSockVote(data) {
 
 function onAnalysis(data) {
     var client = servman.getClient(this.id);
+    if( !client ) return;
     var socket = client.socket;
     var logined = socket.handshake.session.username ? true : false;
     var auth_state = logined ? socket.handshake.session.auth : -1;
