@@ -687,6 +687,9 @@ function isLiveQuizTime() {
 function onSockVote(data) {
     try {
         var client = servman.getClient(this.id);
+        if( !client ) {
+            return;
+        }
         var socket = client.socket;
 
         if( client.auth < 1 && servman.checkBaned( client.ip ) ) {
@@ -703,12 +706,11 @@ function onSockVote(data) {
             })
 
             var total = _counts[0] + _counts[1] + _counts[2];
-            /*
+
             if( isLiveQuizTime() && total <= 0 ) {
                 sendServerMsg(socket, '손님은 회원 투표 전까지 투표 불가능합니다.');
                 return;
             }
-            */
         }
 
         if( client.isClickable() ) {
