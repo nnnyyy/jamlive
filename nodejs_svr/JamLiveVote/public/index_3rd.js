@@ -116,7 +116,7 @@ function getVisible(elem) {
 }
 
 function init() {
-    socket = io({ transports: ['websocket', 'polling'], upgrade: false});
+    socket = io();
     setVisible($('#search-area-1'), false);
     setVisible($('#ads-area-1'), true);
     setVisible($('#search-area-2'), false);
