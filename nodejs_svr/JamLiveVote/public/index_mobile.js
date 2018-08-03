@@ -330,6 +330,10 @@ function getGradeImage( auth, isbaned ) {
             return "/images/star4.png";
         case 5:
             return "/images/star5.png";
+        case 6:
+            return "/images/star6.png";
+        case 7:
+            return "/images/star7.png";
         case 50:
             return "/images/admin.png";
         case 99:
