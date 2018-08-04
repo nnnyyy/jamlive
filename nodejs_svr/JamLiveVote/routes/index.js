@@ -23,6 +23,7 @@ router.post('/vote', JamLive.clickevent );
 router.post('/searchex', JamLive.searchex );
 router.post('/searchgoogle', JamLive.requestDaumWeb);
 router.post('/searchnaver', JamLive.requestNaver);
+router.post('/searchdongyo', JamLive.requestDongyo);
 router.post('/searchdb', JamLive.requestDB)
 router.post('/searchuser', function(req, res, next) {
   dbhelper.searchUser(req.body.query, function(ret) {

@@ -1005,13 +1005,21 @@ function searchWebRoot( socket, query, isBroadcast ) {
     var queries = query.trim().split(' ');
     chatValueObj.lastSearchQuery = query;
     var chinese = false;
+    var dongyo = false;
     var chienseQuery = '';
+    var dongyoQuery = '';
     var chineseSubType = '';
     for( var i = 0 ; i < queries.length ; ++i ) {
         if( queries[i] === "한자") {
             chienseQuery = query.slice(0,query.indexOf(queries[i]));
             chineseSubType = 'chinese_only';
             chinese = true;
+            break;
+        }
+
+        if( queries[i] === '동요' || queries[i] === '가사') {
+            dongyo = true;
+            dongyoQuery = query.slice(0,query.indexOf(queries[i]));
             break;
         }
     }
@@ -1059,6 +1067,9 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searchWebNaver(chienseQuery, chineseSubType, where);
     }
 
+    if( dongyo ) {
+        searchWebDongyo(dongyoQuery, 2);
+    }
 
     if( $('#cb_s6').is(':checked')) {
         var where = $('input[name=radio_s6]:checked').attr('value');
@@ -1139,6 +1150,23 @@ function searchWebNaver( query, subtype, where ) {
             data.hdata = data.hdata.slice(0,2);
             setSearchRet(data.data, true, where);
             setSearchRet(data.hdata, true, where);
+        }
+    });
+}
+
+function searchWebDongyo(query , where) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+            sockid: chatValueObj.sockid
+        }),
+        contentType: 'application/json',
+        url: '/searchdongyo',
+        success: function(data) {
+            data.data = data.data.slice(0,2);
+            setSearchRet(data.data, true, where);
         }
     });
 }

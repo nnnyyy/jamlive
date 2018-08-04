@@ -222,6 +222,16 @@ function parcingNaverChinese(data, hdata, body) {
     })
 }
 
+function parcingDongyo(data, body) {
+    const strContents = new Buffer(body);
+    const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
+    const title = $('.col-md-8').eq(0).html();
+    const desc = $('.col-md-8').eq(1).html();
+
+    data.push({title: title, description: desc});
+}
+
+
 var req_cnt = 0;
 exports.searchex = function(req, res, next) {
     var query = req.body.query;
@@ -486,6 +496,68 @@ exports.requestNaver = function(req, res, next) {
     }
     catch(e){
         console.log('request google error - ' + e);
+        res.json([]);
+    }
+
+
+}
+
+exports.requestDongyo = function(req, res, next) {
+    var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
+    var ipHashed = ip.hashCode().toString();
+    if( ServerManager.checkBaned(ipHashed) ) {
+        res.json([]);
+        return;
+    }
+
+    var query = req.body.query
+    query = query.trim();
+
+    var isGuest = false;
+
+    var cached = ServerManager.getCachedSearchResult('dongyo', query);
+    if( cached ) {
+        if( isGuest ) {
+            cached = cached.slice(0,1);
+        }
+        res.json({ data: cached });
+        return;
+    }
+
+    var url = 'https://gasazip.com/view.html?singer2=%EB%8F%99%EC%9A%94&title2=' +   encodeURI(query);
+
+    var options = {
+        url: url,
+        headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+        }
+        ,encoding: null
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            var data = [];
+            if (!error && response.statusCode == 200) {
+                parcingDongyo(data, body);
+                if( isArray(data) && data.length > 0 ) {
+                    data = data.slice(0,4);
+                    ServerManager.setCachedSearchResult('dongyo', query, data);
+                    if( isGuest ) {
+                        data = data.slice(0,1);
+                        hanja_data = hanja_data.slice(0,1);
+                    }
+                    res.json({data: data });
+                }
+                else {
+                    res.json([]);
+                }
+            } else {
+                console.log('requestDongyo failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                res.json([]);
+            }
+        });
+    }
+    catch(e){
+        console.log('requestDongyo error - ' + e);
         res.json([]);
     }
 
