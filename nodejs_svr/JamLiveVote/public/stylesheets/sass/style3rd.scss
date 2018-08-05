@@ -187,6 +187,27 @@ div#hint-wnd {
   }
 }
 
+wnd[role="users"] {
+  $width: 300px;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: $width;
+  height: 100%;
+  background-color: $main-font-color;
+  color: $primary-color;
+  z-index: 2;
+  box-shadow: 5px 0 0 0 $primary-color;
+  text-align: center;
+  overflow-y: auto;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
 wnd[role="settings"] {
   $width: 300px;
   $line-width: $width / 10 * 9;

@@ -12,6 +12,9 @@ var chatMan = require('./modules/chatMan');
 
 var config = require('../config');
 
+var connectedListMan = require('./modules/ConnectedListMan');
+const connListMan = new connectedListMan();
+
 var VOTEPERTIME = 1000;
 var BANTIME = 4 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
@@ -69,7 +72,6 @@ var ServerMan = function() {
 var servman = new ServerMan();
 
 ServerMan.prototype.register = function(socket) {
-
     if( !this.addSocket(socket) ) {
         return;
     }
@@ -109,6 +111,9 @@ ServerMan.prototype.register = function(socket) {
 
     client.nick = nick;
 
+    connListMan.addUser(client);
+    connListMan.updateListToClient(client);
+
     if( config.mode == 'auth' ) {
         if ( !client.isLogined() ) {
             socket.emit('reconn-server', {logined: client.isLogined()});
@@ -133,7 +138,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('memo', function(data) {
         var client = servman.getClient(this.id);
         if( !client ) return;
-        if( client.auth < 2 ) {
+        if( client.auth < 3 ) {
             sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
             return;
         }
@@ -180,6 +185,7 @@ ServerMan.prototype.removeSocket = function(socketid) {
             return;
         }
 
+        connListMan.removeUser(client);
         this.socketmap.delete(socketid);
 
         if( client.isLogined() ) {

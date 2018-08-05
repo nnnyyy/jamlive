@@ -54,6 +54,7 @@ var ChatValues = function() {
     this.bQuizEnable = true;
 
     this.wndSearchUser = $('.wnd-search-user');
+    this.usersMap = new Map();
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -161,6 +162,8 @@ function registerSocketEvent() {
     socket.on('next-quiz', onNextQuiz);
     socket.on('connect', connectStateInfo.Connect );
     socket.on('disconnect', connectStateInfo.Disconnect);
+    socket.on('update-user', onUpdateUser);
+    socket.on('update-users', onUpdateUsers);
     socket.on('memo', function(data) {
         chatValueObj.memo = data.memo;
         chatValueObj.memoProvider = data.memo_provider;
@@ -193,7 +196,6 @@ function setEventListener() {
             contentType: 'application/json',
             url: '/searchuser',
             success: function(data) {
-                console.log(data);
                 if( data.data.ret != 0 ) {
                     $('#search-user-ret').text('검색결과가 없습니다.');
                 }
@@ -299,7 +301,6 @@ function onQuizRet(_data) {
 }
 
 function onEmoticon(_data) {
-    console.log('emoticon : ' + _data.name);
     switch( _data.name ) {
         case "bbam":
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
@@ -327,6 +328,37 @@ function onNextQuiz(data) {
     var qinfo = data.data.name + ' ' + tTime.getHours() + '시 ' + tTime.getMinutes().toString() + '분';
     $('.weekday').text(bToday? '오.늘.' : weekdayname[data.data.weekday]);
     $('.quizinfo').text(qinfo);
+}
+
+function onUpdateUser(data) {
+    if( data.op == 'add') {
+        chatValueObj.usersMap.put(data.nick, 1);
+    }
+    else {
+        chatValueObj.usersMap.remove(data.nick);
+    }
+
+    var html = '';
+    var keys = chatValueObj.usersMap.keys();
+    for( var i = 0 ; i < keys.length ; ++i ) {
+        html += '<li>'+ keys[i] + '</li>';
+    }
+    $('#conn-users-list').html(html);
+}
+
+function onUpdateUsers(data) {
+    console.log(data);
+    for( var i = 0 ; i < data.list.length ; ++i) {
+        chatValueObj.usersMap.put(data.list[i], 1);
+    }
+
+    var html = '';
+    var keys = chatValueObj.usersMap.keys();
+    for( var i = 0 ; i < keys.length ; ++i ) {
+        html += '<li>'+ keys[i] + '</li>';
+    }
+
+    $('#conn-users-list').html(html);
 }
 
 function onInputMsgKeyPress(e) {
@@ -501,7 +533,6 @@ function setNickName( nick ) {
 function setSocketListener() {
     socket.on('vote_data', onProcessVoteData);
     socket.on('myid', function(data) {
-        console.log(data);
         chatValueObj.sockid = data.socket;
         isLogin = data.isLogined;
         setVisible($('#btn-admin'), data.auth >= 50);
@@ -572,6 +603,7 @@ function onSearchRetRank( datalist, hash ) {
 function setBtnListener() {
     $('wnd[role="settings"]').css('display', 'none');
     $('#btn-settings').click(onBtnSettings);
+    $('#btn-users').click(onBtnUsers);
     $('#btn-help').click(onBtnHelp);
     $('#btn-admin').click(onBtnAdmin);
 
@@ -819,6 +851,31 @@ function onBtnSettings(e) {
     })
 
     settingsWnd.animate({
+        left: "+=300"
+    }, 300, function() {
+        // Animation complete.
+    });
+}
+
+function onBtnUsers(e) {
+    e.stopPropagation();
+    var usersWnd = $('wnd[role="users"]');
+    usersWnd.css('display','inline-block');
+
+    usersWnd.click(function(e) {
+        e.stopPropagation();
+    })
+
+    $(window).click(function() {
+        usersWnd.animate({
+            left: "-=300"
+        }, 300, function() {
+            // Animation complete.
+            $(window).unbind('click');
+        });
+    })
+
+    usersWnd.animate({
         left: "+=300"
     }, 300, function() {
         // Animation complete.
