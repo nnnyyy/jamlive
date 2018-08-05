@@ -10,6 +10,8 @@ var quizAnalysis = require('./quizAnalysis');
 
 var chatMan = require('./modules/chatMan');
 
+var config = require('../config');
+
 var VOTEPERTIME = 1000;
 var BANTIME = 4 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
@@ -107,12 +109,16 @@ ServerMan.prototype.register = function(socket) {
 
     client.nick = nick;
 
-    /*
-    if( this.socketmap.count() > 500 && ( !client.isLogined() || socket.handshake.session.auth <= 0 ) ) {
-        socket.emit('reconn-server', {logined: client.isLogined(), url: 'http://databucket.duckdns.org:5647/new'});
-        return;
+    if( config.mode == 'auth' ) {
+        if ( !client.isLogined() ) {
+            socket.emit('reconn-server', {logined: client.isLogined()});
+        }
+        else {
+            if( client.auth < 3 && servman.socketmap.count() >= 300 ) {
+                socket.emit('reconn-server', {logined: client.isLogined(), url: 'jamlive.net'});
+            }
+        }
     }
-    */
 
     socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });

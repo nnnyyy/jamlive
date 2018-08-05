@@ -29,6 +29,10 @@ process.argv.forEach(function(val, idx, arr) {
     config.serv_name = val;
   }
 
+  if( before =='-mode') {
+    config.mode = val;
+  }
+
   before = val;
 })
 

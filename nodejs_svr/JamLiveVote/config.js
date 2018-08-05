@@ -3,6 +3,7 @@
  */
 var JLVConfig = function() {
     this.serv_name = "채널1";
+    this.mode = '';
 }
 
 var config = new JLVConfig();
