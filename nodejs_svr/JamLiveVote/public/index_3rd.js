@@ -124,7 +124,7 @@ function init() {
     setVisible($('#ads-area-2'), true);
     setVisible($('.quiz_wnd') , false);
     setVisible($('#btn-admin'), false);
-    setVisible($('.popup_wnd'), true);
+    setVisible($('.popup_wnd'), false);
     closeUserMenu();
     $('#search-ret-rank-list').empty();
 

@@ -166,7 +166,7 @@ ServerMan.prototype.addSocket = function(socket) {
         this.socketmap.set(socket.id, client);
 
         if( client.isLogined() ) {
-            chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 입장' );
+            //chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 입장' );
         }
     }catch(e) {
         console.log(`addsocket Error - ${e}`);
@@ -189,7 +189,7 @@ ServerMan.prototype.removeSocket = function(socketid) {
         this.socketmap.delete(socketid);
 
         if( client.isLogined() ) {
-            chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 퇴장' );
+            //chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 퇴장' );
         }
     }
     catch(e) {
