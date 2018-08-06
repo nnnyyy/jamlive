@@ -330,6 +330,16 @@ function onNextQuiz(data) {
     $('.quizinfo').text(qinfo);
 }
 
+function updateUserList() {
+    var html = '';
+    var keys = chatValueObj.usersMap.keys();
+    keys.sort();
+    for( var i = 0 ; i < keys.length ; ++i ) {
+        html += '<li class="btn-user-info" nick="'+ keys[i] +'" >'+ keys[i] + '</li>';
+    }
+    $('#conn-users-list').html(html);
+}
+
 function onUpdateUser(data) {
     if( data.op == 'add') {
         chatValueObj.usersMap.put(data.nick, 1);
@@ -338,12 +348,7 @@ function onUpdateUser(data) {
         chatValueObj.usersMap.remove(data.nick);
     }
 
-    var html = '';
-    var keys = chatValueObj.usersMap.keys();
-    for( var i = 0 ; i < keys.length ; ++i ) {
-        html += '<li>'+ keys[i] + '</li>';
-    }
-    $('#conn-users-list').html(html);
+    updateUserList();
 }
 
 function onUpdateUsers(data) {
@@ -352,13 +357,7 @@ function onUpdateUsers(data) {
         chatValueObj.usersMap.put(data.list[i], 1);
     }
 
-    var html = '';
-    var keys = chatValueObj.usersMap.keys();
-    for( var i = 0 ; i < keys.length ; ++i ) {
-        html += '<li>'+ keys[i] + '</li>';
-    }
-
-    $('#conn-users-list').html(html);
+    updateUserList();
 }
 
 function onInputMsgKeyPress(e) {
@@ -691,6 +690,16 @@ function setBtnListener() {
         $(this).css('background-color', 'white');
         e.preventDefault();
     });
+
+    $(document).on('mouseover', '.btn-user-info', function(e) {
+        $(this).css('background-color', 'yellow');
+        e.preventDefault();
+    })
+
+    $(document).on('mouseout', '.btn-user-info', function(e) {
+        $(this).css('background-color', 'white');
+        e.preventDefault();
+    })
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         searchWebRoot(socket, $(this).text(), false);

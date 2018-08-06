@@ -12,7 +12,8 @@ div.admin-nick {
   color: #510808; }
 
 * {
-  box-sizing: border-box; }
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box; }
 
 html {
   height: 100%;
@@ -150,13 +151,16 @@ wnd[role="users"] {
   background-color: #ffffff;
   color: #1b3440;
   z-index: 2;
-  box-shadow: 5px 0 0 0 #1b3440;
+  -webkit-box-shadow: 5px 0 0 0 #1b3440;
+          box-shadow: 5px 0 0 0 #1b3440;
   text-align: center;
   overflow-y: auto; }
   wnd[role="users"] ul {
     list-style: none;
     margin: 0;
     padding: 0; }
+    wnd[role="users"] ul li {
+      cursor: pointer; }
 
 wnd[role="settings"] {
   position: fixed;
@@ -167,7 +171,8 @@ wnd[role="settings"] {
   background-color: #ffffff;
   color: #1b3440;
   z-index: 2;
-  box-shadow: 5px 0 0 0 #1b3440;
+  -webkit-box-shadow: 5px 0 0 0 #1b3440;
+          box-shadow: 5px 0 0 0 #1b3440;
   text-align: center;
   overflow-y: auto; }
   wnd[role="settings"] div[type="title"] {
@@ -219,7 +224,8 @@ wnd[role="help"] {
   background-color: #ffffff;
   color: #1b3440;
   z-index: 2;
-  box-shadow: 5px 0 0 0 #1b3440;
+  -webkit-box-shadow: 5px 0 0 0 #1b3440;
+          box-shadow: 5px 0 0 0 #1b3440;
   text-align: center;
   overflow-y: auto; }
   wnd[role="help"] div[type="title"] {
@@ -252,7 +258,8 @@ wnd[role="analysis"] {
   background-color: #ffffff;
   color: #1b3440;
   z-index: 3;
-  box-shadow: 5px 0 0 0 #1b3440;
+  -webkit-box-shadow: 5px 0 0 0 #1b3440;
+          box-shadow: 5px 0 0 0 #1b3440;
   text-align: center;
   overflow-y: auto; }
   wnd[role="analysis"] div[type="title"] {
@@ -489,7 +496,8 @@ article {
         overflow-y: auto;
         margin: 8px auto;
         border-radius: 5px;
-        box-shadow: -4px 4px 0 0 black;
+        -webkit-box-shadow: -4px 4px 0 0 black;
+                box-shadow: -4px 4px 0 0 black;
         border: 2px solid gray;
         padding: 10px;
         width: calc(100% - 8px - 8px);
@@ -649,16 +657,10 @@ notice-nick {
 
 .opacity {
   -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out; }
 
 .non_opacity {
   -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -ms-transition: none !important;
-  -o-transition: none !important;
   transition: none !important; }
 
 /*# sourceMappingURL=style3rd.css.map */
