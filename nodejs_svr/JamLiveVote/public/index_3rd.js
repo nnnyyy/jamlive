@@ -141,9 +141,10 @@ function registerKeyEvent( socket ) {
     $('.ip-msg').keyup(onInputMsgKeyUp);
 }
 
-function openUserMenu( name, sockid ) {
+function openUserMenu( name, sockid, nick ) {
     var user_menu = $('.user-menu');
     user_menu.attr('sockid', sockid);
+    user_menu.attr('nick', nick);
     user_menu.find('name').text(name);
     setVisible(user_menu, true);
 }
@@ -335,7 +336,7 @@ function updateUserList() {
     var keys = chatValueObj.usersMap.keys();
     keys.sort();
     for( var i = 0 ; i < keys.length ; ++i ) {
-        html += '<li class="btn-user-info" nick="'+ keys[i] +'" >'+ keys[i] + '</li>';
+        html += '<li><div class="btn-user-info" nick="'+ keys[i] +'" >'+ keys[i] + '</div></li>';
     }
     $('#conn-users-list').html(html);
 }
@@ -352,7 +353,6 @@ function onUpdateUser(data) {
 }
 
 function onUpdateUsers(data) {
-    console.log(data);
     for( var i = 0 ; i < data.list.length ; ++i) {
         chatValueObj.usersMap.put(data.list[i], 1);
     }
@@ -645,19 +645,19 @@ function setBtnListener() {
     $('#um-ban').click(function(e) {
         var user_menu = $('.user-menu');
         closeUserMenu();
-        socket.emit('ban', {sockid: user_menu.attr('sockid')});
+        socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
     });
 
     $('#um-permanentban').click(function(e) {
         var user_menu = $('.user-menu');
         closeUserMenu();
-        socket.emit('permanentban', {sockid: user_menu.attr('sockid')});
+        socket.emit('permanentban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
     });
 
     $('#um-like').click(function(e) {
         var user_menu = $('.user-menu');
         closeUserMenu();
-        socket.emit('like', {sockid: user_menu.attr('sockid')});
+        socket.emit('like', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
     })
 
     $('#um-cancel').click(function(e) { closeUserMenu() } );
@@ -671,7 +671,7 @@ function setBtnListener() {
     $('.btn-memo-cancel').click(onBtnMemoCancel);
 
     $(document).on('click', '.chat_item div[type="nick"]', function (e) {
-        openUserMenu($(this).text(), $(this).attr('sockid') );
+        openUserMenu($(this).text(), $(this).attr('sockid'), '' );
         /*
         var name = $(this).text();
         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
@@ -700,6 +700,11 @@ function setBtnListener() {
         $(this).css('background-color', 'white');
         e.preventDefault();
     })
+
+    $('#conn-users-list').on('click', '.btn-user-info', function (e) {
+        openUserMenu($(this).text(), '', $(this).attr('nick') );
+        e.preventDefault();
+    });
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         searchWebRoot(socket, $(this).text(), false);

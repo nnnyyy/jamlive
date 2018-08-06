@@ -46,6 +46,14 @@ class CConnectedlistMan {
     getUserNickList() {
         return this.mList.keys();
     }
+
+    getUser(nick) {
+        try {
+            return this.mList.get( nick );
+        }catch( e ) {
+            return null;
+        }
+    }
 }
 
 

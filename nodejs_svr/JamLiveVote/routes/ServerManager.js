@@ -461,7 +461,7 @@ function onSockBan(data) {
     try {
         var client = servman.getClient(this.id);
         if( !client ) return;
-        var toBanClient = servman.getClient(data.sockid);
+        var toBanClient = data.sockid != '' ? servman.getClient(data.sockid) :  connListMan.getUser(data.nick);
         if( !toBanClient ) return;
         var socket = client.socket;
         var msg = '';
@@ -510,7 +510,7 @@ function onSockPermanentBan(data) {
     try {
         var client = servman.getClient(this.id);
         if( !client ) return;
-        var toBanClient = servman.getClient(data.sockid);
+        var toBanClient = data.sockid != '' ? servman.getClient(data.sockid) :  connListMan.getUser(data.nick);
         if( !toBanClient ) return;
         var socket = client.socket;
         if( !client.isAdmin() ) return;
@@ -572,7 +572,7 @@ function onSockLike(data) {
     try {
         var client = servman.getClient(this.id);
         if( !client ) return;
-        var toLikeClient = servman.getClient(data.sockid);
+        var toLikeClient = data.sockid != '' ? servman.getClient(data.sockid) :  connListMan.getUser(data.nick);
         if( !toLikeClient ) return;
         var socket = client.socket;
         var logined = socket.handshake.session.username ? true : false;
