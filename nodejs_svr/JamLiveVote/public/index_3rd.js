@@ -133,6 +133,9 @@ function init() {
 
     chatValueObj.setUpdateChat();
     setEventListener();
+
+    var tCur = new Date();
+    localStorage.setItem('refreshtime', tCur.toString());
 }
 
 function registerKeyEvent( socket ) {
@@ -475,6 +478,26 @@ function onGlobalKeyDown(e) {
     if( $('.ip-msg').is(':focus') ) return;
     if( $('.memo-area').is(':focus')) return;
     if( $('#ip-search-user-name').is(':focus') ) return;
+
+    // 새로고침
+    var tCur = new Date();
+    var tRefreshed = new Date(localStorage.getItem('refreshtime'));
+    var bCanRefresh = ( tCur - tRefreshed >= 3000 );
+
+    console.log( tCur );
+    console.log( tRefreshed );
+
+    if (e.keyCode == 116 && !bCanRefresh) {
+        e.keyCode = 2;
+        return false;
+    } else if ( !bCanRefresh &&
+        (e.ctrlKey
+        && (e.keyCode == 78 || e.keyCode == 82) )) {
+        return false;
+    }
+    else {
+        localStorage.setItem('refreshtime', tCur.toString());
+    }
 
     if( (code >= 97 && code <= 99) ) {
         var curTime = new Date();
