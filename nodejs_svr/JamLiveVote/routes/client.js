@@ -37,6 +37,10 @@ Client.prototype.isSearchable = function() {
     return (cur - this.tLastClick) > 10 * 1000;
 }
 
+Client.prototype.getUserId = function() {
+    return this.socket.handshake.session.username;
+}
+
 Client.prototype.isAdmin = function() {
     return this.auth >= 50;
 }

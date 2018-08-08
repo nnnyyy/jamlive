@@ -228,3 +228,22 @@ exports.searchUser = function( nick, cb ) {
         console.log(`[db] search user error - ${err}`);
     }
 }
+
+
+exports.addItem = function( id, itemid, cb ) {
+    try {
+        dbpool.query("CALL addItem( ?, ?, @ret ); select @ret;", [id, Number(itemid)], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            var ret = rows[rows.length - 1][0]['@ret'];
+            cb({ret: ret });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - addItem');
+        cb({ret: -1});
+    }
+}

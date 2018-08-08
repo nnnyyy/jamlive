@@ -608,9 +608,6 @@ function onSockSearch(data) {
         if( !client ) return;
         var socket = client.socket;
         var logined = socket.handshake.session.username ? true : false;
-        var auth_state = logined ? socket.handshake.session.auth : -1;
-
-        var isBaned = false;
 
         if( isLiveQuizTime() ) {
             client.activePoint += 1;
@@ -619,7 +616,7 @@ function onSockSearch(data) {
         if( data.isBroadcast ) {
             var nick = client.nick;
             servman.addSearchQuery( data.msg, true );
-            chatMan.Broadcast(servman.io, client, 'search', `[검색] ${data.msg}`, isBaned);
+            //chatMan.Broadcast(servman.io, client, 'search', `[검색] ${data.msg}`, isBaned);
         }
         else {
             servman.addSearchQuery( data.msg, false );

@@ -242,7 +242,7 @@ function onChat(data) {
         addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else {
-
+        if( isNotShowChat() ) return;
         if( data.admin ) {
             addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + '</div>', false, data.auth, data.ip, data.sockid);
         }
@@ -668,6 +668,11 @@ function setBtnListener() {
     $('#um-ban').click(function(e) {
         var user_menu = $('.user-menu');
         closeUserMenu();
+
+        var name = user_menu.attr('nick');
+        if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
+            socket.emit('ban', {sockid: $(this).attr('sockid')});
+        }
         socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
     });
 
@@ -1560,6 +1565,28 @@ function setVoteMsgVisibleListener() {
     });
 }
 
+function setShowChatOptions() {
+    var checked = localStorage.getItem('cb_notshowchat') || 0;
+    $('#cb_notshowchat').attr('checked', checked == 1 ? true : false );
+
+    $('#cb_notshowchat').change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb_notshowchat', 1);
+            console.log('setShowChatOptions - ' + 1 );
+        }
+        else {
+            localStorage.setItem('cb_notshowchat', 0);
+            console.log('setShowChatOptions - ' + 0 );
+        }
+    });
+}
+
+function isNotShowChat() {
+    var checked = localStorage.getItem('cb_notshowchat') || 0;
+    console.log('isNotShowChat - ' + checked );
+    return checked == 1 ? true : false;
+}
+
 function setSearchTopFiveListener() {
     var checked = localStorage.getItem('cb_searchTopFive') || 0;
     $('#cb_top_five').attr('checked', checked == 1 ? true : false );
@@ -1568,7 +1595,6 @@ function setSearchTopFiveListener() {
         if( $(this).is(':checked') ) {
             onSearchRetRank([], '');
             localStorage.setItem('cb_searchTopFive', 1);
-
         }
         else {
             onSearchRetRank([], '');
