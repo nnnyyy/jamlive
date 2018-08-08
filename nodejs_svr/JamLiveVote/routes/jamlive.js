@@ -274,8 +274,8 @@ exports.searchex = function(req, res, next) {
         api_url += '&sort=sim';
     }
 
-    var clientids = ['VZ9vuXcJh36t7IuDAeCW','zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl', 'NhTno6hxnZpTGZUPffvI', 'x8DQ2xYWaeQqVGDZzdL4'];
-    var secrets = ['cP_ecRsKYR','kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G', 'foM4QTYU9U', 'vPCM314sAS'];
+    var clientids = ['4NRIgHcJlNKT6R3gTvyv', 'ooCDH_d8imisrpnUcp1d', 'VZ9vuXcJh36t7IuDAeCW','zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl', 'NhTno6hxnZpTGZUPffvI', 'x8DQ2xYWaeQqVGDZzdL4'];
+    var secrets = ['P4wN5u9RXR', 'TfQpAeDrwO', 'cP_ecRsKYR','kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G', 'foM4QTYU9U', 'vPCM314sAS'];
     var modcnt = clientids.length;
 
 
