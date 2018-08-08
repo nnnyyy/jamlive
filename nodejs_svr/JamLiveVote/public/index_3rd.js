@@ -55,6 +55,10 @@ var ChatValues = function() {
 
     this.wndSearchUser = $('.wnd-search-user');
     this.usersMap = new Map();
+
+    this.tLastUserUpdate = 0;
+
+    this.connUserList = $('#conn-users-list');
 }
 
 ChatValues.prototype.setUpdateChat = function() {
@@ -335,13 +339,19 @@ function onNextQuiz(data) {
 }
 
 function updateUserList() {
+    var tCur = new Date();
+    if( tCur - chatValueObj.tLastUserUpdate < 5000 ) {
+        return;
+    }
+    chatValueObj.tLastUserUpdate = tCur;
+
     var html = '';
     var keys = chatValueObj.usersMap.keys();
     keys.sort();
     for( var i = 0 ; i < keys.length ; ++i ) {
         html += '<li><div class="btn-user-info" nick="'+ keys[i] +'" >'+ keys[i] + '</div></li>';
     }
-    $('#conn-users-list').html(html);
+    chatValueObj.connUserList.html(html);
 }
 
 function onUpdateUser(data) {
@@ -671,9 +681,8 @@ function setBtnListener() {
 
         var name = user_menu.attr('nick');
         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
-            socket.emit('ban', {sockid: $(this).attr('sockid')});
+            socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
         }
-        socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
     });
 
     $('#um-permanentban').click(function(e) {
