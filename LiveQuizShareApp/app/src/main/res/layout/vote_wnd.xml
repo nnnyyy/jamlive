@@ -14,11 +14,20 @@
             android:id="@+id/ll_chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             >
+            <TextView
+                android:id="@+id/tv_conn_user_cnt"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:text="공유기 접속인원 : 0 명"
+                android:textColor="#ff0000"
+                />
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 />
         </LinearLayout>
     </LinearLayout>

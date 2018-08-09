@@ -52,6 +52,8 @@ public class VoteServiceWnd extends Service {
             super.handleMessage(msg);
 
             BarChart chart = mView.findViewById(R.id.chart);
+            TextView tvConn = mView.findViewById(R.id.tv_conn_user_cnt);
+            tvConn.setText("공유기 접속인원 : "+ msg.arg1 + " 명");
             chart.invalidate();
         }
     };
@@ -99,8 +101,10 @@ public class VoteServiceWnd extends Service {
                     try {
                         JSONObject jVoteData = receivedData.getJSONObject("vote_data");
                         JSONArray aVoteCnt = jVoteData.getJSONArray("cnt");
+                        int nUserCnt = jVoteData.getInt("users");
 
                         BarChart chart = mView.findViewById(R.id.chart);
+                        TextView tvConn = mView.findViewById(R.id.tv_conn_user_cnt);
                         XAxis xAxis = chart.getXAxis();
                         xAxis.setDrawLabels(true);
 
@@ -112,10 +116,11 @@ public class VoteServiceWnd extends Service {
                         BarDataSet dataSet = new BarDataSet(entries, "Numbers");
                         dataSet.setColors(new int[] { ColorTemplate.rgb("#DE5B49"), ColorTemplate.rgb("#3AA84B"), ColorTemplate.rgb("#F0CA4D")});
                         BarData barData = new BarData(dataSet);
-                        barData.setBarWidth(0.3f);
+                        barData.setBarWidth(0.2f);
                         chart.setData( barData );
 
                         Message msg= handler.obtainMessage();
+                        msg.arg1 = nUserCnt;
                         handler.sendMessage(msg);
 
                     } catch (JSONException e) {
@@ -158,6 +163,9 @@ public class VoteServiceWnd extends Service {
 
         chart.getAxisLeft().setGranularity(1.0f);
         chart.getAxisLeft().setGranularityEnabled(true);
+        chart.getAxisLeft().setEnabled(false);
+        chart.getAxisRight().setGranularity(1.0f);
+        chart.getAxisRight().setGranularityEnabled(true);
     }
 
     protected void InitBtns() {
