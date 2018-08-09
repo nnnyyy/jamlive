@@ -15,6 +15,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -71,22 +73,23 @@ public class VoteServiceWnd extends Service {
         WindowManager.LayoutParams params;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     PixelFormat.TRANSLUCENT);
         } else {
             params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     PixelFormat.TRANSLUCENT);
         }
 
         try {
             InitChart();
+            InitBtns();
 
             mSocket = IO.socket("http://databucket.duckdns.org:4650");
             mSocket.on("vote_data", new Emitter.Listener() {
@@ -146,6 +149,7 @@ public class VoteServiceWnd extends Service {
 
     protected void InitChart() {
         BarChart chart = mView.findViewById(R.id.chart);
+        chart.setTouchEnabled(false);
 
         chart.getXAxis().setGranularity(1.0f);
         chart.getXAxis().setGranularityEnabled(true);
@@ -154,5 +158,9 @@ public class VoteServiceWnd extends Service {
 
         chart.getAxisLeft().setGranularity(1.0f);
         chart.getAxisLeft().setGranularityEnabled(true);
+    }
+
+    protected void InitBtns() {
+
     }
 }
