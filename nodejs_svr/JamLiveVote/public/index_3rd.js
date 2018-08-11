@@ -321,6 +321,10 @@ function onEmoticon(_data) {
         case "yeee":
             addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/yeee.png"/>', false, _data.auth);
             break;
+
+        case "hi":
+            addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hi.png"/>', false, _data.auth);
+            break;
     }
 }
 
@@ -401,6 +405,10 @@ function onInputMsgKeyPress(e) {
         else if( msg == "예~") {
             mode = "emoticon";
             emoticon = "yeee";
+        }
+        else if( msg == "ㅎㅇ") {
+            mode = "emoticon";
+            emoticon = "hi";
         }
 
         if( msg == '@memo') {
