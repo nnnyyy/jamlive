@@ -54,9 +54,19 @@ body {
 }
 #area-top #area-top-right {
   float: right;
-  width: 450px;
+  width: 300px;
   height: 65px;
+  line-height: 65px;
   margin-right: 32px;
+}
+#area-top #area-top-right .area-top-btn {
+  font-size: 18px;
+  float: right;
+  margin: 0 15px 0 0;
+  cursor: pointer;
+}
+#area-top #area-top-right #btn-login {
+  color: #0086B3;
 }
 
 #area-article {
@@ -227,6 +237,7 @@ body {
   margin: 13px 0 0 0;
   float: left;
   width: 300px;
+  height: 250px;
   border: 1px solid #e5e5e5;
 }
 #area-article #article-right {
@@ -310,6 +321,7 @@ body {
 }
 #area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .nick-area .nick {
   float: left;
+  padding-left: 4px;
 }
 #area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .nick-area .ip {
   float: left;
