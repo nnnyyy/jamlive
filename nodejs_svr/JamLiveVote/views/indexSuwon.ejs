@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122840650-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-122840650-1');
+    </script>
+
+    <title>라이브 퀴즈 정답 공유기 v0.5</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="/basic.js"></script>
+    <script src="/myChart.js"></script>
+    <link rel='stylesheet' href='/stylesheets/styleSuwon.css' />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <link rel="stylesheet" href="//cdn.rawgit.com/hiun/NanumSquare/master/nanumsquare.css">
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<body>
+<div id="root">
+    <div id="area-top">
+        <div id="area-top-left">
+            <div id="logo">
+                <img src="/images/logo.png"/>
+            </div>
+        </div>
+        <div id="area-top-center">
+            <div id="quizinfo-title">다음 라이브 퀴즈쇼</div>
+            <div id="quizinfo-main">오늘 잼라이브 20시 00분</div>
+        </div>
+        <div id="area-top-right">
+        </div>
+    </div>
+    <div id="area-article">
+        <div id="article-left">
+            <div id="search-area-left">
+            </div>
+            <div id="notice">
+                <div type="title">사이트 주의사항 ( 필독 )</div>
+                <div type="msg">정확하게 아는 것만 투표 해 주세요 ( 헷갈리면 투표 X )</div>
+                <div type="msg">욕설은 무조건 ip 영구밴 대상이 됩니다</div>
+                <div type="msg">투표 실수에 대한 과도한 비난도 영구밴의 대상입니다</div>
+                <div type="msg">기타 비매너라고 판단되는 행위도 영구밴 대상입니다</div>
+                <div type="msg"><u>ex)투표빨리빨리 안해? 이런 것도 못푸냐 등</u></div>
+            </div>
+            <div id="hint">
+                <div type="top-menu">
+                    <hint-provider>잼라이브</hint-provider>님의 힌트 제공
+                    <div id="btn-modify-hint">
+                        수정하기
+                    </div>
+                </div>
+                <div id="hint-article-area">
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                    <p>힌트를 제공제공제공 제공제공제공</p>
+                </div>
+                <div id="hint-modify-area">
+                    <textarea class="memo-area"></textarea>
+                </div>
+            </div>
+        </div>
+        <div id="article-center">
+            <div id="search-area-center">
+            </div>
+            <div id="random-quiz">
+                <div type="top-menu">
+                    <quiz-provider>잼라이브</quiz-provider>님이 내주신 퀴즈
+                    <div id="btn-toggle-quiz">
+                        퀴즈 끄기
+                    </div>
+                </div>
+            </div>
+            <div id="ads-banner-center">
+                <ins class="kakao_ad_area" style="display:none;"
+                     data-ad-unit    = "DAN-1iyeys41mnepk"
+                     data-ad-width   = "320"
+                     data-ad-height  = "100"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+            </div>
+            <div id="ads-img1-center">
+                <ins class="kakao_ad_area" style="display:none;"
+                     data-ad-unit    = "DAN-tofpljkyvq06"
+                     data-ad-width   = "300"
+                     data-ad-height  = "250"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+            </div>
+        </div>
+        <div id="article-right">
+            <div id="vote-data">
+                <div type="top-menu">
+                    <vtitle>투표 결과</vtitle>
+                </div>
+                <div class="ct-chart">
+                </div>
+            </div>
+            <div id="ads-banner-right">
+                <ins class="kakao_ad_area" style="display:none;width:100%"
+                     data-ad-unit    = "DAN-t87e91n4i053"
+                     data-ad-width   = "320"
+                     data-ad-height  = "50"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+<wnd role="settings">
+    <div type="title"> - 투표 - </div>
+    <div type="line"></div>
+    <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
+    <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>고정닉 투표 결과만 보기(로그인시)</div>
+    <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
+    <div class="min_vote_slider"></div>
+    <div type="line"></div>
+    <div type="title"> - 검색 - </div>
+    <div type="line"></div>
+    <div type="msg">검색당 결과 수 ( <ret_cnt>0</ret_cnt>표 이하 ) </div>
+    <div class="ret_cnt_slider"></div>
+    <div type="checkbox"><input type="checkbox" id="cb_s0"/>네이버 - 백과사전
+        <input type="radio" name="radio_s0" value="1" >왼쪽
+        <input type="radio" name="radio_s0" value="2" checked>오른쪽</div>
+    <div type="checkbox"><input type="checkbox" id="cb_s1"/>네이버 - 지식인
+        <input type="radio" name="radio_s1" value="1" checked>왼쪽
+        <input type="radio" name="radio_s1" value="2">오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_s2"/>네이버 - 블로그
+        <input type="radio" name="radio_s2" value="1" checked>왼쪽
+        <input type="radio" name="radio_s2" value="2">오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_s3"/>네이버 - 뉴스
+        <input type="radio" name="radio_s3" value="1" checked>왼쪽
+        <input type="radio" name="radio_s3" value="2">오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_s4"/>네이버 - 이미지
+        <input type="radio" name="radio_s4" value="1" checked>왼쪽
+        <input type="radio" name="radio_s4" value="2">오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_s5"/>구글(다음으로 대체)
+        <input type="radio" name="radio_s5" value="1" >왼쪽
+        <input type="radio" name="radio_s5" value="2"checked>오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_s6"/>사이트 기출DB
+        <input type="radio" name="radio_s6" value="1" >왼쪽
+        <input type="radio" name="radio_s6" value="2"checked>오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_s7"/>어학사전
+        <input type="radio" name="radio_s7" value="1" >왼쪽
+        <input type="radio" name="radio_s7" value="2"checked>오른쪽</div>
+    </div>
+    <div type="checkbox"><input type="checkbox" id="cb_top_five"/>검색 top 5 보기</div>
+    <div type="line"></div>
+    <div type="title"> - 채팅 - </div>
+    <div type="line"></div>
+    <div type="checkbox"><input type="checkbox" id="cb_auto_scroll"/>강제 자동 스크롤 on/off</div>
+    <div type="checkbox"><input type="checkbox" id="cb_votemsg"/>투표 채팅 가리기</div>
+    <div type="checkbox"><input type="checkbox" id="cb_notshowchat"/>일반 채팅 안받기(성능)</div>
+    <div type="checkbox"><input type="checkbox" id="cb-notice-disable"/>알림 안받기</div>
+</wnd>
+-->
+</body>
+<script type="text/javascript" src="/indexSuwon.js"></script>
+<script>
+    $(document).ready(function() {
+        if( isMobile() ) {
+            window.location.href = 'http://jamlive.net';
+            return;
+        }
+
+        var socket = io();
+        init( socket );
+    });
+</script>

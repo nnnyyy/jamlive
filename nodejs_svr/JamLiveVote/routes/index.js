@@ -15,6 +15,11 @@ router.get('/', function(req, res, next) {
 router.get('/new', function(req,res, next) {
   res.render('index_3rd', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick, auth: req.session.auth});
 })
+
+router.get('/test', function(req,res, next) {
+  res.render('indexSuwon', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick, auth: req.session.auth});
+})
+
 router.get('/ping', function(req, res, next) {
   res.send('pong');
 });
