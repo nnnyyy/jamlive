@@ -173,6 +173,14 @@ GlobalValue.prototype.onEmoticon = function( _data ) {
         case "ddk":
             global.addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/ddoddoke.png"/>', false, _data.auth);
             break;
+
+        case "yeee":
+            addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/yeee.png"/>', false, _data.auth);
+            break;
+
+        case "hi":
+            addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/hi.png"/>', false, _data.auth);
+            break;
     }
 }
 
