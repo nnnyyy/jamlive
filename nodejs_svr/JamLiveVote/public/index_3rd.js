@@ -411,10 +411,6 @@ function onInputMsgKeyPress(e) {
             emoticon = "hi";
         }
 
-        if( msg == '@memo') {
-            return;
-        }
-
         if( msg[0] == '/' ) {
             $(this).val('');
 
@@ -1600,7 +1596,6 @@ function setShowChatOptions() {
 
 function isNotShowChat() {
     var checked = localStorage.getItem('cb_notshowchat') || 0;
-    console.log('isNotShowChat - ' + checked );
     return checked == 1 ? true : false;
 }
 

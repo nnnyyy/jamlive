@@ -77,10 +77,8 @@ $top-bottom-margin: 5px;
   }
 
   #area-top-right {
-    $width: 300px;
 
     float: right;
-    width: $width;
     height: $height;
     line-height: $height;
     margin-right: 32px;
@@ -90,6 +88,13 @@ $top-bottom-margin: 5px;
       float: right;
       margin: 0 15px 0 0;
       cursor: pointer;
+    }
+
+    .area-login-info {
+      font-size: 18px;
+      float: right;
+      width: 120px;
+      margin: 0 15px 0 0;
     }
 
     #btn-login {
@@ -174,6 +179,15 @@ $top-bottom-margin: 5px;
         }
 
         #btn-modify-hint {
+          float: right;
+          margin-right: 14px;
+          font-size: 16px;
+          height: $top-menu-height;
+          line-height: $top-menu-height;
+          cursor: pointer;
+        }
+
+        #btn-modify-hint-cancel {
           float: right;
           margin-right: 14px;
           font-size: 16px;
@@ -436,7 +450,7 @@ $top-bottom-margin: 5px;
         $ip-name-width: 140px;
         height: $chat-msg-height;
 
-        #ip-name {
+        #ip-nick {
           width: $ip-name-width;
           height: $chat-msg-height;
           margin: 0;
@@ -454,4 +468,37 @@ $top-bottom-margin: 5px;
       }
     }
   }
+}
+
+.admin_msg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40vw;
+  min-height: 60px;
+  padding: 15px;
+  margin-left: -20vw;
+  background-color: black;
+  color: white;
+  text-align: center;
+  line-height: 60px;
+  font-size: 17px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.opacity {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.non_opacity {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
 }

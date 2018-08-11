@@ -66,6 +66,7 @@ var ServerMan = function() {
     this.countslistForGuest = [];
     this.memo = "";
     this.memo_provider = '';
+    this.bMemoModifying = false;
     this.nextQuizShowdata = {};
 }
 
@@ -81,6 +82,10 @@ ServerMan.prototype.register = function(socket) {
         var client = servman.getClient(this.id);
         servman.removeSocket(this.id);
         if( client && client.isLogined() ) {
+            if( servman.modifyingUser == client.nick ) {
+                servman.modifyingUser = '';
+                servman.bMemoModifying = false;
+            }
             //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
             dbhelper.updateActivePoint( this.handshake.session.username, client.activePoint, function(ret) {
                 //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
@@ -135,17 +140,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('permanentban', onSockPermanentBan);
     socket.on('like', onSockLike);
     socket.on('analysis', onAnalysis);
-    socket.on('memo', function(data) {
-        var client = servman.getClient(this.id);
-        if( !client ) return;
-        if( client.auth < 3 ) {
-            sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
-            return;
-        }
-        servman.memo = data.memo;
-        servman.memo_provider = client.nick;
-        servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
-    })
+    socket.on('memo', onMemo);
 }
 
 
@@ -809,6 +804,49 @@ function onAnalysis(data) {
             socket.emit('analysis', {step: data.step, ret: ret, list: quizAnalysis.result});
             break;
         }
+    }
+}
+
+function onMemo(data) {
+    try {
+        var client = servman.getClient(this.id);
+        if( !client ) return;
+
+        if( client.auth < 3 ) {
+            sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
+            return;
+        }
+
+        if( data.mode == 'isUsable' ) {
+            var bAble = false;
+            if( servman.bMemoModifying ) {
+                sendServerMsg(client.socket, `${servman.modifyingUser}님이 수정 중입니다.`);
+            }
+            else {
+                bAble = true;
+                servman.modifyingUser = client.nick;
+                    servman.bMemoModifying = true;
+            }
+            if(client.socket)
+                client.socket.emit('memo', {mode: data.mode, isAble: bAble, modifier: servman.modifyingUser });
+            return;
+        }
+        else if( data.mode == 'cancel' ) {
+            servman.modifyingUser = '';
+            servman.bMemoModifying = false;
+            if(client.socket)
+                client.socket.emit('memo', {mode: data.mode });
+            return;
+        }
+
+        servman.bMemoModifying = false;
+        servman.modifyingUser = '';
+        servman.memo = data.memo;
+        servman.memo_provider = client.nick;
+        servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+    }
+    catch(e) {
+
     }
 }
 
