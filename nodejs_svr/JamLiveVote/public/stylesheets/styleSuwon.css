@@ -342,7 +342,7 @@ body {
 #area-article #article-center #ads-banner2-center {
   margin: 13px 0 0 0;
   width: 100%;
-  height: 100px;
+  height: 50px;
   overflow-y: hidden;
 }
 #area-article #article-center #ads-img1-center {
@@ -585,6 +585,39 @@ wnd[role="settings"] .ret_cnt_slider {
 wnd[role="settings"] .ret_cnt_slider .ui-slider-handle {
   width: 15px;
   height: 15px;
+}
+
+.user-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+  margin-top: -150px;
+  padding: 20px;
+  background-color: #1b3440;
+  color: #ffffff;
+  text-align: center;
+  font-size: 17px;
+  overflow: hidden;
+  border-radius: 10px;
+  z-index: 104;
+}
+.user-menu div[type="name"] {
+  height: 50px;
+}
+.user-menu div[type="menu"] {
+  text-align: center;
+}
+.user-menu div[type="menu"] div[type="btn"] {
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #ffffff;
+  color: #1b3440;
+  margin: 4px auto;
+  border-radius: 10px;
 }
 
 /*# sourceMappingURL=styleSuwon.css.map */

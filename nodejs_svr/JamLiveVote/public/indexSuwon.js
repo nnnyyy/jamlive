@@ -30,6 +30,8 @@ ConnectStateInfo.prototype.Disconnect = function() {
 
 function init( socket ) {
     G.socket = socket;
+    setVisible($('.user-menu'), false);
+
     searchObj.init();
     hintObj.init();
     chatObj.init();
@@ -587,10 +589,16 @@ function TopMenuObject() {
     this.btnLogin.click( onBtnLogin );
     this.btnLogout = $('#btn-logout');
     this.btnLogout.click( onBtnLogout );
+    this.btnSignup = $('#btn-signup');
+    this.btnSignup.click( onBtnSignup );
 }
 
 function onBtnLogin(e) {
     window.location.href = '/signin';
+}
+
+function onBtnSignup(e) {
+    window.location.href = '/signup';
 }
 
 function onBtnLogout(e) {
@@ -845,6 +853,52 @@ function setBtnEvent() {
     var settingsElem = $('wnd[role="settings"]');
     setVisible(settingsElem, false);
     $('#btn-settings').click(onBtnSettings);
+
+    $(document).on('click', '.nick-area .nick', function (e) {
+        e.stopPropagation();
+        openUserMenu($(this).text(), $(this).attr('sockid'), $(this).text().trim() );
+        /*
+         var name = $(this).text();
+         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
+         socket.emit('ban', {sockid: $(this).attr('sockid')});
+         }
+         */
+        e.preventDefault();
+    });
+
+    $('#um-ban').click(function(e) {
+        e.stopPropagation();
+        var user_menu = $('.user-menu');
+        closeUserMenu();
+
+        var name = user_menu.attr('nick');
+        if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
+            G.socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
+        }
+        e.preventDefault();
+    });
+
+    $('#um-permanentban').click(function(e) {
+        e.stopPropagation();
+        var user_menu = $('.user-menu');
+        closeUserMenu();
+        G.socket.emit('permanentban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
+        e.preventDefault();
+    });
+
+    $('#um-like').click(function(e) {
+        e.stopPropagation();
+        var user_menu = $('.user-menu');
+        closeUserMenu();
+        G.socket.emit('like', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
+        e.preventDefault();
+    });
+
+    $('#um-cancel').click(function(e) {
+        e.stopPropagation();
+        closeUserMenu()
+        e.preventDefault();
+    });
 }
 
 function onBtnSettings(e) {
@@ -915,6 +969,7 @@ function onServMsg(data) {
 function onMyID(data) {
     G.sockid = data.socket;
     G.isLogin = data.isLogined;
+    setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
     options.setShowMemberVoteOnly();
 }
@@ -1359,4 +1414,17 @@ function onEmoticon(_data) {
             chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hi.png"/>', false, _data.auth);
             break;
     }
+}
+
+function openUserMenu( name, sockid, nick ) {
+    var user_menu = $('.user-menu');
+    user_menu.attr('sockid', sockid);
+    user_menu.attr('nick', nick);
+    user_menu.find('name').text(name);
+    setVisible(user_menu, true);
+}
+
+function closeUserMenu() {
+    var user_menu = $('.user-menu');
+    setVisible(user_menu, false);
 }

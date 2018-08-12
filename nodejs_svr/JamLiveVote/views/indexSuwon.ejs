@@ -49,7 +49,7 @@
             <div class="area-top-btn" id="btn-help">도움말</div>
             <%
             if( !username ) {%>
-            <div class="area-top-btn" id="btn-sign-up">가입하기</div>
+            <div class="area-top-btn" id="btn-signup">가입하기</div>
             <div class="area-top-btn" id="btn-login">로그인</div>
             <%}else {%>
             <div class="area-top-btn" id="btn-logout">로그아웃</div>
@@ -239,6 +239,15 @@
 </wnd>
 
 <div class="admin_msg"></div>
+<div class="user-menu">
+    <div type="name"><name>왕야옹</name> 님을</div>
+    <div type="menu">
+        <div type="btn" id="um-ban">신고합니다</div>
+        <div type="btn" id="um-permanentban" class="admin-component">영구 밴합니다</div>
+        <div type="btn" id="um-like">칭찬합니다</div>
+        <div type="btn" id="um-cancel">다시 생각해볼게요</div>
+    </div>
+</div>
 </body>
 <script type="text/javascript" src="/indexSuwon.js"></script>
 <script>
