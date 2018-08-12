@@ -438,6 +438,7 @@ body {
   background-color: #ffffff;
 }
 #area-article #article-right #chat-wnd-root #chat ul.chat-ui {
+  height: 400px;
   height: calc( calc( 100vh - 13px - 65px - 5px - 160px - 13px - 50px - 13px) - 46px - 38px - 8px );
   list-style: none;
   overflow-y: auto;

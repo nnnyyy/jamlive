@@ -565,6 +565,7 @@ $top-bottom-margin: 5px;
         background-color: $color-main-back;
 
         ul.chat-ui {
+          height: $chat-root-height-ie;
           height: $height;
           list-style: none;
           overflow-y: auto;
