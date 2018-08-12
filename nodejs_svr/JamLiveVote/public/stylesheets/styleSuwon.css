@@ -473,6 +473,7 @@ body {
 }
 #area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .msg-area {
   float: left;
+  width: calc( 100% - 25px - 25px - 168px );
   width: calc( calc( calc( 100% - 25px - 25px ) - 168px ) + 25px + 25px );
   min-height: 25px;
   line-height: 23px;

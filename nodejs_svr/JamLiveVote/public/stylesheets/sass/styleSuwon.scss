@@ -553,6 +553,7 @@ $top-bottom-margin: 5px;
         $height: calc( #{$chat-root-height} - #{$top-menu-height} - #{$chat-msg-height} - 8px );
         $width: calc( 100% - #{$margin-left-right} - #{$margin-left-right} );
         $nick-area-width: 168px;
+        $msg-area-width-ie: calc( 100% - #{$margin-left-right} - #{$margin-left-right} - #{$nick-area-width} );
         $msg-area-width: calc( #{$width} - #{$nick-area-width} );
         $grade-image-wh: 18px;
         $line-height: 23px;
@@ -603,6 +604,7 @@ $top-bottom-margin: 5px;
 
             .msg-area {
               float: left;
+              width: $msg-area-width-ie;
               width: calc( #{$msg-area-width} + #{$margin-left-right} + #{$margin-left-right} );
               min-height: 25px;
               line-height: $line-height;
