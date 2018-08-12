@@ -523,8 +523,8 @@ function onSockPermanentBan(data) {
         dbhelper.updateBanUser(toBanClient.ip, ret => {
             sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
             toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
-            chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.nick}님을 영구밴 시켰습니다`, false);
-            console.log('permanent ban success');
+            chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.ip}을 영구밴 시켰습니다`, false);
+            console.log('permanent ban success - ip');
 
             dbhelper.getPermanentBanList(function(ret) {
                 if( ret.ret == 0 ) {
@@ -536,12 +536,12 @@ function onSockPermanentBan(data) {
                 }
             });
         });
-        if( toBanClient.isLogined() && toBanClient.socket.session.username ){
-            dbhelper.updateBanUser( toBanClient.socket.session.username, ret => {
+        if( toBanClient.isLogined() && toBanClient.socket.handshake.session.username ){
+            dbhelper.updateBanUser( toBanClient.socket.handshake.session.username, ret => {
                 sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
                 toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
                 chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.nick}님을 영구밴 시켰습니다`, false);
-                console.log('permanent ban success - - ');
+                console.log('permanent ban success - nick');
 
                 dbhelper.getPermanentBanList(function(ret) {
                     if( ret.ret == 0 ) {
