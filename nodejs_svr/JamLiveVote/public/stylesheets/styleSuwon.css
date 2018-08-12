@@ -138,6 +138,8 @@ body {
 }
 #area-article #article-left #search-area-left {
   position: absolute;
+  width: calc( 35% - 13px );
+  /* for ie */
   width: calc( calc(35% - 13px) - 13px );
   height: calc( 100vh - 13px - 65px - 5px );
   overflow-y: auto;
@@ -261,7 +263,8 @@ body {
 }
 #area-article #article-center #search-area-center {
   position: absolute;
-  width: calc( calc( 35% - 13px ) );
+  width: calc( 35% - 13px );
+  width: calc( 35% - 13px );
   height: calc( 100vh - 13px - 65px - 5px );
   background-color: #ffffff;
   color: #393939;
@@ -429,6 +432,7 @@ body {
 #area-article #article-right #chat-wnd-root #chat {
   font-size: 15px;
   width: calc( 100% - 25px - 25px );
+  height: 400px;
   height: calc( calc( 100vh - 13px - 65px - 5px - 160px - 13px - 50px - 13px) - 46px - 38px - 8px );
   margin: 0 25px 0 25px;
   background-color: #ffffff;
