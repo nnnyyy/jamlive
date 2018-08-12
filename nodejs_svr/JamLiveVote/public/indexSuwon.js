@@ -616,6 +616,8 @@ function QuizObject() {
     this.quizData = null;
     this.tQuizStart = 0;
     this.intervalID = -1;
+    this.btnToggleQuiz = $('#btn-toggle-quiz');
+    this.btnToggleQuiz.click( onBtnToggleQuiz )
 }
 
 QuizObject.prototype.onQuiz = function(data) {
@@ -854,6 +856,11 @@ function setBtnEvent() {
     setVisible(settingsElem, false);
     $('#btn-settings').click(onBtnSettings);
 
+    $('#btn-serv-1').click(onBtnGoServ1);
+    $('#btn-serv-2').click(onBtnGoServ2);
+    $('#btn-serv-3').click(onBtnGoServ3);
+    $('#btn-serv-4').click(onBtnGoServ4);
+
     $(document).on('click', '.nick-area .nick', function (e) {
         e.stopPropagation();
         openUserMenu($(this).text(), $(this).attr('sockid'), $(this).text().trim() );
@@ -900,6 +907,11 @@ function setBtnEvent() {
         e.preventDefault();
     });
 }
+
+function onBtnGoServ1(e) { window.location.href = 'http://databucket.duckdns.org:4650/'; }
+function onBtnGoServ2(e) { window.location.href = 'http://databucket.duckdns.org:5647/'; }
+function onBtnGoServ3(e) { window.location.href = 'http://databucket.duckdns.org:6647/'; }
+function onBtnGoServ4(e) { window.location.href = 'http://databucket.duckdns.org:7647/'; }
 
 function onBtnSettings(e) {
     e.stopPropagation();
@@ -1427,4 +1439,14 @@ function openUserMenu( name, sockid, nick ) {
 function closeUserMenu() {
     var user_menu = $('.user-menu');
     setVisible(user_menu, false);
+}
+
+function onBtnToggleQuiz(e) {
+    e.stopPropagation();
+
+    setVisibleBlock(quizObj.quizWnd, false);
+    clearInterval(quizObj.intervalID);
+
+    quizObj.bQuizEnable = !quizObj.bQuizEnable;
+    $('#btn-toggle-quiz').text(quizObj.bQuizEnable ? '퀴즈 끄기' : '퀴즈 켜기');
 }

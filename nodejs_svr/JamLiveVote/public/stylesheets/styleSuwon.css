@@ -21,7 +21,6 @@ body {
 }
 #area-top #area-top-left {
   float: left;
-  width: 450px;
   height: 65px;
   line-height: 65px;
   margin-left: 56px;
@@ -29,6 +28,31 @@ body {
 #area-top #area-top-left img {
   vertical-align: middle;
   height: 45px;
+}
+#area-top #area-top-left #logo {
+  float: left;
+}
+#area-top #area-top-left #server-list {
+  float: left;
+  margin: 0 0 0 26px;
+  height: 65px;
+}
+#area-top #area-top-left #server-list .serv {
+  float: left;
+  margin: 0 13px 0 0;
+  height: 65px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 17px;
+}
+#area-top #area-top-left #server-list .curserv {
+  float: left;
+  margin: 0 25px 0 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+#area-top #area-top-left #server-list .curserv nc {
+  color: #e9bd25;
 }
 #area-top #area-top-center {
   position: absolute;
@@ -297,6 +321,7 @@ body {
   font-size: 16px;
   height: 46px;
   line-height: 46px;
+  cursor: pointer;
 }
 #area-article #article-center #random-quiz #random-quiz-question-wrapper {
   text-align: center;
