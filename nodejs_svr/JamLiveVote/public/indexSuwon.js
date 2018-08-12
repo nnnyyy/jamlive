@@ -8,26 +8,222 @@ function init( socket ) {
     searchObj.init();
     hintObj.init();
     chatObj.init();
+    options.init();
     setSocketEvent(socket);
     setKeyEvent();
     setBtnEvent();
-
-    showBarChart('.ct-chart',['1번','2번','3번'],[[2,0,0]], {
-        seriesBarDistance: 10,
-        height: 120,
-        axisX: {
-            offset: 30
-        },
-        axisY: {
-            offset: 30
-        }
-    });
 }
 
 var GlobalValue = function() {
     this.socket = null;
     this.sockid = '';
     this.isLogin = false;
+    this.connUserElem = $('#conn-cnt');
+    this.banElem = $('#ban-cnt');
+    this.weekdayElem = $('next-quizday');
+    this.quizinfoElem = $('next-quiz-info');
+}
+
+GlobalValue.prototype.onNextQuiz = function (data) {
+    var weekdayname = ['월요일', '화요일','수요일','목요일','금요일','토요일','일요일'];
+    var tTime = new Date('1980-01-01T' + data.data.time);
+    var tCur = new Date();
+    var bToday = false;
+    if( data.data.weekday === ( tCur.getDay() - 1 )) {
+        bToday = true;
+    }
+
+    var qinfo = '<next-quiz-type>' + data.data.name + '</next-quiz-type>' + ' ' + tTime.getHours() + '시 ' + tTime.getMinutes().toString() + '분';
+    G.weekdayElem.text(bToday? '오.늘.' : weekdayname[data.data.weekday]);
+    G.quizinfoElem.html(qinfo);
+}
+
+function Options() {
+
+}
+
+Options.prototype.init = function() {
+    this.initSettings();
+
+    //  투표 메시지 안보이게 하기
+    var checked = localStorage.getItem('cb_votemsg') || 0;
+    $('#cb_votemsg').attr('checked', checked == 1 ? true : false );
+
+    $('#cb_votemsg').change(function() {
+        if( $(this).is(':checked') ) {
+            chatObj.setMsgVisible('vote', false);
+            localStorage.setItem('cb_votemsg', 1);
+
+        }
+        else {
+            chatObj.setMsgVisible('vote', true);
+            localStorage.setItem('cb_votemsg', 0);
+        }
+    });
+
+
+    this.setShowMemberVoteOnly();
+
+    //  투표 몇 표 이상일 경우 보여줄까?
+    var min_vote_val = localStorage.getItem('min_vote') || 0;
+    $('.min_vote_slider').slider({
+        range: "min",
+        value: 0,
+        min: 0,
+        max: 10,
+        slide: function( event, ui ) {
+            localStorage.setItem('min_vote', ui.value);
+            $( "min_vote" ).text( ui.value );
+        }
+    });
+
+    $('.min_vote_slider').slider('value', min_vote_val);
+    $( "min_vote" ).text( min_vote_val );
+
+
+    //  결과 몇개까지 보여줄까?
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    $('.ret_cnt_slider').slider({
+        range: "min",
+        value: 3,
+        min: 2,
+        max: 4,
+        slide: function( event, ui ) {
+            localStorage.setItem('ret_cnt', ui.value);
+            $( "ret_cnt" ).text( ui.value );
+        }
+    });
+
+    $('.ret_cnt_slider').slider('value', ret_cnt_val);
+    $( "ret_cnt" ).text( ret_cnt_val );
+
+    //  투표 동률일 때 표시?
+    var max_vote_dupl = localStorage.getItem('max_vote_dupl') || 0;
+    $('.cb_max_vote_duplicate').attr('checked', max_vote_dupl == 1 ? true : false );
+    $('.cb_max_vote_duplicate').change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('max_vote_dupl', 1);
+        }
+        else {
+            localStorage.setItem('max_vote_dupl', 0);
+        }
+    })
+
+
+    // 검색 Top 5 보기
+    var checked = localStorage.getItem('cb_searchTopFive') || 0;
+    $('#cb_top_five').attr('checked', checked == 1 ? true : false );
+
+    $('#cb_top_five').change(function() {
+        if( $(this).is(':checked') ) {
+            searchObj.onSearchRetRank([], '');
+            localStorage.setItem('cb_searchTopFive', 1);
+        }
+        else {
+            searchObj.onSearchRetRank([], '');
+            localStorage.setItem('cb_searchTopFive', 0);
+        }
+    });
+
+    //  채팅 안보기
+    var checked = localStorage.getItem('cb_notshowchat') || 0;
+    $('#cb_notshowchat').attr('checked', checked == 1 ? true : false );
+
+    $('#cb_notshowchat').change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb_notshowchat', 1);
+            console.log('setShowChatOptions - ' + 1 );
+        }
+        else {
+            localStorage.setItem('cb_notshowchat', 0);
+            console.log('setShowChatOptions - ' + 0 );
+        }
+    });
+}
+
+Options.prototype.initSettings = function() {
+    var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7'];
+    var rbs_name = ['sb0', 'sb1', 'sb2', 'sb3', 'sb4', 'sb5', 'sb6', 'sb7'];
+    var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6'), $('#cb_s7')];
+
+    var rbs = [$('input[name=radio_s0]'), $('input[name=radio_s1]'), $('input[name=radio_s2]'), $('input[name=radio_s3]'),
+        $('input[name=radio_s4]'), $('input[name=radio_s5]'), $('input[name=radio_s6]'), $('input[name=radio_s7]')];
+    var cbs_ret = new Array(cbs_name.length);
+    var rbs_ret = new Array(rbs_name.length);
+    $.each(cbs_name, function(idx, name) {
+        cbs_ret[idx] = localStorage.getItem(name) || 1;
+    });
+
+    $.each(cbs, function(idx, item) {
+        item.attr('checked', cbs_ret[idx] == 1 ? true : false);
+        item.change(function() {
+            if( $(this).is(':checked') ) {
+                localStorage.setItem(cbs_name[idx], 1);
+            }
+            else {
+                localStorage.setItem(cbs_name[idx], 0);
+            }
+        })
+    })
+
+    $.each(rbs_name, function(idx, name) {
+        rbs_ret[idx] = localStorage.getItem(name) || 1;
+    })
+
+    $.each(rbs, function(idx, item) {
+        item.eq(rbs_ret[idx]-1).attr('checked', true);
+        item.change(function() {
+            localStorage.setItem(rbs_name[idx], this.value);
+        })
+    })
+}
+
+Options.prototype.setShowMemberVoteOnly = function() {
+    //  고정닉 투표만 보기 ( 손님투표 거르기 )
+    if( !G.isLogin ) {
+        $('.cb_show_member_vote_only').attr('checked', false );
+        $('.cb_show_member_vote_only').attr('disabled', true);
+    }
+    else {
+        $('.cb_show_member_vote_only').attr('disabled', false);
+        var only = localStorage.getItem('cb_show_member_vote_only') || 0;
+
+        $('.cb_show_member_vote_only').attr('checked', only == 1 ? true : false );
+    }
+
+    $('.cb_show_member_vote_only').change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb_show_member_vote_only', 1);
+        }
+        else {
+            localStorage.setItem('cb_show_member_vote_only', 0);
+        }
+    })
+}
+
+Options.prototype.isShowMemberVoteOnly = function() {
+
+    if($('.cb_show_member_vote_only').is(':checked')) {
+        return true;
+    }
+
+
+    return false;
+}
+
+Options.prototype.isMaxVoteDuplicateChecked = function() {
+
+    if($('.cb_max_vote_duplicate').is(':checked')) {
+        return true;
+    }
+
+
+    return false;
+}
+
+Options.prototype.isNotShowChat = function() {
+    var checked = localStorage.getItem('cb_notshowchat') || 0;
+    return checked == 1 ? true : false;
 }
 
 var G = new GlobalValue();
@@ -36,6 +232,8 @@ var chatObj = new ChatObject();
 var voteObj = new VoteObject();
 var searchObj = new SearchObject();
 var topMenuObj = new TopMenuObject();
+var quizObj = new QuizObject();
+var options = new Options();
 
 //  힌트 관련 변수
 function HintObject() {
@@ -146,11 +344,11 @@ ChatObject.prototype.FlushChat = function( mode ) {
 
         var list = this.chatUI.find('li');
 
-        if( list.length > 50 ) {
+        if( list.length > 70 ) {
             list.eq(0).remove();
         }
 
-        if( (this.chatUI.get(0).scrollTop == (this.chatUI.get(0).scrollHeight - chatwndheight - 20/* padding */) ) ||
+        if( (this.chatUI.get(0).scrollTop == (this.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
             $('#cb_auto_scroll').is(':checked')) {
             bAutoMoveToBottom = true;
         }
@@ -182,12 +380,12 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
         '</div>' +
         '</li>';
 */
-    var li =    '<li>' +
-                    '<div class="chat-msg-item" mode="' + mode +'">' +
+    var li =    '<li mode="' + mode +'">' +
+                    '<div class="chat-msg-item">' +
                         '<div class="nick-area">' +
                             '<div class="grade"><img src="' + getGradeImage(auth, isbaned) + '"></div>' +
                             '<div class="nick" ip="'+ ip +'" sockid="'+ sockid +'">' + nick + '</div>' +
-                            '<div class="ip">('+ ip + ')</div>' +
+                            (ip ? '<div class="ip">('+ ip + ')</div>' : '') +
                         '</div>' +
                         '<div class="msg-area">' +
                             msg +
@@ -200,19 +398,162 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
     this.FlushChat( mode );
 }
 
+ChatObject.prototype.setMsgVisible = function(mode, isVisible) {
+    this.chatUI.find('li').each(function(idx) {
+        if( $(this).attr('mode') == mode) {
+            $(this).css('display', isVisible ? 'block' : 'none');
+        }
+    })
+}
+
 //  투표 관련 변수
 function VoteObject() {
+    this.tClick = 0;
+}
 
+VoteObject.prototype.vote = function(data) {
+    data.nickname = getNickName();
+    G.socket.emit('vote', data);
+}
+
+VoteObject.prototype.onVoteData = function(data) {
+    searchObj.onSearchRetRank(data.searchlist, data.slhash);
+    var votedata = data.vote_data;
+    var users = votedata.users;
+    G.connUserElem.text(users);
+    G.banElem.text(votedata.bans);
+
+    var total = [0,0,0];
+    for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
+        total[i] += votedata.cnt[i];
+    }
+
+    if( !options.isShowMemberVoteOnly() ) {
+        for( var i = 0 ; i < votedata.guest_cnt.length ; ++i ) {
+            total[i] += votedata.guest_cnt[i];
+        }
+    }
+
+    var totalCnt = 0;
+    var maxVoteCnt = 0;
+    for( var i = 0 ; i < total.length ; ++i ) {
+        totalCnt += total[i];
+        if( maxVoteCnt <= total[i]) {
+            maxVoteCnt = total[i];
+        }
+    }
+
+    var duplicatedMaxVoteCnt = 0;
+    for( var i = 0 ; i < total.length ; ++i ) {
+        if( maxVoteCnt == total[i] ) {
+            duplicatedMaxVoteCnt++;
+        }
+    }
+
+    if( options.isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
+        total = [0,0,0];
+    }
+
+
+    var minVoteVal = Number($('min_vote').text());
+
+    if( totalCnt <= minVoteVal) {
+        total = [0,0,0];
+    }
+
+    showBarChart('.ct-chart',['1번','2번','3번'],[total], {
+        seriesBarDistance: 10,
+        height: 120,
+        axisX: {
+            offset: 30
+        },
+        axisY: {
+            offset: 30
+        }
+    });
 }
 
 function SearchObject() {
+    this.lastSearchQuery = '';
+    this.timerID = 0;
+    this.timerIDForDB = 0;
     this.area = [$('#search-area-left'), $('#search-area-center')];
+    this.slhash = '';
+    this.searchtop5queries = [];
+    this.searchRank = $('#search-ret-rank-list');
 }
 
 SearchObject.prototype.init = function() {
-    console.log('searchObject init');
     for( var i = 0 ; i < this.area.length ; ++i ) {
         setVisible(this.area[i], false);
+    }
+}
+
+SearchObject.prototype.initSearch = function() {
+    for( var i = 0 ; i < this.area.length ; ++i ) {
+        this.area[i].html('');
+        setVisible(this.area[i], true);
+    }
+}
+
+SearchObject.prototype.restoreSearch = function() {
+    for( var i = 0 ; i < this.area.length ; ++i ) {
+        this.area[i].html('');
+        setVisible(this.area[i], false);
+    }
+}
+
+SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
+
+    var searchRetRankList = searchObj.searchRank;
+
+    var checked = localStorage.getItem('cb_searchTopFive') || 0;
+
+    if( datalist.length <= 0 || checked == 0) {
+        searchRetRankList.empty();
+        searchObj.searchtop5queries = [];
+        searchObj.slhash = '';
+        setVisible($('#search-ret-rank'), false );
+        return;
+    }
+    else {
+        setVisible($('#search-ret-rank'), true );
+    }
+
+    if( hash != searchObj.slhash ) {
+        searchRetRankList.empty();
+        searchObj.searchtop5queries = [];
+        for( var i = 0 ; i < datalist.length ; ++i ) {
+            var html = '<li class="btn-search-ret-rank">' + datalist[i].query + '</li>';
+            searchRetRankList.append(html);
+            searchObj.searchtop5queries.push(datalist[i].query);
+        }
+
+        searchObj.slhash = hash;
+
+
+        var duplicateMap = new Map();
+
+        var html = getSearchArea(1).html();
+        var html2 = getSearchArea(2).html();
+
+        var bChanged = false;
+        for( var i = 0 ; i < datalist.length ; ++i ) {
+            var words = datalist[i].query.split(' ');
+            for( var w = 0 ; w < words.length ; ++w ) {
+                if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
+                if( duplicateMap.containsKey( words[w]) ) continue;
+                html = html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+                html2 = html2.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+                duplicateMap.put(words[w], 1);
+                bChanged = true;
+            }
+        }
+
+        if( bChanged ) {
+            getSearchArea(1).html(html);
+            getSearchArea(2).html(html2);
+        }
     }
 }
 
@@ -231,14 +572,86 @@ function onBtnLogout(e) {
     logout();
 }
 
+function QuizObject() {
+    this.questionElem = $('#random-quiz-question');
+    this.answerElem = [ $('.random-quiz-answer').eq(0), $('.random-quiz-answer').eq(1), $('.random-quiz-answer').eq(2) ];
+    this.gaugeElem = $('.gauge');
+    this.providerElem = $('quiz-provider');
+    this.quizWnd = $('#quiz-all-wnd');
+    setVisibleBlock(this.quizWnd, false);
+    this.bQuizEnable = true;
+    this.quizData = null;
+    this.tQuizStart = 0;
+    this.intervalID = -1;
+}
+
+QuizObject.prototype.onQuiz = function(data) {
+    if( !quizObj.bQuizEnable ) return;
+
+    quizObj.quizData = data.quizdata;
+    quizObj.questionElem.text(data.quizdata.question);
+
+    quizObj.gaugeElem.css('width', '100%');
+    quizObj.providerElem.text(data.nick);
+
+    var html = '';
+    for( var i = 0 ; i < quizObj.answerElem.length ; ++i ) {
+        quizObj.answerElem[i].removeClass('qsel');
+
+        var t = (i+1) + '. ' + data.quizdata.answer[i];
+        html += (t + '</br>');
+        quizObj.answerElem[i].text(t);
+    }
+
+    setVisibleBlock(quizObj.quizWnd, true);
+
+    chatObj.addChat( "", false, '<div class="notice_font">퀴즈</div>', data.quizdata.question + '</br>' + html, false);
+
+    quizObj.tStartQuiz = new Date();
+
+    clearInterval(quizObj.intervalID);
+    quizObj.intervalID = setInterval(function() {
+        var remain = Math.floor((10000 - (Date.now() - quizObj.tStartQuiz)));
+        if( remain <= 0 ) remain = 0;
+
+        var percent = ( remain * 100 / 10000 ) + '%';
+        quizObj.gaugeElem.css('width', percent);
+        $('time').text(remain);
+    }, 30);
+}
+
+QuizObject.prototype.onQuizRet = function( data ) {
+    if( !quizObj.quizData ) return;
+    if( !quizObj.bQuizEnable ) return;
+
+    for( var i = 0 ; i < quizObj.answerElem.length ; ++i ) {
+        if( data.collect_idx == i ) {
+            quizObj.answerElem[i].addClass('qsel');
+            var collect_rate = (data.collect_cnt / data.total_cnt) * 100.0;
+            if( !collect_rate ) {
+                collect_rate = 0;
+            }
+            chatObj.addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[i] + '">' + (i+1) + '번 '+ quizObj.quizData.answer[i]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+        }
+    }
+
+    setTimeout(function() {
+        clearInterval(quizObj.intervalID);
+        setVisibleBlock(quizObj.quizWnd, false);
+    }, 3000);
+}
+
 function setSocketEvent( socket ) {
     socket.on('chat', onChat );
     socket.on('memo', hintObj.onMemo );
     socket.on('serv_msg', onServMsg);
     socket.on('myid', onMyID);
+    socket.on('vote_data', voteObj.onVoteData);
+    socket.on('quiz', quizObj.onQuiz);
+    socket.on('quizret', quizObj.onQuizRet);
+    socket.on('next-quiz', G.onNextQuiz);
+
     //socket.on('serv_msg', onServMsg);
-    //socket.on('quiz', onQuiz);
-    //socket.on('quizret', onQuizRet);
     //socket.on('emoticon', onEmoticon);
     //socket.on('next-quiz', onNextQuiz);
     //socket.on('connect', connectStateInfo.Connect );
@@ -283,31 +696,31 @@ function onGlobalKeyDown(e) {
 
     if( (code >= 97 && code <= 99) ) {
         var curTime = new Date();
-        if( curTime - tClick < 500 ) {
+        if( curTime - voteObj.tClick < 500 ) {
             return;
         }
-        tClick = curTime;
+        voteObj.tClick = curTime;
 
         var idx = code - 97;
 
         var nick = getNickName();
         var clicked = (idx+1);
-        vote(socket, {idx: idx });
+        voteObj.vote({idx: idx });
     }
     else if( code == 37 || code == 40 || code == 39 ) {
         var idx = -1;
         if( code == 37 ) idx = 0;
         if( code == 40 ) idx = 1;
         if( code == 39 ) idx = 2;
-        vote(socket, {idx: idx });
+        voteObj.vote({idx: idx });
     }
     else if( code >= 49 && code <= 53 ) {
         var idx = code - 49;
-        if( searchtop5queries.length <= idx ) {
+        if( searchObj.searchtop5queries.length <= idx ) {
             return;
         }
 
-        searchWebRoot(socket, searchtop5queries[idx], false);
+        searchWebRoot(G.socket, searchObj.searchtop5queries[idx], false);
     }
     else {
         if( code != 27 ) {
@@ -354,15 +767,8 @@ function onInputMsgKeyPress(e) {
 
         if( msg[0] == '/' ) {
             $(this).val('');
-
-            if( !isAutoSearchChecked() ) {
-                var query = msg.substr(1);
-                searchWebRoot(socket, query, true);
-            }
-            else {
-                //showAdminMsg('반자동 검색을 해제 한 후에 검색을 사용할 수 있습니다');
-            }
-
+            var query = msg.substr(1);
+            searchWebRoot(G.socket, query, true);
             $(this).blur();
             return;
         }
@@ -370,15 +776,15 @@ function onInputMsgKeyPress(e) {
         var isvote = -1;
 
         if( msg.search(/111+/g) != -1 || msg == "1") {
-            vote(socket, {idx:0});
+            voteObj.vote({idx:0});
             isvote = 0;
         }
         else if( msg.search(/222+/g) != -1 || msg == "2" ) {
-            vote(socket, {idx:1});
+            voteObj.vote({idx:1});
             isvote = 1;
         }
         else if( msg.search(/333+/g) != -1 || msg == "3") {
-            vote(socket, {idx:2});
+            voteObj.vote({idx:2});
             isvote = 2;
         }
 
@@ -413,7 +819,25 @@ function onInputMsgKeyUp(e) {
 }
 
 function setBtnEvent() {
+    var settingsElem = $('wnd[role="settings"]');
+    setVisible(settingsElem, false);
+    $('#btn-settings').click(onBtnSettings);
+}
 
+function onBtnSettings(e) {
+    e.stopPropagation();
+    var settingsWnd = $('wnd[role="settings"]');
+    settingsWnd.css('display','inline-block');
+
+    settingsWnd.css({left: 0});
+
+    settingsWnd.click(function(e) {
+        e.stopPropagation();
+    })
+
+    $(window).click(function() {
+        settingsWnd.css({left: -300});
+    })
 }
 
 function onChat( data ) {
@@ -422,7 +846,7 @@ function onChat( data ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
 
-        if( isShowMemberVoteOnly() &&
+        if( options.isShowMemberVoteOnly() &&
             ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
         ) {
             chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>투표했습니다.</b>', false, data.auth, data.ip, data.sockid );
@@ -430,7 +854,7 @@ function onChat( data ) {
         else {
             chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
         }
-        setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
+        chatObj.setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
     }
     else if( data.mode == "search") {
         if( !isShowSearchChat() ) return;
@@ -447,7 +871,7 @@ function onChat( data ) {
         chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else {
-        if( isNotShowChat() ) return;
+        if( options.isNotShowChat() ) return;
         if( data.admin ) {
             chatObj.addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + '</div>', false, data.auth, data.ip, data.sockid);
         }
@@ -466,11 +890,10 @@ function onServMsg(data) {
 }
 
 function onMyID(data) {
-
     G.sockid = data.socket;
     G.isLogin = data.isLogined;
     setNickName(data.nick);
-    //setShowMemberVoteOnlyListener();}
+    options.setShowMemberVoteOnly();
 }
 
 var animOpacityTimerID = -1;
@@ -504,6 +927,10 @@ function getNickName() {
 
 function setVisible(elem, visible) {
     elem.css('display', visible ? 'inline-block' : 'none');
+}
+
+function setVisibleBlock(elem, visible) {
+    elem.css('display', visible ? 'block' : 'none');
 }
 
 function getVisible(elem) {
@@ -561,7 +988,332 @@ function logout() {
     });
 }
 
-function isNotShowChat() {
-    var checked = localStorage.getItem('cb_notshowchat') || 0;
-    return checked == 1 ? true : false;
+function searchWebRoot( socket, query, isBroadcast ) {
+    searchObj.initSearch();
+    var nick = getNickName();
+    socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
+
+    var queries = query.trim().split(' ');
+    searchObj.lastSearchQuery = query;
+    var chinese = false;
+    var dongyo = false;
+    var chienseQuery = '';
+    var dongyoQuery = '';
+    var chineseSubType = '';
+    for( var i = 0 ; i < queries.length ; ++i ) {
+        if( queries[i] === "한자") {
+            chienseQuery = query.slice(0,query.indexOf(queries[i]));
+            chineseSubType = 'chinese_only';
+            chinese = true;
+            break;
+        }
+
+        if( queries[i] === '동요' || queries[i] === '가사') {
+            dongyo = true;
+            dongyoQuery = query.slice(0,query.indexOf(queries[i]));
+            break;
+        }
+    }
+
+    if( !chinese && $('#cb_s7').is(':checked') ) {
+        chienseQuery = query;
+        chinese = true;
+    }
+
+    var searched = false;
+    if( $('#cb_s0').is(':checked')) {
+        var where = $('input[name=radio_s0]:checked').attr('value');
+        searchWeb(0, query, where);
+        searched = true;
+    } //  백과사전
+    if( $('#cb_s1').is(':checked')) {
+        var where = $('input[name=radio_s1]:checked').attr('value');
+        searchWeb(1, query, where);
+        searched = true;
+    } //  지시인
+    if( $('#cb_s2').is(':checked')) {
+        var where = $('input[name=radio_s2]:checked').attr('value');
+        searchWeb(2, query, where);
+        searched = true;
+    } //  블로그
+    if( $('#cb_s3').is(':checked')) {
+        var where = $('input[name=radio_s3]:checked').attr('value');
+        searchWeb(3, query, where);
+        searched = true;
+    } //  뉴스
+    if( $('#cb_s4').is(':checked')) {
+        var where = $('input[name=radio_s4]:checked').attr('value');
+        searchWeb(4, query, where);
+        searched = true;
+    } //  이미지
+
+    if( $('#cb_s5').is(':checked')) {
+        var where = $('input[name=radio_s5]:checked').attr('value');
+        searchWebGoogle(query, false, where);
+        searched = true;
+    } //  구글
+
+    if( chinese ) {
+        var where = $('input[name=radio_s7]:checked').attr('value');
+        searchWebNaver(chienseQuery, chineseSubType, where);
+    }
+
+    if( dongyo ) {
+        searchWebDongyo(dongyoQuery, 2);
+    }
+
+    if( $('#cb_s6').is(':checked')) {
+        var where = $('input[name=radio_s6]:checked').attr('value');
+        searchFromDB(query, where);
+        searched = true;
+    }
+    if( !searched ) {
+        //$('.search_article').html(htmlBackup);
+        $('#sd_ret').css('display','none');
+        $('#sd_ads').css('display','inline-block');
+    }
+}
+
+
+function searchWeb( type, query, where ) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+            type: type,
+            sockid: G.sockid,
+        }),
+        contentType: 'application/json',
+        url: '/searchex',
+        success: function(data) {
+            if( type != 4 ) {
+                setSearchRet(data, false, where);
+            }
+            else {
+                setSearchRetImage(data, true, where);
+            }
+        }
+    });
+}
+
+function searchWebGoogle( query, grammer, where) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+            sockid: G.sockid,
+            grammer : grammer
+        }),
+        contentType: 'application/json',
+        url: '/searchgoogle',
+        success: function(data) {
+            setSearchRet(data, true, where);
+        }
+    });
+}
+
+function searchWebNaver( query, subtype, where ) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+            subtype: subtype,
+            sockid: G.sockid
+        }),
+        contentType: 'application/json',
+        url: '/searchnaver',
+        success: function(data) {
+            data.data = data.data.slice(0,2);
+            data.hdata = data.hdata.slice(0,2);
+            setSearchRet(data.data, true, where);
+            setSearchRet(data.hdata, true, where);
+        }
+    });
+}
+
+function searchWebDongyo(query , where) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+            sockid: G.sockid
+        }),
+        contentType: 'application/json',
+        url: '/searchdongyo',
+        success: function(data) {
+            data.data = data.data.slice(0,2);
+            setSearchRet(data.data, true, where);
+        }
+    });
+}
+
+
+function searchFromDB( query, where ) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            query : query,
+            sockid: G.sockid
+        }),
+        contentType: 'application/json',
+        url: '/searchdb',
+        success: function(data) {
+            setSearchDB(data, where);
+        }
+    });
+}
+
+function setSearchDB(data, where) {
+    var items = data.quizdatalist;
+    var queries = data.queries;
+
+    items.sort( function(item1, item2) {
+        var cnt1 = 0, cnt2 = 0;
+        var add = 1;
+        for( var i = queries.length - 1 ; i >= 0 ; --i) {
+            queries[i] = queries[i].replace('%', '');
+            queries[i] = queries[i].replace('%', '');
+            if( item1.question.toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
+                cnt1+= add;
+            }
+            if( item2.question.toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
+                cnt2+= add;
+            }
+
+            for( var j = 0 ; j < 3 ; ++j) {
+                if( item1.answer[j].toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
+                    cnt1+= add;
+                }
+
+                if( item2.answer[j].toUpperCase().indexOf(queries[i].toUpperCase()) != -1 ) {
+                    cnt2+= add;
+                }
+            }
+
+            add++;
+        }
+        return cnt2 - cnt1;
+    });
+
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    if( items.length > ret_cnt_val) {
+        items = items.slice( 0, ret_cnt_val );
+    }
+
+    var html = '';
+    var htmlforleft = '';
+    var cnt = 0;
+    for( var i = 0 ; i < items.length ; ++i, ++cnt) {
+        var item = items[i];
+        var sub = '';
+        for( var j = 0 ; j < 3 ; ++j ) {
+            if( j != item.collect ) {
+                sub += (j+1) + '. ' + item.answer[j].trim() + '<br>';
+            }
+            else {
+                sub += '<b>' + (j+1) + '. ' + item.answer[j].trim() + '</b><br>';
+            }
+        }
+        var div = '<div class="search_ret_root" type="fromDB">' +
+            '<div class="search_ret_title">' +
+            '[기출문제] ' + item.question +
+            '</div><div class="search_ret_desc">' +
+            (sub) +
+            '</div><div class="separator"></div>' +
+            '</div>';
+
+        html += div;
+        if( cnt < 2 )
+            htmlforleft += div;
+    }
+
+    if( items.length == 0 ) {
+        htmlforleft = html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+    }
+
+    getSearchArea(where).prepend(htmlforleft);
+
+    clearTimeout(searchObj.timerIDForDB);
+    searchObj.timerIDForDB = setTimeout(function() {
+        //$('.search_article').html(htmlBackup);
+        searchObj.restoreSearch();
+    }, 13000);
+}
+
+
+function setSearchRetImage(items, first) {
+    var html = '';
+    var div = '<div class="search_ret_root"><div class="search_ret_desc">';
+    for( var i = 0 ; i < items.length ; ++i) {
+        var item = items[i];
+        var image = '<img class="img_search" src="'+ item.thumbnail + '"/>';
+        div += image;
+    }
+    div += '</div></div>';
+    html = div;
+
+    if( items.length == 0 ) {
+        html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+    }
+
+    getSearchArea(1).prepend(html);
+
+    clearTimeout(searchObj.timerID);
+    searchObj.timerID = setTimeout(function() {
+        //$('.search_article').html(htmlBackup);
+        searchObj.restoreSearch();
+    }, 15000);
+}
+
+function setSearchRet(items, first, where) {
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    if( items && items.length > ret_cnt_val) {
+        items = items.slice( 0, ret_cnt_val );
+    }
+
+    var html = '';
+    for( var i = 0 ; i < items.length ; ++i) {
+        var item = items[i];
+        var hidx = item.description.indexOf('[총획]');
+        var hidxend = item.description.indexOf('[난이도]');
+        if( hidxend == -1 ) hidxend = hidx + 20;
+        var hinfo = '<b>' + item.description.slice(hidx, hidxend).trim() + '</b>';
+        var div = '<div class="search_ret_root">' +
+            '<div class="search_ret_title">' +
+            item.title + ' ' + hinfo +
+            '</div><div class="search_ret_desc">' +
+            (item.description) +
+            '</div><div class="separator"></div>' +
+            '</div>';
+
+        html += div;
+    }
+
+    if( items.length == 0 ) {
+        html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+    }
+    if( first ) {
+        getSearchArea(where).prepend(html);
+    }
+    else {
+        getSearchArea(where).append(html);
+    }
+    clearTimeout(searchObj.timerID);
+    searchObj.timerID = setTimeout(function() {
+        searchObj.restoreSearch();
+    }, 13000);
+}
+
+function getSearchArea(where) {
+    if( where == 1 ) {
+        return searchObj.area[0];
+    }
+    else {
+        return searchObj.area[1];
+    }
 }

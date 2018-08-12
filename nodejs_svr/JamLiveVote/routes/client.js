@@ -14,11 +14,11 @@ var Client = function(socket) {
 Client.prototype.isClickable = function() {
     var cur = new Date();
     var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.auth : -1;
-    if( _auth >= 1 ) {
-        return (cur - this.tLastClick) > 1000;
+    if( _auth >= 3 ) {
+        return (cur - this.tLastClick) > 3000;
     }
     else if ( _auth == 0 ) {
-        return (cur - this.tLastClick) > 3500;
+        return (cur - this.tLastClick) > 5000;
     }
 
     return (cur - this.tLastClick) > 7000;

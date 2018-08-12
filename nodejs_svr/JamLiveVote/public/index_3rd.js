@@ -1112,7 +1112,6 @@ function restoreSearch() {
 
 function searchWebRoot( socket, query, isBroadcast ) {
     initSearch();
-    //$('#mid_quiz_search').html('');
     var nick = getNickName();
     socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
 
@@ -1190,18 +1189,6 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searchFromDB(query, where);
         searched = true;
     }
-/*
-    if( $('#cb_s7').is(':checked')) {
-        //$('#mid_quiz_search').css('display','inline-block');
-        //  국어
-        query = query.trim();
-        var aQueries = query.split(' ');
-        for( var i = 0 ; i < aQueries.length ; ++i ) {
-            searchWebGoogle(aQueries[i], true);
-        }
-        searched = true;
-    }
-*/
     if( !searched ) {
         //$('.search_article').html(htmlBackup);
         $('#sd_ret').css('display','none');

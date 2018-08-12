@@ -1,3 +1,7 @@
+$chat-font-size: 14px;
+$primary-color: #1b3440;
+$main-font-color: #ffffff;
+
 $color-main-back: #ffffff;
 $color-shadow: #e4e6e8;
 $color-back: #f2f4f7;
@@ -73,6 +77,10 @@ $top-bottom-margin: 5px;
       font-size: $font-size-main;
       height: 45px;
       line-height: 50px;
+
+      next-quiz-type {
+        color: $color-yellow-font;
+      }
     }
   }
 
@@ -92,9 +100,9 @@ $top-bottom-margin: 5px;
 
     .area-login-info {
       font-size: 18px;
+      font-weight: bold;
       float: right;
-      width: 120px;
-      margin: 0 15px 0 0;
+      margin: 0 30px 0 0;
     }
 
     #btn-login {
@@ -111,6 +119,61 @@ $top-bottom-margin: 5px;
   width: calc( 100% - 34px );
   height: $area-article-height;
   overflow-y: hidden;
+
+
+  /**/
+
+  .search_ret_root {
+    color: $primary-color;
+    margin: 5px;
+  }
+
+  div.search_ret_root[type="fromDB"] {
+    background-color: $primary-color;
+    color: $main-font-color;
+
+    b {
+      background-color: red;
+    }
+  }
+
+  em {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    background-color: $color-yellow-font;
+  }
+
+  .search_ret_title {
+    font-size: 16px;
+    margin-bottom: 5px;
+
+    b {
+      font-size: 16px;
+      background-color: $color-yellow-font;
+    }
+  }
+
+  .search_ret_desc {
+    font-size: 13px;
+    margin-bottom: 3px;
+    line-height: 19px;
+
+    b {
+      font-size: 16px;
+      background-color: $color-yellow-font;
+    }
+  }
+
+  .separator {
+    width: 100%;
+    height: 1px;
+    background-color: $primary-color;
+    margin: 0 auto;
+  }
+
+  /**/
+
 
   #article-left {
     $bottom-margin: 13px;
@@ -131,28 +194,65 @@ $top-bottom-margin: 5px;
       height: $area-article-height;
       overflow-y: auto;
       background-color: $color-main-back;
+      color: $color-main-font;
+      z-index: 100;
+      font-family: '고딕';
+      font-size: 15px;
     }
 
-    #notice {
+    #site-info-notice {
+      $site-info-width: 150px;
+      $margin-right: 13px;
+      $notice-width: calc( 100% - #{$site-info-width} - #{$margin-right} - 2px - 2px );
       width: 100%;
       height: $notice-height;
-      background-color: $color-main-back;
       margin-bottom: $bottom-margin;
-      border: 1px solid $color-border;
       text-align: center;
       font-family: 'Nanum Square';
       overflow-y: hidden;
 
-      [type="title"] {
-        margin: 14px 0 14px 0;
-        color: $color-sub-font;
-        font-size: 27px;
-        font-weight: bold;
+      #site-info {
+        float: left;
+        width: $site-info-width;
+        height: $notice-height;
+        border: 1px solid $color-border;
+        margin: 0 $margin-right 0 0;
+        background-color: $color-main-back;
+
+        #conn-cnt-wrapper {
+          text-align: center;
+          font-size: 18px;
+          font-weight: bold;
+          height: $notice-height;
+          width: $site-info-width;
+          display: table-cell;
+          vertical-align: middle;
+          line-height: 25px;
+        }
       }
-      [type="msg"] {
-        font-size: 17px;
-        color: $color-sub2-font;
-        margin: 11px 0 11px 0;
+
+      #notice {
+        width: $notice-width;
+        height: 100%;
+        float: left;
+        background-color: $color-main-back;
+        margin-bottom: $bottom-margin;
+        border: 1px solid $color-border;
+        text-align: center;
+        font-family: 'Nanum Square';
+        overflow-y: hidden;
+
+        [type="title"] {
+          margin: 14px 0 14px 0;
+          color: $color-sub-font;
+          font-size: 27px;
+          font-weight: bold;
+        }
+        [type="msg"] {
+          font-size: 17px;
+          color: $color-sub2-font;
+          margin: 11px 0 11px 0;
+        }
       }
     }
 
@@ -203,6 +303,7 @@ $top-bottom-margin: 5px;
         overflow-y: auto;
         padding: 0 10px 0 10px;
         font-size: 14px;
+        font-family: '고딕';
       }
 
       #hint-modify-area {
@@ -236,9 +337,14 @@ $top-bottom-margin: 5px;
     /* 검색 영역 Center */
     #search-area-center {
       position: absolute;
-      width: calc( #{$article-center-width} - 26px );
+      width: calc( #{$article-center-width} );
       height: $area-article-height;
+      background-color: $color-main-back;
+      color: $color-main-font;
       overflow-y: auto;
+      z-index: 100;
+      font-family: '고딕';
+      font-size: 15px;
     }
 
     #random-quiz {
@@ -282,12 +388,22 @@ $top-bottom-margin: 5px;
         vertical-align: middle;
       }
 
+      #random-quiz-question {
+        text-align: center;
+        line-height: 27px;
+        word-break: break-all;
+      }
+
       .random-quiz-answer {
         font-size: 16px;
         font-weight: bold;
         text-align: center;
         height: 40px;
         line-height: 40px;
+      }
+
+      .qsel {
+        color: $color-yellow-font;
       }
 
       .gauge-wrapper {
@@ -305,6 +421,13 @@ $top-bottom-margin: 5px;
     }
 
     #ads-banner-center {
+      margin: $bottom-margin 0 0 0;
+      width: 100%;
+      height: $ads-banner-center-height;
+      overflow-y: hidden;
+    }
+
+    #ads-banner2-center {
       margin: $bottom-margin 0 0 0;
       width: 100%;
       height: $ads-banner-center-height;
@@ -370,6 +493,42 @@ $top-bottom-margin: 5px;
       height: $chat-root-height;
       background-color: $color-main-back;
       border: 1px solid $color-border;
+
+
+      div#search-ret-rank {
+        position: absolute;
+        top: $top-height + $top-bottom-margin + $vote-data-height + $bottom-margin + $ads-banner-center-height;
+        width: 400px;
+        height: 300px;
+        padding: 8px;
+        opacity: 0.75;
+        background-color: $primary-color;
+        color: $main-font-color;
+        z-index: 2;
+
+        li.btn-search-ret-rank {
+          margin-top: 5px;
+          text-align: center;
+          width: 100%;
+          list-style: none;
+          height: 32px;
+          line-height: 32px;
+        }
+
+        div.h1 {
+          font-size: 20px;
+          text-align: center;
+        }
+
+        div.s1 {
+          font-size: 14px;
+          text-align: center;
+        }
+
+        .btn-search-ret-rank {
+          cursor: pointer;
+        }
+      }
 
       [type="top-menu"] {
         width: 100%;
@@ -485,6 +644,7 @@ $top-bottom-margin: 5px;
   font-size: 17px;
   opacity: 0;
   overflow: hidden;
+  z-index: 101;
 }
 
 .opacity {
@@ -501,4 +661,81 @@ $top-bottom-margin: 5px;
   -ms-transition: none !important;
   -o-transition: none !important;
   transition: none !important;
+}
+
+wnd[role="settings"] {
+  $width: 300px;
+  $line-width: $width / 10 * 9;
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: $width;
+  height: 100%;
+  background-color: $main-font-color;
+  color: $primary-color;
+  z-index: 102;
+  box-shadow: 5px 0 0 0 $primary-color;
+  text-align: center;
+  overflow-y: auto;
+
+  div[type="title"] {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  div[type="line"] {
+    height: 1px;
+    width: $line-width;
+    background-color: $primary-color;
+    margin: 0 auto;
+  }
+
+  div[type="checkbox"] {
+    font-size: $chat-font-size;
+    width: calc( 100% - 30px );
+    height: 30px;
+    text-align: left;
+    margin: 9px;
+  }
+
+  div[type="btn"] {
+  }
+
+  div[type="msg"] {
+    font-size: $chat-font-size;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .min_vote_slider {
+    width: calc(90% - 20px);
+    height: 10px;
+    margin: 10px auto;
+    z-index: 0;
+
+    .ui-slider-handle {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .ret_cnt_slider {
+    width: calc(90% - 20px);
+    height: 10px;
+    margin: 10px auto;
+    z-index: 0;
+
+    .ui-slider-handle {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  #btn-exit {
+  }
 }

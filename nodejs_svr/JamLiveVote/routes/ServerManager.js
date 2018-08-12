@@ -350,7 +350,7 @@ ServerMan.prototype.checkAllBaned = function() {
         if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
-                    servman.createQuizData(result.quizdata);
+                    servman.createQuizData('자동퀴즈', result.quizdata);
                 }
             });
         }
@@ -428,11 +428,11 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
     cachedType.searched.set(query, {data: data, tLast: new Date()});
 }
 
-ServerMan.prototype.createQuizData = function( _quizdata ) {
+ServerMan.prototype.createQuizData = function( nick, _quizdata ) {
     if( this.quizdata && !this.quizdata.isEnd() ) {
         return;
     }
-    this.quizdata = new quizDataObj( _quizdata, this.io );
+    this.quizdata = new quizDataObj( nick, _quizdata, this.io );
 }
 
 ServerMan.prototype.isAbleCreateQuizData = function() {
@@ -657,7 +657,7 @@ function onSockChat(data) {
         if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
-                    servman.createQuizData(result.quizdata);
+                    servman.createQuizData(client.nick, result.quizdata);
                 }
             });
             return;

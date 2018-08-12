@@ -42,7 +42,7 @@
         </div>
         <div id="area-top-center">
             <div id="quizinfo-title">다음 라이브 퀴즈쇼</div>
-            <div id="quizinfo-main">오늘 잼라이브 20시 00분</div>
+            <div id="quizinfo-main"><next-quizday>오늘</next-quizday> <next-quiz-info><next-quiz-type>잼라이브</next-quiz-type> 20시 00분</next-quiz-info></div>
         </div>
         <div id="area-top-right">
             <div class="area-top-btn" id="btn-settings">설정</div>
@@ -53,7 +53,7 @@
             <div class="area-top-btn" id="btn-login">로그인</div>
             <%}else {%>
             <div class="area-top-btn" id="btn-logout">로그아웃</div>
-            <div class="area-login-info"><%-nick%></div>
+            <div class="area-login-info"><%-nick%>님으로 접속 중</div>
             <%}%>
 
         </div>
@@ -62,12 +62,22 @@
         <div id="article-left">
             <div id="search-area-left">
             </div>
-            <div id="notice">
-                <div type="title">사이트 주의사항 ( 필독 )</div>
-                <div type="msg">정확하게 아는 것만 투표 해 주세요 ( 헷갈리면 투표 X )</div>
-                <div type="msg">욕설, 실수에 대한 과도한 비난 등은 영구밴 대상입니다</div>
-                <div type="msg">기타 비매너라고 판단되는 행위도 영구밴 대상입니다</div>
-                <div type="msg">투표 왜 이렇게 안올라오냐 등의 재촉 행위도 금합니다</div>
+            <div id="site-info-notice">
+                <div id="site-info">
+                    <div id="conn-cnt-wrapper">
+                        <div>접속자 수</div>
+                        <div id="conn-cnt">0</div>
+                        <div>밴 수</div>
+                        <div id="ban-cnt">0</div>
+                    </div>
+                </div>
+                <div id="notice">
+                    <div type="title">사이트 주의사항 ( 필독 )</div>
+                    <div type="msg">정확하게 아는 것만 투표 해 주세요 ( 헷갈리면 투표 X )</div>
+                    <div type="msg">욕설, 실수에 대한 과도한 비난 등은 영구밴 대상입니다</div>
+                    <div type="msg">기타 비매너라고 판단되는 행위도 영구밴 대상입니다</div>
+                    <div type="msg">투표 왜 이렇게 안올라오냐 등의 재촉 행위도 금합니다</div>
+                </div>
             </div>
             <div id="hint">
                 <div type="top-menu">
@@ -96,22 +106,24 @@
                         퀴즈 끄기
                     </div>
                 </div>
-                <div id="random-quiz-question-wrapper">
-                    <div id="random-quiz-question">
-                        다음 중 단어의 뜻이 나머지와 다른 하나는 무엇일까요? 다음 중 단어의 뜻이 나머지와 다른 하나는 무엇일까요?
+                <div id="quiz-all-wnd">
+                    <div id="random-quiz-question-wrapper">
+                        <div id="random-quiz-question">
+                            문제
+                        </div>
                     </div>
-                </div>
-                <div class="random-quiz-answer">
-                    1. 와하하
-                </div>
-                <div class="random-quiz-answer">
-                    2. 워허허이
-                </div>
-                <div class="random-quiz-answer">
-                    3. 남아공공공
-                </div>
-                <div class="gauge-wrapper">
-                    <div class="gauge"></div>
+                    <div class="random-quiz-answer">
+                        보기1
+                    </div>
+                    <div class="random-quiz-answer">
+                        보기2
+                    </div>
+                    <div class="random-quiz-answer">
+                        보기3
+                    </div>
+                    <div class="gauge-wrapper">
+                        <div class="gauge"></div>
+                    </div>
                 </div>
             </div>
             <div id="ads-banner-center">
@@ -119,6 +131,13 @@
                      data-ad-unit    = "DAN-1iyeys41mnepk"
                      data-ad-width   = "320"
                      data-ad-height  = "100"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+            </div>
+            <div id="ads-banner2-center">
+                <ins class="kakao_ad_area" style="display:none;width:100%"
+                     data-ad-unit    = "DAN-uvjqvmlqkb3k"
+                     data-ad-width   = "320"
+                     data-ad-height  = "50"></ins>
                 <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
             </div>
             <div id="ads-img1-center">
@@ -145,6 +164,12 @@
                 <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
             </div>
             <div id="chat-wnd-root">
+                <div id="search-ret-rank">
+                    <div class="h1">유저들의 검색 결과 상위 5개</div>
+                    <div class="s1">클릭하면 검색합니다</div>
+                    <ui id="search-ret-rank-list">
+                    </ui>
+                </div>
                 <div type="top-menu">
                     <vtitle>채팅</vtitle>
                 </div>
@@ -159,7 +184,7 @@
         </div>
     </div>
 </div>
-<!--
+
 <wnd role="settings">
     <div type="title"> - 투표 - </div>
     <div type="line"></div>
@@ -212,7 +237,7 @@
     <div type="checkbox"><input type="checkbox" id="cb_notshowchat"/>일반 채팅 안받기(성능)</div>
     <div type="checkbox"><input type="checkbox" id="cb-notice-disable"/>알림 안받기</div>
 </wnd>
--->
+
 <div class="admin_msg"></div>
 </body>
 <script type="text/javascript" src="/indexSuwon.js"></script>

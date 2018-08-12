@@ -8,13 +8,13 @@ var moment = require('moment');
 var Log = require('./Log');
 
 var selected = null;
-var quizDataObj = function(_quizdata, io) {
+var quizDataObj = function(nick, _quizdata, io) {
     // {idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx}
     this.data = _quizdata;
     this.io = io;
     this.cnts = [0,0,0];
     this.bEnd = false;
-    this.io.sockets.emit('quiz', {quizdata: _quizdata});
+    this.io.sockets.emit('quiz', {quizdata: _quizdata, nick: nick});
     this.tLastEnd = 0;
     selected = this;
     setTimeout(this.sendRet, 10000);
