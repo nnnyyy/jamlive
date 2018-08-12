@@ -3,6 +3,31 @@
  */
 "use strict"
 
+var RETRY_INTERVAL = 4000;
+var ConnectStateInfo = function() {
+    this.isConnected = false;
+    this.timeoutID = -1;
+}
+var connectStateInfo = new ConnectStateInfo();
+
+ConnectStateInfo.prototype.Connect = function() {
+    this.isConnected = true;
+    clearInterval( this.timeoutID );
+}
+
+ConnectStateInfo.prototype.Disconnect = function() {
+    this.isConnected = false;
+
+    setInterval(function() {
+        if( !connectStateInfo.isConnected ) {
+            $.get('/ping', function(data){
+                connectStateInfo.isConnected = true;
+                window.location.href = unescape(window.location.pathname);
+            })
+        }
+    }, RETRY_INTERVAL);
+}
+
 function init( socket ) {
     G.socket = socket;
     searchObj.init();
@@ -650,12 +675,10 @@ function setSocketEvent( socket ) {
     socket.on('quiz', quizObj.onQuiz);
     socket.on('quizret', quizObj.onQuizRet);
     socket.on('next-quiz', G.onNextQuiz);
+    socket.on('connect', connectStateInfo.Connect );
+    socket.on('disconnect', connectStateInfo.Disconnect);
+    socket.on('emoticon', onEmoticon);
 
-    //socket.on('serv_msg', onServMsg);
-    //socket.on('emoticon', onEmoticon);
-    //socket.on('next-quiz', onNextQuiz);
-    //socket.on('connect', connectStateInfo.Connect );
-    //socket.on('disconnect', connectStateInfo.Disconnect);
     //socket.on('update-user', onUpdateUser);
     //socket.on('update-users', onUpdateUsers);
 }
@@ -1315,5 +1338,25 @@ function getSearchArea(where) {
     }
     else {
         return searchObj.area[1];
+    }
+}
+
+function onEmoticon(_data) {
+    switch( _data.name ) {
+        case "bbam":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
+            break;
+
+        case "ddk":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
+            break;
+
+        case "yeee":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/yeee.png"/>', false, _data.auth);
+            break;
+
+        case "hi":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hi.png"/>', false, _data.auth);
+            break;
     }
 }
