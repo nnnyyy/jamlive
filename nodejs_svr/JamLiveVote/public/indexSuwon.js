@@ -49,6 +49,9 @@ var GlobalValue = function() {
     this.banElem = $('#ban-cnt');
     this.weekdayElem = $('next-quizday');
     this.quizinfoElem = $('next-quiz-info');
+    this.usersMap = new Map();
+    this.connUserList = $('#conn-users-list');
+    this.tLastUserUpdate = 0;
 }
 
 GlobalValue.prototype.onNextQuiz = function (data) {
@@ -688,9 +691,8 @@ function setSocketEvent( socket ) {
     socket.on('connect', connectStateInfo.Connect );
     socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('emoticon', onEmoticon);
-
-    //socket.on('update-user', onUpdateUser);
-    //socket.on('update-users', onUpdateUsers);
+    socket.on('update-user', onUpdateUser);
+    socket.on('update-users', onUpdateUsers);
 }
 
 function setKeyEvent() {
@@ -870,6 +872,11 @@ function setBtnEvent() {
          socket.emit('ban', {sockid: $(this).attr('sockid')});
          }
          */
+        e.preventDefault();
+    });
+
+    $('#conn-users-list').on('click', '.btn-user-info', function (e) {
+        openUserMenu($(this).text(), '', $(this).attr('nick') );
         e.preventDefault();
     });
 
@@ -1449,4 +1456,40 @@ function onBtnToggleQuiz(e) {
 
     quizObj.bQuizEnable = !quizObj.bQuizEnable;
     $('#btn-toggle-quiz').text(quizObj.bQuizEnable ? '퀴즈 끄기' : '퀴즈 켜기');
+}
+
+function updateUserList() {
+    var tCur = new Date();
+    if( tCur - G.tLastUserUpdate < 5000 ) {
+        return;
+    }
+    G.tLastUserUpdate = tCur;
+
+    var html = '';
+    var keys = G.usersMap.keys();
+    keys.sort();
+    for( var i = 0 ; i < keys.length ; ++i ) {
+        html += '<li><div class="btn-user-info" nick="'+ keys[i] +'" >'+ keys[i] + '</div></li>';
+    }
+    G.connUserList.html(html);
+}
+
+
+function onUpdateUser(data) {
+    if( data.op == 'add') {
+        G.usersMap.put(data.nick, 1);
+    }
+    else {
+        G.usersMap.remove(data.nick);
+    }
+
+    updateUserList();
+}
+
+function onUpdateUsers(data) {
+    for( var i = 0 ; i < data.list.length ; ++i) {
+        G.usersMap.put(data.list[i], 1);
+    }
+
+    updateUserList();
 }
