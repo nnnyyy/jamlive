@@ -586,7 +586,7 @@ $top-bottom-margin: 5px;
         $msg-area-width: calc( #{$width} - #{$nick-area-width} );
         $grade-image-wh: 18px;
         $line-height: 23px;
-        font-size: 15px;
+        font-size: 13px;
         width: $width;
         height: $chat-root-height-ie;
         height: $height;
@@ -623,11 +623,12 @@ $top-bottom-margin: 5px;
               .nick {
                 float: left;
                 padding-left: 4px;
+                font-size: 13px;
               }
 
               .ip {
                 float: left;
-                font-size: 10px;
+                font-size: 9px;
                 line-height: $line-height;
               }
             }
