@@ -9,7 +9,7 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
 }
 
 #area-top {
@@ -63,7 +63,7 @@ body {
   margin-left: -180px;
   text-align: center;
   color: #393939;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
   font-weight: bold;
 }
 #area-top #area-top-center #quizinfo-title {
@@ -170,7 +170,7 @@ body {
   background-color: #ffffff;
   color: #393939;
   z-index: 100;
-  font-family: '고딕';
+  font-family: 'Nanum Barun Gothic', sans-serif;
   font-size: 15px;
 }
 #area-article #article-left #site-info-notice {
@@ -178,7 +178,7 @@ body {
   height: 187px;
   margin-bottom: 13px;
   text-align: center;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
   overflow-y: hidden;
 }
 #area-article #article-left #site-info-notice #site-info {
@@ -207,7 +207,7 @@ body {
   margin-bottom: 13px;
   border: 1px solid #e5e5e5;
   text-align: center;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
   overflow-y: hidden;
 }
 #area-article #article-left #site-info-notice #notice [type="title"] {
@@ -226,7 +226,7 @@ body {
   height: calc( 100vh - 13px - 65px - 5px - 187px);
   background-color: #ffffff;
   border: 1px solid #e5e5e5;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
 }
 #area-article #article-left #hint [type="top-menu"] {
   width: 100%;
@@ -262,7 +262,7 @@ body {
   overflow-y: auto;
   padding: 0 10px 0 10px;
   font-size: 14px;
-  font-family: '고딕';
+  font-family: 'Nanum Barun Gothic', sans-serif;
 }
 #area-article #article-left #hint #hint-modify-area {
   width: calc( 100% - 20px );
@@ -294,13 +294,13 @@ body {
   color: #393939;
   overflow-y: auto;
   z-index: 100;
-  font-family: '고딕';
+  font-family: 'Nanum Barun Gothic', sans-serif;
   font-size: 15px;
 }
 #area-article #article-center #random-quiz {
   background-color: #ffffff;
   height: 297px;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
   border: 1px solid #e5e5e5;
 }
 #area-article #article-center #random-quiz [type="top-menu"] {

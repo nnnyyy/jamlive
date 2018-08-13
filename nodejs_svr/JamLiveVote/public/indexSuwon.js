@@ -863,6 +863,11 @@ function setBtnEvent() {
     $('#btn-serv-3').click(onBtnGoServ3);
     $('#btn-serv-4').click(onBtnGoServ4);
 
+    $(document).on('click', '.btn-search-ret-rank', function(e) {
+        e.stopPropagation();
+        searchWebRoot(G.socket, $(this).text(), false);
+    });
+
     $(document).on('click', '.nick-area .nick', function (e) {
         e.stopPropagation();
         openUserMenu($(this).text(), $(this).attr('sockid'), $(this).text().trim() );

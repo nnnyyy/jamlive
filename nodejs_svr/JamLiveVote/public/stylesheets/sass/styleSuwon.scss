@@ -22,7 +22,7 @@ body {
 #root {
   width: 100%;
   height: 100%;
-  font-family: 'Nanum Square';
+  font-family: 'Nanum Barun Gothic', sans-serif;
 }
 
 $top-height: 65px;
@@ -91,7 +91,7 @@ $top-bottom-margin: 5px;
     margin-left:  ($width * -1) / 2;
     text-align: center;
     color:$color-main-font;
-    font-family: 'Nanum Square';
+    font-family: 'Nanum Barun Gothic', sans-serif;
     font-weight: bold;
 
     #quizinfo-title {
@@ -225,7 +225,7 @@ $top-bottom-margin: 5px;
       background-color: $color-main-back;
       color: $color-main-font;
       z-index: 100;
-      font-family: '고딕';
+      font-family: 'Nanum Barun Gothic', sans-serif;
       font-size: 15px;
     }
 
@@ -237,7 +237,7 @@ $top-bottom-margin: 5px;
       height: $notice-height;
       margin-bottom: $bottom-margin;
       text-align: center;
-      font-family: 'Nanum Square';
+      font-family: 'Nanum Barun Gothic', sans-serif;
       overflow-y: hidden;
 
       #site-info {
@@ -268,7 +268,7 @@ $top-bottom-margin: 5px;
         margin-bottom: $bottom-margin;
         border: 1px solid $color-border;
         text-align: center;
-        font-family: 'Nanum Square';
+        font-family: 'Nanum Barun Gothic', sans-serif;
         overflow-y: hidden;
 
         [type="title"] {
@@ -292,7 +292,7 @@ $top-bottom-margin: 5px;
       height: $hint-height;
       background-color: $color-main-back;
       border: 1px solid $color-border;
-      font-family: 'Nanum Square';
+      font-family: 'Nanum Barun Gothic', sans-serif;
 
       [type="top-menu"] {
         width: 100%;
@@ -332,7 +332,7 @@ $top-bottom-margin: 5px;
         overflow-y: auto;
         padding: 0 10px 0 10px;
         font-size: 14px;
-        font-family: '고딕';
+        font-family: 'Nanum Barun Gothic', sans-serif;
       }
 
       #hint-modify-area {
@@ -375,7 +375,7 @@ $top-bottom-margin: 5px;
       color: $color-main-font;
       overflow-y: auto;
       z-index: 100;
-      font-family: '고딕';
+      font-family: 'Nanum Barun Gothic', sans-serif;
       font-size: 15px;
     }
 
@@ -384,7 +384,7 @@ $top-bottom-margin: 5px;
 
       background-color: $color-main-back;
       height: $random-quiz-height;
-      font-family: 'Nanum Square';
+      font-family: 'Nanum Barun Gothic', sans-serif;
       border: 1px solid $color-border;
 
       [type="top-menu"] {
