@@ -514,6 +514,7 @@ function SearchObject() {
     this.slhash = '';
     this.searchtop5queries = [];
     this.searchRank = $('#search-ret-rank-list');
+    this.tLastSearch = 0;
 }
 
 SearchObject.prototype.init = function() {
@@ -534,6 +535,8 @@ SearchObject.prototype.restoreSearch = function() {
         this.area[i].html('');
         setVisible(this.area[i], false);
     }
+
+    searchObj.lastSearchQuery = '';
 }
 
 SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
@@ -1094,6 +1097,19 @@ function logout() {
 }
 
 function searchWebRoot( socket, query, isBroadcast ) {
+    var tCur = new Date();
+    if( tCur - searchObj.tLastSearch <= 800 ) {
+        showAdminMsg('검색은 여유를 두고!');
+        return;
+    }
+
+    if( searchObj.lastSearchQuery == query ) {
+        showAdminMsg('방금 전에 검색했던 검색어입니다');
+        return;
+    }
+
+    searchObj.tLastSearch = tCur;
+
     searchObj.initSearch();
     var nick = getNickName();
     socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
