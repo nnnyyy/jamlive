@@ -498,9 +498,6 @@ function onGlobalKeyDown(e) {
     var tRefreshed = new Date(localStorage.getItem('refreshtime'));
     var bCanRefresh = ( tCur - tRefreshed >= 3000 );
 
-    console.log( tCur );
-    console.log( tRefreshed );
-
     if (e.keyCode == 116 && !bCanRefresh) {
         e.keyCode = 2;
         return false;

@@ -32,6 +32,9 @@ function init( socket ) {
     G.socket = socket;
     setVisible($('.user-menu'), false);
 
+    var tCur = new Date();
+    localStorage.setItem('refreshtime', tCur.toString());
+
     searchObj.init();
     hintObj.init();
     chatObj.init();
