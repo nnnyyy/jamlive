@@ -961,7 +961,6 @@ function onChat( data ) {
         else {
             chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
         }
-        chatObj.setMsgVisible( data.mode, $('#cb_votemsg').is(':checked') ? false : true );
     }
     else if( data.mode == "search") {
         if( !isShowSearchChat() ) return;
@@ -1247,10 +1246,18 @@ function searchWebNaver( query, subtype, where ) {
         contentType: 'application/json',
         url: '/searchnaver',
         success: function(data) {
-            data.data = data.data.slice(0,2);
-            data.hdata = data.hdata.slice(0,2);
-            setSearchRet(data.data, true, where);
-            setSearchRet(data.hdata, true, where);
+            try {
+                data.data = data.data.slice(0,2);
+                data.hdata = data.hdata.slice(0,2);
+                setSearchRet(data.data, true, where);
+                setSearchRet(data.hdata, true, where);
+            }catch( e ) {
+                console.log(e);
+                clearTimeout(searchObj.timerID);
+                searchObj.timerID = setTimeout(function() {
+                    searchObj.restoreSearch();
+                }, 13000);
+            }
         }
     });
 }
@@ -1266,8 +1273,16 @@ function searchWebDongyo(query , where) {
         contentType: 'application/json',
         url: '/searchdongyo',
         success: function(data) {
-            data.data = data.data.slice(0,2);
-            setSearchRet(data.data, true, where);
+            try {
+                data.data = data.data.slice(0,2);
+                setSearchRet(data.data, true, where);
+            }catch(e) {
+                console.log(e);
+                clearTimeout(searchObj.timerID);
+                searchObj.timerID = setTimeout(function() {
+                    searchObj.restoreSearch();
+                }, 13000);
+            }
         }
     });
 }
