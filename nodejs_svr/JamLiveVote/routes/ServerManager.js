@@ -62,8 +62,12 @@ var ServerMan = function() {
     this.countslist = [];
 
     this.countsForGuest  = new HashMap();
-    this.searchQueryMap = new HashMap();
     this.countslistForGuest = [];
+
+    this.countsSearchFirst = new HashMap();
+    this.countslistSearchFirst = [];
+
+    this.searchQueryMap = new HashMap();
     this.memo = "";
     this.memo_provider = '';
     this.bMemoModifying = false;
@@ -99,6 +103,7 @@ ServerMan.prototype.register = function(socket) {
             if( ret.ret == 0 ) {
                 //  완료 처리 해줘
                 client.activePoint = ret.point;
+                socket.emit('ap', {ap: client.activePoint });
                 //console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
 
             }
@@ -245,8 +250,18 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
+    if( this.countsSearchFirst.get(cur) == null ) {
+        this.countsSearchFirst.set(cur, [0,0,0]);
+        this.countslistSearchFirst.push(cur);
+        if( this.countsSearchFirst.count() > 10 ) {
+            this.countsSearchFirst.delete(this.countslistSearchFirst[0]);
+            this.countslistSearchFirst.shift();
+        }
+    }
+
     let _counts = [0,0,0];
     let _countsForGuest = [0,0,0];
+    let _countsSearchFirst = [0,0,0];
 
     this.counts.forEach(function(value, key) {
         _counts[0] += value[0];
@@ -258,6 +273,12 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         _countsForGuest[0] += value[0];
         _countsForGuest[1] += value[1];
         _countsForGuest[2] += value[2];
+    })
+
+    this.countsSearchFirst.forEach(function(value, key) {
+        _countsSearchFirst[0] += value[0];
+        _countsSearchFirst[1] += value[1];
+        _countsSearchFirst[2] += value[2];
     })
 
     var searchlist = this.searchQueryMap.values();
@@ -272,16 +293,16 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         s += searchlist[i].query;
     }
 
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode() });
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode() });
 }
 
-ServerMan.prototype.click = function(idx, isGuest) {
+ServerMan.prototype.click = function(idx, isGuest, isSearchedUser) {
     var cur = new Date();
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
 
-    var _counts = isGuest ? this.countsForGuest : this.counts;
-    var _countslist = isGuest ? this.countslistForGuest : this.countslist;
+    var _counts = isGuest ? this.countsForGuest : ( isSearchedUser ? this.countsSearchFirst : this.counts );
+    var _countslist = isGuest ? this.countslistForGuest : ( isSearchedUser ? this.countslistSearchFirst : this.countslist );
 
     var obj = _counts.get(cur);
     if( obj == null ) {
@@ -588,7 +609,7 @@ function onSockLike(data) {
 
         const curMsg = msg[Math.floor(Math.random() * 5)];
 
-        toLikeClient.activePoint += 10;
+        toLikeClient.activePoint += 1;
 
         servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
@@ -605,13 +626,14 @@ function onSockSearch(data) {
         var logined = socket.handshake.session.username ? true : false;
 
         if( isLiveQuizTime() ) {
-            client.activePoint += 1;
+            client.activePoint += 3;
         }
+
+        client.tLastSearch = new Date();
 
         if( data.isBroadcast ) {
             var nick = client.nick;
             servman.addSearchQuery( data.msg, true );
-            //chatMan.Broadcast(servman.io, client, 'search', `[검색] ${data.msg}`, isBaned);
         }
         else {
             servman.addSearchQuery( data.msg, false );
@@ -702,8 +724,13 @@ function onSockVote(data) {
         }
         var socket = client.socket;
 
-        if( client.auth < 1 && servman.checkBaned( client.ip ) ) {
+        if( servman.checkBaned( client.ip ) ) {
             sendServerMsg(socket, '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.');
+            return;
+        }
+
+        if( client.auth < 2 && !client.isInSearchedUser() ) {
+            sendServerMsg(socket, '레벨 2 미만의 회원은 검색 후 투표가능합니다.');
             return;
         }
 
@@ -724,7 +751,7 @@ function onSockVote(data) {
         }
 
         if( client.isClickable() ) {
-            servman.click(data.idx, !client.isLogined());
+            servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
 
             if( quizAnalysis.isQuizDataEngaged() ) {
                 quizAnalysis.vote(client, data.idx);
@@ -735,7 +762,7 @@ function onSockVote(data) {
                 servman.quizdata.vote(data.idx);
             }
             if( socket.handshake.session.username && socket.handshake.session.auth >= 1 ) {
-                servman.click(data.idx, !client.isLogined());
+                servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
             }
             client.tLastClick = new Date();
 

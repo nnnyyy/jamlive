@@ -9,6 +9,7 @@ var Client = function(socket) {
     this.nick = '';
     this.ip = '';
     this.tLastChat = 0;
+    this.tLastSearch = 0;
 }
 
 Client.prototype.isClickable = function() {
@@ -24,17 +25,9 @@ Client.prototype.isClickable = function() {
     return (cur - this.tLastClick) > 7000;
 }
 
-Client.prototype.isSearchable = function() {
-    var cur = new Date();
-    var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.auth : -1;
-    if( _auth >= 1 ) {
-        return true;
-    }
-    else if ( _auth == 0 ) {
-        return (cur - this.tLastClick) > 500;
-    }
-
-    return (cur - this.tLastClick) > 10 * 1000;
+Client.prototype.isInSearchedUser = function() {
+    var tCur = new Date();
+    return tCur - this.tLastSearch <= ( 8 * 1000 );
 }
 
 Client.prototype.getUserId = function() {

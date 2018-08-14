@@ -96,6 +96,7 @@ Options.prototype.init = function() {
 
 
     this.setShowMemberVoteOnly();
+    this.setSearchUserVoteOnly();
 
     //  투표 몇 표 이상일 경우 보여줄까?
     var min_vote_val = localStorage.getItem('min_vote') || 0;
@@ -234,9 +235,42 @@ Options.prototype.setShowMemberVoteOnly = function() {
     })
 }
 
+Options.prototype.setSearchUserVoteOnly = function() {
+    //  고정닉 투표만 보기 ( 손님투표 거르기 )
+    if( !G.isLogin ) {
+        $('.cb_show_search_user_vote_only').attr('checked', false );
+        $('.cb_show_search_user_vote_only').attr('disabled', true);
+    }
+    else {
+        $('.cb_show_search_user_vote_only').attr('disabled', false);
+        var only = localStorage.getItem('cb_show_search_user_vote_only') || 0;
+
+        $('.cb_show_search_user_vote_only').attr('checked', only == 1 ? true : false );
+    }
+
+    $('.cb_show_search_user_vote_only').change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb_show_search_user_vote_only', 1);
+        }
+        else {
+            localStorage.setItem('cb_show_search_user_vote_only', 0);
+        }
+    })
+}
+
 Options.prototype.isShowMemberVoteOnly = function() {
 
     if($('.cb_show_member_vote_only').is(':checked')) {
+        return true;
+    }
+
+
+    return false;
+}
+
+Options.prototype.isShowSearchUserVoteOnly = function() {
+
+    if($('.cb_show_search_user_vote_only').is(':checked')) {
         return true;
     }
 
@@ -457,13 +491,20 @@ VoteObject.prototype.onVoteData = function(data) {
     G.banElem.text(votedata.bans);
 
     var total = [0,0,0];
-    for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
-        total[i] += votedata.cnt[i];
-    }
+    if( !options.isShowSearchUserVoteOnly() ) {
+        for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
+            total[i] += votedata.cnt[i];
+        }
 
-    if( !options.isShowMemberVoteOnly() ) {
-        for( var i = 0 ; i < votedata.guest_cnt.length ; ++i ) {
-            total[i] += votedata.guest_cnt[i];
+        if( !options.isShowMemberVoteOnly() ) {
+            for( var i = 0 ; i < votedata.guest_cnt.length ; ++i ) {
+                total[i] += votedata.guest_cnt[i];
+            }
+        }
+    }
+    else {
+        for( var i = 0 ; i < votedata.searched_cnt.length ; ++i ) {
+            total[i] += votedata.searched_cnt[i];
         }
     }
 
@@ -486,7 +527,6 @@ VoteObject.prototype.onVoteData = function(data) {
     if( options.isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
         total = [0,0,0];
     }
-
 
     var minVoteVal = Number($('min_vote').text());
 
@@ -699,6 +739,7 @@ function setSocketEvent( socket ) {
     socket.on('emoticon', onEmoticon);
     socket.on('update-user', onUpdateUser);
     socket.on('update-users', onUpdateUsers);
+    socket.on('ap', onAP);
 }
 
 function setKeyEvent() {
@@ -956,7 +997,10 @@ function onChat( data ) {
         if( options.isShowMemberVoteOnly() &&
             ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
         ) {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>투표했습니다.</b>', false, data.auth, data.ip, data.sockid );
+            //chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>투표했습니다.</b>', false, data.auth, data.ip, data.sockid );
+        }
+        else if( options.isShowSearchUserVoteOnly() && !data.isSearched ) {
+            //
         }
         else {
             chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
@@ -1001,6 +1045,7 @@ function onMyID(data) {
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
     options.setShowMemberVoteOnly();
+    options.setSearchUserVoteOnly();
 }
 
 var animOpacityTimerID = -1;
@@ -1525,6 +1570,9 @@ function onUpdateUser(data) {
     updateUserList();
 }
 
+function onAP(data) {
+    $('ap').text(data.ap + ' 점');
+}
 function onUpdateUsers(data) {
     for( var i = 0 ; i < data.list.length ; ++i) {
         G.usersMap.put(data.list[i], 1);
