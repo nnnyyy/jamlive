@@ -112,10 +112,20 @@
         });
     }
 
+    function onInputMsgKeyPress(e) {
+        var code = (e.which ? e.which : e.keyCode );
+        if( code == 13 ) {
+            //  엔터 키
+            signin();
+        }
+    }
+
     $(document).ready(function(){
         $('#btn_login').click(function(e) {
             signin();
         })
+
+        $('#ip_pw').keypress(onInputMsgKeyPress);
     });
 </script>
 </body>
