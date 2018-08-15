@@ -569,6 +569,24 @@ body {
   transition: none !important;
 }
 
+#notice-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 104;
+  text-align: center;
+}
+#notice-wrapper #notice-wnd {
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  padding: 5px 10px;
+  background-color: white;
+}
+
 wnd[role="settings"] {
   position: fixed;
   top: 0;

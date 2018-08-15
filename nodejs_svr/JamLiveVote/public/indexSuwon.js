@@ -32,6 +32,11 @@ function init( socket ) {
     G.socket = socket;
     setVisible($('.user-menu'), false);
 
+    var noticeFirst = localStorage.getItem('notice-first') | 0;
+    if( noticeFirst != 0 ) {
+        setVisible($('#notice-wrapper'), false);
+    }
+
     var tCur = new Date();
     localStorage.setItem('refreshtime', tCur.toString());
 
@@ -904,6 +909,11 @@ function setBtnEvent() {
     var settingsElem = $('wnd[role="settings"]');
     setVisible(settingsElem, false);
     $('#btn-settings').click(onBtnSettings);
+    $('#btn-help').click(onBtnHelp);
+    $('#notice-wrapper').click(function(e) {
+        localStorage.setItem('notice-first', 1);
+        setVisible($('#notice-wrapper'), false);
+    });
 
     $('#btn-serv-1').click(onBtnGoServ1);
     $('#btn-serv-2').click(onBtnGoServ2);
@@ -986,6 +996,11 @@ function onBtnSettings(e) {
     $(window).click(function() {
         settingsWnd.css({left: -300});
     })
+}
+
+function onBtnHelp(e) {
+    e.stopPropagation();
+    setVisible($('#notice-wrapper'), true);
 }
 
 function onChat( data ) {
