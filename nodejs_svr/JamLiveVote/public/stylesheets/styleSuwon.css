@@ -203,7 +203,7 @@ body {
   width: calc( 100% - 150px - 13px - 2px - 2px );
   height: 100%;
   float: left;
-  background-color: #ffffff;
+  background-color: #e9bd25;
   margin-bottom: 13px;
   border: 1px solid #e5e5e5;
   text-align: center;
@@ -212,13 +212,14 @@ body {
 }
 #area-article #article-left #site-info-notice #notice [type="title"] {
   margin: 14px 0 14px 0;
-  color: #626262;
+  color: red;
   font-size: 27px;
   font-weight: bold;
 }
 #area-article #article-left #site-info-notice #notice [type="msg"] {
   font-size: 17px;
-  color: #6e6e6e;
+  color: black;
+  font-weight: bold;
   margin: 11px 0 11px 0;
 }
 #area-article #article-left #hint {

@@ -264,7 +264,7 @@ $top-bottom-margin: 5px;
         width: $notice-width;
         height: 100%;
         float: left;
-        background-color: $color-main-back;
+        background-color: $color-yellow-font;
         margin-bottom: $bottom-margin;
         border: 1px solid $color-border;
         text-align: center;
@@ -273,13 +273,14 @@ $top-bottom-margin: 5px;
 
         [type="title"] {
           margin: 14px 0 14px 0;
-          color: $color-sub-font;
+          color: red;
           font-size: 27px;
           font-weight: bold;
         }
         [type="msg"] {
           font-size: 17px;
-          color: $color-sub2-font;
+          color: black;
+          font-weight: bold;
           margin: 11px 0 11px 0;
         }
       }
