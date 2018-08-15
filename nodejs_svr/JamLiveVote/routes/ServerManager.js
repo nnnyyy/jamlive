@@ -599,6 +599,18 @@ function onSockLike(data) {
          return;
          }
 
+        const curMsg = msg[Math.floor(Math.random() * 5)];
+
+        var tCur = new Date();
+        if( tCur - toLikeClient.tLastClick >= 25000 ) {
+            sendServerMsg(client.socket, '칭찬은 상대의 퀴즈 투표 후에');
+            return;
+        }
+
+        if( !isLiveQuizTime() ) {
+            sendServerMsg(client.socket, '라이브 퀴즈 시간대가 아니면 칭찬 불가');
+        }
+
         const msg = [
             `${toLikeClient.nick}님! 당신은 최고에요!`,
             `${toLikeClient.nick}님 덕분에 살았습니다`,
@@ -607,9 +619,7 @@ function onSockLike(data) {
             `${toLikeClient.nick}님 매우 칭찬해~`,
         ];
 
-        const curMsg = msg[Math.floor(Math.random() * 5)];
-
-        toLikeClient.activePoint += 1;
+        toLikeClient.activePoint += 5;
 
         servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
