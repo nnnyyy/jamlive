@@ -304,7 +304,7 @@ exports.searchex = function(req, res, next) {
                     res.json([]);
                 }
             } else {
-                console.log('searchex failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                //console.log('searchex failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
                 res.json([]);
             }
         });
