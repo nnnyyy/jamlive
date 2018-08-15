@@ -599,8 +599,6 @@ function onSockLike(data) {
          return;
          }
 
-        const curMsg = msg[Math.floor(Math.random() * 5)];
-
         var tCur = new Date();
         if( tCur - toLikeClient.tLastClick >= 25000 ) {
             sendServerMsg(client.socket, '칭찬은 상대의 퀴즈 투표 후에');
@@ -618,6 +616,8 @@ function onSockLike(data) {
             `퀴즈의 지배자 ${toLikeClient.nick}님 ♡ㅅ♡`,
             `${toLikeClient.nick}님 매우 칭찬해~`,
         ];
+
+        const curMsg = msg[Math.floor(Math.random() * 5)];
 
         toLikeClient.activePoint += 5;
 
