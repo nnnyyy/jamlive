@@ -398,25 +398,32 @@ function ChatObject() {
     this.chatInputNameElem = $('#ip-nick');
     this.chatInputMsgElem = $('#ip-msg');
     this.bTrigger = false;
+    this.tLastFlushByInterval = 0;
+    this.isFlushing = false;
 }
 
 ChatObject.prototype.init = function() {
     setInterval(function() {
-        chatObj.bFlushByTimer = true;
+        var tCur = new Date();
+        if( tCur - chatObj.tLastFlushByInterval >= 1500 ) {
+            chatObj.bFlushByTimer = true;
+            chatObj.tLastFlushByInterval = tCur;
+        }
         chatObj.FlushChat();
-    }, 1000);
+    }, 60);
 }
 
-ChatObject.prototype.FlushChat = function( mode ) {
+ChatObject.prototype.FlushChat = function() {
     var tCur = new Date();
-    if( mode == "vote" || this.chatBuffer.length >= 3 || this.bFlushByTimer  ) {
-
+    if( (this.chatBuffer.length >= 6 || this.bFlushByTimer) && !this.isFlushing  ) {
+        this.isFlushing = true;
+        this.bFlushByTimer = false;
         var bAutoMoveToBottom = false;
         var chatwndheight = this.chatUI.height();
 
         var list = this.chatUI.find('li');
 
-        if( list.length > 70 ) {
+        if( list.length > 50 ) {
             list.eq(0).remove();
         }
 
@@ -438,20 +445,11 @@ ChatObject.prototype.FlushChat = function( mode ) {
         }
 
         this.chatBuffer = [];
-        this.bFlushByTimer = false;
+        this.isFlushing = false;
     }
 }
 
 ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid ) {
-    /*
-    var li =    '<li class="chat_item" mode="' + mode +'">' +
-        '<div type="msg-obj">' +
-        '<div type="nick" ip="'+ ip +'" sockid="' + sockid + '"><img type="grade" src="' + getGradeImage(auth, isbaned) +'"/><div type="nick-only">' + name +'</div><div type="ip-only">' + (ip ? ('(' + ip + ')') : '') + '</div></div>' +
-        '<div type="msg">' + ( bStrip ? strip(msg) : msg ) + '</div>' +
-        '<data class="chat_name"></data>' +
-        '</div>' +
-        '</li>';
-*/
     var li =    '<li mode="' + mode +'">' +
                     '<div class="chat-msg-item">' +
                         '<div class="nick-area">' +
@@ -467,7 +465,9 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
 
     this.chatBuffer.push(li);
 
-    this.FlushChat( mode );
+    if( mode == 'vote') {
+        chatObj.bFlushByTimer = true;
+    }
 }
 
 ChatObject.prototype.setMsgVisible = function(mode, isVisible) {
