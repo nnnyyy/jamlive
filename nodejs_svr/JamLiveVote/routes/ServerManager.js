@@ -739,7 +739,7 @@ function onSockVote(data) {
             return;
         }
 
-        if( client.auth < 2 && !client.isInSearchedUser() ) {
+        if( isLiveQuizTime() && client.auth < 2 && !client.isInSearchedUser() ) {
             sendServerMsg(socket, '레벨 2 미만의 회원은 검색 후 투표가능합니다.');
             return;
         }
