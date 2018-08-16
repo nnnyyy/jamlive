@@ -600,7 +600,7 @@ function onSockLike(data) {
          }
 
         var tCur = new Date();
-        if( tCur - toLikeClient.tLastClick >= 25000 ) {
+        if( tCur - toLikeClient.tLastClick >= 40000 ) {
             sendServerMsg(client.socket, '칭찬은 상대의 퀴즈 투표 후에');
             return;
         }
