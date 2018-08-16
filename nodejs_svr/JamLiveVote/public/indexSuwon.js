@@ -408,46 +408,53 @@ ChatObject.prototype.init = function() {
 }
 
 ChatObject.prototype.FlushChat = function() {
-    var tCur = new Date();
-    if( tCur - chatObj.tLastFlushByInterval >= 1500 ) {
-        chatObj.bFlushByTimer = true;
-        chatObj.tLastFlushByInterval = tCur;
+    try {
+        var tCur = new Date();
+        if (tCur - chatObj.tLastFlushByInterval >= 1500) {
+            chatObj.bFlushByTimer = true;
+            chatObj.tLastFlushByInterval = tCur;
+        }
+
+        var bufCopy = chatObj.chatBuffer.slice();
+
+        if ((bufCopy.length >= 6 || chatObj.bFlushByTimer) && !chatObj.isFlushing) {
+            chatObj.isFlushing = true;
+            chatObj.bFlushByTimer = false;
+            var bAutoMoveToBottom = false;
+            var chatwndheight = chatObj.chatUI.height();
+
+            var list = chatObj.chatUI.find('li');
+
+            if (list.length > 50) {
+                list.eq(0).remove();
+            }
+
+            if ((chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
+                chatObj.autoScrollElem.is(':checked')) {
+                bAutoMoveToBottom = true;
+            }
+
+            var html = '';
+            for (var i = 0; i < bufCopy.length; ++i) {
+                html += bufCopy[i];
+            }
+
+            chatObj.chatUI.append(html);
+
+            //  끝 정렬
+            if (bAutoMoveToBottom) {
+                chatObj.chatUI.scrollTop(chatObj.chatUI.get(0).scrollHeight);
+            }
+
+            chatObj.chatBuffer = [];
+            chatObj.isFlushing = false;
+        }
+    }
+    catch(e) {
+
     }
 
-    if( (chatObj.chatBuffer.length >= 6 || chatObj.bFlushByTimer) && !chatObj.isFlushing  ) {
-        chatObj.isFlushing = true;
-        chatObj.bFlushByTimer = false;
-        var bAutoMoveToBottom = false;
-        var chatwndheight = chatObj.chatUI.height();
-
-        var list = chatObj.chatUI.find('li');
-
-        if( list.length > 50 ) {
-            list.eq(0).remove();
-        }
-
-        if( (chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
-            chatObj.autoScrollElem.is(':checked')) {
-            bAutoMoveToBottom = true;
-        }
-
-        var html = '';
-        for( var i = 0 ; i < chatObj.chatBuffer.length ; ++i ) {
-            html += chatObj.chatBuffer[i];
-        }
-
-        chatObj.chatUI.append(html);
-
-        //  끝 정렬
-        if( bAutoMoveToBottom ) {
-            chatObj.chatUI.scrollTop(chatObj.chatUI.get(0).scrollHeight);
-        }
-
-        chatObj.chatBuffer = [];
-        chatObj.isFlushing = false;
-    }
-
-    setTimeout(chatObj.FlushChat, 60);
+    setTimeout(chatObj.FlushChat, 100);
 }
 
 ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid ) {
