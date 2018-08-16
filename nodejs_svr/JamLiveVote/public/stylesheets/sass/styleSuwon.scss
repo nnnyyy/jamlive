@@ -165,25 +165,25 @@ $top-bottom-margin: 5px;
   }
 
   em {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
     font-style: normal;
     background-color: $color-yellow-font;
   }
 
   .search_ret_title {
-    font-size: 16px;
+    font-size: 17px;
     margin-bottom: 5px;
 
     b {
-      font-size: 16px;
+      font-size: 17px;
       background-color: $color-yellow-font;
     }
   }
 
   .search_ret_desc {
-    font-size: 13px;
-    margin-bottom: 3px;
+    font-size: 15px;
+    margin-bottom: 8px;
     line-height: 19px;
 
     b {
@@ -854,4 +854,11 @@ wnd[role="settings"] {
       border-radius: 10px;
     }
   }
+}
+
+search-top-ret {
+  background-color: #ff9284;
+  color: black;
+  font-size: 17px;
+  font-weight: bold;
 }
