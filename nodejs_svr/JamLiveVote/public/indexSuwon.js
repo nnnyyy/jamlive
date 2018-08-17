@@ -1307,8 +1307,13 @@ function searchWebNaver( query, subtype, where ) {
         url: '/searchnaver',
         success: function(data) {
             try {
-                data.data = data.data.slice(0,2);
-                data.hdata = data.hdata.slice(0,2);
+                if( data.data ) {
+                    data.data = data.data.slice(0,2);
+                }
+
+                if( data.hdata ) {
+                    data.hdata = data.hdata.slice(0,2);
+                }
                 setSearchRet(data.data, true, where);
                 setSearchRet(data.hdata, true, where);
             }catch( e ) {
