@@ -400,53 +400,61 @@ function ChatObject() {
     this.bTrigger = false;
     this.tLastFlushByInterval = 0;
     this.isFlushing = false;
+    this.autoScrollElem = $('#cb_auto_scroll');
 }
 
 ChatObject.prototype.init = function() {
-    setInterval(function() {
-        var tCur = new Date();
-        if( tCur - chatObj.tLastFlushByInterval >= 1500 ) {
-            chatObj.bFlushByTimer = true;
-            chatObj.tLastFlushByInterval = tCur;
-        }
-        chatObj.FlushChat();
-    }, 60);
+    chatObj.FlushChat();
 }
 
 ChatObject.prototype.FlushChat = function() {
-    var tCur = new Date();
-    if( (this.chatBuffer.length >= 6 || this.bFlushByTimer) && !this.isFlushing  ) {
-        this.isFlushing = true;
-        this.bFlushByTimer = false;
-        var bAutoMoveToBottom = false;
-        var chatwndheight = this.chatUI.height();
-
-        var list = this.chatUI.find('li');
-
-        if( list.length > 50 ) {
-            list.eq(0).remove();
+    try {
+        var tCur = new Date();
+        if (tCur - chatObj.tLastFlushByInterval >= 1500) {
+            chatObj.bFlushByTimer = true;
+            chatObj.tLastFlushByInterval = tCur;
         }
 
-        if( (this.chatUI.get(0).scrollTop == (this.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
-            $('#cb_auto_scroll').is(':checked')) {
-            bAutoMoveToBottom = true;
+        var bufCopy = chatObj.chatBuffer.slice();
+
+        if ((bufCopy.length >= 6 || chatObj.bFlushByTimer) && !chatObj.isFlushing) {
+            chatObj.isFlushing = true;
+            chatObj.bFlushByTimer = false;
+            var bAutoMoveToBottom = false;
+            var chatwndheight = chatObj.chatUI.height();
+
+            var list = chatObj.chatUI.find('li');
+
+            if (list.length > 50) {
+                list.eq(0).remove();
+            }
+
+            if ((chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
+                chatObj.autoScrollElem.is(':checked')) {
+                bAutoMoveToBottom = true;
+            }
+
+            var html = '';
+            for (var i = 0; i < bufCopy.length; ++i) {
+                html += bufCopy[i];
+            }
+
+            chatObj.chatUI.append(html);
+
+            //  끝 정렬
+            if (bAutoMoveToBottom) {
+                chatObj.chatUI.scrollTop(chatObj.chatUI.get(0).scrollHeight);
+            }
+
+            chatObj.chatBuffer = [];
+            chatObj.isFlushing = false;
         }
-
-        var html = '';
-        for( var i = 0 ; i < this.chatBuffer.length ; ++i ) {
-            html += this.chatBuffer[i];
-        }
-
-        this.chatUI.append(html);
-
-        //  끝 정렬
-        if( bAutoMoveToBottom ) {
-            this.chatUI.scrollTop(this.chatUI.get(0).scrollHeight);
-        }
-
-        this.chatBuffer = [];
-        this.isFlushing = false;
     }
+    catch(e) {
+
+    }
+
+    setTimeout(chatObj.FlushChat, 100);
 }
 
 ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid ) {
@@ -765,9 +773,6 @@ function onGlobalKeyDown(e) {
     var tCur = new Date();
     var tRefreshed = new Date(localStorage.getItem('refreshtime'));
     var bCanRefresh = ( tCur - tRefreshed >= 3000 );
-
-    console.log( tCur );
-    console.log( tRefreshed );
 
     if (e.keyCode == 116 && !bCanRefresh) {
         e.keyCode = 2;
@@ -1472,38 +1477,44 @@ function setSearchRetImage(items, first) {
 }
 
 function setSearchRet(items, first, where) {
-    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
-    if( items && items.length > ret_cnt_val) {
-        items = items.slice( 0, ret_cnt_val );
+    try {
+        var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+        if( items && items.length > ret_cnt_val) {
+            items = items.slice( 0, ret_cnt_val );
+        }
+
+        var html = '';
+        for( var i = 0 ; i < items.length ; ++i) {
+            var item = items[i];
+            var hidx = item.description.indexOf('[총획]');
+            var hidxend = item.description.indexOf('[난이도]');
+            if( hidxend == -1 ) hidxend = hidx + 20;
+            var hinfo = '<b>' + item.description.slice(hidx, hidxend).trim() + '</b>';
+            var div = '<div class="search_ret_root">' +
+                '<div class="search_ret_title">' +
+                item.title + ' ' + hinfo +
+                '</div><div class="search_ret_desc">' +
+                (item.description) +
+                '</div><div class="separator"></div>' +
+                '</div>';
+
+            html += div;
+        }
+
+        if( items.length == 0 ) {
+            html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+        }
+        if( first ) {
+            getSearchArea(where).prepend(html);
+        }
+        else {
+            getSearchArea(where).append(html);
+        }
+    }
+    catch(e) {
+
     }
 
-    var html = '';
-    for( var i = 0 ; i < items.length ; ++i) {
-        var item = items[i];
-        var hidx = item.description.indexOf('[총획]');
-        var hidxend = item.description.indexOf('[난이도]');
-        if( hidxend == -1 ) hidxend = hidx + 20;
-        var hinfo = '<b>' + item.description.slice(hidx, hidxend).trim() + '</b>';
-        var div = '<div class="search_ret_root">' +
-            '<div class="search_ret_title">' +
-            item.title + ' ' + hinfo +
-            '</div><div class="search_ret_desc">' +
-            (item.description) +
-            '</div><div class="separator"></div>' +
-            '</div>';
-
-        html += div;
-    }
-
-    if( items.length == 0 ) {
-        html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
-    }
-    if( first ) {
-        getSearchArea(where).prepend(html);
-    }
-    else {
-        getSearchArea(where).append(html);
-    }
     clearTimeout(searchObj.timerID);
     searchObj.timerID = setTimeout(function() {
         searchObj.restoreSearch();

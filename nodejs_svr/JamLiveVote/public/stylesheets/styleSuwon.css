@@ -124,22 +124,22 @@ body {
   background-color: red;
 }
 #area-article em {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: bold;
   font-style: normal;
   background-color: #e9bd25;
 }
 #area-article .search_ret_title {
-  font-size: 16px;
+  font-size: 17px;
   margin-bottom: 5px;
 }
 #area-article .search_ret_title b {
-  font-size: 16px;
+  font-size: 17px;
   background-color: #e9bd25;
 }
 #area-article .search_ret_desc {
-  font-size: 13px;
-  margin-bottom: 3px;
+  font-size: 15px;
+  margin-bottom: 8px;
   line-height: 19px;
 }
 #area-article .search_ret_desc b {
@@ -681,6 +681,13 @@ wnd[role="settings"] .ret_cnt_slider .ui-slider-handle {
   color: #1b3440;
   margin: 4px auto;
   border-radius: 10px;
+}
+
+search-top-ret {
+  background-color: #ff9284;
+  color: black;
+  font-size: 17px;
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=styleSuwon.css.map */

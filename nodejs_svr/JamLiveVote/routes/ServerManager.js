@@ -600,7 +600,7 @@ function onSockLike(data) {
          }
 
         var tCur = new Date();
-        if( tCur - toLikeClient.tLastClick >= 25000 ) {
+        if( tCur - toLikeClient.tLastClick >= 40000 ) {
             sendServerMsg(client.socket, '칭찬은 상대의 퀴즈 투표 후에');
             return;
         }
@@ -739,7 +739,7 @@ function onSockVote(data) {
             return;
         }
 
-        if( client.auth < 2 && !client.isInSearchedUser() ) {
+        if( isLiveQuizTime() && client.auth < 2 && !client.isInSearchedUser() ) {
             sendServerMsg(socket, '레벨 2 미만의 회원은 검색 후 투표가능합니다.');
             return;
         }
