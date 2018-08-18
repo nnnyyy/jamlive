@@ -9,6 +9,7 @@ var quizDataObj = require('./quizman');
 var quizAnalysis = require('./quizAnalysis');
 
 var chatMan = require('./modules/chatMan');
+var Chosung = require('./modules/chosungGame');
 
 var config = require('../config');
 
@@ -204,6 +205,9 @@ ServerMan.prototype.getClient = function(socketid){
 ServerMan.prototype.setIO = function(io) {
     this.io = io;
 
+    this.chosung = new Chosung(io);
+    //this.chosung.start();
+
     dbhelper.getPermanentBanList(function(ret) {
         if( ret.ret == 0 ) {
             console.log('getPermanentBanList success : ' + ret.ret);
@@ -229,6 +233,18 @@ ServerMan.prototype.setIO = function(io) {
 
 ServerMan.prototype.broadcastVoteInfo = function() {
     let cur = new Date();
+
+    if( this.chosung.isRunning() ) {
+
+        if( isLiveQuizTime() ) {
+            this.chosung.stop();
+            return;
+        }
+
+        this.chosung.update( cur );
+        return;
+    }
+
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
 

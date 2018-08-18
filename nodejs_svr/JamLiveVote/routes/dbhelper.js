@@ -61,6 +61,27 @@ exports.getRandomQuiz = function( cb ) {
     }
 }
 
+exports.getRandomWords = function( cb ) {
+    try {
+        dbpool.query("select * from krdic order by rand() limit 0,15", function(err, rows) {
+            if( err ) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var d = rows[i];
+                data.push(d.word);
+            }
+
+            cb({ret: 0, words: data});
+        })
+    }catch(err) {
+        Log.logger.debug('DB Failed - getRandomWords');
+        cb({ret: -1});
+    }
+}
+
 exports.search = function( query , cb ) {
     try {
         var queries = query.trim().split(' ');
