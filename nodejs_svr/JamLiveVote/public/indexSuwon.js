@@ -410,7 +410,7 @@ ChatObject.prototype.init = function() {
 ChatObject.prototype.FlushChat = function() {
     try {
         var tCur = new Date();
-        if (tCur - chatObj.tLastFlushByInterval >= 1500) {
+        if (tCur - chatObj.tLastFlushByInterval >=800) {
             chatObj.bFlushByTimer = true;
             chatObj.tLastFlushByInterval = tCur;
         }
