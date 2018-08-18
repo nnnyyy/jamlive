@@ -410,7 +410,7 @@ ChatObject.prototype.init = function() {
 ChatObject.prototype.FlushChat = function() {
     try {
         var tCur = new Date();
-        if (tCur - chatObj.tLastFlushByInterval >=800) {
+        if (tCur - chatObj.tLastFlushByInterval >= 1400 ) {
             chatObj.bFlushByTimer = true;
             chatObj.tLastFlushByInterval = tCur;
         }
@@ -872,15 +872,15 @@ function onInputMsgKeyPress(e) {
 
         var isvote = -1;
 
-        if( msg.search(/111+/g) != -1 || msg == "1") {
+        if( msg == "1") {
             voteObj.vote({idx:0});
             isvote = 0;
         }
-        else if( msg.search(/222+/g) != -1 || msg == "2" ) {
+        else if( msg == "2" ) {
             voteObj.vote({idx:1});
             isvote = 1;
         }
-        else if( msg.search(/333+/g) != -1 || msg == "3") {
+        else if( msg == "3") {
             voteObj.vote({idx:2});
             isvote = 2;
         }
