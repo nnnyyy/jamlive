@@ -47,6 +47,8 @@ function init( socket ) {
     setSocketEvent(socket);
     setKeyEvent();
     setBtnEvent();
+
+
 }
 
 var GlobalValue = function() {
@@ -336,13 +338,13 @@ HintObject.prototype.setHintMode = function( bModify ) {
     this.btnModifyHint.text(str);
 
     if( bModify ) {
-        this.modifyTextArea.val(this.articleArea.html().replace(/<br>/gi,'\n'));
+        CKEDITOR.instances['memo-area'].setData(this.articleArea.html().replace(/<br>/gi,'\n'));
     }
 }
 
 HintObject.prototype.sendHint = function() {
-    var modifiedHint = this.modifyTextArea.val();
-    modifiedHint = modifiedHint.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    var modifiedHint = CKEDITOR.instances['memo-area'].getData();
+    //modifiedHint = modifiedHint.replace(/(?:\r\n|\r|\n)/g, '<br>');
     G.socket.emit('memo', {memo: modifiedHint });
 }
 
