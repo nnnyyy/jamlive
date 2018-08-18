@@ -474,7 +474,7 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
     this.chatBuffer.push(li);
 
     if( mode == 'vote') {
-        if( searchObj.totalCnt < 4 ) {
+        if( searchObj.totalCnt < 20 ) {
             chatObj.bFlushByTimer = true;
         }
     }
