@@ -474,7 +474,9 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
     this.chatBuffer.push(li);
 
     if( mode == 'vote') {
-        chatObj.bFlushByTimer = true;
+        if( searchObj.totalCnt < 4 ) {
+            chatObj.bFlushByTimer = true;
+        }
     }
 }
 
@@ -530,6 +532,8 @@ VoteObject.prototype.onVoteData = function(data) {
         }
     }
 
+    searchObj.totalCnt = totalCnt;
+
     var duplicatedMaxVoteCnt = 0;
     for( var i = 0 ; i < total.length ; ++i ) {
         if( maxVoteCnt == total[i] ) {
@@ -568,6 +572,7 @@ function SearchObject() {
     this.searchtop5queries = [];
     this.searchRank = $('#search-ret-rank-list');
     this.tLastSearch = 0;
+    this.totalCnt = 0;
 }
 
 SearchObject.prototype.init = function() {
