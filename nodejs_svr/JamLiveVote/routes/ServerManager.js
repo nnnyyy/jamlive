@@ -753,7 +753,7 @@ function onSockChat(data) {
 function isLiveQuizTime() {
     var cur = new Date();
     var hours = cur.getHours();
-    return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 19 ) );
+    return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 18 ) );
 }
 
 function onSockVote(data) {
