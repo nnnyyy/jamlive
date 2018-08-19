@@ -17,7 +17,7 @@ var connectedListMan = require('./modules/ConnectedListMan');
 const connListMan = new connectedListMan();
 
 var VOTEPERTIME = 1000;
-var BANTIME = 4 * 60 * 1000;
+var BANTIME = 6 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
 var BANCNT = 4;
 
@@ -623,6 +623,7 @@ function onSockLike(data) {
 
         if( !isLiveQuizTime() ) {
             sendServerMsg(client.socket, '라이브 퀴즈 시간대가 아니면 칭찬 불가');
+            return;
         }
 
         const msg = [
