@@ -73,6 +73,8 @@ var ServerMan = function() {
     this.memo_provider = '';
     this.bMemoModifying = false;
     this.nextQuizShowdata = {};
+
+    this.autoQuizForcedOff = false;
 }
 
 var servman = new ServerMan();
@@ -474,7 +476,7 @@ ServerMan.prototype.createQuizData = function( nick, _quizdata ) {
 
 ServerMan.prototype.isAbleCreateQuizData = function() {
     var cur = new Date();
-    return !this.quizdata || ( this.quizdata.isEnd() && ( cur - this.quizdata.tLastEnd >= 7000 ) );
+    return !this.quizdata || ( this.quizdata.isEnd() && ( cur - this.quizdata.tLastEnd >= 7000 ) && !this.autoQuizForcedOff );
 }
 
 ServerMan.prototype.addSearchQuery = function( query, bCount ) {
@@ -703,7 +705,18 @@ function onSockChat(data) {
 
         client.tLastChat = new Date();
 
-        if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && !quizAnalysis.isQuizDataEngaged() && data.msg == "#quiz") {
+        if( client.isAdmin() && data.msg == "#quizoff") {
+            servman.autoQuizForcedOff = true;
+            chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 off 했습니다.', isBaned );
+            return;
+        }
+        else if( client.isAdmin() && data.msg == "#quizon" ) {
+            servman.autoQuizForcedOff = false;
+            chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 on 했습니다.', isBaned );
+            return;
+        }
+
+        if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && data.msg == "#quiz" && servman.isAbleCreateQuizData() ) {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
                     servman.createQuizData(client.nick, result.quizdata);
@@ -780,13 +793,9 @@ function onSockVote(data) {
         if( client.isClickable() ) {
             servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
 
-            if( quizAnalysis.isQuizDataEngaged() ) {
-                quizAnalysis.vote(client, data.idx);
-                client.activePoint += 1;
-            }
-
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
                 servman.quizdata.vote(data.idx);
+                client.activePoint += 1;
             }
             if( socket.handshake.session.username && socket.handshake.session.auth >= 1 ) {
                 servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
