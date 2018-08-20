@@ -567,6 +567,7 @@ VoteObject.prototype.onVoteData = function(data) {
 
 function SearchObject() {
     this.lastSearchQuery = '';
+    this.tLastRefresh = 0;
     this.timerID = 0;
     this.timerIDForDB = 0;
     this.area = [$('#search-area-left'), $('#search-area-center')];
@@ -601,6 +602,7 @@ SearchObject.prototype.restoreSearch = function() {
 
 SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
 
+    var tCur = new Date();
     var searchRetRankList = searchObj.searchRank;
 
     var checked = localStorage.getItem('cb_searchTopFive') || 0;
@@ -616,7 +618,8 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
         setVisible($('#search-ret-rank'), true );
     }
 
-    if( hash != searchObj.slhash ) {
+    if( hash != searchObj.slhash || tCur - searchObj.tLastRefresh > 1000 ) {
+        searchObj.tLastRefresh = tCur;
         searchRetRankList.empty();
         searchObj.searchtop5queries = [];
         for( var i = 0 ; i < datalist.length ; ++i ) {
@@ -1260,10 +1263,12 @@ function searchWebRoot( socket, query, isBroadcast ) {
     if( chinese ) {
         var where = $('input[name=radio_s7]:checked').attr('value');
         searchWebNaver(chienseQuery, chineseSubType, where);
+        searched = true;
     }
 
     if( dongyo ) {
         searchWebDongyo(dongyoQuery, 2);
+        searched = true;
     }
 
     if( $('#cb_s6').is(':checked')) {
@@ -1279,6 +1284,8 @@ function searchWebRoot( socket, query, isBroadcast ) {
 }
 
 
+var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
+var search_title_prefix_style_name = ['cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7', 'cb8'];
 function searchWeb( type, query, where ) {
     $.ajax({
         type: 'POST',
@@ -1292,7 +1299,7 @@ function searchWeb( type, query, where ) {
         url: '/searchex',
         success: function(data) {
             if( type != 4 ) {
-                setSearchRet(data, false, where);
+                setSearchRet(data, false, where, search_title_prefix[type], search_title_prefix_style_name[type]);
             }
             else {
                 setSearchRetImage(data, true, where);
@@ -1313,7 +1320,7 @@ function searchWebGoogle( query, grammer, where) {
         contentType: 'application/json',
         url: '/searchgoogle',
         success: function(data) {
-            setSearchRet(data, true, where);
+            setSearchRet(data, true, where, '[다음(구글)]', "cb6");
         }
     });
 }
@@ -1338,8 +1345,13 @@ function searchWebNaver( query, subtype, where ) {
                 if( data.hdata ) {
                     data.hdata = data.hdata.slice(0,2);
                 }
-                setSearchRet(data.data, true, where);
-                setSearchRet(data.hdata, true, where);
+
+                if( data.edata ) {
+                    data.edata = data.edata.slice(0,2);
+                }
+                setSearchRet(data.data, true, where, '[국어사전]', 'krdic');
+                setSearchRet(data.hdata, true, where, '[한자사전]', 'hdic');
+                setSearchRet(data.edata, true, where, '[영어사전]', 'edic');
             }catch( e ) {
                 console.log(e);
                 clearTimeout(searchObj.timerID);
@@ -1364,7 +1376,7 @@ function searchWebDongyo(query , where) {
         success: function(data) {
             try {
                 data.data = data.data.slice(0,2);
-                setSearchRet(data.data, true, where);
+                setSearchRet(data.data, true, where, '[동요]', 'dongyo');
             }catch(e) {
                 console.log(e);
                 clearTimeout(searchObj.timerID);
@@ -1495,8 +1507,9 @@ function setSearchRetImage(items, first) {
     }, 15000);
 }
 
-function setSearchRet(items, first, where) {
+function setSearchRet(items, first, where, title_prefix, title_prefix_style) {
     try {
+        title_prefix = '<title-prefix class="'+ title_prefix_style + '">' + title_prefix + '</title-prefix>';
         var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
         if( items && items.length > ret_cnt_val) {
             items = items.slice( 0, ret_cnt_val );
@@ -1511,7 +1524,7 @@ function setSearchRet(items, first, where) {
             var hinfo = '<b>' + item.description.slice(hidx, hidxend).trim() + '</b>';
             var div = '<div class="search_ret_root">' +
                 '<div class="search_ret_title">' +
-                item.title + ' ' + hinfo +
+                title_prefix + ' ' + item.title + ' ' + hinfo +
                 '</div><div class="search_ret_desc">' +
                 (item.description) +
                 '</div><div class="separator"></div>' +
@@ -1521,7 +1534,7 @@ function setSearchRet(items, first, where) {
         }
 
         if( items.length == 0 ) {
-            html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
+            //html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
         }
         if( first ) {
             getSearchArea(where).prepend(html);

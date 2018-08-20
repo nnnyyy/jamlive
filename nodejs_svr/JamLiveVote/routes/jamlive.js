@@ -203,7 +203,7 @@ function parcingDaum(data, body) {
     })
 }
 
-function parcingNaverChinese(data, hdata, body) {
+function parcingNaverChinese(data, hdata, endic_data, body) {
     const strContents = new Buffer(body);
     const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
     $('.kr_dic_section ul.lst_krdic').find('li').each(function(idx){
@@ -219,6 +219,14 @@ function parcingNaverChinese(data, hdata, body) {
 
     $('.hanja_dic_section .dic_search_result').find('dd').each(function(idx) {
         hdata[idx].description = $(this).text().trim();
+    })
+
+    $('.en_dic_section .dic_search_result').find('dt').each(function(idx) {
+        endic_data.push({ title: $(this).text().trim(), description: '' });
+    })
+
+    $('.en_dic_section .dic_search_result').find('dd').each(function(idx) {
+        endic_data[idx].description = $(this).text().trim();
     })
 }
 
@@ -450,13 +458,15 @@ exports.requestNaver = function(req, res, next) {
 
     var cached = ServerManager.getCachedSearchResult('naver_chinese', query);
     var cached_h = ServerManager.getCachedSearchResult('naver_chinese_h', query);
-    if( cached || cached_h ) {
+    var cached_e = ServerManager.getCachedSearchResult('naver_chinese_e', query);
+    if( cached || cached_h || cached_e ) {
         //console.log('cached : ' + query);
         if( isGuest ) {
             cached = cached.slice(0,1);
             cached_h = cached_h.slice(0,1);
+            cached_e = cached_e.slice(0,1);
         }
-        res.json({ data: cached, hdata: cached_h });
+        res.json({ data: cached, hdata: cached_h, edata: cached_e });
         return;
     }
 
@@ -473,17 +483,20 @@ exports.requestNaver = function(req, res, next) {
         request.get(options, function (error, response, body) {
             var data = [];
             var hanja_data = [];
+            var endic_data = [];
             if (!error && response.statusCode == 200) {
-                parcingNaverChinese(data, hanja_data, body);
+                parcingNaverChinese(data, hanja_data, endic_data, body);
                 if( isArray(data) && data.length > 0 ) {
                     data = data.slice(0,4);
                     ServerManager.setCachedSearchResult('naver_chinese', query, data);
                     ServerManager.setCachedSearchResult('naver_chinese_h', query, hanja_data);
+                    ServerManager.setCachedSearchResult('naver_chinese_e', query, endic_data);
                     if( isGuest ) {
                         data = data.slice(0,1);
                         hanja_data = hanja_data.slice(0,1);
+                        endic_data = endic_data.slice(0,1);
                     }
-                    res.json({data: data, hdata: hanja_data });
+                    res.json({data: data, hdata: hanja_data, edata: endic_data });
                 }
                 else {
                     res.json([]);
