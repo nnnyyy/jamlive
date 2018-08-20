@@ -264,7 +264,7 @@ $top-bottom-margin: 5px;
         width: $notice-width;
         height: 100%;
         float: left;
-        background-color: $color-yellow-font;
+        background-color: $color-main-back;
         margin-bottom: $bottom-margin;
         border: 1px solid $color-border;
         text-align: center;
@@ -272,13 +272,13 @@ $top-bottom-margin: 5px;
         overflow-y: hidden;
 
         [type="title"] {
-          margin: 14px 0 14px 0;
-          color: red;
-          font-size: 27px;
+          margin: 12px 0 12px 0;
+          color: $primary-color;
+          font-size: 24px;
           font-weight: bold;
         }
         [type="msg"] {
-          font-size: 17px;
+          font-size: 15px;
           color: black;
           font-weight: bold;
           margin: 11px 0 11px 0;

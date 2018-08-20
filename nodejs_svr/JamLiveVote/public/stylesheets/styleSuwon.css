@@ -203,7 +203,7 @@ body {
   width: calc( 100% - 150px - 13px - 2px - 2px );
   height: 100%;
   float: left;
-  background-color: #e9bd25;
+  background-color: #ffffff;
   margin-bottom: 13px;
   border: 1px solid #e5e5e5;
   text-align: center;
@@ -211,13 +211,13 @@ body {
   overflow-y: hidden;
 }
 #area-article #article-left #site-info-notice #notice [type="title"] {
-  margin: 14px 0 14px 0;
-  color: red;
-  font-size: 27px;
+  margin: 12px 0 12px 0;
+  color: #1b3440;
+  font-size: 24px;
   font-weight: bold;
 }
 #area-article #article-left #site-info-notice #notice [type="msg"] {
-  font-size: 17px;
+  font-size: 15px;
   color: black;
   font-weight: bold;
   margin: 11px 0 11px 0;
