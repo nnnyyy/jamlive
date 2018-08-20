@@ -582,10 +582,11 @@ body {
 }
 #notice-wrapper #notice-wnd {
   width: 500px;
-  height: 500px;
+  height: 100vh;
   margin: 0 auto;
   padding: 5px 10px;
   background-color: white;
+  overflow-y: auto;
 }
 
 wnd[role="settings"] {
