@@ -512,9 +512,6 @@ function registerSocketListener(g) {
             alert('이용 자격이 없음이 확인되어 영구밴 당하셨습니다.');
             window.location.href = 'jamlive.net';
         }
-        if( !data.logined ) {
-            window.location.href = '/signin';
-        }
         else {
             window.location.href = 'http://' + data.url;
         }

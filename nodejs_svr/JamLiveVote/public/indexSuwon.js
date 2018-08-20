@@ -760,6 +760,16 @@ function setSocketEvent( socket ) {
     socket.on('update-user', onUpdateUser);
     socket.on('update-users', onUpdateUsers);
     socket.on('ap', onAP);
+    socket.on('reconn-server', function(data) {
+        if( data.reason == 'baned') {
+            alert('이용 자격이 없음이 확인되어 영구밴 당하셨습니다.');
+            window.location.href = 'jamlive.net';
+        }
+        else {
+            window.location.href = 'http://' + data.url;
+        }
+        return;
+    });
 }
 
 function setKeyEvent() {
