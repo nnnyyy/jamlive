@@ -412,14 +412,14 @@ ChatObject.prototype.init = function() {
 ChatObject.prototype.FlushChat = function() {
     try {
         var tCur = new Date();
-        if (tCur - chatObj.tLastFlushByInterval >= 1400 ) {
+        if (tCur - chatObj.tLastFlushByInterval >= 1200 ) {
             chatObj.bFlushByTimer = true;
             chatObj.tLastFlushByInterval = tCur;
         }
 
         var bufCopy = chatObj.chatBuffer.slice();
 
-        if ((bufCopy.length >= 6 || chatObj.bFlushByTimer) && !chatObj.isFlushing) {
+        if ((chatObj.bFlushByTimer) && !chatObj.isFlushing) {
             chatObj.isFlushing = true;
             chatObj.bFlushByTimer = false;
             var bAutoMoveToBottom = false;
@@ -476,7 +476,7 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
     this.chatBuffer.push(li);
 
     if( mode == 'vote') {
-        if( searchObj.totalCnt < 20 ) {
+        if( searchObj.totalCnt < 40 ) {
             chatObj.bFlushByTimer = true;
         }
     }
