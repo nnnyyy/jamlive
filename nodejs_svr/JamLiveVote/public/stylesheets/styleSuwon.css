@@ -473,6 +473,14 @@ body {
 #area-article #article-right #chat-wnd-root [type="top-menu"] vtitle {
   margin: 0 0 0 25px;
 }
+#area-article #article-right #chat-wnd-root [type="top-menu"] #btn-clear-chat {
+  float: right;
+  margin-right: 14px;
+  font-size: 16px;
+  height: 46px;
+  line-height: 46px;
+  cursor: pointer;
+}
 #area-article #article-right #chat-wnd-root #chat {
   font-size: 13px;
   width: calc( 100% - 25px - 25px );

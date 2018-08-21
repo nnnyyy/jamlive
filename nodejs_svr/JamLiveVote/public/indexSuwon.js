@@ -180,6 +180,20 @@ Options.prototype.init = function() {
             console.log('setShowChatOptions - ' + 0 );
         }
     });
+
+
+    var bDisable = localStorage.getItem('cb-notice-disable') || 0;
+
+    chatObj.cbNoticeDisable.attr('checked', bDisable == 1 ? true : false );
+
+    chatObj.cbNoticeDisable.change(function() {
+        if( $(this).is(':checked') ) {
+            localStorage.setItem('cb-notice-disable', 1);
+        }
+        else {
+            localStorage.setItem('cb-notice-disable', 0);
+        }
+    })
 }
 
 Options.prototype.initSettings = function() {
@@ -300,6 +314,11 @@ Options.prototype.isNotShowChat = function() {
     return checked == 1 ? true : false;
 }
 
+Options.prototype.isClearChatAuto = function() {
+    var bDisable = localStorage.getItem('cb-notice-disable') || 0;
+    return bDisable == 1 ? true : false;
+}
+
 var G = new GlobalValue();
 var hintObj = new HintObject();
 var chatObj = new ChatObject();
@@ -403,32 +422,35 @@ function ChatObject() {
     this.tLastFlushByInterval = 0;
     this.isFlushing = false;
     this.autoScrollElem = $('#cb_auto_scroll');
+    this.cbNoticeDisable = $('#cb-notice-disable');
+    this.tLastClear = 0;
 }
 
 ChatObject.prototype.init = function() {
-    chatObj.FlushChat();
+    setInterval(function() {
+        chatObj.bFlushByTimer = true;
+        chatObj.FlushChat();
+    }, 1000);
 }
 
-ChatObject.prototype.FlushChat = function() {
+ChatObject.prototype.FlushChat = function( mode ) {
     try {
         var tCur = new Date();
-        if (tCur - chatObj.tLastFlushByInterval >= 1200 ) {
-            chatObj.bFlushByTimer = true;
-            chatObj.tLastFlushByInterval = tCur;
-        }
 
-        var bufCopy = chatObj.chatBuffer.slice();
-
-        if ((chatObj.bFlushByTimer) && !chatObj.isFlushing) {
+        if ( mode == 'vote' || (chatObj.bFlushByTimer && !chatObj.isFlushing )) {
             chatObj.isFlushing = true;
             chatObj.bFlushByTimer = false;
             var bAutoMoveToBottom = false;
             var chatwndheight = chatObj.chatUI.height();
 
             var list = chatObj.chatUI.find('li');
-
-            if (list.length > 50) {
-                list.eq(0).remove();
+            if (list.length > 35) {
+                if( options.isClearChatAuto() ) {
+                    chatObj.clearChat();
+                }
+                else {
+                    list.eq(0).remove();
+                }
             }
 
             if ((chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
@@ -437,8 +459,8 @@ ChatObject.prototype.FlushChat = function() {
             }
 
             var html = '';
-            for (var i = 0; i < bufCopy.length; ++i) {
-                html += bufCopy[i];
+            for (var i = 0; i < chatObj.chatBuffer.length; ++i) {
+                html += chatObj.chatBuffer[i];
             }
 
             chatObj.chatUI.append(html);
@@ -455,8 +477,10 @@ ChatObject.prototype.FlushChat = function() {
     catch(e) {
 
     }
+}
 
-    setTimeout(chatObj.FlushChat, 100);
+ChatObject.prototype.clearChat = function() {
+    chatObj.chatUI.empty();
 }
 
 ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid ) {
@@ -475,11 +499,7 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
 
     this.chatBuffer.push(li);
 
-    if( mode == 'vote') {
-        if( searchObj.totalCnt < 40 ) {
-            chatObj.bFlushByTimer = true;
-        }
-    }
+    chatObj.FlushChat( mode );
 }
 
 ChatObject.prototype.setMsgVisible = function(mode, isVisible) {
@@ -940,6 +960,8 @@ function setBtnEvent() {
         setVisible($('#notice-wrapper'), false);
     });
 
+    $('#btn-clear-chat').click(onClearChat);
+
     $('#btn-serv-1').click(onBtnGoServ1);
     $('#btn-serv-2').click(onBtnGoServ2);
     $('#btn-serv-3').click(onBtnGoServ3);
@@ -1026,6 +1048,10 @@ function onBtnSettings(e) {
 function onBtnHelp(e) {
     e.stopPropagation();
     setVisible($('#notice-wrapper'), true);
+}
+
+function onClearChat(e) {
+    chatObj.clearChat();
 }
 
 function onChat( data ) {
