@@ -222,11 +222,10 @@ function parcingNaverChinese(data, hdata, endic_data, body) {
     })
 
     $('.en_dic_section .dic_search_result').find('dt').each(function(idx) {
-        endic_data.push({ title: $(this).text().trim(), description: '' });
+        endic_data[idx] = { title: $(this).text().trim(), description: '' };
     })
 
     $('.en_dic_section .dic_search_result').find('dd').each(function(idx) {
-        if( endic_data.length <= idx ) return;
         if( endic_data[idx].description )
             endic_data[idx].description = $(this).text().trim();
     })
