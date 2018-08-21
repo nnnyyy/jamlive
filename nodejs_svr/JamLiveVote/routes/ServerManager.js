@@ -706,10 +706,17 @@ function onSockChat(data) {
         var nick = client.nick;
         var auth_state = client.auth;
 
+        if( !logined ) {
+            sendServerMsg(socket, '가입 후 채팅 가능');
+            return;
+        }
+
+        /*
         if( servman.checkBaned(client.ip) ) {
             sendServerMsg(socket, '밴유저는 채팅 참여가 불가능합니다.');
             return;
         }
+        */
 
         if( !client.isAbleChat() ) {
             sendServerMsg(socket, '여유를 가지고 채팅 해 주세요.');
@@ -741,19 +748,6 @@ function onSockChat(data) {
         if( data.mode == "emoticon" ) {
             servman.io.sockets.emit('emoticon', {auth: client.auth, nick: nick, name: data.emoticon});
             return;
-        }
-
-        if( !logined ) {
-            const msg = [
-                `(속닥속닥) 무언가 말하고 있습니다...`,
-                `(속닥속닥) 무슨 말을 하고 있는걸까요...`,
-                `(속닥속닥) 제 말이 들리시나요..`,
-                `(속닥속닥) 답답하네요 ㅠ`,
-                `(속닥속닥) 가입을 해야겠어요..`,
-            ];
-
-            const curMsg = msg[Math.floor(Math.random() * 5)];
-            data.msg = curMsg;
         }
 
         chatMan.Broadcast( servman.io, client, 'chat', data.msg, isBaned );
