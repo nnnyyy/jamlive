@@ -1189,6 +1189,11 @@ function searchWebRoot( socket, query, isBroadcast ) {
         return;
     }
 
+    if( query.length <= 1 ) {
+        showAdminMsg('검색어는 2자 이상');
+        return;
+    }
+
     if( searchObj.lastSearchQuery == query ) {
         showAdminMsg('방금 전에 검색했던 검색어입니다');
         return;
