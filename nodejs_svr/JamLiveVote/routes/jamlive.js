@@ -204,31 +204,37 @@ function parcingDaum(data, body) {
 }
 
 function parcingNaverChinese(data, hdata, endic_data, body) {
-    const strContents = new Buffer(body);
-    const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
-    $('.kr_dic_section ul.lst_krdic').find('li').each(function(idx){
-        const title = $(this).find('p').eq(0).find('.c_b').text() + $(this).find('p').eq(0).find('.word_class2').text();
-        const desc = $(this).find('p').eq(1).html();
+    try {
+        const strContents = new Buffer(body);
+        const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
+        $('.kr_dic_section ul.lst_krdic').find('li').each(function(idx){
+            const title = $(this).find('p').eq(0).find('.c_b').text() + $(this).find('p').eq(0).find('.word_class2').text();
+            const desc = $(this).find('p').eq(1).html();
 
-        data.push({title: title, description: desc});
-    })
+            data.push({title: title, description: desc});
+        })
 
-    $('.hanja_dic_section .dic_search_result').find('dt').each(function(idx) {
-        hdata.push({ title: $(this).text().trim(), description: '' });
-    })
+        $('.hanja_dic_section .dic_search_result').find('dt').each(function(idx) {
+            hdata[idx] = { title: $(this).text().trim(), description: '' };
+        })
 
-    $('.hanja_dic_section .dic_search_result').find('dd').each(function(idx) {
-        hdata[idx].description = $(this).text().trim();
-    })
+        $('.hanja_dic_section .dic_search_result').find('dd').each(function(idx) {
+            if( hdata[idx] && hdata[idx].description )
+                hdata[idx].description = $(this).text().trim();
+        })
 
-    $('.en_dic_section .dic_search_result').find('dt').each(function(idx) {
-        endic_data[idx] = { title: $(this).text().trim(), description: 't' };
-    })
+        $('.en_dic_section .dic_search_result').find('dt').each(function(idx) {
+            endic_data[idx] = { title: $(this).text().trim(), description: 't' };
+        })
 
-    $('.en_dic_section .dic_search_result').find('dd').each(function(idx) {
-        if( endic_data[idx].description )
-            endic_data[idx].description = $(this).text().trim();
-    })
+        $('.en_dic_section .dic_search_result').find('dd').each(function(idx) {
+            if( endic_data[idx] && endic_data[idx].description )
+                endic_data[idx].description = $(this).text().trim();
+        })
+    }
+    catch(e) {
+        
+    }
 }
 
 function parcingDongyo(data, body) {
