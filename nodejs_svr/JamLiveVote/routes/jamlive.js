@@ -222,7 +222,7 @@ function parcingNaverChinese(data, hdata, endic_data, body) {
     })
 
     $('.en_dic_section .dic_search_result').find('dt').each(function(idx) {
-        endic_data[idx] = { title: $(this).text().trim(), description: '' };
+        endic_data[idx] = { title: $(this).text().trim(), description: 't' };
     })
 
     $('.en_dic_section .dic_search_result').find('dd').each(function(idx) {
