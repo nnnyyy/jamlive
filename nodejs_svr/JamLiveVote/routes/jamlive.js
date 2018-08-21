@@ -233,7 +233,7 @@ function parcingNaverChinese(data, hdata, endic_data, body) {
         })
     }
     catch(e) {
-        
+
     }
 }
 

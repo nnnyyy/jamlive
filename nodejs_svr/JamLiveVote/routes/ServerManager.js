@@ -317,7 +317,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         return item2.cnt - item1.cnt;
     })
 
-    searchlist = searchlist.slice(0, 5);
+    searchlist = searchlist.slice(0, 7);
 
     let s = '';
     for( var i = 0 ; i < searchlist.length ; ++i ) {

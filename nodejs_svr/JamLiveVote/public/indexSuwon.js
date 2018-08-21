@@ -826,7 +826,7 @@ function onGlobalKeyDown(e) {
         if( code == 39 ) idx = 2;
         voteObj.vote({idx: idx });
     }
-    else if( code >= 49 && code <= 53 ) {
+    else if( code >= 49 && code <= 55 ) {
         var idx = code - 49;
         if( searchObj.searchtop5queries.length <= idx ) {
             return;
