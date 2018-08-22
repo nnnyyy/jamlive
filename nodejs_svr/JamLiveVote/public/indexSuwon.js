@@ -126,6 +126,10 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         showAdminMsg('초성 게임이 강제 종료 되었습니다');
         chosungGameMan.closeUI();
     }
+    else if( packet.step == 'q-hint') {
+        chatObj.addChat('chat', false, '초성게임', '힌트가 도착했습니다', false, 99, '', '' );
+        chosungGameMan.setText(packet.q);
+    }
 }
 
 function Options() {

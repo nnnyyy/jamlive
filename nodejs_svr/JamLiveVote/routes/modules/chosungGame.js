@@ -68,16 +68,39 @@ class ChosungGame {
 
     broadcastQuestion() {
         const word = this.words[ this.quizIdx ];
+        this.currentWord = [];
+        for( var i = 0 ; i < word.length ; ++i ) {
+            this.currentWord[i] = word.substring(i, i+1);
+        }
+        this.question = [];
         const a = Hangul.d(word, true);
         var chosung = '';
         for( var i = 0 ; i < a.length ; ++i) {
             chosung += a[i][0];
+            this.question[i] = a[i][0];
         }
 
         //console.log(`quiz : ${word} -> ${chosung}`);
 
         this.io.sockets.emit('chosung', {step: 'q', q: chosung});
         this.tStartQuestion = new Date();
+        this.tLastHint = new Date();
+        this.nHintCnt = 0;
+    }
+
+    showHint() {
+        if( this.question.length <= this.nHintCnt + 1 ) return;
+
+        this.question[this.nHintCnt] = this.currentWord[this.nHintCnt];
+
+        var chosung = '';
+        for( var i = 0 ; i < this.question.length ; ++i) {
+            chosung += this.question[i];
+        }
+
+        this.io.sockets.emit('chosung', {step: 'q-hint', q: chosung});
+        this.nHintCnt++;
+        this.tLastHint = new Date();
     }
 
     broadcastNextWord() {
@@ -121,6 +144,10 @@ class ChosungGame {
         if( this.step == 1 && tCur - this.tStart >= 5000 ) {
             this.step = 2;
             this.broadcastQuestion();
+        }
+
+        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 20 ) {
+            this.showHint();
         }
 
         if( this.step == 2 && tCur - this.tStartQuestion >= 1000 * 60 ) {
