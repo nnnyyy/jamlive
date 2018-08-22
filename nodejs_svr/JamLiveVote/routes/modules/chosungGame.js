@@ -22,7 +22,6 @@ class ChosungGame {
     }
 
     start() {
-        console.log('chosung game start');
         if( this.isRunning() ) {
             console.log('already start');
             return;
@@ -75,7 +74,7 @@ class ChosungGame {
             chosung += a[i][0];
         }
 
-        console.log(`quiz : ${word} -> ${chosung}`);
+        //console.log(`quiz : ${word} -> ${chosung}`);
 
         this.io.sockets.emit('chosung', {step: 'q', q: chosung});
         this.tStartQuestion = new Date();
