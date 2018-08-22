@@ -51,14 +51,10 @@ Client.prototype.isAbleChat = function() {
 Client.prototype.incActivePoint = function( point ) {
     if( !this.isLogined() ) return;
 
-    console.log('inc ' + this.socket.handshake.session.userinfo.ap);
-
     this.socket.handshake.session.userinfo.ap += point;
     if( this.socket.handshake.session.userinfo.ap <= 0 ) {
         this.socket.handshake.session.userinfo.ap = 0;
     }
-
-    console.log('inc ret ' + this.socket.handshake.session.userinfo.ap);
 }
 
 Client.prototype.getActivePoint = function() {
