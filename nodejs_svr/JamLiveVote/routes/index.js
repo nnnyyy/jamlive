@@ -9,11 +9,11 @@ var dbhelper = require('./dbhelper');
 /* GET home page. */
 router.use( Log.logging );
 router.get('/', function(req, res, next) {
-  res.render('index', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick});
+  res.render('index', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 });
 
 router.get('/new', function(req,res, next) {
-  res.render('indexSuwon', {servname: config.serv_name, username: req.session.username, nick: req.session.usernick, auth: req.session.auth});
+  res.render('indexSuwon', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 })
 
 router.get('/ping', function(req, res, next) {

@@ -101,23 +101,12 @@ ServerMan.prototype.register = function(socket) {
     });
 
     if( client.isLogined() ) {
-        client.auth = socket.handshake.session.auth;
-        dbhelper.getActivePoint( socket.handshake.session.username, function(ret) {
-            if( ret.ret == 0 ) {
-                //  완료 처리 해줘
-                client.activePoint = ret.point;
-                socket.emit('ap', {ap: client.activePoint });
-                //console.log(`${client.nick} - getActivePoint success ( ${ret.point} )`);
-
-            }
-            else {
-                //console.log(`${client.nick} - getActivePoint Error ( ${ret.ret} )`);
-            }
-        })
+        client.auth = socket.handshake.session.userinfo.auth;
+        client.activePoint = socket.handshake.session.userinfo.ap;
     }
 
     var rd = Math.floor(Math.random() * 500);
-    var nick = socket.handshake.session.usernick;
+    var nick = client.isLogined() ? socket.handshake.session.userinfo.usernick : '';
     if( !client.isLogined() ){
         nick = '손님' + rd;
     }
@@ -623,7 +612,7 @@ function onSockLike(data) {
         if( !toLikeClient ) return;
         var socket = client.socket;
         var logined = socket.handshake.session.username ? true : false;
-        var auth_state = logined ? socket.handshake.session.auth : -1;
+        var auth_state = logined ? client.auth : -1;
 
          if( client.ip == toLikeClient.ip ) {
              sendServerMsg(client.socket, '스스로 칭찬 불가능');
@@ -804,7 +793,7 @@ function onSockVote(data) {
                 servman.quizdata.vote(data.idx);
                 client.activePoint += 1;
             }
-            if( socket.handshake.session.username && socket.handshake.session.auth >= 1 ) {
+            if( client.isLogined() && client.auth >= 1 ) {
                 servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
             }
             client.tLastClick = new Date();
@@ -833,7 +822,7 @@ function onAnalysis(data) {
     if( !client ) return;
     var socket = client.socket;
     var logined = socket.handshake.session.username ? true : false;
-    var auth_state = logined ? socket.handshake.session.auth : -1;
+    var auth_state = logined ? client.auth : -1;
 
     if( !client.isAdmin() ) {
         return;

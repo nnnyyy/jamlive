@@ -9,6 +9,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var routes_quiz = require('./routes/quiz');
 var session = require('express-session');
+const redis = require('redis');
+const redisStore = require('connect-redis')(session);
+const client = redis.createClient();
 
 var app = express();
 
@@ -24,9 +27,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 var sessionMiddleware = session({
-  secret: 'dhkddPtlr',
-  resave: false,
-  saveUninitialized: true
+    secret: 'dhkddPtlr',
+    resave: true,
+    saveUninitialized: false,
+    store: new redisStore({
+        host: '127.0.0.1',
+        port: 6379,
+        client: client,
+        prefix: "session-jamlive.net:",
+        db: 0
+    })
 });
 app.session = sessionMiddleware;
 app.use(sessionMiddleware);

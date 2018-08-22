@@ -14,7 +14,7 @@ var Client = function(socket) {
 
 Client.prototype.isClickable = function() {
     var cur = new Date();
-    var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.auth : -1;
+    var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.userinfo.auth : -1;
     if( _auth >= 3 ) {
         return (cur - this.tLastClick) > 3000;
     }

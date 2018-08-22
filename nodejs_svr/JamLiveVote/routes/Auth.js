@@ -9,6 +9,7 @@ exports.login = function(req, res, next) {
     async.waterfall(
         [
             async.apply(requestLogin, req),
+            requestActivePoint,
             requestGetItemList
         ]
         ,
@@ -31,23 +32,32 @@ function requestLogin( req, callback ) {
         }
 
         req.session.username = json.id;
-        req.session.usernick = json.nick;
-        req.session.auth = json.auth;
+        req.session.userinfo = { usernick: json.nick, auth: json.auth }
         //res.json(json.ret);
         callback(null,req);
     })
 }
 
+function requestActivePoint(req, callback) {
+    dbhelper.getActivePoint( req.session.username, function(ret) {
+        if( ret.ret == 0 ) {
+            //  완료 처리 해줘
+            req.session.userinfo.ap = ret.point;
+            callback(null, req);
+        }
+        else {
+            callback(ret.ret);
+        }
+    })
+}
+
 function requestGetItemList(req, callback) {
-    req.session.items = [1];
+    req.session.userinfo.items = [1];
     callback(null);
 }
 
 exports.logout = function(req, res, next) {
-    req.session.username = null;
-    req.session.usernick = null;
-    req.session.auth = null;
-    req.session.items = null;
+    req.session.destroy();
     res.json({ret: 0});
 }
 
