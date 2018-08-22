@@ -232,6 +232,18 @@ ServerMan.prototype.setIO = function(io, redis) {
     this.chosung = new Chosung(io);
     //this.chosung.start();
 
+    servman.redis.get('jamlive-memo-info',  (err, info) => {
+        try {
+            if( !err ) {
+                const memoinfo = JSON.parse(info);
+                servman.memo = memoinfo.memo;
+                servman.memo_provider = memoinfo.provider;
+            }
+        }catch(e) {
+
+        }
+    } );
+
     dbhelper.getPermanentBanList(function(ret) {
         if( ret.ret == 0 ) {
             console.log('getPermanentBanList success : ' + ret.ret);
@@ -933,6 +945,11 @@ function onMemo(data) {
         servman.modifyingUser = '';
         servman.memo = data.memo;
         servman.memo_provider = client.nick;
+
+        const memoinfo = JSON.stringify({memo: servman.memo, provider: servman.memo_provider });
+        servman.redis.set('jamlive-memo-info', memoinfo,  (err, info) => {
+        } );
+
         servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
     }
     catch(e) {
