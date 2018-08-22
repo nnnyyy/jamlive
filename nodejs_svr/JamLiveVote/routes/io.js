@@ -3,8 +3,8 @@
  */
 var ServerManager = require('./ServerManager');
 
-module.exports = function(io) {
-    ServerManager.setIO(io);
+module.exports = function(io, redisClient) {
+    ServerManager.setIO(io, redisClient);
     io.on('connection', function(socket){
         /*
         if( ServerManager.uniqueip.get(socket.handshake.address) != null ) {

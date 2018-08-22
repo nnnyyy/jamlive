@@ -94,8 +94,11 @@ ServerMan.prototype.register = function(socket) {
                 servman.bMemoModifying = false;
             }
             //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
-            dbhelper.updateActivePoint( this.handshake.session.username, client.activePoint, function(ret) {
-                client.socket.handshake.session.userinfo.ap = client.activePoint;
+            const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
+            servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
+            } )
+
+            dbhelper.updateActivePoint( this.handshake.session.username, client.getActivePoint(), function(ret) {
                 //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
             });
         }
@@ -103,7 +106,6 @@ ServerMan.prototype.register = function(socket) {
 
     if( client.isLogined() ) {
         client.auth = socket.handshake.session.userinfo.auth;
-        client.activePoint = socket.handshake.session.userinfo.ap;
     }
 
     var rd = Math.floor(Math.random() * 500);
@@ -172,6 +174,17 @@ ServerMan.prototype.addSocket = function(socket) {
         this.socketmap.set(socket.id, client);
 
         if( client.isLogined() ) {
+            this.redis.get(client.socket.handshake.session.username, (err, info) => {
+                try {
+                    if( !err ) {
+                        const parsedInfo = JSON.parse(info);
+                        client.socket.handshake.session.userinfo.ap = parsedInfo.ap;
+                        client.socket.emit('ap', {ap: parsedInfo.ap});
+                    }
+                }catch(e) {
+
+                }
+            } )
             //chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 입장' );
         }
     }catch(e) {
@@ -207,8 +220,9 @@ ServerMan.prototype.getClient = function(socketid){
     return this.socketmap.get(socketid);
 }
 
-ServerMan.prototype.setIO = function(io) {
+ServerMan.prototype.setIO = function(io, redis) {
     this.io = io;
+    this.redis = redis;
 
     this.chosung = new Chosung(io);
     //this.chosung.start();
@@ -523,15 +537,12 @@ function onSockBan(data) {
             return;
         }
 
-        toBanClient.activePoint -= 10;
-        if( toBanClient.activePoint <= 0 ) {
-            toBanClient.activePoint = 0;
-        }
+        toBanClient.incActivePoint( -10 );
 
         if( servman.banUser(toBanClient.ip, client.ip) ) {
             chatMan.Broadcast(servman.io, client, 'ban', `[BAN] ${toBanClient.nick}님을 신고 했습니다.`, false);
             msg = '밴 신청 완료';
-            client.activePoint += 3;
+            client.incActivePoint( 3 );
         }
         else {
             msg = '동일 유저에게 신고할 수 없습니다.';
@@ -641,7 +652,7 @@ function onSockLike(data) {
 
         const curMsg = msg[Math.floor(Math.random() * 5)];
 
-        toLikeClient.activePoint += 5;
+        toLikeClient.incActivePoint( 5 );
 
         servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
@@ -658,7 +669,7 @@ function onSockSearch(data) {
         var logined = socket.handshake.session.username ? true : false;
 
         if( isLiveQuizTime() ) {
-            client.activePoint += 3;
+            client.incActivePoint( 3 );
         }
 
         client.tLastSearch = new Date();
@@ -792,7 +803,7 @@ function onSockVote(data) {
 
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
                 servman.quizdata.vote(data.idx);
-                client.activePoint += 1;
+                client.incActivePoint( 1 );
             }
             if( client.isLogined() && client.auth >= 1 ) {
                 servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
@@ -804,7 +815,7 @@ function onSockVote(data) {
             var nick = client.nick;
 
             if( isLiveQuizTime() ) {
-                client.activePoint += 2;
+                client.incActivePoint( 2 );
             }
 
             chatMan.Broadcast(servman.io, client, 'vote', `[투표] ${number}번!`, false, data.idx );

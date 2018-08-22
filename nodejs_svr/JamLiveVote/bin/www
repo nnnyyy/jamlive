@@ -54,7 +54,7 @@ var io = require('socket.io')(server,
 
 var sharedsession = require("express-socket.io-session");
 io.use(sharedsession(app.session));
-require('../routes/io')(io);
+require('../routes/io')(io, app.redis);
 /**
  * Listen on provided port, on all network interfaces.
  */

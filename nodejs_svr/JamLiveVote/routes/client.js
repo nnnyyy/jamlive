@@ -4,7 +4,6 @@
 var Client = function(socket) {
     this.socket = socket;
     this.tLastClick = 0;
-    this.activePoint = 0;
     this.auth = -1;
     this.nick = '';
     this.ip = '';
@@ -47,6 +46,24 @@ Client.prototype.isLogined = function() {
 Client.prototype.isAbleChat = function() {
     const tCur = new Date();
     return (tCur - this.tLastChat >= 950);
+}
+
+Client.prototype.incActivePoint = function( point ) {
+    if( !this.isLogined() ) return;
+
+    console.log('inc ' + this.socket.handshake.session.userinfo.ap);
+
+    this.socket.handshake.session.userinfo.ap += point;
+    if( this.socket.handshake.session.userinfo.ap <= 0 ) {
+        this.socket.handshake.session.userinfo.ap = 0;
+    }
+
+    console.log('inc ret ' + this.socket.handshake.session.userinfo.ap);
+}
+
+Client.prototype.getActivePoint = function() {
+    if( !this.isLogined() ) return 0;
+    return this.socket.handshake.session.userinfo.ap;
 }
 
 module.exports = Client;

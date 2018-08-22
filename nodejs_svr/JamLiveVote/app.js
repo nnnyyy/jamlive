@@ -39,6 +39,13 @@ var sessionMiddleware = session({
     })
 });
 app.session = sessionMiddleware;
+app.redis = client;
+
+app.use(function(req,res, next) {
+    req.redis = client;
+    next();
+})
+
 app.use(sessionMiddleware);
 
 app.use('/', routes);
