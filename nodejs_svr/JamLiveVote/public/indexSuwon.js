@@ -44,6 +44,7 @@ function init( socket ) {
     hintObj.init();
     chatObj.init();
     options.init();
+    chosungGameMan.init();
     setSocketEvent(socket);
     setKeyEvent();
     setBtnEvent();
@@ -76,6 +77,53 @@ GlobalValue.prototype.onNextQuiz = function (data) {
     var qinfo = '<next-quiz-type>' + data.data.name + '</next-quiz-type>' + ' ' + tTime.getHours() + '시 ' + tTime.getMinutes().toString() + '분';
     G.weekdayElem.text(bToday? '오.늘.' : weekdayname[data.data.weekday]);
     G.quizinfoElem.html(qinfo);
+}
+
+function ChosungGameMan() {
+
+}
+
+ChosungGameMan.prototype.init = function() {
+    setVisibleBlock(quizObj.randomQuizRootElem, true);
+    setVisibleBlock(quizObj.jaumQuizRootElem, false);
+}
+
+ChosungGameMan.prototype.setUI = function() {
+    setVisibleBlock(quizObj.randomQuizRootElem, false);
+    setVisibleBlock(quizObj.jaumQuizRootElem, true);
+}
+
+ChosungGameMan.prototype.closeUI = function() {
+    setVisibleBlock(quizObj.randomQuizRootElem, true);
+    setVisibleBlock(quizObj.jaumQuizRootElem, false);
+}
+
+ChosungGameMan.prototype.setText = function(word) {
+    $('jaum-notice').text(word);
+}
+
+ChosungGameMan.prototype.onPacket = function( packet ) {
+    if( packet.step == 'start' ) {
+        chosungGameMan.setText('곧 초성게임이 사작 됩니다!');
+        chosungGameMan.setUI();
+    }
+    else if( packet.step == 'q') {
+        chosungGameMan.setText(packet.q);
+    }
+    else if( packet.step == 'msg' ) {
+        chatObj.addChat('chat', false, '초성게임', packet.msg, false, 99, '', '' );
+    }
+    else if( packet.step == 'result' ) {
+        chosungGameMan.closeUI();
+    }
+    else if( packet.step == 'wait') {
+        chosungGameMan.setUI();
+        chosungGameMan.setText('초성게임이 진행 중입니다');
+    }
+    else if( packet.step == 'stop') {
+        showAdminMsg('초성 게임이 강제 종료 되었습니다');
+        chosungGameMan.closeUI();
+    }
 }
 
 function Options() {
@@ -325,6 +373,7 @@ var chatObj = new ChatObject();
 var voteObj = new VoteObject();
 var searchObj = new SearchObject();
 var topMenuObj = new TopMenuObject();
+var chosungGameMan = new ChosungGameMan();
 var quizObj = new QuizObject();
 var options = new Options();
 
@@ -711,10 +760,7 @@ function QuizObject() {
     this.tQuizStart = 0;
     this.intervalID = -1;
     this.btnToggleQuiz = $('#btn-toggle-quiz');
-    this.btnToggleQuiz.click( onBtnToggleQuiz )
-
-    setVisibleBlock(this.randomQuizRootElem, true);
-    setVisibleBlock(this.jaumQuizRootElem, false);
+    this.btnToggleQuiz.click( onBtnToggleQuiz );
 }
 
 QuizObject.prototype.onQuiz = function(data) {
@@ -788,6 +834,7 @@ function setSocketEvent( socket ) {
     socket.on('update-user', onUpdateUser);
     socket.on('update-users', onUpdateUsers);
     socket.on('ap', onAP);
+    socket.on('chosung', chosungGameMan.onPacket);
     socket.on('reconn-server', function(data) {
         if( data.reason == 'baned') {
             alert('이용 자격이 없음이 확인되어 영구밴 당하셨습니다.');

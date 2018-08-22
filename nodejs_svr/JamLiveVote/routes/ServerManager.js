@@ -146,6 +146,11 @@ ServerMan.prototype.register = function(socket) {
     socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
     socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+
+    if( this.chosung.isRunning() ) {
+        this.chosung.sendState(socket);
+    }
+
     socket.on('vote', onSockVote);;
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
@@ -256,8 +261,8 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     if( this.chosung.isRunning() ) {
 
         if( isLiveQuizTime() ) {
-            this.chosung.stop();
-            return;
+            //this.chosung.stop();
+            //return;
         }
 
         this.chosung.update( cur );
@@ -736,6 +741,14 @@ function onSockChat(data) {
             chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 on 했습니다.', isBaned );
             return;
         }
+        else if( client.isAdmin() && data.msg == "#chosung") {
+            servman.chosung.start();
+            return;
+        }
+        else if( client.isAdmin() && data.msg == "#chosungoff" ) {
+            servman.chosung.stop();
+            return;
+        }
 
         if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && data.msg == "#quiz" && servman.isAbleCreateQuizData() ) {
             dbhelper.getRandomQuiz(function(result) {
@@ -749,6 +762,12 @@ function onSockChat(data) {
         if( data.mode == "emoticon" ) {
             servman.io.sockets.emit('emoticon', {auth: client.auth, nick: nick, name: data.emoticon});
             return;
+        }
+
+        if( servman.chosung.isRunning() ) {
+            if( servman.chosung.checkAnswer(client.nick, data.msg) ) {
+                //  성공 !
+            }
         }
 
         chatMan.Broadcast( servman.io, client, 'chat', data.msg, isBaned );
