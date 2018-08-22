@@ -108,12 +108,14 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         chosungGameMan.setUI();
     }
     else if( packet.step == 'q') {
+        chatObj.addChat('chat', false, '초성게임', '새로운 문제가 출제 되었습니다 - ' + packet.q, false, 99, '', '' );
         chosungGameMan.setText(packet.q);
     }
     else if( packet.step == 'msg' ) {
         chatObj.addChat('chat', false, '초성게임', packet.msg, false, 99, '', '' );
     }
     else if( packet.step == 'result' ) {
+        chatObj.addChat('chat', false, '초성게임', '퀴즈가 종료 되었습니다', false, 99, '', '' );
         chosungGameMan.closeUI();
     }
     else if( packet.step == 'wait') {
