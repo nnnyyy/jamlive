@@ -298,7 +298,18 @@ body {
   font-family: 'Nanum Barun Gothic', sans-serif;
   font-size: 15px;
 }
+#area-article #article-center #jaum-quiz {
+  width: 100%;
+  height: 297px;
+  line-height: 297px;
+  font-weight: bolder;
+  font-size: 22px;
+  text-align: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+}
 #area-article #article-center #random-quiz {
+  width: 100%;
   background-color: #ffffff;
   height: 297px;
   font-family: 'Nanum Barun Gothic', sans-serif;

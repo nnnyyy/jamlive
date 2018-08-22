@@ -698,6 +698,8 @@ function onBtnLogout(e) {
 }
 
 function QuizObject() {
+    this.randomQuizRootElem = $('#random-quiz');
+    this.jaumQuizRootElem = $('#jaum-quiz');
     this.questionElem = $('#random-quiz-question');
     this.answerElem = [ $('.random-quiz-answer').eq(0), $('.random-quiz-answer').eq(1), $('.random-quiz-answer').eq(2) ];
     this.gaugeElem = $('.gauge');
@@ -710,6 +712,9 @@ function QuizObject() {
     this.intervalID = -1;
     this.btnToggleQuiz = $('#btn-toggle-quiz');
     this.btnToggleQuiz.click( onBtnToggleQuiz )
+
+    setVisibleBlock(this.randomQuizRootElem, true);
+    setVisibleBlock(this.jaumQuizRootElem, false);
 }
 
 QuizObject.prototype.onQuiz = function(data) {

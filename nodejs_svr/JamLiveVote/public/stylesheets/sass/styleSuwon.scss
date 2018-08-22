@@ -380,7 +380,19 @@ $top-bottom-margin: 5px;
       font-size: 15px;
     }
 
+    #jaum-quiz {
+      width: 100%;
+      height: $random-quiz-height;
+      line-height: $random-quiz-height;
+      font-weight: bolder;
+      font-size: 22px;
+      text-align: center;
+      background-color: $color-main-back;
+      border: 1px solid $color-border;
+    }
+
     #random-quiz {
+      width: 100%;
       $random-quiz-question-height: 100px;
 
       background-color: $color-main-back;
