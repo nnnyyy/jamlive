@@ -1032,6 +1032,7 @@ function setBtnEvent() {
     $('#btn-serv-2').click(onBtnGoServ2);
     $('#btn-serv-3').click(onBtnGoServ3);
     $('#btn-serv-4').click(onBtnGoServ4);
+    $('#btn-serv-4').click(onBtnGoServ5);
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
@@ -1094,6 +1095,7 @@ function onBtnGoServ1(e) { window.location.href = 'http://databucket.duckdns.org
 function onBtnGoServ2(e) { window.location.href = 'http://databucket.duckdns.org:5647/'; }
 function onBtnGoServ3(e) { window.location.href = 'http://databucket.duckdns.org:6647/'; }
 function onBtnGoServ4(e) { window.location.href = 'http://databucket.duckdns.org:7647/'; }
+function onBtnGoServ5(e) { window.location.href = 'http://databucket.duckdns.org:8647/'; }
 
 function onBtnSettings(e) {
     e.stopPropagation();

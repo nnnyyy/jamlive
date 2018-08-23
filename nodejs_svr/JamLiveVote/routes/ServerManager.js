@@ -278,7 +278,6 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
 
         this.chosung.update( cur );
-        return;
     }
 
     cur -= cur % VOTEPERTIME;
@@ -762,13 +761,18 @@ function onSockChat(data) {
             return;
         }
 
-        if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && data.msg == "#quiz" && servman.isAbleCreateQuizData() ) {
-            dbhelper.getRandomQuiz(function(result) {
-                if( result.ret == 0 ){
-                    servman.createQuizData(client.nick, result.quizdata);
-                }
-            });
-            return;
+        if( data.msg == "#quiz" ) {
+            if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && servman.isAbleCreateQuizData() ) {
+                dbhelper.getRandomQuiz(function(result) {
+                    if( result.ret == 0 ){
+                        servman.createQuizData(client.nick, result.quizdata);
+                    }
+                });
+                return;
+            }
+            else {
+                sendServerMsg(client.socket, '퀴즈를 아직 낼 수 없습니다.');
+            }
         }
 
         if( data.mode == "emoticon" ) {
