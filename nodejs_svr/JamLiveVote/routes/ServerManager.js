@@ -232,7 +232,7 @@ ServerMan.prototype.setIO = function(io, redis) {
     this.chosung = new Chosung(io);
     //this.chosung.start();
 
-    servman.redis.get('jamlive-memo-info',  (err, info) => {
+    servman.redis.get('jamlive-memo-info:' + config.serv_name,  (err, info) => {
         try {
             if( !err ) {
                 const memoinfo = JSON.parse(info);
@@ -947,7 +947,7 @@ function onMemo(data) {
         servman.memo_provider = client.nick;
 
         const memoinfo = JSON.stringify({memo: servman.memo, provider: servman.memo_provider });
-        servman.redis.set('jamlive-memo-info', memoinfo,  (err, info) => {
+        servman.redis.set('jamlive-memo-info:' + config.serv_name, memoinfo,  (err, info) => {
         } );
 
         servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
