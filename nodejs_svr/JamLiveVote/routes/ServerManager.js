@@ -420,7 +420,7 @@ ServerMan.prototype.checkAllBaned = function() {
 
     try {
         //  자동 퀴즈쇼 모드
-        if( !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
+        if( !this.chosung.isRunning() && !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
                     servman.createQuizData('자동퀴즈', result.quizdata);
