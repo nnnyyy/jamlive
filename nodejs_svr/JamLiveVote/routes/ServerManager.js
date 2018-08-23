@@ -779,6 +779,8 @@ function onSockChat(data) {
         if( servman.chosung.isRunning() ) {
             if( servman.chosung.checkAnswer(client.nick, data.msg) ) {
                 //  성공 !
+                client.incActivePoint(20);
+                sendServerMsg(client.socket, '+20점');
             }
         }
 

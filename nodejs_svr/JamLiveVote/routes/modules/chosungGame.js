@@ -66,7 +66,7 @@ class ChosungGame {
         callback( null );
     }
 
-    broadcastQuestion() {
+    broadcastQuestion(prev) {
         const word = this.words[ this.quizIdx ];
         this.currentWord = [];
         for( var i = 0 ; i < word.length ; ++i ) {
@@ -82,7 +82,7 @@ class ChosungGame {
 
         //console.log(`quiz : ${word} -> ${chosung}`);
 
-        this.io.sockets.emit('chosung', {step: 'q', q: chosung});
+        this.io.sockets.emit('chosung', {step: 'q', q: chosung, prev_q: prev});
         this.tStartQuestion = new Date();
         this.tLastHint = new Date();
         this.nHintCnt = 0;
@@ -104,6 +104,7 @@ class ChosungGame {
     }
 
     broadcastNextWord() {
+        var prev = this.words[this.quizIdx];
         this.quizIdx++;
         if( this.words.length <= this.quizIdx ) {
             // 게임 종료 후 결과 제공
@@ -112,7 +113,7 @@ class ChosungGame {
             return;
         }
 
-        this.broadcastQuestion();
+        this.broadcastQuestion(prev);
     }
 
     broadcastFail() {

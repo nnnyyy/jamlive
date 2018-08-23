@@ -109,6 +109,9 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
     }
     else if( packet.step == 'q') {
         chatObj.addChat('chat', false, '초성게임', '새로운 문제가 출제 되었습니다 - ' + packet.q, false, 99, '', '' );
+        if( packet.prev_q ) {
+            showAdminMsg('정답은 ' + packet.prev_q + '였습니다');
+        }
         chosungGameMan.setText(packet.q);
     }
     else if( packet.step == 'msg' ) {
