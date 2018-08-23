@@ -130,6 +130,11 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         chatObj.addChat('chat', false, '초성게임', '힌트가 도착했습니다', false, 99, '', '' );
         chosungGameMan.setText(packet.q);
     }
+    else if( packet.step == 'fail') {
+        var msg = '실패 했습니다! 답은 ' + packet.q;
+        chatObj.addChat('chat', false, '초성게임', msg, false, 99, '', '' );
+        showAdminMsg(msg);
+    }
 }
 
 function Options() {

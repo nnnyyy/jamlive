@@ -115,6 +115,10 @@ class ChosungGame {
         this.broadcastQuestion();
     }
 
+    broadcastFail() {
+        this.io.sockets.emit('chosung', {step: 'fail', q: this.question});
+    }
+
     broadcastResult() {
         this.io.sockets.emit('chosung', {step: 'result'});
     }
@@ -151,6 +155,7 @@ class ChosungGame {
         }
 
         if( this.step == 2 && tCur - this.tStartQuestion >= 1000 * 60 ) {
+            this.broadcastFail();
             this.broadcastNextWord();
         }
     }
