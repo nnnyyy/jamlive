@@ -19,7 +19,7 @@
         });
     </script>
 
-    <title>라이브 퀴즈 정답 공유기 v0.5</title>
+    <title><%= __('title')%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
     <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
     <meta property="og:type" content="website">
@@ -48,27 +48,27 @@
                 <img src="/images/logo.png"/>
             </div>
             <div id="server-list">
-                <div class="serv" id="btn-serv-1">서버1</div>
-                <div class="serv" id="btn-serv-2">서버2</div>
-                <div class="serv" id="btn-serv-3">서버3</div>
-                <div class="serv" id="btn-serv-4">서버4</div>
-                <div class="curserv">현재서버 : <nc><%- servname %></nc></div>
+                <div class="serv" id="btn-serv-1"><%= __('server')%>1</div>
+                <div class="serv" id="btn-serv-2"><%= __('server')%>2</div>
+                <div class="serv" id="btn-serv-3"><%= __('server')%>3</div>
+                <div class="serv" id="btn-serv-4"><%= __('server')%>4</div>
+                <div class="curserv"><%= __('current-server-name')%> : <nc><%- servname %></nc></div>
             </div>
         </div>
         <div id="area-top-center">
-            <div id="quizinfo-title">다음 라이브 퀴즈쇼</div>
+            <div id="quizinfo-title"><%= __('next-live-quiz')%></div>
             <div id="quizinfo-main"><next-quizday>오늘</next-quizday> <next-quiz-info><next-quiz-type>잼라이브</next-quiz-type> 20시 00분</next-quiz-info></div>
         </div>
         <div id="area-top-right">
-            <div class="area-top-btn" id="btn-settings">설정</div>
-            <div class="area-top-btn" id="btn-help">도움말</div>
+            <div class="area-top-btn" id="btn-settings"><%=__('menu-settings')%></div>
+            <div class="area-top-btn" id="btn-help"><%=__('menu-help')%></div>
             <%
             if( !username ) {%>
-            <div class="area-top-btn" id="btn-signup">가입하기</div>
-            <div class="area-top-btn" id="btn-login">로그인</div>
+            <div class="area-top-btn" id="btn-signup"><%=__('menu-signup')%></div>
+            <div class="area-top-btn" id="btn-login"><%=__('menu-login')%></div>
             <%}else {%>
-            <div class="area-top-btn" id="btn-logout">로그아웃</div>
-            <div class="area-login-info"><%-userinfo.usernick%>(<ap><%-userinfo.ap%> 점</ap>)님으로 접속 중</div>
+            <div class="area-top-btn" id="btn-logout"><%=__('menu-logout')%></div>
+            <div class="area-login-info"><%-userinfo.usernick%>(<ap><%-userinfo.ap%> 점</ap>)<%=__('menu-connector')%></div>
             <%}%>
 
         </div>
@@ -96,7 +96,7 @@
             </div>
             <div id="hint">
                 <div type="top-menu">
-                    <hint-provider>잼라이브</hint-provider>님의 힌트 제공
+                    <hint-provider>잼라이브</hint-provider><%= __('hint-provider')%>
                     <div id="btn-modify-hint">
                         수정하기
                     </div>
@@ -119,9 +119,9 @@
             </div>
             <div id="random-quiz">
                 <div type="top-menu">
-                    <quiz-provider>잼라이브</quiz-provider>님이 내주신 퀴즈
+                    <quiz-provider>잼라이브</quiz-provider><%=__('user-quiz')%>
                     <div id="btn-toggle-quiz">
-                        퀴즈 끄기
+                        <%= __('quiz-off')%>
                     </div>
                 </div>
                 <div id="quiz-all-wnd">
@@ -172,7 +172,7 @@
         <div id="article-right">
             <div id="vote-data">
                 <div type="top-menu">
-                    <vtitle>투표 결과</vtitle>
+                    <vtitle><%= __('vote-result')%></vtitle>
                 </div>
                 <div class="ct-chart">
                 </div>
@@ -192,9 +192,9 @@
                     </ui>
                 </div>
                 <div type="top-menu">
-                    <vtitle>채팅</vtitle>
+                    <vtitle><%= __('chatting-title')%></vtitle>
                     <div id="btn-clear-chat">
-                        지우기
+                        <%= __('clear-chat')%>
                     </div>
                 </div>
                 <div id="chat">
@@ -210,7 +210,7 @@
 </div>
 
 <wnd role="settings">
-    <div type="title"> - 투표 - </div>
+    <div type="title"> - <%= __('vote')%> - </div>
     <div type="line"></div>
     <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
     <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>고정닉 투표 결과만 보기(로그인시)</div>
@@ -309,9 +309,18 @@
             return;
         }
 
-        CKEDITOR.replace('memo-area');
+        var stringTable = {
+            "modify-hint": "<%=__('modify-hint')%>",
+            "modify-hint-complete": "<%=__('modify-hint-complete')%>",
+            "today": "<%=__('today')%>",
+            "hour": "<%=__('hour')%>",
+            "minute": "<%=__('minute')%>",
+            "quiz-on": "<%=__('quiz-on')%>",
+            "quiz-off": "<%=__('quiz-off')%>"
+        }
 
+        CKEDITOR.replace('memo-area');
         var socket = io();
-        init( socket );
+        init( socket, stringTable );
     });
 </script>

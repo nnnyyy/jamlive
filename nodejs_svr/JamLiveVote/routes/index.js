@@ -16,6 +16,16 @@ router.get('/new', function(req,res, next) {
   res.render('indexSuwon', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 })
 
+router.get('/jp', function(req, res, next) {
+  res.cookie('lang', 'jp');
+  res.redirect('/');
+})
+
+router.get('/ko', function(req, res, next) {
+  res.cookie('lang', 'ko');
+  res.redirect('/');
+})
+
 router.get('/ping', function(req, res, next) {
   res.send('pong');
 });

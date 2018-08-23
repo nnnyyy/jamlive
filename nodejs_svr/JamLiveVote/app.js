@@ -13,6 +13,8 @@ const redis = require('redis');
 const redisStore = require('connect-redis')(session);
 const client = redis.createClient();
 
+const i18n = require('./i18n');
+
 var app = express();
 
 // view engine setup
@@ -26,6 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(i18n);
 var sessionMiddleware = session({
     secret: 'dhkddPtlr',
     resave: true,

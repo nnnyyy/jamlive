@@ -28,8 +28,9 @@ ConnectStateInfo.prototype.Disconnect = function() {
     }, RETRY_INTERVAL);
 }
 
-function init( socket ) {
+function init( socket, stringTable ) {
     G.socket = socket;
+    G.stringTable = stringTable;
     setVisible($('.user-menu'), false);
 
     var noticeFirst = localStorage.getItem('notice-first') | 0;
@@ -48,7 +49,6 @@ function init( socket ) {
     setSocketEvent(socket);
     setKeyEvent();
     setBtnEvent();
-
 
 }
 
@@ -74,8 +74,8 @@ GlobalValue.prototype.onNextQuiz = function (data) {
         bToday = true;
     }
 
-    var qinfo = '<next-quiz-type>' + data.data.name + '</next-quiz-type>' + ' ' + tTime.getHours() + '시 ' + tTime.getMinutes().toString() + '분';
-    G.weekdayElem.text(bToday? '오.늘.' : weekdayname[data.data.weekday]);
+    var qinfo = '<next-quiz-type>' + data.data.name + '</next-quiz-type>' + ' ' + tTime.getHours() + G.stringTable['hour'] + ' ' + tTime.getMinutes().toString() + G.stringTable['minute'];
+    G.weekdayElem.text(bToday? G.stringTable['today'] : weekdayname[data.data.weekday]);
     G.quizinfoElem.html(qinfo);
 }
 
@@ -408,7 +408,7 @@ HintObject.prototype.setHintMode = function( bModify ) {
     setVisible(this.articleArea, !bModify );
     setVisible(this.btnModifyCancel, bModify);
     this.bModifyMode = bModify;
-    var str = bModify == true ? '수정완료' : '수정하기';
+    var str = bModify == true ? G.stringTable['modify-hint-complete'] : G.stringTable['modify-hint'];
     this.btnModifyHint.text(str);
 
     if( bModify ) {
@@ -1691,7 +1691,7 @@ function onBtnToggleQuiz(e) {
     clearInterval(quizObj.intervalID);
 
     quizObj.bQuizEnable = !quizObj.bQuizEnable;
-    $('#btn-toggle-quiz').text(quizObj.bQuizEnable ? '퀴즈 끄기' : '퀴즈 켜기');
+    $('#btn-toggle-quiz').text(quizObj.bQuizEnable ? G.stringTable['quiz-off'] : G.stringTable['quiz-on']);
 }
 
 function updateUserList() {
