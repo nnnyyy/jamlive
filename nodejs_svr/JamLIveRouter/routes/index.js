@@ -4,7 +4,7 @@ const HashMap = require('hashmap');
 
 var servinfo = new HashMap();
 const ioclient = require('socket.io-client');
-const socketToCenterServer = ioclient.connect('http://127.0.0.1:7777', {reconnect: true });
+const socketToCenterServer = ioclient.connect('http://databucket.duckdns.org:7777', {reconnect: true });
 var servnameConvert = new HashMap();
 servnameConvert.set('1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 1200 });
 servnameConvert.set('2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1200 });
