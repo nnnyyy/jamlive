@@ -1032,7 +1032,7 @@ function setBtnEvent() {
     $('#btn-serv-2').click(onBtnGoServ2);
     $('#btn-serv-3').click(onBtnGoServ3);
     $('#btn-serv-4').click(onBtnGoServ4);
-    $('#btn-serv-4').click(onBtnGoServ5);
+    $('#btn-serv-5').click(onBtnGoServ5);
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
