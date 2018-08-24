@@ -848,6 +848,7 @@ function setSocketEvent( socket ) {
     socket.on('update-user', onUpdateUser);
     socket.on('update-users', onUpdateUsers);
     socket.on('ap', onAP);
+    socket.on('go', onGo);
     socket.on('chosung', chosungGameMan.onPacket);
     socket.on('reconn-server', function(data) {
         if( data.reason == 'baned') {
@@ -1091,11 +1092,11 @@ function setBtnEvent() {
     });
 }
 
-function onBtnGoServ1(e) { window.location.href = 'http://databucket.duckdns.org:4650/'; }
-function onBtnGoServ2(e) { window.location.href = 'http://databucket.duckdns.org:5647/'; }
-function onBtnGoServ3(e) { window.location.href = 'http://databucket.duckdns.org:6647/'; }
-function onBtnGoServ4(e) { window.location.href = 'http://databucket.duckdns.org:7647/'; }
-function onBtnGoServ5(e) { window.location.href = 'http://databucket.duckdns.org:8647/'; }
+function onBtnGoServ1(e) { G.socket.emit('go', {servidx: '1'}) }
+function onBtnGoServ2(e) { G.socket.emit('go', {servidx: '2'}) }
+function onBtnGoServ3(e) { G.socket.emit('go', {servidx: '3'}) }
+function onBtnGoServ4(e) { G.socket.emit('go', {servidx: '4'}) }
+function onBtnGoServ5(e) { G.socket.emit('go', {servidx: '5'}) }
 
 function onBtnSettings(e) {
     e.stopPropagation();
@@ -1735,6 +1736,16 @@ function onUpdateUser(data) {
 function onAP(data) {
     $('ap').text(data.ap + ' 점');
 }
+
+function onGo(data) {
+    if( data.ret == 0 ) {
+        window.location.href = data.url;
+    }
+    else {
+        showAdminMsg(data.msg);
+    }
+}
+
 function onUpdateUsers(data) {
     for( var i = 0 ; i < data.list.length ; ++i) {
         G.usersMap.put(data.list[i], 1);

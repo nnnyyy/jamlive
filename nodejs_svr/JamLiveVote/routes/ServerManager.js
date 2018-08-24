@@ -16,6 +16,42 @@ var config = require('../config');
 var connectedListMan = require('./modules/ConnectedListMan');
 const connListMan = new connectedListMan();
 
+const ioclient = require('socket.io-client');
+var socketToCenterServer = ioclient.connect('http://localhost:7777', {reconnect: true });
+
+var servinfo = new HashMap();
+var servnameConvert = new HashMap();
+servnameConvert.set('1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 1200 });
+servnameConvert.set('2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1200 });
+servnameConvert.set('3', {name: '서버3', url: 'http://databucket.duckdns.org:6647/', limit: 1200 });
+servnameConvert.set('4', {name: '서버4', url: 'http://databucket.duckdns.org:7647/', limit: 1200 });
+servnameConvert.set('5', {name: '서버5', url: 'http://databucket.duckdns.org:8647/', limit: 1200 });
+
+var centerConnected = false;
+
+// Add a connect listener
+socketToCenterServer.on('connect', function () {
+    console.log('connect to center');
+    centerConnected = true;
+    this.emit('serv-info', { type: "vote-server", name: config.serv_name });
+    this.on('disconnect', function() {
+        console.log('disconnect from center');
+    })
+
+    this.on('user-cnt', function(packet) {
+        try {
+            const data = packet.data;
+            for( var i = 0 ; i < data.length ; ++i ) {
+                servinfo.set(data[i].name, {cnt: data[i].cnt, tLastRecv: new Date()});
+            }
+        }
+        catch(e) {
+            console.log(e);
+        }
+    })
+});
+
+
 var VOTEPERTIME = 1000;
 var BANTIME = 6 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
@@ -159,6 +195,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('like', onSockLike);
     socket.on('analysis', onAnalysis);
     socket.on('memo', onMemo);
+    socket.on('go', onGo);
 }
 
 
@@ -344,6 +381,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         s += searchlist[i].query;
     }
 
+    socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count()});
     this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode() });
 }
 
@@ -960,6 +998,42 @@ function onMemo(data) {
     }
     catch(e) {
 
+    }
+}
+
+function onGo(data) {
+    try {
+        var client = servman.getClient(this.id);
+        if( !client ) return;
+
+        var tCur = new Date();
+
+        if( !servnameConvert.has(data.servidx) ) {
+            client.socket.emit('go', {ret: -1, msg: '서버 오류'});
+            return;
+        }
+        else {
+            const info = servnameConvert.get(data.servidx);
+            if( !servinfo.has(info.name) ) {
+                client.socket.emit('go', {ret: -1, msg: '서버가 죽었어요. 다른 서버로'});
+                return;
+            }
+
+            var serv = servinfo.get(info.name);
+            if( tCur - serv.tLastRecv >= 5000 ) {
+                client.socket.emit('go', {ret: -1, msg: '서버가 죽었어요. 다른 서버로'});
+                return;
+            }
+
+            if( serv.cnt >= info.limit ) {
+                client.socket.emit('go', {ret: -1, msg: '서버에 인원이 너무 많아요. 다른서버로.'});
+                return;
+            }
+
+            client.socket.emit('go', {ret: 0, url: info.url});
+        }
+    }catch(e) {
+        console.log(e);
     }
 }
 

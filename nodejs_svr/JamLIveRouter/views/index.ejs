@@ -28,10 +28,11 @@
                    data-ad-height  = "100"></ins>
               <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
           </div>
-          <a href="http://databucket.duckdns.org:4650"><div class="btn_box">서버 1</div></a>
-          <a href="http://databucket.duckdns.org:5647"><div class="btn_box">서버 2</div></a>
-          <a href="http://databucket.duckdns.org:6647"><div class="btn_box">서버 3</div></a>
-          <a href="http://databucket.duckdns.org:7647"><div class="btn_box">서버 4</div></a>
+          <div class="btn_box btn-serv" servidx=1>서버 1</div>
+          <div class="btn_box btn-serv" servidx=2>서버 2</div>
+          <div class="btn_box btn-serv" servidx=3>서버 3</div>
+          <div class="btn_box btn-serv" servidx=4>서버 4</div>
+          <div class="btn_box btn-serv" servidx=5>서버 5</div>
           <a href="http://quiz.jamlive.net"><div class="btn_box">퀴즈 기출문제 사이트</div></a>
           <div style="text-align: center;width: 320px; margin: 0 auto;">
               <ins class="kakao_ad_area" style="display:none;width:100%"
@@ -42,9 +43,71 @@
           </div>
       </div>
   </div>
+  <div class="admin_msg"></div>
   </body>
     <script>
+        var animOpacityTimerID = -1;
+        function showAdminMsg(msg) {
+            var obj = $('.admin_msg');
+            setVisible(obj, true);
+            if( animOpacityTimerID != -1 ) {
+                clearTimeout(animOpacityTimerID);
+                animOpacityTimerID = -1;
+                obj.removeClass('opacity');
+                obj.addClass('non_opacity');
+            }
+            obj.addClass('opacity');
+            obj.removeClass('non_opacity');
+            obj.html(msg);
+            obj.css('opacity', '0.95');
+            animOpacityTimerID = setTimeout(function() {
+                setVisible(obj, false);
+                //$('.admin_msg').css('opacity', '0');
+            }, 1500);
+
+        }
+
+        function setVisible(elem, visible) {
+            elem.css('display', visible ? 'inline-block' : 'none');
+        }
+
+        function setVisibleBlock(elem, visible) {
+            elem.css('display', visible ? 'block' : 'none');
+        }
+
+        function getVisible(elem) {
+            if( elem.css('display') === 'none' ) return false;
+
+            return true;
+        }
+
         $(document).ready(function(){
+            var obj = $('.admin_msg');
+            setVisible(obj, false);
+
+            $('.btn-serv').each(function(idx) {
+                var servidx = $(this).attr('servidx');
+                $(this).click(function(e) {
+                    e.stopPropagation();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            servidx: servidx
+                        }),
+                        contentType: 'application/json',
+                        url: '/go',
+                        success: function(data) {
+                            if( data.ret == 0 ) {
+                                window.location.href = data.url;
+                            }
+                            else {
+                                showAdminMsg(data.msg);
+                            }
+                        }
+                    });
+                })
+            });
         });
     </script>
 </html>
