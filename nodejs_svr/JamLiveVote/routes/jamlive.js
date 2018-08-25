@@ -252,7 +252,17 @@ exports.searchex = function(req, res, next) {
     var query = req.body.query;
     var type = req.body.type;
 
+    if( !ServerManager.isLiveQuizTime() ) {
+        res.json([{title: '라이브 퀴즈 시간 아님', description: '네이버 검색은 라이브 퀴즈 시간에 ㅠ 검색량이 너무 많아요.'}]);
+        return;
+    }
+
     query = query.trim();
+
+    if( query.length <= 1 ) {
+        res.json([{title: '검색어 짧음', description: '검색어가 너무 짧음'}]);
+        return;
+    }
 
     var ip = req.headers['X-Real-IP'] || (req.connection.remoteAddress.substr(7));
     var ipHashed = ip.hashCode().toString();

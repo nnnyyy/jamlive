@@ -115,6 +115,21 @@ var ServerMan = function() {
 
 var servman = new ServerMan();
 
+ServerMan.prototype.isLiveQuizTime = function() {
+    var cur = new Date();
+    var hours = cur.getHours();
+    return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 18 ) );
+}
+
+ServerMan.prototype.sendServerMsg = function( socket, msg ) {
+    try {
+        socket.emit('serv_msg', {msg: msg});
+    }
+    catch(e) {
+        console.log(`sendServerMsg Error - ${e}`);
+    }
+}
+
 ServerMan.prototype.register = function(socket) {
     if( !this.addSocket(socket) ) {
         return;
@@ -309,7 +324,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
 
     if( this.chosung.isRunning() ) {
 
-        if( isLiveQuizTime() ) {
+        if( this.isLiveQuizTime() ) {
             //this.chosung.stop();
             //return;
         }
@@ -457,7 +472,7 @@ ServerMan.prototype.checkAllBaned = function() {
 
     try {
         //  자동 퀴즈쇼 모드
-        if( !this.chosung.isRunning() && !isLiveQuizTime() && this.isAbleCreateQuizData() ) {
+        if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.isAbleCreateQuizData() ) {
             dbhelper.getRandomQuiz(function(result) {
                 if( result.ret == 0 ){
                     servman.createQuizData('자동퀴즈', result.quizdata);
@@ -572,22 +587,22 @@ function onSockBan(data) {
         var msg = '';
 
         if( !client.isLogined() ) {
-            sendServerMsg(socket, '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.');
+            servman.sendServerMsg(socket, '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.');
             return;
         }
 
         if( client.ip == toBanClient.ip ) {
-            sendServerMsg(socket, '자신을 신고할 수 없습니다.');
+            servman.sendServerMsg(socket, '자신을 신고할 수 없습니다.');
             return;
         }
 
         if( servman.checkBaned(client.ip) ) {
-            sendServerMsg(socket, '밴유저는 다른 유저를 밴 할 수 없습니다.');
+            servman.sendServerMsg(socket, '밴유저는 다른 유저를 밴 할 수 없습니다.');
             return;
         }
 
         if( servman.checkBaned( toBanClient.ip ) ) {
-            sendServerMsg(socket, '이미 밴 되어 있습니다.');
+            servman.sendServerMsg(socket, '이미 밴 되어 있습니다.');
             return;
         }
 
@@ -602,7 +617,7 @@ function onSockBan(data) {
             msg = '동일 유저에게 신고할 수 없습니다.';
         }
 
-        sendServerMsg(socket, msg);
+        servman.sendServerMsg(socket, msg);
     }catch(e) {
         console.log(`onSockBan Error - ${e}`);
     }
@@ -618,7 +633,7 @@ function onSockPermanentBan(data) {
         if( !client.isAdmin() ) return;
 
         if( !client.isLogined() ) {
-            sendServerMsg(socket, '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.');
+            servman.sendServerMsg(socket, '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.');
             return;
         }
 
@@ -628,7 +643,7 @@ function onSockPermanentBan(data) {
         }
 
         dbhelper.updateBanUser(toBanClient.ip, ret => {
-            sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
+            servman.sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
             toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
             chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.ip}을 영구밴 시켰습니다`, false);
             console.log('permanent ban success - ip');
@@ -645,7 +660,7 @@ function onSockPermanentBan(data) {
         });
         if( toBanClient.isLogined() && toBanClient.socket.handshake.session.username ){
             dbhelper.updateBanUser( toBanClient.socket.handshake.session.username, ret => {
-                sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
+                servman.sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
                 toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
                 chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.nick}님을 영구밴 시켰습니다`, false);
                 console.log('permanent ban success - nick');
@@ -681,18 +696,18 @@ function onSockLike(data) {
         var auth_state = logined ? client.auth : -1;
 
          if( client.ip == toLikeClient.ip ) {
-             sendServerMsg(client.socket, '스스로 칭찬 불가능');
+             servman.sendServerMsg(client.socket, '스스로 칭찬 불가능');
          return;
          }
 
         var tCur = new Date();
         if( tCur - toLikeClient.tLastClick >= 40000 ) {
-            sendServerMsg(client.socket, '칭찬은 상대의 퀴즈 투표 후에');
+            servman.sendServerMsg(client.socket, '칭찬은 상대의 퀴즈 투표 후에');
             return;
         }
 
-        if( !isLiveQuizTime() ) {
-            sendServerMsg(client.socket, '라이브 퀴즈 시간대가 아니면 칭찬 불가');
+        if( !servman.isLiveQuizTime() ) {
+            servman.sendServerMsg(client.socket, '라이브 퀴즈 시간대가 아니면 칭찬 불가');
             return;
         }
 
@@ -722,7 +737,7 @@ function onSockSearch(data) {
         var socket = client.socket;
         var logined = socket.handshake.session.username ? true : false;
 
-        if( isLiveQuizTime() ) {
+        if( servman.isLiveQuizTime() ) {
             client.incActivePoint( 3 );
         }
 
@@ -762,19 +777,19 @@ function onSockChat(data) {
         var auth_state = client.auth;
 
         if( !logined ) {
-            sendServerMsg(socket, '가입 후 채팅 가능');
+            servman.sendServerMsg(socket, '가입 후 채팅 가능');
             return;
         }
 
         /*
         if( servman.checkBaned(client.ip) ) {
-            sendServerMsg(socket, '밴유저는 채팅 참여가 불가능합니다.');
+         servman.sendServerMsg(socket, '밴유저는 채팅 참여가 불가능합니다.');
             return;
         }
         */
 
         if( !client.isAbleChat() ) {
-            sendServerMsg(socket, '여유를 가지고 채팅 해 주세요.');
+            servman.sendServerMsg(socket, '여유를 가지고 채팅 해 주세요.');
             return;
         }
 
@@ -809,7 +824,7 @@ function onSockChat(data) {
                 return;
             }
             else {
-                sendServerMsg(client.socket, '퀴즈를 아직 낼 수 없습니다.');
+                servman.sendServerMsg(client.socket, '퀴즈를 아직 낼 수 없습니다.');
             }
         }
 
@@ -822,7 +837,7 @@ function onSockChat(data) {
             if( servman.chosung.checkAnswer(client.nick, data.msg) ) {
                 //  성공 !
                 client.incActivePoint(20);
-                sendServerMsg(client.socket, '+20점');
+                servman.sendServerMsg(client.socket, '+20점');
             }
         }
 
@@ -831,12 +846,6 @@ function onSockChat(data) {
     catch(err) {
         console.error(err);
     }
-}
-
-function isLiveQuizTime() {
-    var cur = new Date();
-    var hours = cur.getHours();
-    return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 18 ) );
 }
 
 function onSockVote(data) {
@@ -848,12 +857,12 @@ function onSockVote(data) {
         var socket = client.socket;
 
         if( servman.checkBaned( client.ip ) ) {
-            sendServerMsg(socket, '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.');
+            servman.sendServerMsg(socket, '다수의 신고로 인해 일시적으로 투표에서 제외되었습니다.');
             return;
         }
 
-        if( isLiveQuizTime() && client.auth < 2 && !client.isInSearchedUser() ) {
-            sendServerMsg(socket, '레벨 2 미만의 회원은 검색 후 투표가능합니다.');
+        if( servman.isLiveQuizTime() && client.auth < 2 && !client.isInSearchedUser() ) {
+            servman.sendServerMsg(socket, '레벨 2 미만의 회원은 검색 후 투표가능합니다.');
             return;
         }
 
@@ -867,8 +876,8 @@ function onSockVote(data) {
 
             var total = _counts[0] + _counts[1] + _counts[2];
 
-            if( isLiveQuizTime() && total <= 0 ) {
-                sendServerMsg(socket, '손님은 회원 투표 전까지 투표 불가능합니다.');
+            if( servman.isLiveQuizTime() && total <= 0 ) {
+                servman.sendServerMsg(socket, '손님은 회원 투표 전까지 투표 불가능합니다.');
                 return;
             }
         }
@@ -889,14 +898,14 @@ function onSockVote(data) {
 
             var nick = client.nick;
 
-            if( isLiveQuizTime() ) {
+            if( servman.isLiveQuizTime() ) {
                 client.incActivePoint( 2 );
             }
 
             chatMan.Broadcast(servman.io, client, 'vote', `[투표] ${number}번!`, false, data.idx );
         }
         else {
-            sendServerMsg(socket, '투표한지 얼마 안됐어요. 나중에 시도하세요.');
+            servman.sendServerMsg(socket, '투표한지 얼마 안됐어요. 나중에 시도하세요.');
         }
     }
     catch(e) {
@@ -959,14 +968,14 @@ function onMemo(data) {
         if( !client ) return;
 
         if( client.auth < 3 ) {
-            sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
+            servman.sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
             return;
         }
 
         if( data.mode == 'isUsable' ) {
             var bAble = false;
             if( servman.bMemoModifying ) {
-                sendServerMsg(client.socket, `${servman.modifyingUser}님이 수정 중입니다.`);
+                servman.sendServerMsg(client.socket, `${servman.modifyingUser}님이 수정 중입니다.`);
             }
             else {
                 bAble = true;
@@ -1036,15 +1045,5 @@ function onGo(data) {
         console.log(e);
     }
 }
-
-function sendServerMsg( socket, msg ) {
-    try {
-        socket.emit('serv_msg', {msg: msg});
-    }
-    catch(e) {
-        console.log(`sendServerMsg Error - ${e}`);
-    }
-}
-
 
 module.exports = servman;
