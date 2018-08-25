@@ -6,11 +6,11 @@ var servinfo = new HashMap();
 const ioclient = require('socket.io-client');
 const socketToCenterServer = ioclient.connect('http://databucket.duckdns.org:7777', {reconnect: true });
 var servnameConvert = new HashMap();
-servnameConvert.set('1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 1200 });
-servnameConvert.set('2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1200 });
-servnameConvert.set('3', {name: '서버3', url: 'http://databucket.duckdns.org:6647/', limit: 1200 });
-servnameConvert.set('4', {name: '서버4', url: 'http://databucket.duckdns.org:7647/', limit: 1200 });
-servnameConvert.set('5', {name: '서버5', url: 'http://databucket.duckdns.org:8647/', limit: 1200 });
+servnameConvert.set('1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 1400 });
+servnameConvert.set('2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1400 });
+servnameConvert.set('3', {name: '서버3', url: 'http://databucket.duckdns.org:6647/', limit: 1400 });
+servnameConvert.set('4', {name: '서버4', url: 'http://databucket.duckdns.org:7647/', limit: 1400 });
+servnameConvert.set('5', {name: '서버5', url: 'http://databucket.duckdns.org:8647/', limit: 1400 });
 
 // Add a connect listener
 socketToCenterServer.on('connect', function () {
