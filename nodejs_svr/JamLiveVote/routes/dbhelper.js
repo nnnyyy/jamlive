@@ -63,7 +63,7 @@ exports.getRandomQuiz = function( cb ) {
 
 exports.getRandomWords = function( cb ) {
     try {
-        dbpool.query("select * from krdic order by rand() limit 0,15", function(err, rows) {
+        dbpool.query("select * from krdic where type <> 0 order by rand() limit 0,15", function(err, rows) {
             if( err ) {
                 cb({ret: -1});
                 return;
@@ -71,7 +71,7 @@ exports.getRandomWords = function( cb ) {
             var data = [];
             for( var i  = 0; i < rows.length ; ++i ) {
                 var d = rows[i];
-                data.push(d.word);
+                data.push({word: d.word, type: d.type});
             }
 
             cb({ret: 0, words: data});

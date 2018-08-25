@@ -67,11 +67,15 @@ class ChosungGame {
     }
 
     broadcastQuestion(prev) {
-        const word = this.words[ this.quizIdx ];
+        const worddata = this.words[ this.quizIdx ];
+        const word = worddata.word;
+        const type = worddata.type;
         this.currentWord = [];
         for( var i = 0 ; i < word.length ; ++i ) {
             this.currentWord[i] = word.substring(i, i+1);
         }
+        this.questionWord = word;
+        this.questionType = type;
         this.question = [];
         const a = Hangul.d(word, true);
         var chosung = '';
@@ -82,7 +86,7 @@ class ChosungGame {
 
         //console.log(`quiz : ${word} -> ${chosung}`);
 
-        this.io.sockets.emit('chosung', {step: 'q', q: chosung, prev_q: prev});
+        this.io.sockets.emit('chosung', {step: 'q', q: chosung, type: type, prev_q: prev});
         this.tStartQuestion = new Date();
         this.tLastHint = new Date();
         this.nHintCnt = 0;
@@ -104,7 +108,8 @@ class ChosungGame {
     }
 
     broadcastNextWord() {
-        var prev = this.words[this.quizIdx];
+        const prevdata = this.words[this.quizIdx];
+        const prev = prevdata.word;
         this.quizIdx++;
         if( this.words.length <= this.quizIdx ) {
             // 게임 종료 후 결과 제공
@@ -117,7 +122,7 @@ class ChosungGame {
     }
 
     broadcastFail() {
-        this.io.sockets.emit('chosung', {step: 'fail', q: this.question});
+        this.io.sockets.emit('chosung', {step: 'fail', q: this.questionWord});
     }
 
     broadcastResult() {
@@ -151,7 +156,7 @@ class ChosungGame {
             this.broadcastQuestion();
         }
 
-        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 20 ) {
+        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 10 ) {
             this.showHint();
         }
 
@@ -162,7 +167,7 @@ class ChosungGame {
     }
 
     checkAnswer( nick, userTypingWord ) {
-        if( userTypingWord == this.words[ this.quizIdx ]) {
+        if( userTypingWord == this.words[ this.quizIdx ].word) {
             this.broadcastMessage(`${nick} 님이 맞추셨습니다!`);
             this.broadcastNextWord();
             return true;
