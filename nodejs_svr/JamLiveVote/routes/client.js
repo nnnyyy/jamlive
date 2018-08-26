@@ -29,6 +29,10 @@ Client.prototype.isInSearchedUser = function() {
     return tCur - this.tLastSearch <= ( 8 * 1000 );
 }
 
+Client.prototype.isHighLevelUser = function() {
+    return this.auth >= 4;
+}
+
 Client.prototype.getUserId = function() {
     return this.socket.handshake.session.username;
 }

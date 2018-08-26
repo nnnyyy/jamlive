@@ -376,13 +376,13 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode() });
 }
 
-ServerMan.prototype.click = function(idx, isGuest, isSearchedUser) {
+ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
     var cur = new Date();
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
 
-    var _counts = isGuest ? this.countsForGuest : ( isSearchedUser ? this.countsSearchFirst : this.counts );
-    var _countslist = isGuest ? this.countslistForGuest : ( isSearchedUser ? this.countslistSearchFirst : this.countslist );
+    var _counts = isGuest ? this.countsForGuest : ( isHighLevelUser ? this.countsSearchFirst : this.counts );
+    var _countslist = isGuest ? this.countslistForGuest : ( isHighLevelUser ? this.countslistSearchFirst : this.countslist );
 
     var obj = _counts.get(cur);
     if( obj == null ) {
@@ -837,8 +837,8 @@ function onSockVote(data) {
             return;
         }
 
-        if( servman.isLiveQuizTime() && client.auth < 2 && !client.isInSearchedUser() ) {
-            servman.sendServerMsg(socket, '레벨 2 미만의 회원은 검색 후 투표가능합니다.');
+        if( servman.isLiveQuizTime() && client.auth < 2 ) {
+            servman.sendServerMsg(socket, '레벨 2 미만의 회원은 검색만 가능합니다. 검색과 자동퀴즈로 레벨을 올리세요.');
             return;
         }
 
@@ -859,14 +859,14 @@ function onSockVote(data) {
         }
 
         if( client.isClickable() ) {
-            servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
+            servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
 
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
                 servman.quizdata.vote(data.idx);
                 client.incActivePoint( 1 );
             }
             if( client.isLogined() && client.auth >= 1 ) {
-                servman.click(data.idx, !client.isLogined(), client.isInSearchedUser());
+                servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
             }
             client.tLastClick = new Date();
 
