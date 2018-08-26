@@ -17,7 +17,7 @@ class ServerManager {
         this.chServMap = new HashMap();
         this.voteServMap = new HashMap();
         this.servinfo = new HashMap();
-        this.servinfo.set('서버1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 0 });
+        this.servinfo.set('서버1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 1400 });
         this.servinfo.set('서버2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1400 });
         this.servinfo.set('서버3', {name: '서버3', url: 'http://databucket.duckdns.org:6647/', limit: 1400 });
         this.servinfo.set('서버4', {name: '서버4', url: 'http://databucket.duckdns.org:7647/', limit: 1400 });
