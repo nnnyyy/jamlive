@@ -523,7 +523,7 @@ exports.searchNaverMainWeb = function( req, res , next ) {
 
     var cached = ServerManager.getCachedSearchResult('naver_main', query);
     if( cached ) {
-        res.json({ data: cached });
+        res.json(cached);
         return;
     }
 

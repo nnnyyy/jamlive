@@ -1283,7 +1283,7 @@ function logout() {
 
 function searchWebRoot( socket, query, isBroadcast ) {
     var tCur = new Date();
-    if( tCur - searchObj.tLastSearch <= 800 ) {
+    if( tCur - searchObj.tLastSearch <= 500 ) {
         showAdminMsg('검색은 여유를 두고!');
         return;
     }
