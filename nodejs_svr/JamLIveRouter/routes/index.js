@@ -26,6 +26,7 @@ socketToCenterServer.on('connect', function () {
     try {
       const data = packet.data;
       for( var i = 0 ; i < data.length ; ++i ) {
+          console.log(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
         servInfoMan.set(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
       }
     }
@@ -73,7 +74,7 @@ router.post('/go', function( req, res , next) {
     client.socket.emit('go', {ret: 0, url: servinfo.url});
   }
 
-  res.json({ret: 0, url: info.url});
+  res.json({ret: 0, url: servinfo.url});
 
 });
 
