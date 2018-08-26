@@ -3,8 +3,8 @@ var router = express.Router();
 const HashMap = require('hashmap');
 
 const ioclient = require('socket.io-client');
-const socketToCenterServer = ioclient.connect('http://127.0.0.1:7777', {reconnect: true });
-//const socketToCenterServer = ioclient.connect('http://databucket.duckdns.org:7777', {reconnect: true });
+//const socketToCenterServer = ioclient.connect('http://127.0.0.1:7777', {reconnect: true });
+const socketToCenterServer = ioclient.connect('http://databucket.duckdns.org:7777', {reconnect: true });
 var servInfoMan = new HashMap();
 var servnameConvert = new HashMap();
 servnameConvert.set('1', '서버1');
