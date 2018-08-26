@@ -543,6 +543,7 @@ exports.searchNaverMainWeb = function( req, res , next ) {
             if (!error && response.statusCode == 200) {
                 parcingNaverMainWeb(data, body);
                 if( data && data.length != 0 ) {
+                    ServerManager.setCachedSearchResult('naver_main', query, data);
                     res.json(data);
                 }
                 else {
