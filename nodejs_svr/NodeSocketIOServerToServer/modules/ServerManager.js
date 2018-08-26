@@ -16,6 +16,12 @@ class ServerManager {
         // Child Server Map
         this.chServMap = new HashMap();
         this.voteServMap = new HashMap();
+        this.servinfo = new HashMap();
+        this.servinfo.set('서버1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 0 });
+        this.servinfo.set('서버2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1400 });
+        this.servinfo.set('서버3', {name: '서버3', url: 'http://databucket.duckdns.org:6647/', limit: 1400 });
+        this.servinfo.set('서버4', {name: '서버4', url: 'http://databucket.duckdns.org:7647/', limit: 1400 });
+        this.servinfo.set('서버5', {name: '서버5', url: 'http://databucket.duckdns.org:8647/', limit: 1400 });
 
         io.on('connection', function(socket) {
             // Child Server Connected
@@ -33,9 +39,13 @@ class ServerManager {
                 let distServInfo = servman.chServMap.get(this.id);
                 if( !distServInfo ) return;
                 distServInfo.type = packet.type;
-                console.log(`type - ${packet.type}`);
+                console.log(`type - ${packet.type} : ${packet.name}`);
+                const info = servman.servinfo.get(packet.name);
+
                 if( packet.type == 'vote-server' ) {
                     distServInfo.name = packet.name;
+                    distServInfo.userlimit = info.limit;
+                    distServInfo.url = info.url;
                     servman.voteServMap.set(this.id, distServInfo);
                 }
                 else if( packet.type == 'route-server') {
@@ -78,7 +88,7 @@ class ServerManager {
         let data = [];
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
-            data.push({name: servinfo.name, cnt: servinfo.usercnt});
+            data.push({name: servinfo.name, cnt: servinfo.usercnt, limit: servinfo.userlimit, url: servinfo.url });
         })
 
         return data;

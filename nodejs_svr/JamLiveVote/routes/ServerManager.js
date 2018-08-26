@@ -19,13 +19,13 @@ const connListMan = new connectedListMan();
 const ioclient = require('socket.io-client');
 var socketToCenterServer = ioclient.connect('http://localhost:7777', {reconnect: true });
 
-var servinfo = new HashMap();
+var servInfoMan = new HashMap();
 var servnameConvert = new HashMap();
-servnameConvert.set('1', {name: '서버1', url: 'http://databucket.duckdns.org:4650/', limit: 1400 });
-servnameConvert.set('2', {name: '서버2', url: 'http://databucket.duckdns.org:5647/', limit: 1400 });
-servnameConvert.set('3', {name: '서버3', url: 'http://databucket.duckdns.org:6647/', limit: 1400 });
-servnameConvert.set('4', {name: '서버4', url: 'http://databucket.duckdns.org:7647/', limit: 1400 });
-servnameConvert.set('5', {name: '서버5', url: 'http://databucket.duckdns.org:8647/', limit: 1400 });
+servnameConvert.set('1', '서버1');
+servnameConvert.set('2', '서버2');
+servnameConvert.set('3', '서버3');
+servnameConvert.set('4', '서버4');
+servnameConvert.set('5', '서버5');
 
 var centerConnected = false;
 
@@ -42,7 +42,7 @@ socketToCenterServer.on('connect', function () {
         try {
             const data = packet.data;
             for( var i = 0 ; i < data.length ; ++i ) {
-                servinfo.set(data[i].name, {cnt: data[i].cnt, tLastRecv: new Date()});
+                servInfoMan.set(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
             }
         }
         catch(e) {
@@ -169,30 +169,6 @@ ServerMan.prototype.register = function(socket) {
 
     connListMan.addUser(client);
     connListMan.updateListToClient(client);
-
-    /*
-    if( config.mode == 'auth' ) {
-        if ( !client.isLogined() ) {
-            socket.emit('reconn-server', {logined: client.isLogined()});
-        }
-        else {
-            if( client.auth < 3 && servman.socketmap.count() >= 300 ) {
-                socket.emit('reconn-server', {logined: client.isLogined(), url: 'jamlive.net'});
-            }
-        }
-    }
-
-     if( config.serv_name == '서버1' && servman.socketmap.count() >= 1200 ) {
-     const serv234 = [ 'databucket.duckdns.org:5647', 'databucket.duckdns.org:6647', 'databucket.duckdns.org:7647' ];
-     const idx = Math.floor(Math.random() * serv234.length);
-     socket.emit('reconn-server', {logined: client.isLogined(), url: serv234[idx]});
-     }
-     else if( config.serv_name == '서버2' && servman.socketmap.count() >= 1200 ) {
-     const serv34 = [ 'databucket.duckdns.org:6647', 'databucket.duckdns.org:7647' ];
-     const idx = Math.floor(Math.random() * serv34.legnth);
-     socket.emit('reconn-server', {logined: client.isLogined(), url: serv34[idx]});
-     }
-    */
 
     socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
@@ -1022,24 +998,24 @@ function onGo(data) {
             return;
         }
         else {
-            const info = servnameConvert.get(data.servidx);
-            if( !servinfo.has(info.name) ) {
+            const servRealName = servnameConvert.get(data.servidx);
+            if( !servInfoMan.has(servRealName) ) {
                 client.socket.emit('go', {ret: -1, msg: '서버가 죽었어요. 다른 서버로'});
                 return;
             }
 
-            var serv = servinfo.get(info.name);
-            if( tCur - serv.tLastRecv >= 5000 ) {
+            var servinfo = servInfoMan.get(servRealName);
+            if( tCur - servinfo.tLastRecv >= 5000 ) {
                 client.socket.emit('go', {ret: -1, msg: '서버가 죽었어요. 다른 서버로'});
                 return;
             }
 
-            if( serv.cnt >= info.limit ) {
+            if( servinfo.cnt >= servinfo.limit ) {
                 client.socket.emit('go', {ret: -1, msg: '서버에 인원이 너무 많아요. 다른서버로.'});
                 return;
             }
 
-            client.socket.emit('go', {ret: 0, url: info.url});
+            client.socket.emit('go', {ret: 0, url: servinfo.url});
         }
     }catch(e) {
         console.log(e);

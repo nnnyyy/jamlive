@@ -11,6 +11,8 @@ class DistServer {
         this.socket = socket;
         this.type;
         this.usercnt = 0;
+        this.userlimit = 0;
+        this.url = '';
 
         const distServ = this;
 
