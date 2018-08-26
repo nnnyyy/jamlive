@@ -26,7 +26,6 @@ socketToCenterServer.on('connect', function () {
     try {
       const data = packet.data;
       for( var i = 0 ; i < data.length ; ++i ) {
-          console.log(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
         servInfoMan.set(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
       }
     }
@@ -70,12 +69,8 @@ router.post('/go', function( req, res , next) {
       res.json({ret: -1, msg: '서버에 사용자가 많습니다. 다른서버로'});
       return;
     }
-
-    client.socket.emit('go', {ret: 0, url: servinfo.url});
+      res.json({ret: 0, url: servinfo.url});
   }
-
-  res.json({ret: 0, url: servinfo.url});
-
 });
 
 
