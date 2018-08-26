@@ -1332,31 +1332,8 @@ function searchWebRoot( socket, query, isBroadcast ) {
     }
 
     var searched = false;
-    if( $('#cb_s0').is(':checked')) {
-        var where = $('input[name=radio_s0]:checked').attr('value');
-        searchWeb(0, query, where);
-        searched = true;
-    } //  백과사전
-    if( $('#cb_s1').is(':checked')) {
-        var where = $('input[name=radio_s1]:checked').attr('value');
-        searchWeb(1, query, where);
-        searched = true;
-    } //  지시인
-    if( $('#cb_s2').is(':checked')) {
-        var where = $('input[name=radio_s2]:checked').attr('value');
-        searchWeb(2, query, where);
-        searched = true;
-    } //  블로그
-    if( $('#cb_s3').is(':checked')) {
-        var where = $('input[name=radio_s3]:checked').attr('value');
-        searchWeb(3, query, where);
-        searched = true;
-    } //  뉴스
-    if( $('#cb_s4').is(':checked')) {
-        var where = $('input[name=radio_s4]:checked').attr('value');
-        searchWeb(4, query, where);
-        searched = true;
-    } //  이미지
+    var where = $('input[name=radio_s0]:checked').attr('value');
+    searchWeb(0, query, where);
 
     if( $('#cb_s5').is(':checked')) {
         var where = $('input[name=radio_s5]:checked').attr('value');
@@ -1390,7 +1367,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
 var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
 var search_title_prefix_style_name = ['cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7', 'cb8'];
-function searchWeb( type, query, where ) {
+function searchWeb( type, query ) {
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -1403,13 +1380,96 @@ function searchWeb( type, query, where ) {
         url: '/searchex',
         success: function(data) {
             if( type != 4 ) {
-                setSearchRet(data, false, where, search_title_prefix[type], search_title_prefix_style_name[type]);
+                var itemMap = procSearchRet(data);
+                for (var key of itemMap.keys()) {
+                    var items = itemMap.get(key);
+                    var isShow = getShow(key);
+                    if( !isShow ) continue;
+                    var where = getWhere(key);
+                    setSearchRet(items, false, where, search_title_prefix[type], search_title_prefix_style_name[type]);
+                }
             }
             else {
                 setSearchRetImage(data, true, where);
             }
         }
     });
+}
+
+function getShow( key ) {
+    //  웹 지식인 블로그 뉴스 포스트
+    if( key == '웹' && $('#cb_s0').is(':checked')) {
+        return true;
+    } //  지식인
+
+    if( key == '지식인' && $('#cb_s1').is(':checked')) {
+        return true;
+    } //  지식인
+
+    if( key == '블로그' && $('#cb_s2').is(':checked')) {
+        return true;
+    } //  블로그
+
+    if( key == '뉴스' && $('#cb_s3').is(':checked')) {
+        return true;
+    } //  뉴스
+
+    if( key == '포스트') {
+        return true;
+    }
+
+    return false;
+}
+
+function getWhere( key ) {
+    var where = 1;
+    if( key == '웹' ) {
+        where = $('input[name=radio_s0]:checked').attr('value');
+    }
+    else if( key == '지식인') {
+        where = $('input[name=radio_s1]:checked').attr('value');
+    }
+    else if( key == '블로그') {
+        where = $('input[name=radio_s2]:checked').attr('value');
+    }
+    else if( key == '뉴스') {
+        where = $('input[name=radio_s3]:checked').attr('value');
+    }
+    else if( key == '포스트') {
+        where = 1;
+    }
+
+    return where;
+}
+
+function procSearchRet( items ) {
+    //  뉴스 블로그 포스트 지식인 웹
+    var map = new Map();
+    for( var i = 0 ; i < items.length ; ++i) {
+        var item = items[i];
+        if( item.category && item.category != '' ) {
+            if( map.containsKey(item.category) ) {
+                var arr = map.get(item.category);
+                arr.push(item);
+            }
+            else {
+                map.put(item.category, []);
+                var arr = map.get(item.category);
+                arr.push(item);
+            }
+        }
+    }
+
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    for (var key of map.keys()) {
+        var items = map.get(key);
+        if( items && items.length > ret_cnt_val) {
+            items = items.slice( 0, ret_cnt_val );
+            map.put(key, items);
+        }
+    }
+
+    return map;
 }
 
 function searchWebGoogle( query, grammer, where) {
@@ -1614,14 +1674,13 @@ function setSearchRetImage(items, first) {
 function setSearchRet(items, first, where, title_prefix, title_prefix_style) {
     try {
         title_prefix = '<title-prefix class="'+ title_prefix_style + '">' + title_prefix + '</title-prefix>';
-        var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
-        if( items && items.length > ret_cnt_val) {
-            items = items.slice( 0, ret_cnt_val );
-        }
 
         var html = '';
         for( var i = 0 ; i < items.length ; ++i) {
             var item = items[i];
+            if( item.category && item.category != '') {
+                title_prefix = '<title-prefix class="title-prefix-ex">[' + item.category + ']</title-prefix>';
+            }
             var hidx = item.description.indexOf('[총획]');
             var hidxend = item.description.indexOf('[난이도]');
             if( hidxend == -1 ) hidxend = hidx + 20;

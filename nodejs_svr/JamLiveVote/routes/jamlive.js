@@ -247,14 +247,70 @@ function parcingDongyo(data, body) {
 }
 
 
+function parcingNaverMainWeb( data, body ) {
+    const strContents = new Buffer(body);
+    const $ = cheerio.load(iconv.decode(strContents, 'utf-8').toString());
+    const root = $('#main_pack');
+    const nNewsRoot = root.find('.news ul');
+    nNewsRoot.find('li').each(function(idx) {
+        const title = $(this).find('dl dt').text();
+        if( title == '' ) return;
+        const desc = $(this).find('dl dd').eq(1).html();
+        if( !desc || desc == '' ) return;
+        const item = {category: '뉴스', title: title, description: desc };
+        data.push(item);
+    });
+
+    const nBlogRoot = root.find('.blog ul');
+    nBlogRoot.find('li').each(function(idx) {
+        const title = $(this).find('dl dt').text();
+        if( title == '' ) return;
+        const desc = $(this).find('dl dd').eq(1).html();
+        if( !desc || desc == '' ) return;
+        const item = {category: '블로그', title: title, description: desc };
+        data.push(item);
+    });
+
+    const nPostRoot = root.find('.sp_post ul');
+    nPostRoot.find('li').each(function(idx) {
+        const title = $(this).find('dl dt').text();
+        if( title == '' ) return;
+        const desc = $(this).find('dl dd').eq(1).html();
+        if( !desc || desc == '' ) return;
+        const item = {category: '포스트', title: title, description: desc };
+        data.push(item);
+    });
+
+    const nWebsiteRoot = root.find('.sp_website ul');
+    nWebsiteRoot.find('li').each(function(idx) {
+        const title = $(this).find('dl dt').text();
+        if( title == '' ) return;
+        const desc = $(this).find('dl dd').eq(1).html();
+        if( !desc || desc == '' ) return;
+        const item = {category: '웹', title: title, description: desc };
+        data.push(item);
+    });
+
+    const nInRoot = root.find('._kinBase ul');
+    nInRoot.find('li').each(function(idx) {
+        const title = $(this).find('dl dt').text();
+        if( title == '' ) return;
+        const desc = $(this).find('dl dd').eq(1).html();
+        if( !desc || desc == '' ) return;
+        const item = {category: '지식인', title: title, description: desc };
+        data.push(item);
+    });
+}
+
+
 var req_cnt = 0;
 exports.searchex = function(req, res, next) {
     var query = req.body.query;
     var type = req.body.type;
 
     if( !ServerManager.isLiveQuizTime() ) {
-        res.json([{title: '라이브 퀴즈 시간 아님', description: '네이버 검색은 라이브 퀴즈 시간에 ㅠ 검색량이 너무 많아요.'}]);
-        return;
+        //res.json([{title: '라이브 퀴즈 시간 아님', description: '네이버 검색은 라이브 퀴즈 시간에 ㅠ 검색량이 너무 많아요.'}]);
+        //return;
     }
 
     query = query.trim();
@@ -458,6 +514,50 @@ exports.requestDaumWeb = function(req, res, next) {
     }
 
 
+}
+
+
+exports.searchNaverMainWeb = function( req, res , next ) {
+    var query = req.body.query;
+    query = query.trim();
+
+    var cached = ServerManager.getCachedSearchResult('naver_main', query);
+    if( cached ) {
+        res.json({ data: cached });
+        return;
+    }
+
+    var url = 'https://search.naver.com/search.naver?where=nexearch&query=' +   encodeURI(query);
+
+    var options = {
+        url: url,
+        headers: {
+            "referer": 'http://m.naver.com',
+            "User-Agent": "Mozilla/5.0"
+        }
+        ,encoding: null
+    };
+    try {
+        request.get(options, function (error, response, body) {
+            var data = [];
+            if (!error && response.statusCode == 200) {
+                parcingNaverMainWeb(data, body);
+                if( data && data.length != 0 ) {
+                    res.json(data);
+                }
+                else {
+                    res.json([]);
+                }
+            } else {
+                //console.log('naver main search failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                res.json([]);
+            }
+        });
+    }
+    catch(e){
+        //console.log('request google error - ' + e);
+        res.json([]);
+    }
 }
 
 exports.requestNaver = function(req, res, next) {

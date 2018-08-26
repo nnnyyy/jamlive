@@ -190,6 +190,11 @@ $top-bottom-margin: 5px;
       font-size: 16px;
       background-color: $color-yellow-font;
     }
+
+    strong.hl {
+      font-size: 16px;
+      background-color: $color-yellow-font;
+    }
   }
 
   .separator {
@@ -883,6 +888,11 @@ search-top-ret {
   color: black;
   font-size: 17px;
   font-weight: bold;
+}
+
+title-prefix-ex {
+  color: blue;
+  font-size: 14px;
 }
 
 title-prefix {
