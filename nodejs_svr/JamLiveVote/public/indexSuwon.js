@@ -975,6 +975,12 @@ function onInputMsgKeyPress(e) {
             emoticon = "hi";
         }
 
+        if( msg == '#cls') {
+            $(this).val('');
+            chatObj.clearChat();
+            return;
+        }
+
         if( msg[0] == '/' ) {
             $(this).val('');
             var query = msg.substr(1);
