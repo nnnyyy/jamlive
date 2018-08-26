@@ -215,7 +215,7 @@ function parcingNaverChinese(data, hdata, endic_data, body) {
         })
 
         $('.hanja_dic_section .dic_search_result').find('dt').each(function(idx) {
-            hdata[idx] = { title: $(this).text().trim(), description: '' };
+            hdata[idx] = { title: $(this).text().trim(), description: 't' };
         })
 
         $('.hanja_dic_section .dic_search_result').find('dd').each(function(idx) {
