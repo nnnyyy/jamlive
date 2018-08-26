@@ -181,18 +181,18 @@ ServerMan.prototype.register = function(socket) {
             }
         }
     }
-    */
 
-    if( config.serv_name == '서버1' && servman.socketmap.count() >= 1200 ) {
-        const serv234 = [ 'databucket.duckdns.org:5647', 'databucket.duckdns.org:6647', 'databucket.duckdns.org:7647' ];
-        const idx = Math.floor(Math.random() * serv234.length);
-        socket.emit('reconn-server', {logined: client.isLogined(), url: serv234[idx]});
-    }
-    else if( config.serv_name == '서버2' && servman.socketmap.count() >= 1200 ) {
-        const serv34 = [ 'databucket.duckdns.org:6647', 'databucket.duckdns.org:7647' ];
-        const idx = Math.floor(Math.random() * serv34.legnth);
-        socket.emit('reconn-server', {logined: client.isLogined(), url: serv34[idx]});
-    }
+     if( config.serv_name == '서버1' && servman.socketmap.count() >= 1200 ) {
+     const serv234 = [ 'databucket.duckdns.org:5647', 'databucket.duckdns.org:6647', 'databucket.duckdns.org:7647' ];
+     const idx = Math.floor(Math.random() * serv234.length);
+     socket.emit('reconn-server', {logined: client.isLogined(), url: serv234[idx]});
+     }
+     else if( config.serv_name == '서버2' && servman.socketmap.count() >= 1200 ) {
+     const serv34 = [ 'databucket.duckdns.org:6647', 'databucket.duckdns.org:7647' ];
+     const idx = Math.floor(Math.random() * serv34.legnth);
+     socket.emit('reconn-server', {logined: client.isLogined(), url: serv34[idx]});
+     }
+    */
 
     socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
