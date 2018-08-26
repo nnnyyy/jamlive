@@ -1341,6 +1341,8 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
     var searched = false;
     searchWeb(0, query);
+    searchWeb(4, query);
+    searched = true;
 
     if( $('#cb_s5').is(':checked')) {
         var where = $('input[name=radio_s5]:checked').attr('value');
@@ -1375,6 +1377,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
 var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
 var search_title_prefix_style_name = ['cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7', 'cb8'];
 function searchWeb( type, query, where ) {
+    var typeurl = type == 4 ? '/searchimage' : '/searchex';
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -1384,7 +1387,7 @@ function searchWeb( type, query, where ) {
             sockid: G.sockid,
         }),
         contentType: 'application/json',
-        url: '/searchex',
+        url: typeurl,
         success: function(data) {
             if( type != 4 ) {
                 var itemMap = procSearchRet(data);

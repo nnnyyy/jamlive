@@ -32,6 +32,7 @@ router.get('/ping', function(req, res, next) {
 router.post('/vote', JamLive.clickevent );
 //router.post('/search', JamLive.search );
 router.post('/searchex', JamLive.searchNaverMainWeb );
+router.post('/searchimage', JamLive.searchex );
 router.post('/searchgoogle', JamLive.requestDaumWeb);
 router.post('/searchnaver', JamLive.requestNaver);
 router.post('/searchdongyo', JamLive.requestDongyo);

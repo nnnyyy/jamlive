@@ -209,7 +209,7 @@ $top-bottom-margin: 5px;
 
   #article-left {
     $bottom-margin: 13px;
-    $notice-height: 200px - $bottom-margin;
+    $notice-height: 160px - $bottom-margin;
     $hint-height: calc( 100vh - 13px - #{$top-height} - #{$top-bottom-margin} - #{$notice-height});
     $article-left-width: calc(35% - 13px);
     $article-left-width-ie: ( 35vh / 100vh * 100% );
@@ -235,7 +235,7 @@ $top-bottom-margin: 5px;
     }
 
     #site-info-notice {
-      $site-info-width: 150px;
+      $site-info-width: 80px;
       $margin-right: 13px;
       $notice-width: calc( 100% - #{$site-info-width} - #{$margin-right} - 2px - 2px );
       width: 100%;
@@ -274,7 +274,7 @@ $top-bottom-margin: 5px;
         border: 1px solid $color-border;
         text-align: center;
         font-family: 'Nanum Barun Gothic', sans-serif;
-        overflow-y: hidden;
+        overflow-y: auto;
 
         [type="title"] {
           margin: 12px 0 12px 0;

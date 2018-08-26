@@ -837,8 +837,8 @@ function onSockVote(data) {
             return;
         }
 
-        if( servman.isLiveQuizTime() && client.auth < 2 ) {
-            servman.sendServerMsg(socket, '레벨 2 미만의 회원은 검색만 가능합니다. 검색과 자동퀴즈로 레벨을 올리세요.');
+        if( servman.isLiveQuizTime() && client.auth < 1 ) {
+            servman.sendServerMsg(socket, '레벨 1 미만의 회원은 검색만 가능합니다. 검색과 자동퀴즈로 레벨을 올리세요.');
             return;
         }
 

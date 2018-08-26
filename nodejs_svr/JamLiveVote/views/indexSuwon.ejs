@@ -81,18 +81,17 @@
             <div id="site-info-notice">
                 <div id="site-info">
                     <div id="conn-cnt-wrapper">
-                        <div>접속자 수</div>
+                        <div>접속</div>
                         <div id="conn-cnt">0</div>
-                        <div>밴 수</div>
+                        <div>밴</div>
                         <div id="ban-cnt">0</div>
                     </div>
                 </div>
                 <div id="notice">
-                    <div type="title">사이트 주의사항</div>
-                    <div type="msg">정확하게 아는 것만 투표 해 주세요 ( 헷갈리면 투표 X )</div>
+                    <div type="msg" style="font-color: red">정확하게 아는 것만 투표 해 주세요 ( 헷갈리면 투표 X )</div>
                     <div type="msg">욕설, 실수에 대한 과도한 비난 등은 영구밴 대상입니다</div>
-                    <div type="msg">기타 비매너라고 판단되는 행위도 영구밴 대상입니다</div>
                     <div type="msg">투표 왜 이렇게 안올라오냐 등의 재촉 행위도 금합니다</div>
+                    <div type="msg" style="color: darkblue">레벨 1 미만 유저는 검색과 사이트 퀴즈 풀이로 등업해야 투표 가능합니다</div>
                     <div type="msg" style="color: darkblue">설정에서 [레벨 4이상 투표만 보기] 기능이 신설되었습니다</div>
                 </div>
             </div>
@@ -215,7 +214,7 @@
     <div type="title"> - <%= __('vote')%> - </div>
     <div type="line"></div>
     <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
-    <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>고정닉 투표 결과만 보기(로그인시)</div>
+    <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>손님 투표 안보기(로그인시)</div>
     <div type="checkbox"><input type="checkbox" class="cb_show_search_user_vote_only"/>레벨 4이상 유저 투표만 보기(로그인시)</div>
     <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
     <div class="min_vote_slider"></div>
