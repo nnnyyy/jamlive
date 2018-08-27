@@ -80,7 +80,7 @@ GlobalValue.prototype.onNextQuiz = function (data) {
 }
 
 function ChosungGameMan() {
-    this.questionTypeName = ['사전', '음식', '관용표현', '해산물', '날씨', '식물', '영화주인공', '나루토', '과일', '화가', '장소'];
+    this.questionTypeName = ['사전', '음식', '관용표현', '해산물', '날씨', '식물', '영화-주인공', '나루토', '과일', '화가', '장소', '한국영화'];
     this.questionType = 0;
 }
 
