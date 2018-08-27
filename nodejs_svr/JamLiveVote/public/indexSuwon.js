@@ -981,6 +981,12 @@ function onInputMsgKeyPress(e) {
             return;
         }
 
+        if( msg == '#server-reload') {
+            G.socket.emit('server-info-reload', {});
+            $(this).val('');
+            return;
+        }
+
         if( msg[0] == '/' ) {
             $(this).val('');
             var query = msg.substr(1);

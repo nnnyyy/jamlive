@@ -23,6 +23,14 @@ class DistServer {
                 console.log(e);
             }
         })
+
+        socket.on('server-info-reload', function(packet) {
+            try {
+                distServ.servman.reloadServInfo();
+            }catch(e) {
+                console.log(e);
+            }
+        });
     }
 
     sendCount() {

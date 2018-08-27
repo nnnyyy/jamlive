@@ -178,7 +178,7 @@ ServerMan.prototype.register = function(socket) {
         this.chosung.sendState(socket);
     }
 
-    socket.on('vote', onSockVote);;
+    socket.on('vote', onSockVote);
     socket.on('chat', onSockChat);
     socket.on('search', onSockSearch);
     socket.on('ban', onSockBan);
@@ -187,6 +187,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('analysis', onAnalysis);
     socket.on('memo', onMemo);
     socket.on('go', onGo);
+    socket.on('server-info-reload', onServerInfoReload);
 }
 
 
@@ -1020,6 +1021,17 @@ function onGo(data) {
     }catch(e) {
         console.log(e);
     }
+}
+
+function onServerInfoReload(data) {
+    var client = servman.getClient(this.id);
+    if( !client ) return;
+
+    if( !client.isAdmin() ) {
+        return;
+    }
+
+    socketToCenterServer.emit('server-info-reload', {});
 }
 
 module.exports = servman;
