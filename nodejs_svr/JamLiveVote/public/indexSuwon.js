@@ -849,6 +849,7 @@ function setSocketEvent( socket ) {
     socket.on('memo', hintObj.onMemo );
     socket.on('serv_msg', onServMsg);
     socket.on('myid', onMyID);
+    socket.on('update-info', onUpdateInfo);
     socket.on('vote_data', voteObj.onVoteData);
     socket.on('quiz', quizObj.onQuiz);
     socket.on('quizret', quizObj.onQuizRet);
@@ -1204,6 +1205,10 @@ function onMyID(data) {
     setNickName(data.nick);
     options.setShowMemberVoteOnly();
     options.setSearchUserVoteOnly();
+}
+
+function onUpdateInfo(data) {
+
 }
 
 var animOpacityTimerID = -1;

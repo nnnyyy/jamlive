@@ -268,3 +268,21 @@ exports.addItem = function( id, itemid, cb ) {
         cb({ret: -1});
     }
 }
+
+
+exports.updateAuth = function( id, auth, cb ) {
+    try {
+        dbpool.query("CALL updateAuth( ?, ? )", [id, auth], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - updateAuth');
+        cb({ret: -1});
+    }
+}

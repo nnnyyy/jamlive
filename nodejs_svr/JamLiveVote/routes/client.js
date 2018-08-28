@@ -1,7 +1,11 @@
 /**
  * Created by nnnyy on 2018-05-10.
  */
-var Client = function(socket) {
+const LevelExpTable = require('./modules/LevelExpTable');
+const dbhelper = require('./dbhelper');
+
+var Client = function(servman, socket) {
+    this.servman = servman;
     this.socket = socket;
     this.tLastClick = 0;
     this.auth = -1;
@@ -58,6 +62,17 @@ Client.prototype.incActivePoint = function( point ) {
     this.socket.handshake.session.userinfo.ap += point;
     if( this.socket.handshake.session.userinfo.ap <= 0 ) {
         this.socket.handshake.session.userinfo.ap = 0;
+    }
+
+    const client = this;
+
+    if( LevelExpTable.isAbleLevelUp(this.auth, this.socket.handshake.session.userinfo.ap) ) {
+        this.auth++;
+        this.socket.handshake.session.userinfo.auth++;
+        dbhelper.updateAuth( this.socket.handshake.session.username, this.auth, function( result ) {
+            client.servman.sendServerMsg(client.socket, `레벨 업!!`);
+            client.servman.updateInfo();
+        } );
     }
 }
 

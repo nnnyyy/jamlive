@@ -13,7 +13,7 @@ var Chosung = require('./modules/chosungGame');
 
 var config = require('../config');
 
-var connectedListMan = require('./modules/ConnectedListMan');
+const connectedListMan = require('./modules/ConnectedListMan');
 const connListMan = new connectedListMan();
 
 const ioclient = require('socket.io-client');
@@ -21,6 +21,7 @@ var socketToCenterServer = ioclient.connect('http://localhost:7777', {reconnect:
 
 var servInfoMan = new HashMap();
 var servnameConvert = new HashMap();
+
 servnameConvert.set('1', '서버1');
 servnameConvert.set('2', '서버2');
 servnameConvert.set('3', '서버3');
@@ -130,6 +131,17 @@ ServerMan.prototype.sendServerMsg = function( socket, msg ) {
     }
 }
 
+ServerMan.prototype.updateInfo = function( socket, client ) {
+    try {
+        if( !socket || !client ) return;
+
+        socket.emit('update-info', { ap: client.getActivePoint(), auth: client.auth })
+    }
+    catch(e) {
+        console.log('update info error');
+    }
+}
+
 ServerMan.prototype.register = function(socket) {
     if( !this.addSocket(socket) ) {
         return;
@@ -203,7 +215,7 @@ ServerMan.prototype.addSocket = function(socket) {
             return false;
         }
 
-        const client = new Client(socket);
+        const client = new Client(this, socket);
         client.ip = ip;
         this.socketmap.set(socket.id, client);
 
