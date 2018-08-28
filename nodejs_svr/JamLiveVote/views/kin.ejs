@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122840650-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-122840650-1');
+    </script>
+
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-3598320494828213",
+            enable_page_level_ads: true
+        });
+    </script>
+
+    <title><%= __('title')%></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="/basic.js"></script>
+    <script src="/myChart.js"></script>
+    <link rel='stylesheet' href='/stylesheets/stylekin.css' />
+    <link href='https://cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css' rel='stylesheet' type='text/css'>
+    <script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<body>
+<div id="root">
+    <div id="area-top">
+        <div id="area-top-left">
+            <div id="logo">
+                <img src="/images/logo.png"/>
+            </div>
+        </div>
+        <div id="area-top-center">
+            <div id="area-top-center-title">지식의 바다</div>
+        </div>
+        <div id="area-top-right">
+            <%
+            if( !username ) {%>
+            <div class="area-top-btn" id="btn-signup"><%=__('menu-signup')%></div>
+            <div class="area-top-btn" id="btn-login"><%=__('menu-login')%></div>
+            <%}else {%>
+            <div class="area-top-btn" id="btn-logout"><%=__('menu-logout')%></div>
+            <div class="area-login-info"><%-userinfo.usernick%>(<ap><%-userinfo.ap%> 점</ap>)<%=__('menu-connector')%></div>
+            <%}%>
+        </div>
+    </div>
+    <div id="area-article">
+        등록할 간단 지식을 입력 해 주세요.
+        <div>
+            <input type="text" class="ip-search-word"/><input type="button" value="찾기"/>
+        </div>
+        <div>
+            정보가 없습니다 <input type="button" value="등록" />
+        </div>
+        <div>
+            단어 : <input type="text" class="ip-word"/> 설명 : <input type="text" class="ip-word"/><input type="button" value="업데이트"/>
+        </div>
+
+        <div>
+            최근에 추가 되거나 수정 된 지식
+            <ui>
+                <li>
+                    <div>명랑해전</div>
+                    <div>1984년</div>
+                    <div>키키둥</div>
+                </li>
+                <li>
+                    <div>임진왜란</div>
+                    <div>1984년</div>
+                    <div>키키둥</div>
+                </li>
+            </ui>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="/kin.js"></script>
+<script>
+    $(document).ready(function() {
+        var stringTable = {
+            "modify-hint": "<%=__('modify-hint')%>",
+            "modify-hint-complete": "<%=__('modify-hint-complete')%>",
+            "today": "<%=__('today')%>",
+            "hour": "<%=__('hour')%>",
+            "minute": "<%=__('minute')%>",
+            "quiz-on": "<%=__('quiz-on')%>",
+            "quiz-off": "<%=__('quiz-off')%>"
+        }
+
+        CKEDITOR.replace('memo-area');
+    });
+</script>

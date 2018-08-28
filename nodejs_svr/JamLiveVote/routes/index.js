@@ -16,6 +16,10 @@ router.get('/new', function(req,res, next) {
   res.render('indexSuwon', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 })
 
+router.get('/kin', function(req,res, next) {
+    res.render('kin', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
+})
+
 router.get('/jp', function(req, res, next) {
   res.cookie('lang', 'jp');
   res.redirect('/');
