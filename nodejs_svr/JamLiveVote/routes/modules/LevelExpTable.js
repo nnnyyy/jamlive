@@ -21,9 +21,6 @@ class LevelExpTable {
     }
 
     isAbleLevelUp(currentAuth, curPoint) {
-
-        console.log(`${currentAuth} , ${curPoint} , ${nextLevelExp}`);
-
         if( currentAuth >= this.lvTable.length - 1 ) return false;
         var nextLevelExp = this.lvTable[currentAuth];
 
