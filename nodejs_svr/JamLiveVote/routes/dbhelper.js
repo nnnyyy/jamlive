@@ -290,7 +290,7 @@ exports.updateAuth = function( id, auth, cb ) {
 
 exports.searchWord = function( word, cb ) {
     try {
-        dbpool.query(`select * from kin where word = '${word}'`, function(err, rows) {
+        dbpool.query(`select sn, word, description, modifiedDate, nick from kin a, account b where b.id = a.modifier_id and word = '${word}'`, function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 cb({ret: -99});
@@ -300,7 +300,7 @@ exports.searchWord = function( word, cb ) {
             let data = [];
             for( var i  = 0; i < rows.length ; ++i ) {
                 const item = rows[i];
-                data.push( { sn: item.sn, word: item.word, desc: item.description });
+                data.push( { sn: item.sn, word: item.word, desc: item.description, nick: item.nick, date: item.modifiedDate });
             }
 
             cb({ret: 0, data: data });

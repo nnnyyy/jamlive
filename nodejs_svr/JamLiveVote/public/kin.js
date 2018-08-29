@@ -19,6 +19,7 @@ Global.prototype.init = function() {
     this.eSearchWord = $('#ip-search-word');
     this.eNoData = $('#no-data');
     this.eModifyData = $('#modify-data');
+    this.eDesc = $('#ip-desc');
 
     setVisible(this.eNoData, true);
     setVisible(this.eModifyData, false);
@@ -48,6 +49,12 @@ function SearchWordListener(e) {
                 G.setModifyMode(false);
             }
             else {
+                var d = new Date(packet.data[0].date);
+                $('current-word').text( packet.data[0].word );
+                $('current-nick').text( packet.data[0].nick );
+                $('current-date').text( d.toISOString().substring(0, 10) + ' ' + d.toISOString().substring(11, 19 ) );
+                G.eDesc.val(packet.data[0].desc);
+                G.eDesc.attr('sn', packet.data[0].sn);
                 G.setModifyMode(true);
             }
         }
