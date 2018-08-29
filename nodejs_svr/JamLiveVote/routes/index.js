@@ -58,5 +58,6 @@ router.get('/signup', function(req, res, next) {
 router.post('/signup_req', Auth.signup);
 
 router.post('/search-word', Kin.SearchWord);
+router.post('/search-word-register', Kin.Register);
 
 module.exports = router;

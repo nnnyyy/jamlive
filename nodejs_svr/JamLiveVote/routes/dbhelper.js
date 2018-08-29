@@ -310,3 +310,23 @@ exports.searchWord = function( word, cb ) {
         cb({ret: -1});
     }
 }
+
+
+exports.registerNewWord = function( id, word, desc, cb ) {
+    try {
+        dbpool.query("CALL createKinWord( ?, ?, ? )", [id, word, desc], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            console.log(id + ' ' + word + ' ' + desc);
+
+            cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - updateAuth');
+        cb({ret: -1});
+    }
+}
