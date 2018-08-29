@@ -67,16 +67,18 @@
         <div>
             <input type="text" id="ip-search-word"/><input type="button" value="찾기"/>
         </div>
-        <div>
-            정보가 없습니다 <input type="button" value="등록" />
+        <div id="no-data">
+            <div>
+                정보가 없습니다 <input type="button" value="등록" />
+            </div>
+            <div>
+                단어 : <input type="text" class="ip-word"/> |  설명 : <input type="text" class="ip-desc"/><input type="button" value="업데이트"/>
+            </div>
         </div>
-        <div>
-            단어 : 명랑해전 | 설명 : <input type="text" class="ip-desc"/><input type="button" value="수정" />
+        <div id="modify-data">
+            단어 : 명랑해전 | 설명 : <input type="text" class="ip-desc"/><input type="button" value="수정" /><input type="button" value="삭제" />
         </div>
-        <div>
-            단어 : <input type="text" class="ip-word"/> |  설명 : <input type="text" class="ip-desc"/><input type="button" value="업데이트"/>
-        </div>
-
+<!--
         <div>
             최근에 추가 되거나 수정 된 지식
             <ui>
@@ -92,6 +94,7 @@
                 </li>
             </ui>
         </div>
+        -->
     </div>
 </div>
 </body>

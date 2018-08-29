@@ -286,3 +286,27 @@ exports.updateAuth = function( id, auth, cb ) {
         cb({ret: -1});
     }
 }
+
+
+exports.searchWord = function( word, cb ) {
+    try {
+        dbpool.query(`select * from kin where word = '${word}'`, function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            let data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                const item = rows[i];
+                data.push( { sn: item.sn, word: item.word, desc: item.description });
+            }
+
+            cb({ret: 0, data: data });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - searchWord');
+        cb({ret: -1});
+    }
+}

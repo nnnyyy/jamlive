@@ -4,6 +4,7 @@ var Log = require('./Log');
 var router = express.Router();
 var config = require('../config');
 var Auth = require('./Auth');
+const Kin = require('./modules/KinProc');
 var dbhelper = require('./dbhelper');
 
 /* GET home page. */
@@ -56,8 +57,6 @@ router.get('/signup', function(req, res, next) {
 })
 router.post('/signup_req', Auth.signup);
 
-router.post('/search-word', function(req,res,next) {
-  res.json({data: req.body.word});
-})
+router.post('/search-word', Kin.SearchWord);
 
 module.exports = router;
