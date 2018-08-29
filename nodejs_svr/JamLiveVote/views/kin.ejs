@@ -63,9 +63,9 @@
         </div>
     </div>
     <div id="area-article">
-        등록할 간단 지식을 입력 해 주세요.
+        등록할 간단 지식을 입력 해 주세요. ( 사건 발생 년도, 타워 높이, 방영 시작 년도, 출생일, 기업 설립일 등 )
         <div>
-            <input type="text" class="ip-search-word"/><input type="button" value="찾기"/>
+            <input type="text" id="ip-search-word"/><input type="button" value="찾기"/>
         </div>
         <div>
             정보가 없습니다 <input type="button" value="등록" />
@@ -108,6 +108,6 @@
             "quiz-off": "<%=__('quiz-off')%>"
         }
 
-        CKEDITOR.replace('memo-area');
+        init();
     });
 </script>

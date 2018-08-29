@@ -56,4 +56,8 @@ router.get('/signup', function(req, res, next) {
 })
 router.post('/signup_req', Auth.signup);
 
+router.post('/search-word', function(req,res,next) {
+  res.json({data: req.body.word});
+})
+
 module.exports = router;
