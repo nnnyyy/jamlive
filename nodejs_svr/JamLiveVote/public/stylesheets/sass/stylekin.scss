@@ -134,3 +134,18 @@ $top-bottom-margin: 5px;
 #ip-desc {
   width: 300px;
 }
+
+#tb-recent-word {
+  margin: 0 auto;
+  border: 1px solid #000066;
+  border-spacing: 0px;
+
+  tr {
+  }
+
+  td {
+    padding: 0 12px;
+    height: 36px;
+    border: 1px solid #000066;
+  }
+}

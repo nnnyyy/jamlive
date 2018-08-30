@@ -18,7 +18,9 @@ router.get('/new', function(req,res, next) {
 })
 
 router.get('/kin', function(req,res, next) {
-    res.render('kin', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
+  dbhelper.getKinRecentRegisterList(function(result) {
+    res.render('kin', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo, data: result.data});
+  })
 })
 
 router.get('/jp', function(req, res, next) {

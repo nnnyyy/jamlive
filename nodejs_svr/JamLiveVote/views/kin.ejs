@@ -88,6 +88,26 @@
         <div class="base-margin" id="modify-data">
             <div><current-nick></current-nick>님이 마지막 수정 / 수정일 : <current-date></current-date></div> <div>단어 : <current-word></current-word> | 설명 : <input type="text" id="ip-desc" class="ip-style"/><input id="btn-modify" type="button" value="수정" /><input id="btn-delete" type="button" value="삭제" /></div>
         </div>
+
+        <div>
+            <div class="base-margin">
+                최근 추가된 지식
+            </div>
+            <div class="base-margin">
+                <table id="tb-recent-word">
+
+                <%
+                 for( var i = 0 ; i < data.length ; ++i ) {
+                     %>
+                    <tr>
+                <td><%= data[i].word %></td><td><%= data[i].desc %></td><td><%= data[i].nick %> 님</td>
+                    </tr>
+                <%
+                 }
+                 %>
+                </table>
+            </div>
+        </div>
 <!--
         <div>
             최근에 추가 되거나 수정 된 지식

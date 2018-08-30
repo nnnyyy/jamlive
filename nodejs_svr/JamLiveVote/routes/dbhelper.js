@@ -346,3 +346,28 @@ exports.modifyKinWord = function( sn, id, desc, cb ) {
         cb({ret: -1});
     }
 }
+
+exports.getKinRecentRegisterList = function( cb ) {
+    try {
+        dbpool.query(`select word, description, nick from kin k, account a where a.id = k.modifier_id order by modifieddate desc limit 15;`, function(err, rows) {
+
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            let data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                const item = rows[i];
+                data.push( { word: item.word, desc: item.description, nick: item.nick });
+            }
+
+            cb({ret: 0, data: data });
+
+        });
+    }catch(e) {
+        Log.logger.debug('DB Failed - getKinRecentRegisterList');
+        cb({ret: -1});
+    }
+}
