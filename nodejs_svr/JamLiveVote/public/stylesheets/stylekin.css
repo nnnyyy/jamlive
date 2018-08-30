@@ -83,7 +83,7 @@ body {
 
 .ip-style {
   height: 30px;
-  font-size: 20px;
+  font-size: 17px;
 }
 
 .base-margin {
@@ -91,11 +91,11 @@ body {
 }
 
 #ip-new-desc {
-  width: 300px;
+  width: 600px;
 }
 
 #ip-desc {
-  width: 300px;
+  width: 600px;
 }
 
 /*# sourceMappingURL=stylekin.css.map */
