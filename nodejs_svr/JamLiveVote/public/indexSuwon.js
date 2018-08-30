@@ -1409,7 +1409,11 @@ function showKin() {
     }
 
     if( kinlist.length > 0 ) {
-        kinlist.sort();
+        kinlist.sort(function(item1, item2) {
+            var item1s = item1.desc.replace(/[^0-9]/g,'');
+            var item2s = item2.desc.replace(/[^0-9]/g,'');
+            return item1s.localeCompare(item2s);
+        });
 
         for( var i = 0 ; i < kinlist.length ; ++i ) {
             var item = kinlist[i];
