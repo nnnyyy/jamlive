@@ -81,7 +81,7 @@ Global.prototype.init = function() {
     this.btnModify = $('#btn-modify');
     this.btnDelete = $('#btn-delete');
 
-    setVisible(this.eNoData, true);
+    setVisible(this.eNoData, false);
     setVisible(this.eModifyData, false);
 }
 
@@ -200,6 +200,11 @@ function SearchWordListener(e) {
 }
 
 function SearchWord(query) {
+    if( query == '' ) {
+        setVisible(G.eNoData, false);
+        return;
+    }
+
     ajaxHelper.postJson('/search-word', { word: query }, function( packet ) {
         if( packet.ret != 0 || packet.data.length <= 0 ) {
             G.eNewWord.val(query);
