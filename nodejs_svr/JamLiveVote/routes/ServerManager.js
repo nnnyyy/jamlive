@@ -10,6 +10,7 @@ var quizAnalysis = require('./quizAnalysis');
 
 var chatMan = require('./modules/chatMan');
 var Chosung = require('./modules/chosungGame');
+var KinMan = require('./modules/KinManager');
 
 var config = require('../config');
 
@@ -386,7 +387,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     }
 
     socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count()});
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode() });
+    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
 ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
@@ -460,6 +461,9 @@ ServerMan.prototype.checkAllBaned = function() {
     var cur = new Date();
 
     try {
+        //  지식의 바다
+        KinMan.update( cur );
+
         //  자동 퀴즈쇼 모드
         if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.isAbleCreateQuizData() ) {
             dbhelper.getRandomQuiz(function(result) {
@@ -734,6 +738,11 @@ function onSockSearch(data) {
 
         if( data.isBroadcast ) {
             var nick = client.nick;
+
+            dbhelper.searchKinWord(data.msg, function(result) {
+
+            });
+
             servman.addSearchQuery( data.msg, true );
         }
         else {

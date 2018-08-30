@@ -4,6 +4,7 @@
 var Log = require('./Log');
 var dbpool = require('./MySQL').init();
 var HashMap = require('hashmap');
+var KinMan = require('./modules/KinManager');
 
 exports.signup = function(id, pw, nick, cb) {
     try {
@@ -368,6 +369,44 @@ exports.getKinRecentRegisterList = function( cb ) {
         });
     }catch(e) {
         Log.logger.debug('DB Failed - getKinRecentRegisterList');
+        cb({ret: -1});
+    }
+}
+
+exports.searchKinWord = function( query , cb ) {
+    try {
+        var queries = query.trim().split(' ');
+        var queries_backup = queries;
+        var question_query = '';
+        for( var i = 0 ; i < queries.length ; ++i ) {
+            queries[i] = '%' + queries[i].trim() + '%';
+            var t = ('like \'' + queries[i] + '\' ');
+            question_query += ('word ' + t);
+            if( i != queries.length - 1  ) {
+                question_query += ' or ';
+            }
+        }
+
+        var where = question_query;
+        //console.log(where);
+
+        var final = "select * from kin where " + where;
+        //console.log( final );
+
+        dbpool.query(final, function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var item = rows[i];
+                KinMan.register(item.word, item.description);
+            }
+            cb({ret:0, list: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - search');
         cb({ret: -1});
     }
 }

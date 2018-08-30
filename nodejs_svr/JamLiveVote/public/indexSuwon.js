@@ -105,7 +105,7 @@ ChosungGameMan.prototype.setText = function(word) {
 
 ChosungGameMan.prototype.onPacket = function( packet ) {
     if( packet.step == 'start' ) {
-        chosungGameMan.setText('곧 초성게임이 사작 됩니다!');
+        chosungGameMan.setText('#### 곧 초성게임이 시작 됩니다! ####');
         chosungGameMan.setUI();
     }
     else if( packet.step == 'q') {
@@ -579,6 +579,7 @@ ChatObject.prototype.setMsgVisible = function(mode, isVisible) {
 
 //  투표 관련 변수
 function VoteObject() {
+    this.kinlist = [];
     this.tClick = 0;
 }
 
@@ -590,6 +591,8 @@ VoteObject.prototype.vote = function(data) {
 VoteObject.prototype.onVoteData = function(data) {
     searchObj.onSearchRetRank(data.searchlist, data.slhash);
     var votedata = data.vote_data;
+    voteObj.kinlist = data.kin;
+    showKin();
     var users = votedata.users;
     G.connUserElem.text(users);
     G.banElem.text(votedata.bans);
@@ -670,6 +673,7 @@ function SearchObject() {
     this.searchRank = $('#search-ret-rank-list');
     this.tLastSearch = 0;
     this.totalCnt = 0;
+    this.isRunning = false;
 }
 
 SearchObject.prototype.init = function() {
@@ -683,6 +687,8 @@ SearchObject.prototype.initSearch = function() {
         this.area[i].html('');
         setVisible(this.area[i], true);
     }
+
+    searchObj.isRunning = true;
 }
 
 SearchObject.prototype.restoreSearch = function() {
@@ -692,6 +698,7 @@ SearchObject.prototype.restoreSearch = function() {
     }
 
     searchObj.lastSearchQuery = '';
+    searchObj.isRunning = false;
 }
 
 SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
@@ -1392,6 +1399,34 @@ function searchWebRoot( socket, query, isBroadcast ) {
     }
 }
 
+function showKin() {
+    if( !searchObj.isRunning ) return;
+    var desc_total = '';
+    var kinlist = voteObj.kinlist;
+
+    if( $('#kindata') ) {
+        $('#kindata').remove();
+    }
+
+    if( kinlist.length > 0 ) {
+        kinlist.sort();
+
+        for( var i = 0 ; i < kinlist.length ; ++i ) {
+            var item = kinlist[i];
+            var div = '<div class="search_ret_desc">' +
+                '<b>' + item.word + '</b> : ' + item.desc +
+                '</div>';
+            desc_total += div;
+        }
+
+        var kin_total_html = '<div id="kindata" class="search_ret_root">' +
+            '<div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div>' +
+            desc_total +
+            '<div class="separator"></div></div>';
+
+        getSearchArea(2).prepend(kin_total_html);
+    }
+}
 
 var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
 var search_title_prefix_style_name = ['cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7', 'cb8'];
