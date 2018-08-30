@@ -83,19 +83,24 @@ body {
 
 .ip-style {
   height: 30px;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 .base-margin {
   margin: 10px 0;
 }
 
+.s-strong {
+  font-weight: bolder;
+  font-size: 20px;
+}
+
 #ip-new-desc {
-  width: 600px;
+  width: 300px;
 }
 
 #ip-desc {
-  width: 600px;
+  width: 300px;
 }
 
 /*# sourceMappingURL=stylekin.css.map */

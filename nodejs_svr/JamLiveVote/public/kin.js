@@ -10,6 +10,43 @@ function init() {
     initBtnEvent();
 }
 
+function TopMenuObject() {
+    this.btnLogin = $('#btn-login');
+    this.btnLogin.click( onBtnLogin );
+    this.btnLogout = $('#btn-logout');
+    this.btnLogout.click( onBtnLogout );
+    this.btnSignup = $('#btn-signup');
+    this.btnSignup.click( onBtnSignup );
+}
+
+var topMenuObj = new TopMenuObject();
+
+function onBtnLogin(e) {
+    window.location.href = '/signin';
+}
+
+function onBtnSignup(e) {
+    window.location.href = '/signup';
+}
+
+function onBtnLogout(e) {
+    logout();
+}
+
+function logout() {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+        }),
+        contentType: 'application/json',
+        url: '/logout',
+        success: function(data) {
+            window.location.href = unescape(window.location.pathname);
+        }
+    });
+}
+
 function AjaxHelper() {
 
 }
@@ -76,10 +113,26 @@ function onBtnRegister(e) {
     G.btnRegister.prop('disabled', true);
     ajaxHelper.postJson('/search-word-register', { word: newWord, desc: desc }, function(data) {
         var ret = data.ret;
+        G.btnRegister.prop('disabled', false);
         if( ret == 0 ) {
-            G.btnRegister.prop('disabled', false);
             G.eNewDesc.val('');
             SearchWord(newWord);
+        }
+        else {
+            switch( ret ) {
+                    case -1:
+                    {
+                        alert('로그인이 필요합니다');
+                        break;
+                    }
+                    case -2:
+                    {
+                        alert('레벨 4 이상만 가능합니다');
+                        break;
+                    }
+                    default:
+                    break;
+            }
         }
     });
 }
@@ -98,13 +151,26 @@ function onBtnModify(e) {
     G.btnModify.prop('disabled', true);
     ajaxHelper.postJson('/search-word-modify', { sn: sn, desc: desc }, function(data) {
         var ret = data.ret;
+        G.btnModify.prop('disabled', false);
         if( ret == 0 ) {
-            G.btnModify.prop('disabled', false);
             G.eNewDesc.val('');
             alert('수정 완료');
         }
         else {
-            alert('수정 오류');
+            switch( ret ) {
+                case -1:
+                {
+                    alert('로그인이 필요합니다');
+                    break;
+                }
+                case -2:
+                {
+                    alert('레벨 4 이상만 가능합니다');
+                    break;
+                }
+                default:
+                    break;
+            }
         }
     });
 }
