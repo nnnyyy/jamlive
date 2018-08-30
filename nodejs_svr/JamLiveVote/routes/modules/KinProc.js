@@ -33,7 +33,7 @@ exports.Modify = function( req, res, next ) {
         return;
     }
 
-    if( !req.session.userinfo.auth < 4 ) {
+    if( req.session.userinfo.auth < 4 ) {
         res.json({ret: -2});
         return;
     }
@@ -49,7 +49,7 @@ exports.Delete = function( req, res, next ) {
         return;
     }
 
-    if( !req.session.userinfo.auth < 4 ) {
+    if( req.session.userinfo.auth < 4 ) {
         res.json({ret: -2});
         return;
     }
