@@ -60,6 +60,8 @@ function initKeyEvent() {
 
 function initBtnEvent() {
     G.btnRegister.click(onBtnRegister);
+    G.btnModify.click(onBtnModify);
+    G.btnDelete.click(onBtnDelete);
 }
 
 function onBtnRegister(e) {
@@ -68,7 +70,6 @@ function onBtnRegister(e) {
     var newWord = G.eNewWord.val().trim();
     var desc = G.eNewDesc.val().trim();
     if( newWord.length < 1 || desc.length < 1 ) {
-        console.log(newWord + ' : ' + desc );
         alert('단어나 설명 정보가 너무 짧습니다');
         return;
     }
@@ -81,6 +82,35 @@ function onBtnRegister(e) {
             alert('입력 완료');
         }
     });
+}
+
+function onBtnModify(e) {
+    e.preventDefault();
+
+    var desc = G.eDesc.val().trim();
+    if( desc.length < 1 ) {
+        alert('단어나 설명 정보가 너무 짧습니다');
+        return;
+    }
+
+    var sn = Number(G.eDesc.attr('sn'));
+    console.log(sn);
+    G.btnModify.prop('disabled', true);
+    ajaxHelper.postJson('/search-word-modify', { sn: sn, desc: desc }, function(data) {
+        var ret = data.ret;
+        if( ret == 0 ) {
+            G.btnModify.prop('disabled', false);
+            G.eNewDesc.val('');
+            alert('수정 완료');
+        }
+        else {
+            alert('수정 오류');
+        }
+    });
+}
+
+function onBtnDelete(e) {
+
 }
 
 function SearchWordListener(e) {

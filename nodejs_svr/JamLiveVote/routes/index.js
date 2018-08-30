@@ -59,5 +59,7 @@ router.post('/signup_req', Auth.signup);
 
 router.post('/search-word', Kin.SearchWord);
 router.post('/search-word-register', Kin.Register);
+router.post('/search-word-modify', Kin.Modify);
+router.post('/search-word-delete', Kin.Delete);
 
 module.exports = router;
