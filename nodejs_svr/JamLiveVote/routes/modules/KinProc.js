@@ -29,9 +29,20 @@ exports.Modify = function( req, res, next ) {
 
     dbhelper.modifyKinWord(  req.body.sn, req.session.username, req.body.desc , function(result) {
         res.json({ret: result.ret });
-    } )
+    } );
 }
 
 exports.Delete = function( req, res, next ) {
-    rs.json({ret: -99 });
+    if( !req.session.username ) {
+        res.json({ret: -1});
+        return;
+    }
+
+    /*
+    dbhelper.modifyKinWord(  req.body.sn, req.session.username, req.body.desc , function(result) {
+        res.json({ret: result.ret });
+    } );
+    */
+
+    res.json({ret: -1});
 }

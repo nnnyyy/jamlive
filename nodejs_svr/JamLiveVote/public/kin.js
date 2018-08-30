@@ -79,7 +79,7 @@ function onBtnRegister(e) {
         if( ret == 0 ) {
             G.btnRegister.prop('disabled', false);
             G.eNewDesc.val('');
-            alert('입력 완료');
+            SearchWord(newWord);
         }
     });
 }
@@ -110,11 +110,30 @@ function onBtnModify(e) {
 }
 
 function onBtnDelete(e) {
+    e.preventDefault();
 
+    var sn = Number(G.eDesc.attr('sn'));
+    console.log(sn);
+    G.btnModify.prop('disabled', true);
+    ajaxHelper.postJson('/search-word-delete', { sn: sn, desc: desc }, function(data) {
+        var ret = data.ret;
+        if( ret == 0 ) {
+            G.btnModify.prop('disabled', false);
+            G.eNewDesc.val('');
+            var query = $('current-word').text().trim();
+            SearchWord(query);
+        }
+        else {
+        }
+    });
 }
 
 function SearchWordListener(e) {
     var query = G.eSearchWord.val().trim();
+    SearchWord(query);
+}
+
+function SearchWord(query) {
     ajaxHelper.postJson('/search-word', { word: query }, function( packet ) {
         if( packet.ret != 0 || packet.data.length <= 0 ) {
             G.eNewWord.val(query);
