@@ -374,24 +374,9 @@ exports.getKinRecentRegisterList = function( cb ) {
 
 exports.searchKinWordPerfect = function( query , cb ) {
     try {
-        var queries = query.trim().split(' ');
-        var queries_backup = queries;
-        queries.push(query.trim());
+        query = query.trim();
 
-        var question_query = '';
-        for( var i = 0 ; i < queries.length ; ++i ) {
-            queries[i] = queries[i].trim();
-            var t = ('= \'' + queries[i] + '\' ');
-            question_query += ('word ' + t);
-            if( i != queries.length - 1  ) {
-                question_query += ' or ';
-            }
-        }
-
-        var where = question_query;
-        //console.log(where);
-
-        var final = "select * from kin where " + where;
+        var final = `select * from kin where word = '${query}'`;
 
         dbpool.query(final, function(err, rows) {
             if(err) {
@@ -402,6 +387,7 @@ exports.searchKinWordPerfect = function( query , cb ) {
             for( var i  = 0; i < rows.length ; ++i ) {
                 var item = rows[i];
                 KinMan.register(item.word, item.description);
+                data.push({word: item.word});
             }
             cb({ret:0, list: data});
         });
@@ -417,7 +403,7 @@ exports.searchKinWord = function( query , cb ) {
         var queries_backup = queries;
         var question_query = '';
         for( var i = 0 ; i < queries.length ; ++i ) {
-            if( queries[i].trim().length <= 1 ) {
+            if( queries[i].trim().length <= 1 || KinMan.isExist(queries[i].trim())) {
                 continue;
             }
             queries[i] = '%' + queries[i].trim() + '%';

@@ -14,8 +14,12 @@ class KinManager {
     }
 
     register(word, desc) {
-        if( this.isExist(word) ) return;
-        this.wordInfoMap.set(word, {desc: desc, tRegister: new Date()});
+        if( this.isExist(word) ) {
+            let item = this.wordInfoMap.get(word);
+            item.cnt++;
+            return;
+        }
+        this.wordInfoMap.set(word, {desc: desc, tRegister: new Date(), cnt: 1});
     }
 
     update( tCur ) {
@@ -31,8 +35,14 @@ class KinManager {
         const man = this;
         let list = [];
         this.wordInfoMap.forEach(function(value, key) {
-            list.push({word: key, desc: value.desc });
+            list.push({word: key, desc: value.desc, cnt: value.cnt });
         });
+
+        list.sort(function(item1, item2) {
+            return item2.cnt - item1.cnt;
+        });
+
+        list = list.slice(0, 6);
 
         return list;
     }
