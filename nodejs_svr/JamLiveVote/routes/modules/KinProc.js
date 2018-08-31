@@ -54,11 +54,8 @@ exports.Delete = function( req, res, next ) {
         return;
     }
 
-    /*
-    dbhelper.modifyKinWord(  req.body.sn, req.session.username, req.body.desc , function(result) {
+
+    dbhelper.deleteKinWord(  req.body.sn, function(result) {
         res.json({ret: result.ret });
     } );
-    */
-
-    res.json({ret: -4});
 }

@@ -80,6 +80,7 @@ Global.prototype.init = function() {
     this.btnRegister = $('#btn-register');
     this.btnModify = $('#btn-modify');
     this.btnDelete = $('#btn-delete');
+    this.eSimilar = $('#search-similar');
 
     setVisible(this.eNoData, false);
     setVisible(this.eModifyData, false);
@@ -99,6 +100,12 @@ function initBtnEvent() {
     G.btnRegister.click(onBtnRegister);
     G.btnModify.click(onBtnModify);
     G.btnDelete.click(onBtnDelete);
+
+    $(document).on('click', '.similar-item', function(e) {
+        e.stopPropagation();
+        G.eSearchWord.val($(this).text());
+        SearchWord( $(this).text().trim() );
+    });
 }
 
 function onBtnRegister(e) {
@@ -181,7 +188,7 @@ function onBtnDelete(e) {
     var sn = Number(G.eDesc.attr('sn'));
     console.log(sn);
     G.btnModify.prop('disabled', true);
-    ajaxHelper.postJson('/search-word-delete', { sn: sn, desc: desc }, function(data) {
+    ajaxHelper.postJson('/search-word-delete', { sn: sn }, function(data) {
         var ret = data.ret;
         if( ret == 0 ) {
             G.btnModify.prop('disabled', false);
@@ -190,6 +197,20 @@ function onBtnDelete(e) {
             SearchWord(query);
         }
         else {
+            switch( ret ) {
+                case -1:
+                {
+                    alert('로그인이 필요합니다');
+                    break;
+                }
+                case -2:
+                {
+                    alert('레벨 4 이상만 가능합니다');
+                    break;
+                }
+                default:
+                    break;
+            }
         }
     });
 }
@@ -211,13 +232,33 @@ function SearchWord(query) {
             G.setModifyMode(false);
         }
         else {
-            var d = new Date(packet.data[0].date);
-            $('current-word').text( packet.data[0].word );
-            $('current-nick').text( packet.data[0].nick );
-            $('current-date').text( d.toISOString().substring(0, 10) + ' ' + d.toISOString().substring(11, 19 ) );
-            G.eDesc.val(packet.data[0].desc);
-            G.eDesc.attr('sn', packet.data[0].sn);
-            G.setModifyMode(true);
+            var bModifyMode = false;
+            G.setModifyMode(false);
+            var html = '';
+            for( var i = 0 ; i < packet.data.length ; ++i ) {
+                var item = packet.data[i];
+                if( item.word.trim() == query ) {
+                    bModifyMode = true;
+                    var d = new Date(item.date);
+                    $('current-word').text( item.word );
+                    $('current-nick').text( item.nick );
+                    $('current-date').text( d.toISOString().substring(0, 10) + ' ' + d.toISOString().substring(11, 19 ) );
+                    G.eDesc.val(item.desc);
+                    G.eDesc.attr('sn', item.sn);
+                    G.setModifyMode(true);
+                }
+                else {
+                    //  나머지들은 리스트로 정리
+                    html += '<div class="base-margin similar-item" sn="'+ item.sn + '" desc="' + item.desc + '">' + item.word + '</div>';
+                }
+            }
+
+            if( !bModifyMode ) {
+                G.eNewWord.val(query);
+                G.setModifyMode(false);
+            }
+
+            G.eSimilar.html(html);
         }
     });
 }

@@ -291,7 +291,7 @@ exports.updateAuth = function( id, auth, cb ) {
 
 exports.searchWord = function( word, cb ) {
     try {
-        dbpool.query(`select sn, word, description, modifiedDate, nick from kin a, account b where b.id = a.modifier_id and word = '${word}'`, function(err, rows) {
+        dbpool.query(`select sn, word, description, modifiedDate, nick from kin a, account b where b.id = a.modifier_id and word like '%${word}%' limit 10`, function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 cb({ret: -99});
@@ -332,7 +332,6 @@ exports.registerNewWord = function( id, word, desc, cb ) {
 
 exports.modifyKinWord = function( sn, id, desc, cb ) {
     try {
-        console.log(`${sn}, ${id}, ${desc}`);
         dbpool.query("CALL modifyKinWord( ?, ?, ? )", [sn, id, desc], function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
@@ -407,7 +406,7 @@ exports.searchKinWordPerfect = function( query , cb ) {
             cb({ret:0, list: data});
         });
     }catch(err) {
-        Log.logger.debug('DB Failed - search');
+        Log.logger.debug('DB Failed - searchKinWordPerfect');
         cb({ret: -1});
     }
 }
@@ -448,7 +447,24 @@ exports.searchKinWord = function( query , cb ) {
             cb({ret:0, list: data});
         });
     }catch(err) {
-        Log.logger.debug('DB Failed - search');
+        Log.logger.debug('DB Failed - searchKinWord');
+        cb({ret: -1});
+    }
+}
+
+exports.deleteKinWord = function( sn, cb ) {
+    try {
+        dbpool.query("CALL deleteKinWord( ? )", [sn], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - deleteKinWord');
         cb({ret: -1});
     }
 }
