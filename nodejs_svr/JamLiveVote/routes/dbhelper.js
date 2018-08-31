@@ -418,6 +418,9 @@ exports.searchKinWord = function( query , cb ) {
         var queries_backup = queries;
         var question_query = '';
         for( var i = 0 ; i < queries.length ; ++i ) {
+            if( queries[i].trim().length <= 1 ) {
+                continue;
+            }
             queries[i] = '%' + queries[i].trim() + '%';
             var t = ('like \'' + queries[i] + '\' ');
             question_query += ('word ' + t);
