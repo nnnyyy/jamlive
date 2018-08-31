@@ -230,6 +230,7 @@ function SearchWord(query) {
         if( packet.ret != 0 || packet.data.length <= 0 ) {
             G.eNewWord.val(query);
             G.setModifyMode(false);
+            G.eSimilar.html('');
         }
         else {
             var bModifyMode = false;
@@ -249,7 +250,7 @@ function SearchWord(query) {
                 }
                 else {
                     //  나머지들은 리스트로 정리
-                    html += '<div class="base-margin similar-item" sn="'+ item.sn + '" desc="' + item.desc + '">' + item.word + '</div>';
+                    html += '<tr><td><div class="base-margin similar-item" sn="'+ item.sn + '" desc="' + item.desc + '">' + item.word + '</div></td><td><div style="text-align: left">' + item.desc + '</div></td></tr>';
                 }
             }
 
@@ -258,7 +259,7 @@ function SearchWord(query) {
                 G.setModifyMode(false);
             }
 
-            G.eSimilar.html(html);
+            G.eSimilar.html('<table style="margin: 0 auto;">' + html + '</table>');
         }
     });
 }
