@@ -738,9 +738,15 @@ function onSockSearch(data) {
 
         if( data.isBroadcast ) {
             var nick = client.nick;
+            dbhelper.searchKinWordPerfect(data.msg, function(result) {
+                if( result.ret == 0 && result.list.length > 0 ) {
 
-            dbhelper.searchKinWord(data.msg, function(result) {
+                }
+                else {
+                    dbhelper.searchKinWord(data.msg, function(result) {
 
+                    });
+                }
             });
 
             servman.addSearchQuery( data.msg, true );

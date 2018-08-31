@@ -373,6 +373,45 @@ exports.getKinRecentRegisterList = function( cb ) {
     }
 }
 
+exports.searchKinWordPerfect = function( query , cb ) {
+    try {
+        var queries = query.trim().split(' ');
+        var queries_backup = queries;
+        queries.push(query.trim());
+
+        var question_query = '';
+        for( var i = 0 ; i < queries.length ; ++i ) {
+            queries[i] = queries[i].trim();
+            var t = ('= \'' + queries[i] + '\' ');
+            question_query += ('word ' + t);
+            if( i != queries.length - 1  ) {
+                question_query += ' or ';
+            }
+        }
+
+        var where = question_query;
+        //console.log(where);
+
+        var final = "select * from kin where " + where;
+
+        dbpool.query(final, function(err, rows) {
+            if(err) {
+                cb({ret: -1});
+                return;
+            }
+            var data = [];
+            for( var i  = 0; i < rows.length ; ++i ) {
+                var item = rows[i];
+                KinMan.register(item.word, item.description);
+            }
+            cb({ret:0, list: data});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - search');
+        cb({ret: -1});
+    }
+}
+
 exports.searchKinWord = function( query , cb ) {
     try {
         var queries = query.trim().split(' ');
