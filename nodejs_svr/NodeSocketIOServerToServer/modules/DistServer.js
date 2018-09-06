@@ -31,6 +31,14 @@ class DistServer {
                 console.log(e);
             }
         });
+
+        socket.on('ban-reload', function(packet) {
+            try {
+                distServ.servman.banReload();
+            }catch(e) {
+                console.log(e);
+            }
+        })
     }
 
     sendCount() {

@@ -34,7 +34,7 @@ Client.prototype.incBanCnt = function() {
 
     try {
         if( !this.isLogined() ) return;
-        
+
         dbhelper.insertBanUser(this.socket.handshake.session.username, function(result) {
             try {
                 if( client && client.socket ) {

@@ -56,6 +56,14 @@ socketToCenterServer.on('connect', function () {
             console.log(e);
         }
     })
+
+    this.on('ban-reload', function(packet) {
+        try {
+            servman.reloadBanList();
+        }catch(e) {
+            console.log(e);
+        }
+    })
 });
 
 
@@ -126,6 +134,18 @@ ServerMan.prototype.isLiveQuizTime = function() {
     var cur = new Date();
     var hours = cur.getHours();
     return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 18 ) );
+}
+
+ServerMan.prototype.reloadBanList = function() {
+    dbhelper.getPermanentBanList(function(ret) {
+        if( ret.ret == 0 ) {
+            console.log('reloadBanList success : ' + ret.ret);
+            servman.permanentBanList = ret.list;
+        }
+        else {
+            console.log('reloadBanList error : ' + ret.ret);
+        }
+    });
 }
 
 ServerMan.prototype.sendServerMsg = function( socket, msg ) {
@@ -206,6 +226,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('memo', onMemo);
     socket.on('go', onGo);
     socket.on('server-info-reload', onServerInfoReload);
+    socket.on('ban-reload', onBanReload);
 }
 
 
@@ -1074,6 +1095,17 @@ function onServerInfoReload(data) {
     }
 
     socketToCenterServer.emit('server-info-reload', {});
+}
+
+function onBanReload(data) {
+    var client = servman.getClient(this.id);
+    if( !client ) return;
+
+    if( !client.isAdmin() ) {
+        return;
+    }
+
+    socketToCenterServer.emit('ban-reload', {});
 }
 
 module.exports = servman;

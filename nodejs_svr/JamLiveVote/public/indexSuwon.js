@@ -999,6 +999,12 @@ function onInputMsgKeyPress(e) {
             return;
         }
 
+        if( msg == '#ban-reload') {
+            G.socket.emit('ban-reload', {});
+            $(this).val('');
+            return;
+        }
+
         if( msg[0] == '/' ) {
             $(this).val('');
             var query = msg.substr(1);

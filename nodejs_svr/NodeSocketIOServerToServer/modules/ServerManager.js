@@ -156,6 +156,19 @@ class ServerManager {
             }
         });
     }
+
+    banReload() {
+        try {
+            this.voteServMap.forEach(function(value, key){
+                const distServer = value;
+                if( distServer && distServer.socket ) {
+                    distServer.socket.emit('ban-reload', {});
+                }
+            })
+        }catch(e) {
+            console.log(e);
+        }
+    }
 }
 
 module.exports = ServerManager;
