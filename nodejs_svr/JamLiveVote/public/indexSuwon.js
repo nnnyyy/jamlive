@@ -1069,6 +1069,11 @@ function setBtnEvent() {
     $('#btn-serv-3').click(onBtnGoServ3);
     $('#btn-serv-4').click(onBtnGoServ4);
     $('#btn-serv-5').click(onBtnGoServ5);
+    $('#btn-serv-6').click(onBtnGoServ6);
+    $('#btn-serv-7').click(onBtnGoServ7);
+    $('#btn-serv-8').click(onBtnGoServ8);
+    $('#btn-serv-9').click(onBtnGoServ9);
+    $('#btn-serv-10').click(onBtnGoServ10);
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
@@ -1132,6 +1137,11 @@ function onBtnGoServ2(e) { G.socket.emit('go', {servidx: '2'}) }
 function onBtnGoServ3(e) { G.socket.emit('go', {servidx: '3'}) }
 function onBtnGoServ4(e) { G.socket.emit('go', {servidx: '4'}) }
 function onBtnGoServ5(e) { G.socket.emit('go', {servidx: '5'}) }
+function onBtnGoServ6(e) { G.socket.emit('go', {servidx: '6'}) }
+function onBtnGoServ7(e) { G.socket.emit('go', {servidx: '7'}) }
+function onBtnGoServ8(e) { G.socket.emit('go', {servidx: '8'}) }
+function onBtnGoServ9(e) { G.socket.emit('go', {servidx: '9'}) }
+function onBtnGoServ10(e) { G.socket.emit('go', {servidx: '10'}) }
 
 function onBtnSettings(e) {
     e.stopPropagation();
