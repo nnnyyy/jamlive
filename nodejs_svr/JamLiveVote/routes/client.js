@@ -16,19 +16,38 @@ var Client = function(servman, socket) {
 }
 
 Client.prototype.getBanCnt = function() {
-    if( this.isLogined() ) {
-        return this.socket.handshake.session.userinfo.banCnt;
-    }
-    else {
+    try {
+        if( this.isLogined() ) {
+            return this.socket.handshake.session.userinfo.banCnt;
+        }
+        else {
+            return 0;
+        }
+    }catch(e) {
+        console.log(`getBanCnt - ${e}`);
         return 0;
     }
 }
 
 Client.prototype.incBanCnt = function() {
     var client = this;
-    dbhelper.insertBanUser(this.socket.handshake.session.username, function(result) {
-        client.socket.handshake.session.userinfo.banCnt++;
-    });
+
+    try {
+        if( !this.isLogined() ) return;
+        
+        dbhelper.insertBanUser(this.socket.handshake.session.username, function(result) {
+            try {
+                if( client && client.socket ) {
+                    client.socket.handshake.session.userinfo.banCnt++;
+                }
+            }catch(e) {
+                console.log(e);
+            }
+        });
+    }
+    catch(e) {
+        console.log(`incBanCnt - ${e}`);
+    }
 }
 
 Client.prototype.isClickable = function() {
