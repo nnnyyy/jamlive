@@ -12,6 +12,11 @@ servnameConvert.set('2', '서버2');
 servnameConvert.set('3', '서버3');
 servnameConvert.set('4', '서버4');
 servnameConvert.set('5', '서버5');
+servnameConvert.set('6', '서버6');
+servnameConvert.set('7', '서버7');
+servnameConvert.set('8', '서버8');
+servnameConvert.set('9', '서버9');
+servnameConvert.set('10', '서버10');
 
 // Add a connect listener
 socketToCenterServer.on('connect', function () {
