@@ -454,3 +454,37 @@ exports.deleteKinWord = function( sn, cb ) {
         cb({ret: -1});
     }
 }
+
+exports.getBanCnt = function( id, cb ) {
+    try {
+        dbpool.query("CALL getBanCnt( ? )", [id], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0, cnt: rows[0][0].cnt });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getBanCnt');
+        cb({ret: -1});
+    }
+}
+
+exports.insertBanUser = function( id, cb ) {
+    try {
+        dbpool.query("CALL insertBanList( ? )", [id], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getBanCnt');
+        cb({ret: -1});
+    }
+}

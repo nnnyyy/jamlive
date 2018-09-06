@@ -1183,7 +1183,7 @@ function onChat( data ) {
             //
         }
         else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ color[data.vote] + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ ( data.vote == -1 ? 'black' : color[data.vote] ) + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
         }
     }
     else if( data.mode == "search") {

@@ -230,7 +230,7 @@ ServerMan.prototype.addSocket = function(socket) {
                 try {
                     if( !err ) {
                         const parsedInfo = JSON.parse(info);
-                        client.socket.handshake.session.userinfo.ap = parsedInfo.ap;
+                        client.socket.handshake.session.userinfo = parsedInfo;
                         client.socket.emit('ap', {ap: parsedInfo.ap});
                     }
                 }catch(e) {
@@ -277,7 +277,6 @@ ServerMan.prototype.setIO = function(io, redis) {
     this.redis = redis;
 
     this.chosung = new Chosung(io);
-    //this.chosung.start();
 
     servman.redis.get('jamlive-memo-info:' + config.serv_name,  (err, info) => {
         try {
@@ -418,7 +417,7 @@ ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
     obj[idx]++;
 }
 
-ServerMan.prototype.banUser = function( ip, byIp ) {
+ServerMan.prototype.banUser = function( ip, byIp, banState ) {
     var bui = this.banMap.get( ip );
     if( bui == null ) {
         var newbui = new BanUserInfo();
@@ -428,6 +427,7 @@ ServerMan.prototype.banUser = function( ip, byIp ) {
         if( newbui.isAbleBan() ) {
             this.banUsers.set( ip, Date.now() );
             this.banMap.delete( ip );
+            banState = 2;
         }
         return true;
     }
@@ -436,6 +436,7 @@ ServerMan.prototype.banUser = function( ip, byIp ) {
         if( bui.isAbleBan() ) {
             this.banUsers.set( ip, Date.now() );
             this.banMap.delete( ip );
+            banState = 2;
         }
         return true;
     }
@@ -606,10 +607,14 @@ function onSockBan(data) {
 
         toBanClient.incActivePoint( -10 );
 
-        if( servman.banUser(toBanClient.ip, client.ip) ) {
+        var banState = -1;
+        if( servman.banUser(toBanClient.ip, client.ip, banState) ) {
             chatMan.Broadcast(servman.io, client, 'ban', `[BAN] ${toBanClient.nick}님을 신고 했습니다.`, false);
             msg = '밴 신청 완료';
             client.incActivePoint( 3 );
+            if( banState == 2 && toBanClient.isLogined() ) {
+                toBanClient.incBanCnt();
+            }
         }
         else {
             msg = '동일 유저에게 신고할 수 없습니다.';
@@ -911,7 +916,12 @@ function onSockVote(data) {
                 client.incActivePoint( 2 );
             }
 
-            chatMan.Broadcast(servman.io, client, 'vote', `[투표] ${number}번!`, false, data.idx );
+            var banCnt = client.getBanCnt();
+            var clientMsg = `[투표] ${number}번!`;
+            if( banCnt >= 2 )
+                clientMsg = `[투표] ${number}번  ...  이달에 밴을 ${banCnt}번 당한 유저입니다`;
+
+            chatMan.Broadcast(servman.io, client, 'vote', clientMsg, false, banCnt >= 2 ? -1 : data.idx );
         }
         else {
             servman.sendServerMsg(socket, '투표한지 얼마 안됐어요. 나중에 시도하세요.');

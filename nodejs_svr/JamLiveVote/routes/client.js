@@ -15,6 +15,22 @@ var Client = function(servman, socket) {
     this.tLastSearch = 0;
 }
 
+Client.prototype.getBanCnt = function() {
+    if( this.isLogined() ) {
+        return this.socket.handshake.session.userinfo.banCnt;
+    }
+    else {
+        return 0;
+    }
+}
+
+Client.prototype.incBanCnt = function() {
+    var client = this;
+    dbhelper.insertBanUser(this.socket.handshake.session.username, function(result) {
+        client.socket.handshake.session.userinfo.banCnt++;
+    });
+}
+
 Client.prototype.isClickable = function() {
     var cur = new Date();
     var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.userinfo.auth : -1;

@@ -4,11 +4,13 @@
 var Log = require('./Log');
 var dbhelper = require('./dbhelper');
 var async = require('async');
+var ServerManager = require('./ServerManager');
 
 exports.login = function(req, res, next) {
     async.waterfall(
         [
             async.apply(requestLogin, req),
+            requestBanCnt,
             requestActivePoint,
             requestGetItemList
         ]
@@ -38,12 +40,28 @@ function requestLogin( req, callback ) {
     })
 }
 
+function requestBanCnt(req, callback) {
+    dbhelper.getBanCnt( req.session.username, function(ret) {
+        if( ret.ret == 0 ) {
+            //  완료 처리 해줘
+            req.session.userinfo.banCnt = ret.cnt;
+            callback(null, req);
+        }
+        else {
+            callback(ret.ret);
+        }
+    })
+}
+
 function requestActivePoint(req, callback) {
     dbhelper.getActivePoint( req.session.username, function(ret) {
         if( ret.ret == 0 ) {
             //  완료 처리 해줘
             req.session.userinfo.ap = ret.point;
-            callback(null, req);
+            const userinfo = JSON.stringify(req.session.userinfo);
+            ServerManager.redis.set(req.session.username, userinfo,  (err, info) => {
+                callback(null, req);
+            });
         }
         else {
             callback(ret.ret);
