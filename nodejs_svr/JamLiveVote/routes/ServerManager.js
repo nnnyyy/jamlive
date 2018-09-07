@@ -70,7 +70,7 @@ socketToCenterServer.on('connect', function () {
 var VOTEPERTIME = 1000;
 var BANTIME = 6 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
-var BANCNT = 1;
+var BANCNT = 4;
 
 var ConnectUserInfo = function() {
     this.tLast = new Date();
@@ -448,7 +448,7 @@ ServerMan.prototype.banUser = function( ip, byIp, banState ) {
         if( newbui.isAbleBan() ) {
             this.banUsers.set( ip, Date.now() );
             this.banMap.delete( ip );
-            banState = 2;
+            banState.state = 2;
         }
         return true;
     }
@@ -457,7 +457,7 @@ ServerMan.prototype.banUser = function( ip, byIp, banState ) {
         if( bui.isAbleBan() ) {
             this.banUsers.set( ip, Date.now() );
             this.banMap.delete( ip );
-            banState = 2;
+            banState.state = 2;
         }
         return true;
     }
@@ -628,12 +628,12 @@ function onSockBan(data) {
 
         toBanClient.incActivePoint( -10 );
 
-        var banState = -1;
+        var banState = { state: -1 };
         if( servman.banUser(toBanClient.ip, client.ip, banState) ) {
             chatMan.Broadcast(servman.io, client, 'ban', `[BAN] ${toBanClient.nick}님을 신고 했습니다.`, false);
             msg = '밴 신청 완료';
             client.incActivePoint( 3 );
-            if( banState == 2 && toBanClient.isLogined() ) {
+            if( banState.state == 2 && toBanClient.isLogined() ) {
                 toBanClient.incBanCnt();
             }
         }
