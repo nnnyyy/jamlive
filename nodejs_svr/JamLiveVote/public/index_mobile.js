@@ -167,19 +167,31 @@ function showAdminMsg(msg) {
 GlobalValue.prototype.onEmoticon = function( _data ) {
     switch( _data.name ) {
         case "bbam":
-            global.addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/hong_shock.png"/>', false, _data.auth);
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
             break;
 
         case "ddk":
-            global.addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/ddoddoke.png"/>', false, _data.auth);
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
             break;
 
         case "yeee":
-            global.addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/yeee.png"/>', false, _data.auth);
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/yeee.png"/>', false, _data.auth);
             break;
 
         case "hi":
-            global.addChat( "", false, _data.nick, '<img style="width:40px; height:40px;" src="/images/hi.png"/>', false, _data.auth);
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hi.png"/>', false, _data.auth);
+            break;
+
+        case "by":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/by.png"/>', false, _data.auth);
+            break;
+
+        case "daebak":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/emo_daebak.png"/>', false, _data.auth);
+            break;
+
+        case "ua":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ua.png"/>', false, _data.auth);
             break;
     }
 }

@@ -990,6 +990,10 @@ function onInputMsgKeyPress(e) {
             mode = "emoticon";
             emoticon = "daebak";
         }
+        else if( msg == "으아") {
+            mode = "emoticon";
+            emoticon = "ua";
+        }
 
         if( msg == '#cls') {
             $(this).val('');
@@ -1841,6 +1845,10 @@ function onEmoticon(_data) {
 
         case "daebak":
             chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/emo_daebak.png"/>', false, _data.auth);
+            break;
+
+        case "ua":
+            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ua.png"/>', false, _data.auth);
             break;
     }
 }
