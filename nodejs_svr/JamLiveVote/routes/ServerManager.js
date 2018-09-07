@@ -70,7 +70,7 @@ socketToCenterServer.on('connect', function () {
 var VOTEPERTIME = 1000;
 var BANTIME = 6 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
-var BANCNT = 4;
+var BANCNT = 1;
 
 var ConnectUserInfo = function() {
     this.tLast = new Date();
