@@ -33,6 +33,8 @@ servnameConvert.set('7', '서버7');
 servnameConvert.set('8', '서버8');
 servnameConvert.set('9', '서버9');
 servnameConvert.set('10', '서버10');
+servnameConvert.set('11', '서버11');
+servnameConvert.set('12', '서버12');
 
 var centerConnected = false;
 

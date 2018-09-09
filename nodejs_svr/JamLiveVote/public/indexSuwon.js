@@ -1088,6 +1088,8 @@ function setBtnEvent() {
     $('#btn-serv-8').click(onBtnGoServ8);
     $('#btn-serv-9').click(onBtnGoServ9);
     $('#btn-serv-10').click(onBtnGoServ10);
+    $('#btn-serv-11').click(onBtnGoServ11);
+    $('#btn-serv-12').click(onBtnGoServ12);
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
@@ -1156,6 +1158,8 @@ function onBtnGoServ7(e) { G.socket.emit('go', {servidx: '7'}) }
 function onBtnGoServ8(e) { G.socket.emit('go', {servidx: '8'}) }
 function onBtnGoServ9(e) { G.socket.emit('go', {servidx: '9'}) }
 function onBtnGoServ10(e) { G.socket.emit('go', {servidx: '10'}) }
+function onBtnGoServ11(e) { G.socket.emit('go', {servidx: '11'}) }
+function onBtnGoServ12(e) { G.socket.emit('go', {servidx: '12'}) }
 
 function onBtnSettings(e) {
     e.stopPropagation();
