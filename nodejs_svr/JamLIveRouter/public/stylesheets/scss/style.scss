@@ -1,6 +1,6 @@
 $chat-font-size: 14px;
-$primary-color: #1b3440;
-$main-font-color: #ffffff;
+$primary-color: #ffffff;
+$main-font-color: #393939;
 
 $color-main-back: #ffffff;
 $color-shadow: #e4e6e8;
@@ -22,8 +22,8 @@ html, body {
 body {
   margin-top: 8px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: #F5F1D5;
-  background-color: #1b3440;
+  color: $main-font-color;
+  background-color: $primary-color;
 }
 
 a {
@@ -38,10 +38,9 @@ a {
 .center_wnd {
   position: absolute;
   width: 100%;
-  height: 400px;
-  top: 50%;
+  top: 0;
   left: 0;
-  margin-top: -150px;
+  margin-top: 15px;
   text-align: center;
 }
 
@@ -55,17 +54,17 @@ a {
 }
 
 .c_main {
-  color: #F5F1D5;
+  color: $main-font-color;
 }
 
 .btn_box {
   width: 320px;
   height: 40px;
   line-height: 40px;
-  background-color: #F5F1D5;
-  color: #1b3440;
+  background-color: $main-font-color;
+  color: $primary-color;
   cursor: pointer;
-  margin: 20px auto;
+  margin: 10px auto;
 }
 
 .admin_msg {
