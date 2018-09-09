@@ -199,6 +199,14 @@ ServerMan.prototype.register = function(socket) {
         client.auth = socket.handshake.session.userinfo.auth;
     }
 
+    if( isServerLimit() ) {
+        socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
+        return;
+    }
+
+    //  서버를 강제로 이동해도 이 그룹에 속하지 않으면 받을 수 없다.
+    socket.join('auth');
+
     var rd = Math.floor(Math.random() * 500);
     var nick = client.isLogined() ? socket.handshake.session.userinfo.usernick : '';
     if( !client.isLogined() ){
@@ -414,7 +422,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     }
 
     socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count()});
-    this.io.sockets.emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
+    this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
 ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
@@ -515,7 +523,7 @@ ServerMan.prototype.checkAllBaned = function() {
         ) {
             dbhelper.getNextQuizshowTime(function(ret) {
                 servman.nextQuizShowdata = ret.data;
-                servman.io.sockets.emit('next-quiz', {data: servman.nextQuizShowdata});
+                servman.io.sockets.in('auth').emit('next-quiz', {data: servman.nextQuizShowdata});
             })
         }
 
@@ -703,7 +711,7 @@ function onSockPermanentBan(data) {
             } );
         }
 
-        //servman.io.sockets.emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
+        //servman.io.sockets.in('auth').emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
 
     }
     catch(e) {
@@ -749,7 +757,7 @@ function onSockLike(data) {
 
         toLikeClient.incActivePoint( 5 );
 
-        servman.io.sockets.emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
+        servman.io.sockets.in('auth').emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
     catch(e){
         console.log(`onSockLike exception : ${e}`);
@@ -866,7 +874,7 @@ function onSockChat(data) {
         }
 
         if( data.mode == "emoticon" ) {
-            servman.io.sockets.emit('emoticon', {auth: client.auth, nick: nick, name: data.emoticon});
+            servman.io.sockets.in('auth').emit('emoticon', {auth: client.auth, nick: nick, name: data.emoticon});
             return;
         }
 
@@ -1045,7 +1053,7 @@ function onMemo(data) {
         servman.redis.set('jamlive-memo-info:' + config.serv_name, memoinfo,  (err, info) => {
         } );
 
-        servman.io.sockets.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+        servman.io.sockets.in('auth').emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
     }
     catch(e) {
 
@@ -1086,6 +1094,17 @@ function onGo(data) {
     }catch(e) {
         console.log(e);
     }
+}
+
+function isServerLimit() {
+    var servinfo = servInfoMan.get(config.serv_name);
+    if( !servinfo ) return true;
+
+    if( servinfo.cnt >= servinfo.limit ) {
+        return true;
+    }
+
+    return false;
 }
 
 function onServerInfoReload(data) {
