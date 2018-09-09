@@ -2,7 +2,7 @@ $primary-color: #1b3440;
 $main-font-color: #ffffff;
 $wnd-width: 100vw;
 $menu-width: 100px;
-$graph-height: 100px;
+$graph-height: 80px;
 $article-width: calc(100vw - #{$menu-width} );
 $font-title-size: 18px;
 $font-chat-size: 11px;
@@ -32,6 +32,11 @@ div#middle-ads {
   min-height: 100px;
 }
 
+div#bottom-ads {
+  min-height: 50px;
+}
+
+
 div#top-title {
   $height: 40px;
   height: $height;
@@ -45,7 +50,7 @@ $vote-btn-height: 80px;
 
 div#chat-area {
   width: 100%;
-  height: calc(100vh - 150px - #{$graph-height} - 40px - #{$vote-btn-height} );
+  height: calc(100vh - 150px - #{$graph-height} - 40px - #{$vote-btn-height} - 50px );
   font-size: $font-chat-size;
 
   $margin: 8px;
@@ -123,7 +128,7 @@ div#fix-btn-area {
   opacity: 0.8;
   position: fixed;
   right: 0;
-  bottom: $vote-btn-height;
+  bottom: calc( #{$vote-btn-height} + 50px );
   margin-top: -10px;
   width: 60px;
   height: 145px;

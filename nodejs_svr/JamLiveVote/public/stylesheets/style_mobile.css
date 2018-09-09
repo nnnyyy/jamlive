@@ -19,6 +19,10 @@ div#middle-ads {
   min-height: 100px;
 }
 
+div#bottom-ads {
+  min-height: 50px;
+}
+
 div#top-title {
   height: 40px;
   width: 100%;
@@ -29,7 +33,7 @@ div#top-title {
 
 div#chat-area {
   width: 100%;
-  height: calc(100vh - 150px - 100px - 40px - 80px );
+  height: calc(100vh - 150px - 80px - 40px - 80px - 50px );
   font-size: 11px;
 }
 div#chat-area ul.chat-ui {
@@ -94,7 +98,7 @@ div#fix-btn-area {
   opacity: 0.8;
   position: fixed;
   right: 0;
-  bottom: 80px;
+  bottom: calc( 80px + 50px );
   margin-top: -10px;
   width: 60px;
   height: 145px;

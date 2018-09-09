@@ -137,7 +137,7 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
 
     showBarChart('.ct-chart',['1번','2번','3번'],[total], {
         seriesBarDistance: 10,
-        height: 100,
+        height: 80,
         axisX: {
             offset: 20
         },
