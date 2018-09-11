@@ -12,6 +12,7 @@ class DistServer {
         this.type;
         this.usercnt = 0;
         this.userlimit = 0;
+        this.voteCnts = [0,0,0];
         this.url = '';
 
         const distServ = this;
@@ -19,10 +20,11 @@ class DistServer {
         socket.on('user-cnt', function(packet) {
             try {
                 distServ.usercnt = packet.cnt;
+                distServ.voteCnts = packet.voteCnts;
             }catch(e) {
                 console.log(e);
             }
-        })
+        });
 
         socket.on('server-info-reload', function(packet) {
             try {

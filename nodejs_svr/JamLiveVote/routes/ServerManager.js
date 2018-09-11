@@ -421,7 +421,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         s += searchlist[i].query;
     }
 
-    socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count()});
+    socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: _counts });
     this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
