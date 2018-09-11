@@ -50,6 +50,10 @@ class DistServer {
             server.socket.emit('user-cnt', {data: info });
         }, 1000);
     }
+
+    sendMsg( msg ) {
+        this.socket.emit('admin-msg', {msg : msg });
+    }
 }
 
 

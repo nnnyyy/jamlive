@@ -136,6 +136,13 @@ class ServerManager {
         return data;
     }
 
+    broadcastMsg( msg ) {
+        this.voteServMap.forEach(function(value, key){
+            const distServer = value;
+            distServer.sendMsg( msg );
+        })
+    }
+
     reloadServInfo() {
         const servman = this;
         dbhelper.getServerInfo(function(result) {

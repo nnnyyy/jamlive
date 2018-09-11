@@ -10,6 +10,22 @@ var ConnectStateInfo = function() {
 }
 var connectStateInfo = new ConnectStateInfo();
 
+function AjaxHelper() {
+
+}
+
+AjaxHelper.prototype.postJson = function( url, jsondata, cbSuccess ) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(jsondata),
+        contentType: 'application/json',
+        url: url,
+        success: cbSuccess
+    });
+}
+
+
 ConnectStateInfo.prototype.Connect = function() {
     this.isConnected = true;
     clearInterval( this.timeoutID );
@@ -853,6 +869,7 @@ QuizObject.prototype.onQuizRet = function( data ) {
 
 function setSocketEvent( socket ) {
     socket.on('chat', onChat );
+    socket.on('admin-msg', onAdminMsg);
     socket.on('memo', hintObj.onMemo );
     socket.on('serv_msg', onServMsg);
     socket.on('myid', onMyID);
@@ -1234,6 +1251,10 @@ function onChat( data ) {
         }
 
     }
+}
+
+function onAdminMsg(data) {
+    chatObj.addChat( "admin", false, "서버메시지", '<b>' + data.msg + '</b>', false, 50, '', 0 );
 }
 
 function onServMsg(data) {

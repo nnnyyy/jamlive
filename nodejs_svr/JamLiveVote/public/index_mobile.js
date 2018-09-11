@@ -90,6 +90,10 @@ GlobalValue.prototype.onChat = function( data ) {
     }
 }
 
+function onAdminMsg(data) {
+    global.addChat( "admin", false, "서버메시지", data.msg, false, 50, '', 0 );
+}
+
 GlobalValue.prototype.onProcessVoteData = function( data ) {
     var votedata = data.vote_data;
     var users = votedata.users;
@@ -520,6 +524,7 @@ function registerBtnListener(g) {
 
 function registerSocketListener(g) {
     g.socket.on('chat', g.onChat);
+    g.socket.on('admin-msg', onAdminMsg);
     g.socket.on('vote_data', g.onProcessVoteData);
     g.socket.on('emoticon', g.onEmoticon);
     g.socket.on('myid', g.onMyID);

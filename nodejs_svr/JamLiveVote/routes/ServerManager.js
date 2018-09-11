@@ -44,6 +44,9 @@ socketToCenterServer.on('connect', function () {
     centerConnected = true;
     this.emit('serv-info', { type: "vote-server", name: config.serv_name });
     this.on('disconnect', function() {
+        this.off('user-cnt');
+        this.off('admin-msg');
+        this.off('ban-reload');
         console.log('disconnect from center');
     })
 
@@ -55,6 +58,14 @@ socketToCenterServer.on('connect', function () {
             }
         }
         catch(e) {
+            console.log(e);
+        }
+    })
+
+    this.on('admin-msg', function(packet) {
+        try {
+            chatMan.BroadcastAdminMsg( servman.io, packet.msg );
+        }catch(e) {
             console.log(e);
         }
     })

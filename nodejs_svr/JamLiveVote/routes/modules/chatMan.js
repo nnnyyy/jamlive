@@ -11,4 +11,8 @@ ChatMan.prototype.Notice = function( io, client, msg ) {
     io.sockets.in('auth').emit('chat', { id: client.socket.id, nickname: '알림', msg: msg , mode: "notice", isBaned: false, admin: false, auth: 99 });
 }
 
+ChatMan.prototype.BroadcastAdminMsg = function( io, msg ) {
+    io.sockets.in('auth').emit('admin-msg', {msg: msg});
+}
+
 module.exports = new ChatMan();
