@@ -397,7 +397,7 @@ exports.searchKinWordPerfect = function( query , cb ) {
     }
 }
 
-exports.searchKinWord = function( query , cb ) {
+exports.searchKinWord = function( query , mode,  cb ) {
     try {
         var queries = query.trim().split(' ');
         var queries_backup = queries;
@@ -406,7 +406,7 @@ exports.searchKinWord = function( query , cb ) {
             if( queries[i].trim().length <= 1 || KinMan.isExist(queries[i].trim())) {
                 continue;
             }
-            queries[i] = '%' + queries[i].trim() + '%';
+            queries[i] = (mode == 0 ? '' : '%') + queries[i].trim() + '%';
             var t = ('like \'' + queries[i] + '\' ');
             question_query += ('word ' + t);
             if( i != queries.length - 1  ) {
@@ -429,6 +429,7 @@ exports.searchKinWord = function( query , cb ) {
             for( var i  = 0; i < rows.length ; ++i ) {
                 var item = rows[i];
                 KinMan.register(item.word, item.description);
+                data.push({word: item.word});
             }
             cb({ret:0, list: data});
         });

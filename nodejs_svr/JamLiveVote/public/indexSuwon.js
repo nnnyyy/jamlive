@@ -735,7 +735,7 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
         setVisible($('#search-ret-rank'), true );
     }
 
-    if( hash != searchObj.slhash || tCur - searchObj.tLastRefresh > 400 ) {
+    if( hash != searchObj.slhash || tCur - searchObj.tLastRefresh > 500 ) {
         searchObj.tLastRefresh = tCur;
         searchRetRankList.empty();
         searchObj.searchtop5queries = [];
@@ -759,8 +759,9 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
             for( var w = 0 ; w < words.length ; ++w ) {
                 if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
                 if( duplicateMap.containsKey( words[w]) ) continue;
-                html = html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
-                html2 = html2.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+                var exp = new RegExp(words[w], "gi");
+                html = html.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
+                html2 = html2.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
 
                 duplicateMap.put(words[w], 1);
                 bChanged = true;
@@ -1491,7 +1492,8 @@ function showKin(datalist) {
             for( var w = 0 ; w < words.length ; ++w ) {
                 //if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
                 if( duplicateMap.containsKey( words[w]) ) continue;
-                kin_total_html = kin_total_html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+                var exp = new RegExp(words[w], "gi");
+                kin_total_html = kin_total_html.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
 
                 duplicateMap.put(words[w], 1);
                 bChanged = true;

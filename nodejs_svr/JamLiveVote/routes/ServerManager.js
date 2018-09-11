@@ -795,8 +795,15 @@ function onSockSearch(data) {
 
                 }
                 else {
-                    dbhelper.searchKinWord(data.msg, function(result) {
+                    dbhelper.searchKinWord(data.msg, 0, function(result) {
+                        if( result.ret == 0 && result.list.length > 0 ) {
 
+                        }
+                        else {
+                            dbhelper.searchKinWord(data.msg, 1, function(result) {
+
+                            });
+                        }
                     });
                 }
             });
