@@ -16,6 +16,7 @@ class KinManager {
     register(word, desc) {
         if( this.isExist(word) ) {
             let item = this.wordInfoMap.get(word);
+            item.tRegister = new Date();
             item.cnt++;
             return;
         }

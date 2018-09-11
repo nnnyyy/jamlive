@@ -608,7 +608,7 @@ VoteObject.prototype.onVoteData = function(data) {
     searchObj.onSearchRetRank(data.searchlist, data.slhash);
     var votedata = data.vote_data;
     voteObj.kinlist = data.kin;
-    showKin();
+    showKin(data.searchlist);
     var users = votedata.users;
     G.connUserElem.text(users);
     G.banElem.text(votedata.bans);
@@ -735,7 +735,7 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
         setVisible($('#search-ret-rank'), true );
     }
 
-    if( hash != searchObj.slhash || tCur - searchObj.tLastRefresh > 1000 ) {
+    if( hash != searchObj.slhash || tCur - searchObj.tLastRefresh > 400 ) {
         searchObj.tLastRefresh = tCur;
         searchRetRankList.empty();
         searchObj.searchtop5queries = [];
@@ -761,6 +761,7 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
                 if( duplicateMap.containsKey( words[w]) ) continue;
                 html = html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
                 html2 = html2.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+
                 duplicateMap.put(words[w], 1);
                 bChanged = true;
             }
@@ -1451,7 +1452,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     }
 }
 
-function showKin() {
+function showKin(datalist) {
     if( !searchObj.isRunning ) return;
     var desc_total = '';
     var kinlist = voteObj.kinlist;
@@ -1461,16 +1462,18 @@ function showKin() {
     }
 
     if( kinlist.length > 0 ) {
+        /*
         kinlist.sort(function(item1, item2) {
             var item1s = item1.desc.replace(/[^0-9]/g,'');
             var item2s = item2.desc.replace(/[^0-9]/g,'');
             return item1s.localeCompare(item2s);
         });
+        */
 
         for( var i = 0 ; i < kinlist.length ; ++i ) {
             var item = kinlist[i];
             var div = '<div class="search_ret_desc">' +
-                '<b>' + item.word + '</b> : ' + item.desc +
+                item.word + ' : ' + item.desc +
                 '</div>';
             desc_total += div;
         }
@@ -1479,6 +1482,21 @@ function showKin() {
             '<div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div>' +
             desc_total +
             '<div class="separator"></div></div>';
+
+        var duplicateMap = new Map();
+
+        var bChanged = false;
+        for( var i = 0 ; i < datalist.length ; ++i ) {
+            var words = datalist[i].query.split(' ');
+            for( var w = 0 ; w < words.length ; ++w ) {
+                //if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
+                if( duplicateMap.containsKey( words[w]) ) continue;
+                kin_total_html = kin_total_html.replace(words[w], '<search-top-ret>' + words[w] + '</search-top-ret>');
+
+                duplicateMap.put(words[w], 1);
+                bChanged = true;
+            }
+        }
 
         getSearchArea(2).prepend(kin_total_html);
     }
