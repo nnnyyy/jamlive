@@ -60,7 +60,7 @@ class DistServer {
         this.sendPremiumIntervalId = setInterval( function() {
             var info = server.servman.getVoteServerVoteData();
             server.socket.emit('votedata', {data: info });
-        }, 400);
+        }, 200);
     }
 
     clear() {
