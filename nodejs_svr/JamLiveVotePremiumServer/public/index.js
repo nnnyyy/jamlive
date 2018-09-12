@@ -83,13 +83,16 @@ function onVoteData( packet ) {
     for( var i = 0 ; i < 12 ; ++i ) {
         var data = [0,0,0];
         var cnt = 0;
+        var name = '----';
         if( datalist.length > i ) {
             var item = datalist[i];
             data = item.votedata;
             cnt = item.cnt;
+            name = item.name;
         }
 
         $('.user-cnt' + i).text(cnt);
+        $('.serv-name' + i).text(name);
         showBarChart('.ct-chart' + i,['1번','2번','3번'],[data], {
             seriesBarDistance: 10,
             height: 120,
