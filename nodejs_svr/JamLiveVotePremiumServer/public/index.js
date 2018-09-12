@@ -70,7 +70,8 @@ function initChart() {
                 offset: 30
             },
             axisY: {
-                offset: 30
+                offset: 30,
+                onlyInteger: true
             }
         });
     }
@@ -92,11 +93,13 @@ function onVoteData( packet ) {
         showBarChart('.ct-chart' + i,['1번','2번','3번'],[data], {
             seriesBarDistance: 10,
             height: 120,
+            high: 10,
             axisX: {
                 offset: 30
             },
             axisY: {
-                offset: 30
+                offset: 30,
+                onlyInteger: true
             }
         });
     }
