@@ -62,6 +62,18 @@ var G = new GlobalValue();
 
 
 function initChart() {
+    showBarChart('.ct-chart-total',['1번','2번','3번'],[[1,1,1]], {
+        seriesBarDistance: 10,
+        height: 120,
+        axisX: {
+            offset: 30
+        },
+        axisY: {
+            offset: 30,
+            onlyInteger: true
+        }
+    });
+
     for( var i = 0 ; i < 12 ; ++i ) {
         showBarChart('.ct-chart' + i,['1번','2번','3번'],[[1,1,1]], {
             seriesBarDistance: 10,
@@ -83,6 +95,8 @@ function onVoteData( packet ) {
         return item1.idx - item2.idx;
     });
 
+    var totalVote = [0,0,0];
+    var totalCnt = 0;
     for( var i = 0 ; i < 12 ; ++i ) {
         var data = [0,0,0];
         var cnt = 0;
@@ -90,7 +104,11 @@ function onVoteData( packet ) {
         if( datalist.length > i ) {
             var item = datalist[i];
             data = item.votedata;
+            totalVote[0] += data[0];
+            totalVote[1] += data[1];
+            totalVote[2] += data[2];
             cnt = item.cnt;
+            totalCnt += cnt;
             name = item.name;
         }
 
@@ -109,4 +127,18 @@ function onVoteData( packet ) {
             }
         });
     }
+
+    $('.user-cnt-total').text(totalCnt);
+    showBarChart('.ct-chart-total',['1번','2번','3번'],[totalVote], {
+        seriesBarDistance: 10,
+        height: 120,
+        high: 10,
+        axisX: {
+            offset: 30
+        },
+        axisY: {
+            offset: 30,
+            onlyInteger: true
+        }
+    });
 }
