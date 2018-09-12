@@ -137,7 +137,6 @@ function onVoteData( packet ) {
     showBarChart('.ct-chart-total',['1번','2번','3번'],[totalVote], {
         seriesBarDistance: 10,
         height: 120,
-        high: 10,
         axisX: {
             offset: 30
         },
