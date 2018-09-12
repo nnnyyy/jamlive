@@ -15,7 +15,6 @@ class ClientSocket {
         let clientSock = this;
         this.socket.on('pw', function(packet) {
             if( clientSock.auth ) return;
-            console.log(packet.key);
             clientSock.pw += packet.key;
 
             if( clientSock.pw == 'APDLVMF' ) {
