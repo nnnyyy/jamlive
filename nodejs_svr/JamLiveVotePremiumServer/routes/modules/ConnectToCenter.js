@@ -23,7 +23,7 @@ class ConnectToCenter {
 
             this.on('votedata', function(packet) {
                 try {
-                    ctc.ioToClient.sockets.emit('votedata', packet);
+                    ctc.ioToClient.sockets.in('auth-user').emit('votedata', packet);
                 }
                 catch(e) {
                     console.log(e);

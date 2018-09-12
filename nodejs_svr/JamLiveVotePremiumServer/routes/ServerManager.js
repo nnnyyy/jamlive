@@ -11,6 +11,7 @@ var dbhelper = require('./dbhelper');
 
 const config = require('../config');
 const ConnectToCenter = require('./modules/ConnectToCenter');
+const ClientSocket = require('./modules/ClientSocket');
 
 var VOTEPERTIME = 1000;
 var BANTIME = 6 * 60 * 1000;
@@ -23,6 +24,7 @@ class ServerMan {
 
         this.io = io;
         this.redis = redis;
+        this.clients = new HashMap();
         this.connectToCenter = new ConnectToCenter(this.io);
 
         this.io.on('connection', function(socket){
@@ -41,7 +43,11 @@ class ServerMan {
     }
 
     register( socket ) {
-
+        const servman = this;
+        this.clients.set( socket.id, new ClientSocket(socket) );
+        socket.on('disconnect', function() {
+            servman.clients.delete(socket.id);
+        });
     }
 
     updateFast() {
@@ -51,18 +57,6 @@ class ServerMan {
     updateSlow() {
         const cur = new Date();
     }
-}
-
-ServerMan.prototype.register = function(socket) {
-
-}
-
-ServerMan.prototype.updateFast = function() {
-
-}
-
-ServerMan.prototype.updateSlow = function() {
-    var cur = new Date();
 }
 
 module.exports = ServerMan;

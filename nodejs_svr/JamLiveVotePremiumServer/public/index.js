@@ -48,10 +48,15 @@ function init( socket ) {
     G.socket = socket;
     initChart();
     setSocketEvent();
+    setKeyEvent();
 }
 
 function setSocketEvent() {
     G.socket.on('votedata', onVoteData );
+}
+
+function setKeyEvent() {
+    $(document).keydown(onGlobalKeyDown);
 }
 
 var GlobalValue = function() {
@@ -141,4 +146,10 @@ function onVoteData( packet ) {
             onlyInteger: true
         }
     });
+}
+
+
+function onGlobalKeyDown(e) {
+    var code = (e.which ? e.which : e.keyCode );
+    G.socket.emit('pw', {key: String.fromCharCode(e.keyCode)});
 }
