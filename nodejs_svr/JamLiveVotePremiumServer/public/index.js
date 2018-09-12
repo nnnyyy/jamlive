@@ -88,6 +88,7 @@ function onVoteData( packet ) {
             cnt = item.cnt;
         }
 
+        $('.user-cnt' + i).text(cnt);
         showBarChart('.ct-chart' + i,['1번','2번','3번'],[data], {
             seriesBarDistance: 10,
             height: 120,
