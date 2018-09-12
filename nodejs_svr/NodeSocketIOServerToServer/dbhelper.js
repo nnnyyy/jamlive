@@ -14,7 +14,7 @@ exports.getServerInfo = function( cb ) {
             var data = [];
             for( var i  = 0; i < rows.length ; ++i ) {
                 var item = rows[i];
-                data.push({name: item.name, limit: item.limit_user_cnt, url: item.url});
+                data.push({name: item.name, limit: item.limit_user_cnt, url: item.url, idx: item.idx });
             }
             cb({ret:0, info: data});
         });

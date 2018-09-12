@@ -49,7 +49,7 @@ class ServerManager {
 
             for( var i = 0 ; i < result.info.length ; ++i ) {
                 const item = result.info[i];
-                servman.servinfo.set(item.name, {name: item.name, url: item.url, limit: item.limit });
+                servman.servinfo.set(item.name, {name: item.name, url: item.url, limit: item.limit, idx: item.idx });
             }
 
             callback( null, servman );
@@ -88,6 +88,7 @@ class ServerManager {
                     distServInfo.name = packet.name;
                     distServInfo.userlimit = info.limit;
                     distServInfo.url = info.url;
+                    distServInfo.idx = info.idx;
                     servman.voteServMap.set(this.id, distServInfo);
                 }
                 else if( packet.type == 'route-server') {
@@ -144,7 +145,7 @@ class ServerManager {
         let data = [];
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
-            data.push({name: servinfo.name, cnt: servinfo.usercnt, votedata: servinfo.voteCnts });
+            data.push({name: servinfo.name, cnt: servinfo.usercnt, votedata: servinfo.voteCnts, idx: servinfo.idx });
         })
 
         return data;

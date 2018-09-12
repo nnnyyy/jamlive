@@ -79,6 +79,9 @@ function initChart() {
 
 function onVoteData( packet ) {
     var datalist = packet.data;
+    datalist.sort(function(item1, item2) {
+        return item1.idx - item2.idx;
+    });
 
     for( var i = 0 ; i < 12 ; ++i ) {
         var data = [0,0,0];

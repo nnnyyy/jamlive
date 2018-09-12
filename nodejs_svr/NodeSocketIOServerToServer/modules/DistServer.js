@@ -14,6 +14,7 @@ class DistServer {
         this.userlimit = 0;
         this.voteCnts = [0,0,0];
         this.url = '';
+        this.idx = 0;
 
         const distServ = this;
 
