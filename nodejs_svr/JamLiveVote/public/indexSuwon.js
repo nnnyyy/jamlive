@@ -1458,10 +1458,6 @@ function showKin(datalist) {
     var desc_total = '';
     var kinlist = voteObj.kinlist;
 
-    if( $('#kindata') ) {
-        $('#kindata').remove();
-    }
-
     if( kinlist.length > 0 ) {
         /*
         kinlist.sort(function(item1, item2) {
@@ -1479,10 +1475,8 @@ function showKin(datalist) {
             desc_total += div;
         }
 
-        var kin_total_html = '<div id="kindata" class="search_ret_root">' +
-            '<div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div>' +
-            desc_total +
-            '<div class="separator"></div></div>';
+        var kin_total_desc = '<div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div>' +
+                            desc_total + '<div class="separator"></div>';
 
         var duplicateMap = new Map();
 
@@ -1493,14 +1487,23 @@ function showKin(datalist) {
                 //if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
                 if( duplicateMap.containsKey( words[w]) ) continue;
                 var exp = new RegExp(words[w], "gi");
-                kin_total_html = kin_total_html.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
+                kin_total_desc = kin_total_desc.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
 
                 duplicateMap.put(words[w], 1);
                 bChanged = true;
             }
         }
 
-        getSearchArea(2).prepend(kin_total_html);
+        if( $('#kindata').has('.search_ret_desc').length ) {
+            $('#kindata').html(kin_total_desc);
+        }
+        else {
+            var kin_total_html = '<div id="kindata" class="search_ret_root">' +
+                kin_total_desc +
+                '</div>';
+
+            getSearchArea(2).prepend(kin_total_html);
+        }
     }
 }
 
