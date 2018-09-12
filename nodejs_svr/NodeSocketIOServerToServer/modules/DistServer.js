@@ -54,6 +54,19 @@ class DistServer {
     sendMsg( msg ) {
         this.socket.emit('admin-msg', {msg : msg });
     }
+
+    setPremiumListener() {
+        const server = this;
+        this.sendPremiumIntervalId = setInterval( function() {
+            var info = server.servman.getVoteServerVoteData();
+            server.socket.emit('votedata', {data: info });
+        }, 400);
+    }
+
+    clear() {
+        clearInterval(this.sendCountIntervalId);
+        clearInterval(this.sendPremiumIntervalId);
+    }
 }
 
 

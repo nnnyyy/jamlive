@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122840650-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-122840650-1');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style_signin.css' />
+</head>
+<body>
+<!-- HTML Design -->
+<div class="main_frame">
+    <div class="center_wnd">
+        <% if( !username ){ %>
+        <div class="top_notice">서버1은 300명 넘을 시 자동인증</div>
+        <table class="tb_signup">
+            <tr>
+                <th>아이디</th>
+                <td><input type="text" id="ip_id" placeholder="영문 숫자 6-10자"/></td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td><input type="password" id="ip_pw" placeholder="영문 숫자 포함 6-12자"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="button" id="btn_login" value="로그인"/>
+                </td>
+            </tr>
+        </table>
+        <%}else {%>
+        <div class="top_notice">이미 로그인 되어 있습니다.</div>
+        <a href="/"><div class="btn_gohome">공유기로 이동</div></a>
+        <%}%>
+
+        <div class="alert_msg"></div>
+    </div>
+</div>
+<!-- Script -->
+<script>
+    function showErrorMsg(ret) {
+        var msg = '';
+        switch(ret) {
+            case -1:
+                msg = '아이디 또는 패스워드를 입력해 주세요';
+                break;
+
+            case -101:
+                msg = '아이디 또는 패스워드가 틀렸습니다';
+                break;
+        }
+
+        $('.alert_msg').text(msg);
+    }
+
+    function signin() {
+        var id = $('#ip_id').val();
+        var pw = $('#ip_pw').val();
+        var ret = 0;
+        var inputs = [$('#ip_id'), $('#ip_pw')];
+        for( var i = 0 ; i < inputs.length ; ++i) {
+            inputs[i].prop('disabled', true);
+        }
+
+        if( (ret = validation(id, pw)) < 0 ) {
+            showErrorMsg(ret);
+            for( var i = 0 ; i < inputs.length ; ++i) {
+                inputs[i].prop('disabled', false);
+            }
+            return;
+        }
+
+        sendPostSignin({id: id, pw: pw});
+    }
+
+    function validation(id, pw) {
+        if( id.length <= 0 || pw.length <= 0 ) {
+            return -1;
+        }
+    }
+
+    function sendPostSignin(data) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                id: data.id,
+                pw: data.pw
+            }),
+            contentType: 'application/json',
+            url: '/login',
+            success: function(ret) {
+                if( ret != 0 ) {
+                    showErrorMsg(ret);
+                    var inputs = [$('#ip_id'), $('#ip_pw')];
+                    for( var i = 0 ; i < inputs.length ; ++i) {
+                        inputs[i].prop('disabled', false);
+                    }
+                }
+                else {
+                    window.location.href = document.referrer;
+                }
+            }
+        });
+    }
+
+    function onInputMsgKeyPress(e) {
+        var code = (e.which ? e.which : e.keyCode );
+        if( code == 13 ) {
+            //  엔터 키
+            signin();
+        }
+    }
+
+    $(document).ready(function(){
+        $('#btn_login').click(function(e) {
+            signin();
+        })
+
+        $('#ip_pw').keypress(onInputMsgKeyPress);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+$chat-font-size: 14px;
+$primary-color: #1b3440;
+$main-font-color: #ffffff;
+
+$color-main-back: #ffffff;
+$color-shadow: #e4e6e8;
+$color-back: #f2f4f7;
+$color-main-font: #393939;
+$color-sub-font: #626262;
+$color-sub2-font: #6e6e6e;
+$color-yellow-font: #e9bd25;
+$color-border: #e5e5e5;
+
+
+body {
+  background-color: $color-back;
+  color: $color-main-font;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  font-family: 'Nanum Barun Gothic', sans-serif;
+}
+
+.chart-obj {
+  float: left;
+  width: 25%;
+}

@@ -432,7 +432,12 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         s += searchlist[i].query;
     }
 
-    socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: _counts });
+    let countForCenter = [0,0,0];
+    countForCenter[0] = _counts[0] + _countsSearchFirst[0];
+    countForCenter[1] = _counts[1] + _countsSearchFirst[1];
+    countForCenter[2] = _counts[2] + _countsSearchFirst[2];
+
+    socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: countForCenter });
     this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 

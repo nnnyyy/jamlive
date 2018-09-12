@@ -1,0 +1,19 @@
+body {
+  background-color: #f2f4f7;
+  color: #393939;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  font-family: 'Nanum Barun Gothic', sans-serif;
+}
+
+.chart-obj {
+  float: left;
+  width: 25%;
+}
+
+/*# sourceMappingURL=style.css.map */

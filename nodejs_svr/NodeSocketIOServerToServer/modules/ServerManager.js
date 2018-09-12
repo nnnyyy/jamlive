@@ -93,6 +93,10 @@ class ServerManager {
                 else if( packet.type == 'route-server') {
 
                 }
+                else if( packet.type == 'premium-server') {
+                    distServInfo.name = packet.name;
+                    distServInfo.setPremiumListener();
+                }
                 distServInfo.sendCount();
             }catch(e) {
                 console.log(e);
@@ -123,7 +127,7 @@ class ServerManager {
         else if ( distServer.type == 'route-server' ) {
 
         }
-        clearInterval(distServer.sendCountIntervalId);
+        distServer.clear();
     }
 
     getVoteServerCntInfo() {
@@ -131,6 +135,16 @@ class ServerManager {
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
             data.push({name: servinfo.name, cnt: servinfo.usercnt, limit: servinfo.userlimit, url: servinfo.url });
+        })
+
+        return data;
+    }
+
+    getVoteServerVoteData() {
+        let data = [];
+        this.voteServMap.forEach(function(value, key){
+            const servinfo = value;
+            data.push({name: servinfo.name, cnt: servinfo.usercnt, votedata: servinfo.voteCnts });
         })
 
         return data;
