@@ -116,4 +116,10 @@ Client.prototype.getActivePoint = function() {
     return this.socket.handshake.session.userinfo.ap;
 }
 
+Client.prototype.getUserName = function() {
+    if( !this.isLogined() ) return '';
+
+    return this.socket.handshake.session.username;
+}
+
 module.exports = Client;

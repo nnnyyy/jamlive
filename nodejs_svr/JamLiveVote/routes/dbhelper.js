@@ -489,3 +489,20 @@ exports.insertBanUser = function( id, cb ) {
         cb({ret: -1});
     }
 }
+
+exports.insertLike = function( id, cb ) {
+    try {
+        dbpool.query("CALL insertLikeLog( ? )", [id], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - updateLike');
+        cb({ret: -1});
+    }
+}

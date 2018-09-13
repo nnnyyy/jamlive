@@ -772,12 +772,17 @@ function onSockLike(data) {
         const curMsg = msg[Math.floor(Math.random() * 5)];
 
         toLikeClient.incActivePoint( 5 );
+        insertLike(toLikeClient, client);
 
         servman.io.sockets.in('auth').emit('chat', {sockid: this.id, id: '', nickname: client.nick, msg: `<like>[칭찬] ${curMsg}</like>`, mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: logined, auth: auth_state, ip: client.ip });
     }
     catch(e){
         console.log(`onSockLike exception : ${e}`);
     }
+}
+
+function insertLike( toLikeClient, client ) {
+    dbhelper.insertLike( toLikeClient.getUserName() );
 }
 
 function onSockSearch(data) {
