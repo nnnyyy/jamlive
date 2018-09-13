@@ -106,14 +106,22 @@ function onVoteData( packet ) {
         var data = [0,0,0];
         var cnt = 0;
         var name = '----';
+        var checked = false;
+        if( $('.cb-serv' + i).is(':checked') ) {
+            checked = true;
+        }
         if( datalist.length > i ) {
             var item = datalist[i];
-            data = item.votedata;
-            totalVote[0] += data[0];
-            totalVote[1] += data[1];
-            totalVote[2] += data[2];
-            cnt = item.cnt;
+            
+            if( checked ) {
+                data = item.votedata;
+                totalVote[0] += data[0];
+                totalVote[1] += data[1];
+                totalVote[2] += data[2];
+            }
+
             totalCnt += cnt;
+            cnt = item.cnt;
             name = item.name;
         }
 
