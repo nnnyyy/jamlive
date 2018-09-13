@@ -74,13 +74,14 @@ var GlobalValue = function() {
     this.isLogin = false;
     this.connUserElem = $('#conn-cnt');
     this.banElem = $('#ban-cnt');
-    this.weekdayElem = $('next-quizday');
+    //this.weekdayElem = $('next-quizday');
     this.quizinfoElem = $('next-quiz-info');
     this.usersMap = new Map();
     this.connUserList = $('#conn-users-list');
     this.tLastUserUpdate = 0;
 }
 
+/*
 GlobalValue.prototype.onNextQuiz = function (data) {
     var weekdayname = ['월요일', '화요일','수요일','목요일','금요일','토요일','일요일'];
     var tTime = new Date('1980-01-01T' + data.data.time);
@@ -94,6 +95,7 @@ GlobalValue.prototype.onNextQuiz = function (data) {
     G.weekdayElem.text(bToday? G.stringTable['today'] : weekdayname[data.data.weekday]);
     G.quizinfoElem.html(qinfo);
 }
+*/
 
 function ChosungGameMan() {
     this.questionTypeName = ['사전', '음식', '관용표현', '해산물', '날씨', '식물', '영화-주인공', '나루토', '과일', '화가', '장소', '한국영화'];
@@ -879,7 +881,7 @@ function setSocketEvent( socket ) {
     socket.on('vote_data', voteObj.onVoteData);
     socket.on('quiz', quizObj.onQuiz);
     socket.on('quizret', quizObj.onQuizRet);
-    socket.on('next-quiz', G.onNextQuiz);
+    //socket.on('next-quiz', G.onNextQuiz);
     socket.on('connect', connectStateInfo.Connect );
     socket.on('disconnect', connectStateInfo.Disconnect);
     socket.on('emoticon', onEmoticon);

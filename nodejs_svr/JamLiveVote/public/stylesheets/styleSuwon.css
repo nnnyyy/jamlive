@@ -55,6 +55,12 @@ body {
 #area-top #area-top-left .curserv nc {
   color: #e9bd25;
 }
+#area-top #area-top-left .left {
+  float: left;
+}
+#area-top #area-top-left #naver-cafe-icon {
+  height: calc( 65px - 20px );
+}
 #area-top #area-top-center {
   position: absolute;
   width: 360px;

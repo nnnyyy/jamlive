@@ -77,6 +77,14 @@ $top-bottom-margin: 5px;
         color: $color-yellow-font;
       }
     }
+
+    .left {
+      float: left;
+    }
+
+    #naver-cafe-icon {
+      height: calc( #{$top-height} - 20px );
+    }
   }
 
   #area-top-center {
