@@ -745,6 +745,8 @@ function onSockLike(data) {
         var logined = socket.handshake.session.username ? true : false;
         var auth_state = logined ? client.auth : -1;
 
+        insertLike(toLikeClient, client);
+
          if( client.ip == toLikeClient.ip ) {
              servman.sendServerMsg(client.socket, '스스로 칭찬 불가능');
          return;
@@ -782,7 +784,12 @@ function onSockLike(data) {
 }
 
 function insertLike( toLikeClient, client ) {
-    dbhelper.insertLike( toLikeClient.getUserName() );
+    try {
+        dbhelper.insertLike( toLikeClient.getUserName() );
+    }
+    catch(e) {
+        console.log(e);
+    }
 }
 
 function onSockSearch(data) {

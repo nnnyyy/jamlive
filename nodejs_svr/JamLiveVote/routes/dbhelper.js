@@ -495,14 +495,14 @@ exports.insertLike = function( id, cb ) {
         dbpool.query("CALL insertLikeLog( ? )", [id], function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
-                cb({ret: -99});
+                if( cb ) cb({ret: -99});
                 return;
             }
 
-            cb({ret: 0 });
+            if( cb ) cb({ret: 0 });
         });
     }catch(err) {
         Log.logger.debug('DB Failed - updateLike');
-        cb({ret: -1});
+        if( cb ) cb({ret: -1});
     }
 }
