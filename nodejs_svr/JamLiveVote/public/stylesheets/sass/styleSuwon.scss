@@ -82,7 +82,15 @@ $top-bottom-margin: 5px;
       float: left;
     }
 
+    .topitem {
+      margin: 0 8px;
+    }
+
     #naver-cafe-icon {
+      height: calc( #{$top-height} - 20px );
+    }
+
+    #quiz-timetable-icon {
       height: calc( #{$top-height} - 20px );
     }
   }
