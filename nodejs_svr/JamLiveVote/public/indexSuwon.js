@@ -1472,7 +1472,7 @@ function showKin(datalist) {
         for( var i = 0 ; i < kinlist.length ; ++i ) {
             var item = kinlist[i];
             var div = '<div class="search_ret_desc">' +
-                item.word + ' : ' + item.desc +
+                strip(item.word) + ' : ' + strip(item.desc) +
                 '</div>';
             desc_total += div;
         }
