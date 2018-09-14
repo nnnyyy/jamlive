@@ -876,7 +876,8 @@ QuizObject.prototype.onQuizRet = function( data ) {
             chatObj.addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[i] + '">' + (i+1) + '번 '+ quizObj.quizData.answer[i]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>', false);
             setTimeout(function() {
                 setVisibleBlock( quizObj.centerVideoElem, true );
-            }, 2000);
+                setVisibleBlock( quizObj.randomQuizRootElem, false );
+            }, 3000);
         }
     }
 
