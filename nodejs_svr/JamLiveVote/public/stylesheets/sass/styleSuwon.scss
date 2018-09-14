@@ -402,6 +402,23 @@ $top-bottom-margin: 5px;
       font-size: 15px;
     }
 
+    #video-ads-area {
+      width: 100%;
+      height: $random-quiz-height;
+      background-color: $color-main-back;
+    }
+
+    #jaum-quiz {
+      width: 100%;
+      height: $random-quiz-height;
+      line-height: $random-quiz-height;
+      font-weight: bolder;
+      font-size: 22px;
+      text-align: center;
+      background-color: $color-main-back;
+      border: 1px solid $color-border;
+    }
+
     #jaum-quiz {
       width: 100%;
       height: $random-quiz-height;

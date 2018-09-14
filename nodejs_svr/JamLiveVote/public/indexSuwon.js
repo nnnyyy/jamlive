@@ -103,18 +103,21 @@ function ChosungGameMan() {
 }
 
 ChosungGameMan.prototype.init = function() {
-    setVisibleBlock(quizObj.randomQuizRootElem, true);
+    setVisibleBlock(quizObj.randomQuizRootElem, false);
     setVisibleBlock(quizObj.jaumQuizRootElem, false);
+    setVisibleBlock(quizObj.centerVideoElem, true);
 }
 
 ChosungGameMan.prototype.setUI = function() {
     setVisibleBlock(quizObj.randomQuizRootElem, false);
+    setVisibleBlock(quizObj.centerVideoElem, false);
     setVisibleBlock(quizObj.jaumQuizRootElem, true);
 }
 
 ChosungGameMan.prototype.closeUI = function() {
-    setVisibleBlock(quizObj.randomQuizRootElem, true);
+    setVisibleBlock(quizObj.randomQuizRootElem, false);
     setVisibleBlock(quizObj.jaumQuizRootElem, false);
+    setVisibleBlock(quizObj.centerVideoElem, true);
 }
 
 ChosungGameMan.prototype.setText = function(word) {
@@ -122,6 +125,8 @@ ChosungGameMan.prototype.setText = function(word) {
 }
 
 ChosungGameMan.prototype.onPacket = function( packet ) {
+    stopVideo();
+
     if( packet.step == 'start' ) {
         chosungGameMan.setText('#### 곧 초성게임이 시작 됩니다! ####');
         chosungGameMan.setUI();
@@ -802,6 +807,7 @@ function onBtnLogout(e) {
 function QuizObject() {
     this.randomQuizRootElem = $('#random-quiz');
     this.jaumQuizRootElem = $('#jaum-quiz');
+    this.centerVideoElem = $('#video-ads-area');
     this.questionElem = $('#random-quiz-question');
     this.answerElem = [ $('.random-quiz-answer').eq(0), $('.random-quiz-answer').eq(1), $('.random-quiz-answer').eq(2) ];
     this.gaugeElem = $('.gauge');
@@ -818,6 +824,11 @@ function QuizObject() {
 
 QuizObject.prototype.onQuiz = function(data) {
     if( !quizObj.bQuizEnable ) return;
+
+    stopVideo();
+
+    setVisibleBlock( quizObj.centerVideoElem, false );
+    setVisibleBlock( quizObj.randomQuizRootElem, true );
 
     quizObj.quizData = data.quizdata;
     quizObj.questionElem.text(data.quizdata.question);
@@ -863,6 +874,9 @@ QuizObject.prototype.onQuizRet = function( data ) {
                 collect_rate = 0;
             }
             chatObj.addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[i] + '">' + (i+1) + '번 '+ quizObj.quizData.answer[i]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+            setTimeout(function() {
+                setVisibleBlock( quizObj.centerVideoElem, true );
+            }, 2000);
         }
     }
 
@@ -1377,7 +1391,12 @@ function logout() {
     });
 }
 
+function stopVideo() {
+    $('#video-player')[0].contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+}
+
 function searchWebRoot( socket, query, isBroadcast ) {
+    stopVideo();
     var tCur = new Date();
     if( tCur - searchObj.tLastSearch <= 500 ) {
         showAdminMsg('검색은 여유를 두고!');
