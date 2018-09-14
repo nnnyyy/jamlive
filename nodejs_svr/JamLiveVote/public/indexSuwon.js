@@ -692,6 +692,7 @@ function SearchObject() {
     this.tLastSearch = 0;
     this.totalCnt = 0;
     this.isRunning = false;
+    this.kinHtml = '';
 }
 
 SearchObject.prototype.init = function() {
@@ -1453,6 +1454,9 @@ function searchWebRoot( socket, query, isBroadcast ) {
         $('#sd_ret').css('display','none');
         $('#sd_ads').css('display','inline-block');
     }
+    else {
+        getSearchArea(2).prepend(searchObj.kinHtml);
+    }
 }
 
 function showKin(datalist) {
@@ -1496,16 +1500,14 @@ function showKin(datalist) {
             }
         }
 
-        if( $('#kindata').has('.search_ret_desc').length ) {
+        if( $('#kindata').length ) {
             $('#kindata').html(kin_total_desc);
         }
-        else {
-            var kin_total_html = '<div id="kindata" class="search_ret_root">' +
-                kin_total_desc +
-                '</div>';
 
-            getSearchArea(2).prepend(kin_total_html);
-        }
+        var kin_total_html = '<div id="kindata" class="search_ret_root">' +
+            kin_total_desc +
+            '</div>';
+        searchObj.kinHtml = kin_total_html;
     }
 }
 
