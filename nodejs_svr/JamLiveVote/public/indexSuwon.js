@@ -1,7 +1,6 @@
 /**
  * Created by nnnyy on 2018-08-10.
  */
-"use strict"
 
 var RETRY_INTERVAL = 4000;
 var ConnectStateInfo = function() {
@@ -66,6 +65,14 @@ function init( socket, stringTable ) {
     setKeyEvent();
     setBtnEvent();
 
+    $('#slider').bxSlider({
+        auto: true,
+        speed: 500,
+        pause: 7000,
+        mode:'fade',
+        autoControls: false,
+        pager: false
+    });
 }
 
 var GlobalValue = function() {
@@ -1393,7 +1400,7 @@ function logout() {
 }
 
 function stopVideo() {
-    $('#video-player')[0].contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+    //$('#video-player')[0].contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
 }
 
 function searchWebRoot( socket, query, isBroadcast ) {
