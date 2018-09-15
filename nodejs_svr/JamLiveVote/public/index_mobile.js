@@ -343,9 +343,9 @@ function getGradeImage( auth, isbaned ) {
 
     switch(auth){
         case 0:
-            return "/images/0star.png";
+            return "/images/star0.png";
         case 1:
-            return "/images/star.png";
+            return "/images/star1.png";
         case 2:
             return "/images/star2.png";
         case 3:
@@ -365,7 +365,7 @@ function getGradeImage( auth, isbaned ) {
         case 10:
             return "/images/star10.png";
         case 11:
-            return "/images/star9.png";
+            return "/images/star11.png";
         case 50:
             return "/images/admin.png";
         case 99:
@@ -376,7 +376,6 @@ function getGradeImage( auth, isbaned ) {
 
     return "";
 }
-
 
 function setVisible(elem, visible) {
     elem.css('display', visible ? 'inline-block' : 'none');
