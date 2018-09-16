@@ -92,6 +92,7 @@ $top-bottom-margin: 5px;
 
     #quiz-timetable-icon {
       height: calc( #{$top-height} - 20px );
+      cursor: pointer;
     }
   }
 

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+</head>
+<body>
+<div id="root" style="text-align: center">
+    <div>
+        <h2>오늘의 퀴즈쇼</h2>
+    </div>
+    <div style="margin: 0 auto;">
+        <table style="border: 1px solid black; border-spacing: 0px; margin: 0 auto;">
+            <%
+            for( var i = 0 ; i < tableList.length ; ++i ) {
+                %>
+              <tr style="border: 1px solid black;">
+                  <td style="border: 1px solid black;padding: 4px;"><%-tableList[i].name%></td>
+                  <td style="border: 1px solid black;padding: 4px;"><%-tableList[i].starttime%></td>
+              </tr>
+            <%
+            }
+             %>
+        </table>
+    </div>
+</div>
+</body>
+</html>

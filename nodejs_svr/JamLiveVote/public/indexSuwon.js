@@ -913,6 +913,7 @@ function setSocketEvent( socket ) {
     socket.on('ap', onAP);
     socket.on('go', onGo);
     socket.on('chosung', chosungGameMan.onPacket);
+    socket.on('get-timetable', onGetTimeTable);
     socket.on('reconn-server', function(data) {
         if( data.reason == 'baned') {
             alert('이용 자격이 없음이 확인되어 영구밴 당하셨습니다.');
@@ -1124,6 +1125,7 @@ function setBtnEvent() {
     });
 
     $('#btn-clear-chat').click(onClearChat);
+    $('#quiz-timetable-icon').click(onBtnTimeTable);
 
     $('#btn-serv-1').click(onBtnGoServ1);
     $('#btn-serv-2').click(onBtnGoServ2);
@@ -1233,6 +1235,18 @@ function onClearChat(e) {
     chatObj.clearChat();
 }
 
+function onBtnTimeTable(e) {
+    var winHeight = document.body.clientHeight;	// 현재창의 높이
+    var winWidth = document.body.clientWidth;	// 현재창의 너비
+    var winX = window.screenLeft;	// 현재창의 x좌표
+    var winY = window.screenTop;	// 현재창의 y좌표
+    var popWidth = 400;
+    var popHeight = 300;
+    var popX = winX + (winWidth - popWidth)/2;
+    var popY = winY + (winHeight - popHeight)/2;
+    window.open('/timetable','popup','width='+popWidth+',height='+popHeight+',top=' + popY + ',left=' + popX);
+}
+
 function onChat( data ) {
     if( data.mode == "vote" ) {
         if( data.isLogin ) {
@@ -1299,6 +1313,10 @@ function onMyID(data) {
 
 function onUpdateInfo(data) {
 
+}
+
+function onGetTimeTable(packet) {
+    window.open('/timetable','popup','width='+200+',height='+400+'');
 }
 
 var animOpacityTimerID = -1;

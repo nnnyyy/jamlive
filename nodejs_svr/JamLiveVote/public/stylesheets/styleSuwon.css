@@ -66,6 +66,7 @@ body {
 }
 #area-top #area-top-left #quiz-timetable-icon {
   height: calc( 65px - 20px );
+  cursor: pointer;
 }
 #area-top #area-top-center {
   position: absolute;

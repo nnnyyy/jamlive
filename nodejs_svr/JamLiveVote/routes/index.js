@@ -23,6 +23,12 @@ router.get('/kin', function(req,res, next) {
   })
 })
 
+router.get('/timetable', function(req, res , next) {
+    dbhelper.getTodayQuizList(function(result) {
+        res.render('timetable', result );
+    })
+})
+
 router.get('/jp', function(req, res, next) {
   res.cookie('lang', 'jp');
   res.redirect('/');

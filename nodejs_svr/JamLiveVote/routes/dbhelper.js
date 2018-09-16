@@ -506,3 +506,20 @@ exports.insertLike = function( id, cb ) {
         if( cb ) cb({ret: -1});
     }
 }
+
+exports.getTodayQuizList = function( cb ) {
+    try {
+        dbpool.query("CALL getTodayQuizShow()", function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0, tableList: rows[0] });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getBanCnt');
+        cb({ret: -1});
+    }
+}
