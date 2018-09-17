@@ -27,7 +27,7 @@ body {
   line-height: 40px;
 }
 #vote-list #vote-list-inner {
-  height: 510px;
+  height: 310px;
   overflow-y: auto;
 }
 #vote-list #btn-vote-list-close {
