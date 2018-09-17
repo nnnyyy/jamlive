@@ -15,7 +15,7 @@ body {
 #vote-list {
   position: fixed;
   width: 400px;
-  height: 600px;
+  height: 400px;
   background-color: #ffffff;
   left: calc( (100vw - 400px) / 2 );
   z-index: 99999;

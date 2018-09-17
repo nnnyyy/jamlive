@@ -30,7 +30,7 @@ $vote-list-width: 400px;
 #vote-list {
   position: fixed;
   width: $vote-list-width;
-  height: 600px;
+  height: 400px;
   background-color: $color-main-back;
   left: calc( (100vw - #{$vote-list-width}) / 2 );
   z-index: 99999;
