@@ -1582,7 +1582,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
     if( $('#cb_s5').is(':checked')) {
         var where = $('input[name=radio_s5]:checked').attr('value');
         json.searchDaum = true;
-        json.whereSearchDaum = where;
+        searchObj.whereSearchDaum = where;
         //searchWebGoogle(query, false, where);
         searched = true;
     } //  구글
