@@ -11,6 +11,7 @@ var quizAnalysis = require('./quizAnalysis');
 var chatMan = require('./modules/chatMan');
 var Chosung = require('./modules/chosungGame');
 var KinMan = require('./modules/KinManager');
+const VoteMan = require('./modules/voteManager');
 
 var config = require('../config');
 
@@ -139,6 +140,7 @@ var ServerMan = function() {
     this.nextQuizShowdata = {};
 
     this.autoQuizForcedOff = false;
+    this.voteManager = new VoteMan();
 }
 
 var servman = new ServerMan();
@@ -248,6 +250,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('go', onGo);
     socket.on('server-info-reload', onServerInfoReload);
     socket.on('ban-reload', onBanReload);
+    socket.on('get-vote-list', onGetVoteList);
 }
 
 
@@ -961,6 +964,7 @@ function onSockVote(data) {
         }
 
         if( client.isClickable() ) {
+            servman.voteManager.vote(client, data.idx);
             servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
 
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
@@ -1160,6 +1164,14 @@ function onBanReload(data) {
     }
 
     socketToCenterServer.emit('ban-reload', {});
+}
+
+function onGetVoteList(packet) {
+    var client = servman.getClient(this.id);
+    if( !client ) return;
+
+    const list = servman.voteManager.getVoteList();
+    this.emit('get-vote-list', list);
 }
 
 module.exports = servman;

@@ -12,6 +12,32 @@ body {
   font-family: 'Nanum Barun Gothic', sans-serif;
 }
 
+#vote-list {
+  position: fixed;
+  width: 400px;
+  height: 600px;
+  background-color: #ffffff;
+  left: calc( (100vw - 400px) / 2 );
+  z-index: 99999;
+  text-align: center;
+  border: 2px dotted black;
+}
+#vote-list .top-bar {
+  height: 40px;
+  line-height: 40px;
+}
+#vote-list #vote-list-inner {
+  height: 510px;
+  overflow-y: auto;
+}
+#vote-list #btn-vote-list-close {
+  cursor: pointer;
+  height: 50px;
+  line-height: 50px;
+  width: 100%;
+  background-color: green;
+}
+
 #area-top {
   background-color: #ffffff;
   width: 100%;
@@ -517,6 +543,14 @@ body {
 #area-article #article-right #chat-wnd-root [type="top-menu"] vtitle {
   margin: 0 0 0 25px;
 }
+#area-article #article-right #chat-wnd-root [type="top-menu"] #btn-get-vote-list {
+  float: right;
+  margin-right: 14px;
+  font-size: 16px;
+  height: 46px;
+  line-height: 46px;
+  cursor: pointer;
+}
 #area-article #article-right #chat-wnd-root [type="top-menu"] #btn-clear-chat {
   float: right;
   margin-right: 14px;
@@ -805,6 +839,10 @@ title-prefix.cb6 {
 .kin_style {
   color: #006600;
   font-weight: bold;
+}
+
+.btn-ban-list-ban {
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=styleSuwon.css.map */

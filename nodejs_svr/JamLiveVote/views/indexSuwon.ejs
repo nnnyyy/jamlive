@@ -44,6 +44,24 @@
 <script src="/socket.io/socket.io.js"></script>
 <body>
 <div id="root">
+    <div id="vote-list">
+        <div class="top-bar">
+            투표자
+        </div>
+        <div id="vote-list-inner">
+            <table style="width: 100%">
+                <tr>
+                    <td>닉네임</td>
+                    <td>투표번호</td>
+                    <td>시간</td>
+                    <td>액션</td>
+                </tr>
+            </table>
+        </div>
+        <div id="btn-vote-list-close">
+            닫기
+        </div>
+    </div>
     <div id="area-top">
         <div id="area-top-left">
             <div id="logo">
@@ -240,6 +258,9 @@
                     <vtitle><%= __('chatting-title')%></vtitle>
                     <div id="btn-clear-chat">
                         <%= __('clear-chat')%>
+                    </div>
+                    <div id="btn-get-vote-list">
+                        투표한 사람 보기
                     </div>
                 </div>
                 <div id="chat">

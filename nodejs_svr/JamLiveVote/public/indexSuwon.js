@@ -56,6 +56,8 @@ function init( socket, stringTable ) {
     var tCur = new Date();
     localStorage.setItem('refreshtime', tCur.toString());
 
+    setVisibleBlock($('#vote-list'), false);
+
     searchObj.init();
     hintObj.init();
     chatObj.init();
@@ -899,6 +901,7 @@ function setSocketEvent( socket ) {
     socket.on('serv_msg', onServMsg);
     socket.on('myid', onMyID);
     socket.on('update-info', onUpdateInfo);
+    socket.on('get-vote-list', onGetVoteListResult);
     socket.on('vote_data', voteObj.onVoteData);
     socket.on('quiz', quizObj.onQuiz);
     socket.on('quizret', quizObj.onQuizRet);
@@ -1123,6 +1126,8 @@ function setBtnEvent() {
     });
 
     $('#btn-clear-chat').click(onClearChat);
+    $('#btn-get-vote-list').click(onGetVoteList);
+    $('#btn-vote-list-close').click(onBtnVoteListClose);
     $('#quiz-timetable-icon').click(onBtnTimeTable);
 
     $('#btn-serv-1').click(onBtnGoServ1);
@@ -1137,6 +1142,8 @@ function setBtnEvent() {
     $('#btn-serv-10').click(onBtnGoServ10);
     $('#btn-serv-11').click(onBtnGoServ11);
     $('#btn-serv-12').click(onBtnGoServ12);
+
+    $(document).on('click', '.btn-ban-list-ban', onBtnBanListBtn);
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
@@ -1208,6 +1215,16 @@ function onBtnGoServ10(e) { G.socket.emit('go', {servidx: '10'}) }
 function onBtnGoServ11(e) { G.socket.emit('go', {servidx: '11'}) }
 function onBtnGoServ12(e) { G.socket.emit('go', {servidx: '12'}) }
 
+function onBtnBanListBtn(e) {
+    e.stopPropagation();
+
+    var nick = $(this).attr('nick');
+
+    if( confirm( nick + "을(를) 밴 하시겠습니까?") ) {
+        G.socket.emit('ban', {sockid: '', nick: nick});
+    }
+}
+
 function onBtnSettings(e) {
     e.stopPropagation();
     var settingsWnd = $('wnd[role="settings"]');
@@ -1231,6 +1248,32 @@ function onBtnHelp(e) {
 
 function onClearChat(e) {
     chatObj.clearChat();
+}
+
+function onGetVoteList(e) {
+   G.socket.emit('get-vote-list', {});
+}
+
+function onGetVoteListResult(packet) {
+
+    setVisibleBlock($('#vote-list'), true);
+
+    var desc = '';
+    for( var i = 0 ; i < packet.length ; ++i ) {
+        var d = new Date(packet[i].time);
+        desc += '<tr>' +
+                '<td>'+ packet[i].nick + '</td>' +
+            '<td style="color:'+ color[packet[i].voteIdx] +'; font-weight: bold;">'+ (packet[i].voteIdx+1) + '번' + '</td>' +
+            '<td>'+ d.toTimeString().split(' ')[0] + '</td>' +
+            '<td class="btn-ban-list-ban" nick="'+ packet[i].nick +'">밴하기</td></tr>';
+    }
+
+    var html = '<table style="width: 100%;"><tr><td>닉네임</td><td>투표번호</td><td>시간</td><td>액션</td></tr>' + desc + '</table>';
+    $('#vote-list-inner').html(html);
+}
+
+function onBtnVoteListClose(e) {
+    setVisibleBlock($('#vote-list'), false);
 }
 
 function onBtnTimeTable(e) {
