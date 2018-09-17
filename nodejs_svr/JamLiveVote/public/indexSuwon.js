@@ -1271,7 +1271,7 @@ function onGetVoteListResult(packet) {
         var d = new Date(packet[i].time);
         desc += '<tr>' +
                 '<td>'+ packet[i].nick + '</td>' +
-            '<td style="color:'+ color[packet[i].voteIdx] +'; font-weight: bold;">'+ (packet[i].voteIdx+1) + '번' + '</td>' +
+            '<td style="color:'+ color[packet[i].voteIdx] +'; font-weight: bold;">'+ (Number(packet[i].voteIdx) + 1) + '번' + '</td>' +
             '<td>'+ d.toTimeString().split(' ')[0] + '</td>' +
             '<td class="btn-ban-list-ban" nick="'+ packet[i].nick +'">밴하기</td>' +
             '<td class="btn-ban-list-like" nick="'+ packet[i].nick +'">칭찬하기</td></tr>';
