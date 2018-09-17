@@ -1147,6 +1147,10 @@ function setBtnEvent() {
     $('#btn-serv-10').click(onBtnGoServ10);
     $('#btn-serv-11').click(onBtnGoServ11);
     $('#btn-serv-12').click(onBtnGoServ12);
+    $('#btn-serv-13').click(onBtnGoServ13);
+    $('#btn-serv-14').click(onBtnGoServ14);
+    $('#btn-serv-15').click(onBtnGoServ15);
+    $('#btn-serv-16').click(onBtnGoServ16);
 
     $(document).on('click', '.btn-ban-list-ban', onBtnBanListBtn);
     $(document).on('click', '.btn-ban-list-like', onBtnLikeListBtn);
@@ -1220,6 +1224,10 @@ function onBtnGoServ9(e) { G.socket.emit('go', {servidx: '9'}) }
 function onBtnGoServ10(e) { G.socket.emit('go', {servidx: '10'}) }
 function onBtnGoServ11(e) { G.socket.emit('go', {servidx: '11'}) }
 function onBtnGoServ12(e) { G.socket.emit('go', {servidx: '12'}) }
+function onBtnGoServ13(e) { G.socket.emit('go', {servidx: '13'}) }
+function onBtnGoServ14(e) { G.socket.emit('go', {servidx: '14'}) }
+function onBtnGoServ15(e) { G.socket.emit('go', {servidx: '15'}) }
+function onBtnGoServ16(e) { G.socket.emit('go', {servidx: '16'}) }
 
 function onBtnBanListBtn(e) {
     e.stopPropagation();

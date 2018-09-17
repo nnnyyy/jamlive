@@ -37,6 +37,10 @@ servnameConvert.set('9', '서버9');
 servnameConvert.set('10', '서버10');
 servnameConvert.set('11', '서버11');
 servnameConvert.set('12', '서버12');
+servnameConvert.set('13', '서버13');
+servnameConvert.set('14', '서버14');
+servnameConvert.set('15', '서버15');
+servnameConvert.set('16', '서버16');
 
 var centerConnected = false;
 
