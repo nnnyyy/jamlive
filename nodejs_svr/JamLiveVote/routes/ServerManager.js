@@ -12,6 +12,7 @@ var chatMan = require('./modules/chatMan');
 var Chosung = require('./modules/chosungGame');
 var KinMan = require('./modules/KinManager');
 const VoteMan = require('./modules/voteManager');
+const WebSearchEngine = require('./modules/webSearchEngine');
 
 var config = require('../config');
 
@@ -141,6 +142,7 @@ var ServerMan = function() {
 
     this.autoQuizForcedOff = false;
     this.voteManager = new VoteMan();
+    this.webSearchMan = new WebSearchEngine(this);
 }
 
 var servman = new ServerMan();
@@ -795,13 +797,36 @@ function insertLike( toLikeClient, client ) {
 
 function onSockSearch(data) {
     try {
+        const tCur = new Date();
         var client = servman.getClient(this.id);
         if( !client ) return;
         var socket = client.socket;
-        var logined = socket.handshake.session.username ? true : false;
+        var logined = client.isLogined();
+        if( !logined )
+        {
+            servman.sendServerMsg(client.socket, '검색기능은 로그인 후 사용 가능합니다.');
+            return;
+        }
 
-        if( servman.isLiveQuizTime() ) {
-            client.incActivePoint( 3 );
+        var tMax = 10000;
+        if( client.auth <= 1 ) tMax = 10000;
+        else if( client.auth >= 2 && client.auth < 5 ) tMax = 3000;
+        else tMax = 500;
+
+        if( tCur - client.tLastSearch < tMax ) {
+            servman.sendServerMsg(client.socket, `${( tMax - ( tCur - client.tLastSearch)) / 1000 }초 후에 다시 시도해주세요.`);
+            return;
+        }
+
+        if( data.searchDic )
+            servman.webSearchMan.searchDic(data.msg, client);
+        if( data.searchNaverMain )
+            servman.webSearchMan.searchNaverMain(data.msg, client);
+        if( data.searchDaum )
+            servman.webSearchMan.searchDaum(data.msg, client);
+
+        if( client.auth < 1 && servman.isLiveQuizTime() ) {
+            client.incActivePoint( 60 );
         }
 
         client.tLastSearch = new Date();

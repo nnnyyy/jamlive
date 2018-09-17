@@ -928,6 +928,11 @@ function setSocketEvent( socket ) {
         }
         return;
     });
+
+
+    socket.on('search-dic', onSearchDic);
+    socket.on('search-naver-main', onSearchNaverMain);
+    socket.on('search-daum', onSearchDaumGoogle);
 }
 
 function setKeyEvent() {
@@ -1369,6 +1374,49 @@ function onGetTimeTable(packet) {
     window.open('/timetable','popup','width='+200+',height='+400+'');
 }
 
+function onSearchDic(data) {
+    try {
+        if( data.data ) {
+            data.data = data.data.slice(0,2);
+        }
+
+        if( data.hdata ) {
+            data.hdata = data.hdata.slice(0,2);
+        }
+
+        if( data.edata ) {
+            data.edata = data.edata.slice(0,2);
+        }
+        setSearchRet(data.data, true, searchObj.whereSearchDic, '[국어사전]', 'krdic');
+        setSearchRet(data.hdata, true, searchObj.whereSearchDic, '[한자사전]', 'hdic');
+        setSearchRet(data.edata, true, searchObj.whereSearchDic, '[영어사전]', 'edic');
+    }catch( e ) {
+        console.log(e);
+        clearTimeout(searchObj.timerID);
+        searchObj.timerID = setTimeout(function() {
+            searchObj.restoreSearch();
+        }, 13000);
+    }
+}
+
+function onSearchNaverMain(data) {
+    var itemMap = procSearchRet(data);
+    var keys = itemMap.keys();
+    console.log(data);
+    for( var i = 0 ; i < keys.length ; ++i ) {
+        var key = keys[i];
+        var items = itemMap.get(key);
+        var isShow = getShow(key);
+        if( !isShow ) return;
+        var where = getWhere(key);
+        setSearchRet(items, false, where, search_title_prefix[0], search_title_prefix_style_name[0]);
+    }
+}
+
+function onSearchDaumGoogle(data) {
+    setSearchRet(data, true, searchObj.whereSearchDaum, '[다음(구글)]', "cb6");
+}
+
 var animOpacityTimerID = -1;
 function showAdminMsg(msg) {
     var obj = $('.admin_msg');
@@ -1489,7 +1537,6 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
     searchObj.initSearch();
     var nick = getNickName();
-    socket.emit('search', {nickname: nick, msg: query, isBroadcast : isBroadcast });
 
     var queries = query.trim().split(' ');
     searchObj.lastSearchQuery = query;
@@ -1518,20 +1565,23 @@ function searchWebRoot( socket, query, isBroadcast ) {
         chinese = true;
     }
 
+    var json = {nickname: nick, msg: query, isBroadcast : isBroadcast, searchDic: chinese, searchNaverMain: true }
+
     var searched = false;
-    searchWeb(0, query);
     searchWeb(4, query);
     searched = true;
 
     if( $('#cb_s5').is(':checked')) {
         var where = $('input[name=radio_s5]:checked').attr('value');
-        searchWebGoogle(query, false, where);
+        json.searchDaum = true;
+        json.whereSearchDaum = where;
+        //searchWebGoogle(query, false, where);
         searched = true;
     } //  구글
 
     if( chinese ) {
         var where = $('input[name=radio_s7]:checked').attr('value');
-        searchWebNaver(chienseQuery, chineseSubType, where);
+        searchObj.whereSearchDic = where;
         searched = true;
     }
 
@@ -1549,6 +1599,9 @@ function searchWebRoot( socket, query, isBroadcast ) {
         //$('.search_article').html(htmlBackup);
         $('#sd_ret').css('display','none');
         $('#sd_ads').css('display','inline-block');
+    }
+    else {
+        socket.emit('search', json);
     }
 }
 

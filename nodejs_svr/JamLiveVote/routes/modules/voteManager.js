@@ -15,7 +15,7 @@ class voteManager {
             if( !client ) return;
 
             const item = {clientid: client.socket.id, id: client.getUserId(), nick: client.nick, voteIdx: idx, time: new Date() };
-            if( this.recentVote.length >= 30 ) {
+            if( this.recentVote.length >= 40 ) {
                 this.recentVote.shift();
             }
             this.recentVote.push(item);
