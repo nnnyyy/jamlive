@@ -806,7 +806,7 @@ $top-bottom-margin: 5px;
   font-size: 17px;
   opacity: 0;
   overflow: hidden;
-  z-index: 101;
+  z-index: 199999;
 }
 
 .opacity {
@@ -1030,5 +1030,9 @@ title-prefix.cb6 {
 }
 
 .btn-ban-list-ban {
+  cursor: pointer;
+}
+
+.btn-ban-list-like {
   cursor: pointer;
 }

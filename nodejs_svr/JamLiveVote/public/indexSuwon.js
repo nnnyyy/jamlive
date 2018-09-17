@@ -1144,6 +1144,7 @@ function setBtnEvent() {
     $('#btn-serv-12').click(onBtnGoServ12);
 
     $(document).on('click', '.btn-ban-list-ban', onBtnBanListBtn);
+    $(document).on('click', '.btn-ban-list-like', onBtnLikeListBtn);
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
@@ -1225,6 +1226,13 @@ function onBtnBanListBtn(e) {
     }
 }
 
+function onBtnLikeListBtn(e) {
+    e.stopPropagation();
+
+    var nick = $(this).attr('nick');
+    G.socket.emit('like', {sockid: '', nick: nick });
+}
+
 function onBtnSettings(e) {
     e.stopPropagation();
     var settingsWnd = $('wnd[role="settings"]');
@@ -1265,10 +1273,11 @@ function onGetVoteListResult(packet) {
                 '<td>'+ packet[i].nick + '</td>' +
             '<td style="color:'+ color[packet[i].voteIdx] +'; font-weight: bold;">'+ (packet[i].voteIdx+1) + '번' + '</td>' +
             '<td>'+ d.toTimeString().split(' ')[0] + '</td>' +
-            '<td class="btn-ban-list-ban" nick="'+ packet[i].nick +'">밴하기</td></tr>';
+            '<td class="btn-ban-list-ban" nick="'+ packet[i].nick +'">밴하기</td>' +
+            '<td class="btn-ban-list-like" nick="'+ packet[i].nick +'">칭찬하기</td></tr>';
     }
 
-    var html = '<table style="width: 100%;"><tr><td>닉네임</td><td>투표번호</td><td>시간</td><td>액션</td></tr>' + desc + '</table>';
+    var html = '<table style="width: 100%;"><tr><td>닉네임</td><td>투표번호</td><td>시간</td><td>액션</td><td>액션</td></tr>' + desc + '</table>';
     $('#vote-list-inner').html(html);
 }
 
