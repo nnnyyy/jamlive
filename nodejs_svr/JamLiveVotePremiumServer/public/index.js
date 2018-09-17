@@ -102,7 +102,7 @@ function onVoteData( packet ) {
 
     var totalVote = [0,0,0];
     var totalCnt = 0;
-    for( var i = 0 ; i < 12 ; ++i ) {
+    for( var i = 0 ; i < 16 ; ++i ) {
         var data = [0,0,0];
         var cnt = 0;
         var name = '----';
@@ -120,9 +120,9 @@ function onVoteData( packet ) {
                 totalVote[2] += data[2];
             }
 
-            totalCnt += cnt;
             cnt = item.cnt;
             name = item.name;
+            totalCnt += cnt;
         }
 
         $('.user-cnt' + i).text(cnt);
