@@ -14,4 +14,14 @@ router.post('/msg', function( req, res, next) {
     serverMan.broadcastMsg(req.body.msg);
 })
 
+router.post('/banbynick', function(req, res, next) {
+    const serverMan = req.serverMan;
+    serverMan.permanentBanByNick(req.body.nick, res);
+})
+
+router.post('/banbyip', function(req, res, next) {
+    const serverMan = req.serverMan;
+    serverMan.permanentBanByIp(req.body.ip, res);
+})
+
 module.exports = router;

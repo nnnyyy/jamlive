@@ -25,4 +25,20 @@ function init() {
         ajaxHelper.postJson('/msg', { msg: msg }, null);
         $('#ip-msg').val('');
     })
+
+    $('#btn-permanent-ban-by-nick').click(function(e) {
+        var msg = $('#ip-ban-nick').val();
+        if( msg.trim() == '' ) return;
+        ajaxHelper.postJson('/banbynick', { nick: msg.trim() }, function(result) {
+            alert(result.ret);
+        });
+    })
+
+    $('#btn-permanent-ban-by-ip').click(function(e) {
+        var msg = $('#ip-ban-ip').val();
+        if( msg.trim() == '' ) return;
+        ajaxHelper.postJson('/banbyip', { ip: msg.trim() }, function(result) {
+            alert(result.ret);
+        });
+    })
 }

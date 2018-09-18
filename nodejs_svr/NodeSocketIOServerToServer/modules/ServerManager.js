@@ -181,6 +181,7 @@ class ServerManager {
 
     banReload() {
         try {
+            console.log('-- ban Reload --');
             this.voteServMap.forEach(function(value, key){
                 const distServer = value;
                 if( distServer && distServer.socket ) {
@@ -190,6 +191,26 @@ class ServerManager {
         }catch(e) {
             console.log(e);
         }
+    }
+
+    permanentBanByNick(nick, res) {
+        const servman = this;
+        dbhelper.updatePermanentBanByNick(nick, function(result) {
+            if( result.ret == 0 )
+                servman.banReload();
+
+            res.json(result);
+        });
+    }
+
+    permanentBanByIp(ip, res) {
+        const servman = this;
+        dbhelper.updatePermanentBanByIp(ip, function(result) {
+            if( result.ret == 0 )
+                servman.banReload();
+
+            res.json(result);
+        });
     }
 }
 
