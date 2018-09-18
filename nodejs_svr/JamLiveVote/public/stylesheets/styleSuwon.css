@@ -739,19 +739,20 @@ wnd[role="settings"] .ret_cnt_slider .ui-slider-handle {
 
 .user-menu {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
   width: 400px;
   margin-left: -200px;
-  margin-top: -150px;
+  margin-top: 25px;
   padding: 20px;
-  background-color: #1b3440;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #393939;
   text-align: center;
   font-size: 17px;
   overflow: hidden;
   border-radius: 10px;
-  z-index: 104;
+  border: 2px solid #393939;
+  z-index: 29999;
 }
 .user-menu div[type="name"] {
   height: 50px;
@@ -765,7 +766,7 @@ wnd[role="settings"] .ret_cnt_slider .ui-slider-handle {
   height: 40px;
   line-height: 40px;
   background-color: #ffffff;
-  color: #1b3440;
+  color: #393939;
   margin: 4px auto;
   border-radius: 10px;
 }

@@ -925,19 +925,20 @@ wnd[role="settings"] {
 
 .user-menu{
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 50%;
   width: 400px;
   margin-left: -200px;
-  margin-top: -150px;
+  margin-top: 25px;
   padding: 20px;
-  background-color: $primary-color;
-  color: $main-font-color;
+  background-color: $color-main-back;
+  color: $color-main-font;
   text-align: center;
   font-size: 17px;
   overflow: hidden;
   border-radius: 10px;
-  z-index: 104;
+  border: 2px solid $color-main-font;
+  z-index: 29999;
 
   div[type="name"] {
     height: 50px;
@@ -950,8 +951,8 @@ wnd[role="settings"] {
       width: 200px;
       height: 40px;
       line-height: 40px;
-      background-color: $main-font-color;
-      color: $primary-color;
+      background-color: $color-main-back;
+      color: $color-main-font;
       margin: 4px auto;
       border-radius: 10px;
     }
