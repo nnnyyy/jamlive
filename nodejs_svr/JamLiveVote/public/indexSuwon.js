@@ -933,6 +933,7 @@ function setSocketEvent( socket ) {
     socket.on('search-dic', onSearchDic);
     socket.on('search-naver-main', onSearchNaverMain);
     socket.on('search-daum', onSearchDaumGoogle);
+    socket.on('search-image', onSearchImage);
 }
 
 function setKeyEvent() {
@@ -1425,6 +1426,10 @@ function onSearchDaumGoogle(data) {
     setSearchRet(data, true, searchObj.whereSearchDaum, '[다음(구글)]', "cb6");
 }
 
+function onSearchImage(data) {
+    setSearchRetImage(data, true, searchObj.whereSearchImage);
+}
+
 var animOpacityTimerID = -1;
 function showAdminMsg(msg) {
     var obj = $('.admin_msg');
@@ -1576,14 +1581,18 @@ function searchWebRoot( socket, query, isBroadcast ) {
     var json = {nickname: nick, msg: query, isBroadcast : isBroadcast, searchDic: chinese, searchNaverMain: true }
 
     var searched = false;
-    searchWeb(4, query);
-    searched = true;
+
+    if( $('#cb_s4').is(':checked')) {
+        var where = $('input[name=radio_s4]:checked').attr('value');
+        json.searchImage = true;
+        searchObj.whereSearchImage = where;
+        searched = true;
+    } //  구글
 
     if( $('#cb_s5').is(':checked')) {
         var where = $('input[name=radio_s5]:checked').attr('value');
         json.searchDaum = true;
         searchObj.whereSearchDaum = where;
-        //searchWebGoogle(query, false, where);
         searched = true;
     } //  구글
 
@@ -1951,7 +1960,7 @@ function setSearchDB(data, where) {
 }
 
 
-function setSearchRetImage(items, first) {
+function setSearchRetImage(items, first, where) {
     var html = '';
     var div = '<div class="search_ret_root"><div class="search_ret_desc">';
     for( var i = 0 ; i < items.length ; ++i) {
@@ -1966,7 +1975,7 @@ function setSearchRetImage(items, first) {
         html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
     }
 
-    getSearchArea(1).prepend(html);
+    getSearchArea(where).prepend(html);
 
     clearTimeout(searchObj.timerID);
     searchObj.timerID = setTimeout(function() {

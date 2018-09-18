@@ -14,6 +14,7 @@ function isArray(what) {
 class WebSearchEngine {
     constructor(servman) {
         this.servman = servman;
+        this.req_cnt = 0;
     }
 
     searchDic( query, client ) {
@@ -254,6 +255,61 @@ class WebSearchEngine {
 
             data.push({title: title, description: desc});
         })
+    }
+
+    searchImage( query, client ) {
+        const wse = this;
+        const PROTOCOL = 'search-image';
+
+        query = query.trim();
+
+        var sType = 'image';
+        var cached = this.servman.getCachedSearchResult(sType, query);
+        if( cached ) {
+            client.socket.emit(PROTOCOL, cached);
+            return;
+        }
+
+        var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query) + '&sort=sim';
+        var clientids = ['kChODmZtLjX7dHIAzwfE', 'j96P2WA6Gayk3krOxehd', '_iBtKrpgLolUtJhXPDUg', 'Til0PbZbqubnmFNgTvGL', '4NRIgHcJlNKT6R3gTvyv', 'ooCDH_d8imisrpnUcp1d', 'VZ9vuXcJh36t7IuDAeCW','zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl', 'NhTno6hxnZpTGZUPffvI', 'x8DQ2xYWaeQqVGDZzdL4'];
+        var secrets = ['eOlQyyDe_6', 'RRnTqf23kL', 'MleZciknEa', 'eOSv5IigLL', 'P4wN5u9RXR', 'TfQpAeDrwO', 'cP_ecRsKYR','kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G', 'foM4QTYU9U', 'vPCM314sAS'];
+        var modcnt = clientids.length;
+
+
+        var clientid = clientids[this.req_cnt%modcnt];
+        var secret = secrets[this.req_cnt%modcnt];
+        this.req_cnt++;
+
+        var options = {
+            url: api_url,
+            headers: {'X-Naver-Client-Id':clientid, 'X-Naver-Client-Secret': secret}
+        };
+        try {
+            request.get(options, function (error, response, body) {
+                if (!error && response.statusCode == 200 && body) {
+                    try {
+                        var data = JSON.parse(body).items;
+                        if( isArray(data) && data.length > 0 ) {
+                            data = data.slice(0,8);
+                            wse.servman.setCachedSearchResult(sType, query, data);
+                            client.socket.emit(PROTOCOL, data);
+                        }
+                        else {
+                            client.socket.emit(PROTOCOL, []);
+                        }
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
+                } else {
+                    //console.log('searchex failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                    client.socket.emit(PROTOCOL, []);
+                }
+            });
+        }
+        catch(e){
+            client.socket.emit(PROTOCOL, []);
+        }
     }
 }
 
