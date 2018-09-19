@@ -23,6 +23,10 @@ a {
 }
 
 .center_wnd {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 13px;
   text-align: center;
 }
 
@@ -39,48 +43,14 @@ a {
   color: #393939;
 }
 
-.btn-group {
-  width: 800px;
-  height: 60px;
-  margin: 0 auto;
-}
-
-.btn-group-n {
-  width: 653px;
-  height: 60px;
-  margin: 0 auto;
-}
-
-.btn-group-n2 {
-  width: 653px;
-  height: 110px;
-  margin: 0 auto;
-}
-
 .btn_box {
-  float: left;
-  width: 160px;
-  height: 40px;
-  line-height: 40px;
-  background-color: #393939;
-  color: #ffffff;
-  cursor: pointer;
-  margin: 10px 20px auto;
-}
-
-.btn_box2 {
   width: 320px;
   height: 40px;
   line-height: 40px;
   background-color: #393939;
   color: #ffffff;
   cursor: pointer;
-  margin: 0px auto;
-  font-size: 20px;
-}
-.btn_box2 a {
-  text-decoration: none;
-  color: #ffffff;
+  margin: 10px 20px auto;
 }
 
 .admin_msg {
@@ -109,4 +79,4 @@ a {
   transition: none !important;
 }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=styleMobile.css.map */

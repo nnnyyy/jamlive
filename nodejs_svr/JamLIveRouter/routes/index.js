@@ -51,6 +51,10 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
+router.get('/m', function(req, res, next) {
+  res.render('indexMobile');
+});
+
 router.get('/new', function(req, res, next) {
   res.render('index');
 });

@@ -35,12 +35,7 @@ a {
   height: 100%;
 }
 
-.center_wnd {
-  position: absolute;
-  width: 100%;
-  top: 0;
-  left: 0;
-  margin-top: 15px;
+.center_wnd {  ;
   text-align: center;
 }
 
@@ -57,14 +52,49 @@ a {
   color: $main-font-color;
 }
 
+.btn-group {
+  width:800px;
+  height:60px;
+  margin: 0 auto;
+}
+
+.btn-group-n {
+  width:653px;
+  height:60px;
+  margin: 0 auto;
+}
+
+.btn-group-n2 {
+  width:653px;
+  height:110px;
+  margin: 0 auto;
+}
+
 .btn_box {
+  float: left;
+  width: 160px;
+  height: 40px;
+  line-height: 40px;
+  background-color: $main-font-color;
+  color: $primary-color;
+  cursor: pointer;
+  margin: 10px 20px auto;
+}
+
+.btn_box2 {
   width: 320px;
   height: 40px;
   line-height: 40px;
   background-color: $main-font-color;
   color: $primary-color;
   cursor: pointer;
-  margin: 10px auto;
+  margin: 0px auto;
+  font-size: 20px;
+
+  a {
+    text-decoration: none;
+    color: $primary-color;
+  }
 }
 
 .admin_msg {
