@@ -24,8 +24,22 @@ var socketToCenterServer = ioclient.connect('http://localhost:7777', {reconnect:
 
 var servInfoMan = new HashMap();
 var servnameConvert = new HashMap();
-
-
+servnameConvert.set('1', '서버1');
+servnameConvert.set('2', '서버2');
+servnameConvert.set('3', '서버3');
+servnameConvert.set('4', '서버4');
+servnameConvert.set('5', '서버5');
+servnameConvert.set('6', '서버6');
+servnameConvert.set('7', '서버7');
+servnameConvert.set('8', '서버8');
+servnameConvert.set('9', '서버9');
+servnameConvert.set('10', '서버10');
+servnameConvert.set('11', '서버11');
+servnameConvert.set('12', '서버12');
+servnameConvert.set('13', '서버13');
+servnameConvert.set('14', '서버14');
+servnameConvert.set('15', '서버15');
+servnameConvert.set('16', '서버16');
 
 var centerConnected = false;
 
