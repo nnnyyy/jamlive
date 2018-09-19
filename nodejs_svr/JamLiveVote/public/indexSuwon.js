@@ -1396,6 +1396,7 @@ function onSearchDic(data) {
         if( data.edata ) {
             data.edata = data.edata.slice(0,2);
         }
+
         setSearchRet(data.data, true, searchObj.whereSearchDic, '[국어사전]', 'krdic');
         setSearchRet(data.hdata, true, searchObj.whereSearchDic, '[한자사전]', 'hdic');
         setSearchRet(data.edata, true, searchObj.whereSearchDic, '[영어사전]', 'edic');
@@ -1628,7 +1629,7 @@ function showKin(datalist) {
     var kinlist = voteObj.kinlist;
 
     if( $('#kindata').length )
-        $('#kindata').clear();
+        $('#kindata').empty();
 
     if( kinlist.length > 0 ) {
         /*

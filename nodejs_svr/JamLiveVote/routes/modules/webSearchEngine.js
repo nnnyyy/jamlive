@@ -98,7 +98,7 @@ class WebSearchEngine {
             })
         }
         catch(e) {
-
+            console.log(e);
         }
     }
 
