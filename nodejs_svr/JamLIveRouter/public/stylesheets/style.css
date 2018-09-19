@@ -109,4 +109,13 @@ a {
   transition: none !important;
 }
 
+.v-ads {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  margin-left: 410px;
+  width: 160px;
+  height: 700px;
+}
+
 /*# sourceMappingURL=style.css.map */
