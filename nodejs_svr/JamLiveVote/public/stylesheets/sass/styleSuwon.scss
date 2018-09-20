@@ -416,7 +416,8 @@ $top-bottom-margin: 5px;
 
     #user-list-area {
       $top-menu-height: 46px;
-
+      $hint-article-height: calc( #{$hint-height} - #{$top-height} );
+      
       float: left;
       width: 142px;
       height: $hint-height;
@@ -435,13 +436,17 @@ $top-bottom-margin: 5px;
         text-align: center;
       }
 
-      #conn-users-list {
-        list-style: none;
+      #conn-users-list-wrapper {
+        height: $hint-article-height;
         overflow-y: auto;
+        #conn-users-list {
+          list-style: none;
+          overflow-y: auto;
 
-        .btn-user-info {
-          margin: 5px 0 0 5px;
-          cursor: pointer;
+          .btn-user-info {
+            margin: 5px 0 0 5px;
+            cursor: pointer;
+          }
         }
       }
     }

@@ -344,11 +344,15 @@ body {
   border-bottom: 1px solid #e5e5e5;
   text-align: center;
 }
-#area-article #article-left #user-list-area #conn-users-list {
+#area-article #article-left #user-list-area #conn-users-list-wrapper {
+  height: calc( calc( 100vh - 13px - 65px - 5px - 147px - 0px) - 65px );
+  overflow-y: auto;
+}
+#area-article #article-left #user-list-area #conn-users-list-wrapper #conn-users-list {
   list-style: none;
   overflow-y: auto;
 }
-#area-article #article-left #user-list-area #conn-users-list .btn-user-info {
+#area-article #article-left #user-list-area #conn-users-list-wrapper #conn-users-list .btn-user-info {
   margin: 5px 0 0 5px;
   cursor: pointer;
 }
