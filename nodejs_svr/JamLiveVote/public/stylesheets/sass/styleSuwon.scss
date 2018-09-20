@@ -262,7 +262,8 @@ $top-bottom-margin: 5px;
     $notice-height: 160px - $bottom-margin;
     $hint-height: calc( 100vh - 13px - #{$top-height} - #{$top-bottom-margin} - #{$notice-height} - #{$global-hint-height});
     $article-left-width: calc(35% - 13px);
-    $user-list-width: 160px;
+    $user-list-width: 130px;
+    $user-list-width-without-gap: calc( #{$user-list-width} - 16px - 2px );
     $hint-width: calc(100% - #{$user-list-width} );
     $article-left-width-ie: ( 35vh / 100vh * 100% );
 
@@ -417,9 +418,9 @@ $top-bottom-margin: 5px;
     #user-list-area {
       $top-menu-height: 46px;
       $hint-article-height: calc( #{$hint-height} - #{$top-height} );
-      
+
       float: left;
-      width: 142px;
+      width: $user-list-width-without-gap;
       height: $hint-height;
       padding: 0;
       margin: 0 0 0 13px;
@@ -442,6 +443,8 @@ $top-bottom-margin: 5px;
         #conn-users-list {
           list-style: none;
           overflow-y: auto;
+          margin: 0;
+          padding: 0 0 0 4px;
 
           .btn-user-info {
             margin: 5px 0 0 5px;

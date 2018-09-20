@@ -270,7 +270,7 @@ body {
   height: 0px;
 }
 #area-article #article-left #hint {
-  width: calc(100% - 160px );
+  width: calc(100% - 130px );
   height: calc( 100vh - 13px - 65px - 5px - 147px - 0px);
   float: left;
   background-color: #ffffff;
@@ -328,7 +328,7 @@ body {
 }
 #area-article #article-left #user-list-area {
   float: left;
-  width: 142px;
+  width: calc( 130px - 16px - 2px );
   height: calc( 100vh - 13px - 65px - 5px - 147px - 0px);
   padding: 0;
   margin: 0 0 0 13px;
@@ -351,6 +351,8 @@ body {
 #area-article #article-left #user-list-area #conn-users-list-wrapper #conn-users-list {
   list-style: none;
   overflow-y: auto;
+  margin: 0;
+  padding: 0 0 0 4px;
 }
 #area-article #article-left #user-list-area #conn-users-list-wrapper #conn-users-list .btn-user-info {
   margin: 5px 0 0 5px;
