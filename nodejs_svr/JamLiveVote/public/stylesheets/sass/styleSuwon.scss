@@ -89,7 +89,7 @@ $top-bottom-margin: 5px;
 
       .serv {
         float: left;
-        margin: 0 13px 0 0;
+        margin: 0 4px 0 0;
         height: $height / 2;
         line-height: $height / 2;
         cursor: pointer;
@@ -124,6 +124,11 @@ $top-bottom-margin: 5px;
     #quiz-timetable-icon {
       height: calc( #{$top-height} - 20px );
       cursor: pointer;
+    }
+
+    #clock {
+      font-weight: bold;
+      color: $color-main-font
     }
   }
 

@@ -104,6 +104,15 @@ class WebSearchEngine {
 
 
     searchNaverMain(query, client) {
+        if( !this.servman.isLiveQuizTime() ) {
+            if( !client.isAdmin() ) {
+                this.servman.sendServerMsg(client.socket, '네이버 검색은 라이브 퀴즈 시간에만 사용 가능');
+                return;
+            }
+            else {
+                this.servman.sendServerMsg(client.socket, '관리자니까 라이브 퀴즈 시간 아니어도 네이버 검색 허용');
+            }
+        }
         const PROTOCOL = 'search-naver-main';
         const wse = this;
         query = query.trim();

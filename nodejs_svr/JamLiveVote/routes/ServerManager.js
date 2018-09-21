@@ -146,6 +146,10 @@ var ServerMan = function() {
     this.autoQuizForcedOff = false;
     this.voteManager = new VoteMan();
     this.webSearchMan = new WebSearchEngine(this);
+
+    this.todayQuizTableList = [];
+
+    this.curDay = -1;
 }
 
 var servman = new ServerMan();
@@ -236,7 +240,7 @@ ServerMan.prototype.register = function(socket) {
     connListMan.addUser(client);
     connListMan.updateListToClient(client);
 
-    socket.emit('myid', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, analstep: quizAnalysis.step });
+    socket.emit('loginInfo', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
     socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
 
@@ -354,12 +358,21 @@ ServerMan.prototype.setIO = function(io, redis) {
         servman.nextQuizShowdata = ret.data;
     })
 
+    var cur = new Date();
+    //  오늘의 퀴즈쇼 알림
+    if( this.curDay != cur.getDay() ) {
+        this.curDay = cur.getDay();
+        dbhelper.getTodayQuizList(function(result) {
+            servman.todayQuizTableList = result.tableList;
+        })
+    }
+
     setInterval(function() {
         servman.broadcastVoteInfo();
     }, 400);
 
     setInterval(function() {
-        servman.checkAllBaned();
+        servman.updateLong();
     }, 3000);
 }
 
@@ -518,10 +531,18 @@ ServerMan.prototype.checkBaned = function( _ip ) {
     }
 }
 
-ServerMan.prototype.checkAllBaned = function() {
+ServerMan.prototype.updateLong = function() {
     var cur = new Date();
 
     try {
+        //  오늘의 퀴즈쇼 알림
+        if( this.curDay != cur.getDay() ) {
+            this.curDay = cur.getDay();
+            dbhelper.getTodayQuizList(function(result) {
+                servman.todayQuizTableList = result.tableList;
+            })
+        }
+
         //  지식의 바다
         KinMan.update( cur );
 
@@ -532,23 +553,6 @@ ServerMan.prototype.checkAllBaned = function() {
                     servman.createQuizData('자동퀴즈', result.quizdata);
                 }
             });
-        }
-
-        //  다음 라이브 퀴즈쇼 업데이트
-        var month = (cur.getMonth()+1).toString().pad(2);
-        var day = cur.getDate().toString().pad(2);
-        var first = `${cur.getFullYear()}-${month}-${day}T`;
-        var todayQuizDate = new Date(first + servman.nextQuizShowdata.time );
-        var day = cur.getDay() - 1;
-        if( day < 0 ) day = 6;
-
-        if (    servman.nextQuizShowdata.weekday != day ||
-            (servman.nextQuizShowdata.weekday == day && cur - todayQuizDate > 0 )
-        ) {
-            dbhelper.getNextQuizshowTime(function(ret) {
-                servman.nextQuizShowdata = ret.data;
-                servman.io.sockets.in('auth').emit('next-quiz', {data: servman.nextQuizShowdata});
-            })
         }
 
         this.searchQueryMap.forEach(function(value, key) {

@@ -21,10 +21,10 @@
 
     <title><%= __('title')%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
-    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 꿀잼 퀴즈방, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
     <meta property="og:type" content="website">
     <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
-    <meta property="og:description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:description" content="라이브 퀴즈쇼(잼라이브, 꿀잼 퀴즈방, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
     <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
     <meta property="og:url" content="http://jamlive.net">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="/basic.js"></script>
     <script src="/myChart.js"></script>
+    <script src="/js/modules/jquery.countdown-2.2.0/jquery.countdown.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/styleSuwon.css' />
     <link href='https://cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css' rel='stylesheet' type='text/css'>
     <script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
@@ -96,6 +97,7 @@
             <div class="left topitem" >
                 <img id="quiz-timetable-icon" src="/images/quiz_timetable_icon.png"/>
             </div>
+            <span id="clock"></span>
         </div>
         <!--
         <div id="area-top-center">

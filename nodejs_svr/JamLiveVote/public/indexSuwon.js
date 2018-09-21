@@ -899,7 +899,7 @@ function setSocketEvent( socket ) {
     socket.on('admin-msg', onAdminMsg);
     socket.on('memo', hintObj.onMemo );
     socket.on('serv_msg', onServMsg);
-    socket.on('myid', onMyID);
+    socket.on('loginInfo', onLoginInfo);
     socket.on('update-info', onUpdateInfo);
     socket.on('get-vote-list', onGetVoteListResult);
     socket.on('vote_data', voteObj.onVoteData);
@@ -1366,13 +1366,56 @@ function onServMsg(data) {
     showAdminMsg(data.msg);
 }
 
-function onMyID(data) {
+function onLoginInfo(data) {
     G.sockid = data.socket;
     G.isLogin = data.isLogined;
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
     options.setShowMemberVoteOnly();
     options.setSearchUserVoteOnly();
+
+    showNextQuizTimeLeft(data.quizTable);
+}
+
+function showNextQuizTimeLeft(table) {
+    var tCur = new Date();
+    var bFind = false;
+    var findDate = '';
+    var findName = '';
+    for( var i = 0 ; i < table.length ; ++i ) {
+        var item = table[i];
+        var date = tCur.getFullYear() + '-' + (tCur.getMonth()+1) + '-' + tCur.getDate() + ' ' + item.starttime;
+        var tDateObj = new Date(date);
+
+        if( tDateObj - tCur >= 0 ) {
+            bFind = true;
+            findName = item.name;
+            findDate = date;
+            break;
+        }
+    }
+
+    if( table.length ) {
+        if( bFind ) {
+            $('#clock').countdown(findDate, {elapse: true })
+                .on('update.countdown', function(event) {
+                    $(this).html(findName + ' ' + event.strftime('%H:%M:%S') + ' 남음');
+                })
+        }
+        else {
+            $('#clock').html('오늘 퀴즈쇼 끝!');
+            /*
+            var item = table[table.length - 1];
+            console.log(item);
+            var date = tCur.getFullYear() + '-' + (tCur.getMonth()+1) + '-' + tCur.getDate() + ' ' + item.starttime;
+            console.log(date);
+            $('#clock').countdown(date, {elapse: true })
+                .on('update.countdown', function(event) {
+                    $(this).html('마지막 퀴즈로부터 ' + event.strftime('%H:%M:%S') + ' 지남');
+                })
+                */
+        }
+    }
 }
 
 function onUpdateInfo(data) {
