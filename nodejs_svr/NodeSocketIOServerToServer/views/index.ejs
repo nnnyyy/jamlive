@@ -82,8 +82,10 @@
     $(document).ready(function() {
         CKEDITOR.replace('notice-area');
 
+        <% if(notice) { %>
         var notice = <%- JSON.stringify(notice) %>;
         CKEDITOR.instances['notice-area'].setData(notice);
+        <% }%>
 
         $('#btn-update-notice').click(function(e) {
             var notice = CKEDITOR.instances['notice-area'].getData();
