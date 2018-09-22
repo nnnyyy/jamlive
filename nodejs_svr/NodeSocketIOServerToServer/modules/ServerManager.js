@@ -18,13 +18,22 @@ class ServerManager {
         this.redis = new Redis(6379, '127.0.0.1');
 
         this.redis.get('global-notice', (err,info) => {
-            if( !err ) {
-                const parsedInfo = JSON.parse(info);
-                servman.noticeData = parsedInfo.notice;
-                this.broadcastUpdateNotice(parsedInfo.notice);
-            }
-            else {
-                console.log('global-notice load error!!');
+            try {
+                if( !err ) {
+                    const parsedInfo = JSON.parse(info);
+                    if( parsedInfo ) {
+                        servman.noticeData = parsedInfo.notice;
+                        this.broadcastUpdateNotice(parsedInfo.notice);
+                    }
+                    else {
+                        this.broadcastUpdateNotice('');
+                    }
+                }
+                else {
+                    console.log('global-notice load error!!');
+                }
+            }catch(e) {
+                console.log(e);
             }
         });
         // Child Server Map
