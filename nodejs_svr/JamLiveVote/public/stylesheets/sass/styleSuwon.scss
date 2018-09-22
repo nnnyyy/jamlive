@@ -128,7 +128,12 @@ $top-bottom-margin: 5px;
 
     #clock {
       font-weight: bold;
-      color: $color-main-font
+      font-size: 20px;
+      color: $color-main-font;
+
+      .name {
+        background-color: $color-yellow-font;
+      }
     }
   }
 

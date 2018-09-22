@@ -1405,7 +1405,7 @@ function showNextQuizTimeLeft(table) {
                         showNextQuizTimeLeft(table);
                     }
                     else {
-                        $(this).html(findName + ' ' + event.strftime('%H:%M:%S') + ' 남음');
+                        $(this).html('<span class="name">' + findName + '</span> ' + event.strftime('%H시간%M분%S초') + ' 남음');
                     }
                 })
         }

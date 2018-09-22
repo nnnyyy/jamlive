@@ -96,7 +96,11 @@ body {
 }
 #area-top #area-top-left #clock {
   font-weight: bold;
+  font-size: 20px;
   color: #393939;
+}
+#area-top #area-top-left #clock .name {
+  background-color: #e9bd25;
 }
 #area-top #area-top-center {
   position: absolute;
