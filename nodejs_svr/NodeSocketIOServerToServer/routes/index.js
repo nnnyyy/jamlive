@@ -9,7 +9,12 @@ router.get('/', function(req, res, next) {
     serverMan.redis.get('global-notice', (err,info) => {
         if( !err ) {
             const parsedInfo = JSON.parse(info);
-            res.render('index', parsedInfo);
+            if( parsedInfo ) {
+                res.render('index', parsedInfo);
+            }
+            else {
+                res.render('index', {notice: ''});
+            }
         }
         else {
             res.json({ret: 'error'});
