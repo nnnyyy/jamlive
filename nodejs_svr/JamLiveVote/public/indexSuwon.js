@@ -1401,7 +1401,12 @@ function showNextQuizTimeLeft(table) {
         if( bFind ) {
             $('#clock').countdown(findDate, {elapse: true })
                 .on('update.countdown', function(event) {
-                    $(this).html(findName + ' ' + event.strftime('%H:%M:%S') + ' 남음');
+                    if( event.elapsed ) {
+                        showNextQuizTimeLeft(table);
+                    }
+                    else {
+                        $(this).html(findName + ' ' + event.strftime('%H:%M:%S') + ' 남음');
+                    }
                 })
         }
         else {
