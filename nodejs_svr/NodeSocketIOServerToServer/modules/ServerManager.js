@@ -8,7 +8,6 @@ var dbhelper = require('../dbhelper');
 const async = require('async');
 
 const Redis = require('ioredis');
-const redis = new Redis(6379, '127.0.0.1');
 
 class ServerManager {
     constructor(io, http) {
@@ -16,6 +15,18 @@ class ServerManager {
 
         this.io = io;
         this.http = http;
+        this.redis = new Redis(6379, '127.0.0.1');
+
+        this.redis.get('global-notice', (err,info) => {
+            if( !err ) {
+                const parsedInfo = JSON.parse(info);
+                servman.noticeData = parsedInfo.notice;
+                this.broadcastUpdateNotice(parsedInfo.notice);
+            }
+            else {
+                console.log('global-notice load error!!');
+            }
+        });
         // Child Server Map
         this.chServMap = new HashMap();
         this.chServMapByName = new HashMap();
@@ -90,6 +101,7 @@ class ServerManager {
                     distServInfo.url = info.url;
                     distServInfo.idx = info.idx;
                     servman.voteServMap.set(this.id, distServInfo);
+                    distServInfo.sendNoticeData(servman.noticeData);
                 }
                 else if( packet.type == 'route-server') {
 
@@ -211,6 +223,13 @@ class ServerManager {
 
             res.json(result);
         });
+    }
+
+    broadcastUpdateNotice( noticeData ) {
+        this.voteServMap.forEach(function(value, key){
+            const distServer = value;
+            distServer.sendNoticeData( noticeData );
+        })
     }
 }
 

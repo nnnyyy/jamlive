@@ -934,6 +934,8 @@ function setSocketEvent( socket ) {
     socket.on('search-naver-main', onSearchNaverMain);
     socket.on('search-daum', onSearchDaumGoogle);
     socket.on('search-image', onSearchImage);
+
+    socket.on('update-notice', onUpdateNotice);
 }
 
 function setKeyEvent() {
@@ -1472,6 +1474,10 @@ function onSearchDaumGoogle(data) {
 
 function onSearchImage(data) {
     setSearchRetImage(data, true, searchObj.whereSearchImage);
+}
+
+function onUpdateNotice(data) {
+    $('#notice').html(data.noticeData);
 }
 
 var animOpacityTimerID = -1;

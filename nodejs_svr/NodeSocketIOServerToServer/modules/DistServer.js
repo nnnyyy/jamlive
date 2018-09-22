@@ -56,6 +56,10 @@ class DistServer {
         this.socket.emit('admin-msg', {msg : msg });
     }
 
+    sendNoticeData( noticeData ) {
+        this.socket.emit('notice-data', {noticeData: noticeData });
+    }
+
     setPremiumListener() {
         const server = this;
         this.sendPremiumIntervalId = setInterval( function() {

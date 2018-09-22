@@ -82,6 +82,14 @@ socketToCenterServer.on('connect', function () {
             console.log(e);
         }
     })
+
+    this.on('notice-data', function(packet) {
+        try {
+            servman.updateNotice(packet.noticeData);
+        }catch(e) {
+            console.log(e);
+        }
+    })
 });
 
 
@@ -243,6 +251,7 @@ ServerMan.prototype.register = function(socket) {
     socket.emit('loginInfo', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
     socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+    socket.emit('update-notice', {noticeData: this.noticeData});
 
     if( this.chosung.isRunning() ) {
         this.chosung.sendState(socket);
@@ -633,6 +642,11 @@ ServerMan.prototype.addSearchQuery = function( query, bCount ) {
             d.cnt += 1;
         d.tLast = new Date();
     }
+}
+
+ServerMan.prototype.updateNotice = function( noticeData ) {
+    this.noticeData = noticeData;
+    servman.io.sockets.in('auth').emit('update-notice', {noticeData: noticeData});
 }
 
 function onSockBan(data) {

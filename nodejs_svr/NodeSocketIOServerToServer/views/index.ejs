@@ -33,6 +33,25 @@
     <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
+    <script>
+        function AjaxHelper() {
+
+        }
+
+        AjaxHelper.prototype.postJson = function( url, jsondata, cbSuccess ) {
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(jsondata),
+                contentType: 'application/json',
+                url: url,
+                success: cbSuccess
+            });
+        }
+
+        var ajaxHelper = new AjaxHelper();
+    </script>
 </head>
 <body>
 <div>관리자 페이지</div>
@@ -51,10 +70,29 @@
     <input type="text" id="ip-ban-ip"/>
     <input type="button" id="btn-permanent-ban-by-ip" value="밴합니다"/>
 </div>
+<div style="width: 600px;">
+    <textarea id ='notice-area' class="notice-area"></textarea>
+    <div id="btn-update-notice">
+        공지 업데이트
+    </div>
+</div>
 </body>
 <script type="text/javascript" src="/index.js"></script>
 <script>
     $(document).ready(function() {
+        CKEDITOR.replace('notice-area');
+
+        var notice = <%- JSON.stringify(notice) %>;
+        CKEDITOR.instances['notice-area'].setData(notice);
+
+        $('#btn-update-notice').click(function(e) {
+            var notice = CKEDITOR.instances['notice-area'].getData();
+            //modifiedHint = modifiedHint.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            //G.socket.emit('memo', {memo: modifiedHint });
+            ajaxHelper.postJson('/update-notice', { notice: notice }, function(ret) {
+                alert(ret.ret);
+            });
+        })
         init();
     });
 </script>
