@@ -88,6 +88,7 @@ var GlobalValue = function() {
     this.usersMap = new Map();
     this.connUserList = $('#conn-users-list');
     this.tLastUserUpdate = 0;
+    this.auth = -1;
 }
 
 /*
@@ -279,6 +280,22 @@ Options.prototype.init = function() {
         }
     });
 
+    //  전체 서버 결과 보기
+    var checked = localStorage.getItem('cb-show-all-server-vote') || 0;
+    $('#cb-show-all-server-vote').change(function() {
+        if( $(this).is(':checked') ) {
+            if( G.auth < 4 ) {
+                $('#cb-show-all-server-vote').prop('checked', false);
+                showAdminMsg('레벨 4 미만은 사용 불가능합니다.');
+                return;
+            }
+            localStorage.setItem('cb-show-all-server-vote', 1);
+        }
+        else {
+            localStorage.setItem('cb-show-all-server-vote', 0);
+        }
+    });
+
 
     var bDisable = localStorage.getItem('cb-notice-disable') || 0;
 
@@ -409,6 +426,11 @@ Options.prototype.isMaxVoteDuplicateChecked = function() {
 
 Options.prototype.isNotShowChat = function() {
     var checked = localStorage.getItem('cb_notshowchat') || 0;
+    return checked == 1 ? true : false;
+}
+
+Options.prototype.isShowAllServerVote = function() {
+    var checked = localStorage.getItem('cb-show-all-server-vote') || 0;
     return checked == 1 ? true : false;
 }
 
@@ -642,16 +664,12 @@ VoteObject.prototype.onVoteData = function(data) {
         for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
             total[i] += votedata.cnt[i];
         }
-
-        if( !options.isShowMemberVoteOnly() ) {
-            //  손님 투표결과 ( 이제 못함 )
-            for( var i = 0 ; i < votedata.guest_cnt.length ; ++i ) {
-                total[i] += votedata.guest_cnt[i];
-            }
-        }
     }
-    else {
 
+    if( options.isShowAllServerVote() ) {
+        for( var i = 0 ; i < 3 ; ++i ) {
+            total[i] += votedata.totalVote[i];
+        }
     }
 
     var totalCnt = 0;
@@ -1371,6 +1389,7 @@ function onServMsg(data) {
 function onLoginInfo(data) {
     G.sockid = data.socket;
     G.isLogin = data.isLogined;
+    G.auth = data.auth;
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
     options.setShowMemberVoteOnly();

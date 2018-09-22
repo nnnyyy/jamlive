@@ -60,6 +60,14 @@ class DistServer {
         this.socket.emit('notice-data', {noticeData: noticeData });
     }
 
+    sendVoteData() {
+        const server = this;
+        this.sendVoteDataIntervalId = setInterval( function() {
+            var totalVote = server.servman.getTotalVoteData();
+            server.socket.emit('total-vote', {totalVote: totalVote });
+        }, 300);
+    }
+
     setPremiumListener() {
         const server = this;
         this.sendPremiumIntervalId = setInterval( function() {
@@ -71,6 +79,7 @@ class DistServer {
     clear() {
         clearInterval(this.sendCountIntervalId);
         clearInterval(this.sendPremiumIntervalId);
+        clearInterval(this.sendVoteDataIntervalId);
     }
 }
 

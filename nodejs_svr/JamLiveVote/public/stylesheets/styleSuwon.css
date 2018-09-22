@@ -521,6 +521,14 @@ body {
 #area-article #article-right #vote-data [type="top-menu"] vtitle {
   margin: 0 0 0 25px;
 }
+#area-article #article-right #vote-data [type="top-menu"] #check-all-server-vote {
+  float: right;
+  margin-right: 14px;
+  font-size: 16px;
+  height: 46px;
+  line-height: 46px;
+  cursor: pointer;
+}
 #area-article #article-right #ads-banner-right {
   margin: 13px 0 0 0;
   width: 100%;

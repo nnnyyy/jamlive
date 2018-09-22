@@ -67,6 +67,16 @@ socketToCenterServer.on('connect', function () {
         }
     })
 
+    this.on('total-vote', function(packet) {
+        try {
+            const totalVote = packet.totalVote;
+            servman.setAllServerVote( totalVote );
+        }
+        catch(e) {
+            console.log(e);
+        }
+    })
+
     this.on('admin-msg', function(packet) {
         try {
             chatMan.BroadcastAdminMsg( servman.io, packet.msg );
@@ -158,6 +168,7 @@ var ServerMan = function() {
     this.todayQuizTableList = [];
 
     this.curDay = -1;
+    this.totalVote = [0,0,0];
 }
 
 var servman = new ServerMan();
@@ -166,6 +177,10 @@ ServerMan.prototype.isLiveQuizTime = function() {
     var cur = new Date();
     var hours = cur.getHours();
     return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 18 ) );
+}
+
+ServerMan.prototype.setAllServerVote = function( totalVote ) {
+    this.totalVote = totalVote;
 }
 
 ServerMan.prototype.reloadBanList = function() {
@@ -468,7 +483,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     countForCenter[2] = _counts[2] + _countsSearchFirst[2];
 
     socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: countForCenter });
-    this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, guest_cnt: _countsForGuest, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
+    this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, totalVote: this.totalVote, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
 ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
