@@ -328,7 +328,7 @@ class WebSearchEngine {
         this.searchNaverAPI( 0, query , client );
         this.searchNaverAPI( 1, query , client );
         this.searchNaverAPI( 2, query , client );
-        //this.searchNaverAPI( 3, query , client );
+        this.searchNaverAPI( 3, query , client );
     }
 
     searchNaverAPI( type, query, client ) {
@@ -343,11 +343,15 @@ class WebSearchEngine {
             case 0: sType="encyc"; sPrefix="백과사전"; break;
             case 1: sType="webkr"; sPrefix="웹";break;
             case 2: sType="news"; sPrefix="뉴스";break;
+            case 3: sType="kin"; sPrefix="지식인";break;
         }
 
         var cached = this.servman.getCachedSearchResult(sType, query);
+        var packetCached = {data: cached, type: type, prefix: sPrefix};
         if( cached ) {
-            client.socket.emit(PROTOCOL, cached);
+            console.log(`cached - ${sType}, ${query}`)
+            console.log(cached);
+            client.socket.emit(PROTOCOL, packetCached);
             return;
         }
 
@@ -372,8 +376,6 @@ class WebSearchEngine {
                         if( isArray(data) && data.length > 0 ) {
                             data = data.slice(0,8);
                             wse.servman.setCachedSearchResult(sType, query, data);
-                            console.log(PROTOCOL);
-                            console.log(data);
                             client.socket.emit(PROTOCOL, packet);
                         }
                         else {
