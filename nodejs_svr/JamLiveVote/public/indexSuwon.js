@@ -663,7 +663,7 @@ VoteObject.prototype.onVoteData = function(data) {
     searchObj.onSearchRetRank(data.searchlist, data.slhash);
     var votedata = data.vote_data;
     voteObj.kinlist = data.kin;
-    //showKin(data.searchlist);
+    showKin(data.searchlist);
     var users = votedata.users;
     G.connUserElem.text(users);
     G.banElem.text(votedata.bans);
@@ -1734,8 +1734,11 @@ function showKin(datalist) {
     var desc_total = '';
     var kinlist = voteObj.kinlist;
 
-    if( $('#kindata').length )
-        $('#kindata').empty();
+    try {
+        getSearchArea(2).remove('#kindata');
+    }catch(e) {
+
+    }
 
     if( kinlist.length > 0 ) {
         /*
@@ -1757,7 +1760,6 @@ function showKin(datalist) {
         var kin_total_desc = '<div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div>' +
                             desc_total + '<div class="separator"></div>';
 
-        var bChanged = false;
         searchObj.duplicateMap.clear();
         for( var i = 0 ; i < datalist.length ; ++i ) {
             var words = datalist[i].query.split(' ');
@@ -1768,7 +1770,6 @@ function showKin(datalist) {
                 kin_total_desc = kin_total_desc.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
 
                 searchObj.duplicateMap.put(words[w], 1);
-                bChanged = true;
             }
         }
 
