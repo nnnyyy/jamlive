@@ -204,7 +204,7 @@ body {
           width: 80px;
           display: table-cell;
           vertical-align: middle;
-          line-height: 25px; }
+          line-height: 23px; }
       #area-article #article-left #site-info-notice #notice {
         width: calc( 100% - 80px - 13px - 2px - 2px );
         height: 100%;

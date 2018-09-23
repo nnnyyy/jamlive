@@ -70,7 +70,9 @@ socketToCenterServer.on('connect', function () {
     this.on('total-vote', function(packet) {
         try {
             const totalVote = packet.totalVote;
+            const totalUserCnt = packet.totalCnt;
             servman.setAllServerVote( totalVote );
+            servman.setTotalUserCnt( totalUserCnt );
         }
         catch(e) {
             console.log(e);
@@ -169,6 +171,7 @@ var ServerMan = function() {
 
     this.curDay = -1;
     this.totalVote = [0,0,0];
+    this.totalUserCnt = 0;
 }
 
 var servman = new ServerMan();
@@ -181,6 +184,10 @@ ServerMan.prototype.isLiveQuizTime = function() {
 
 ServerMan.prototype.setAllServerVote = function( totalVote ) {
     this.totalVote = totalVote;
+}
+
+ServerMan.prototype.setTotalUserCnt = function( totalCnt ) {
+    this.totalUserCnt = totalCnt;
 }
 
 ServerMan.prototype.reloadBanList = function() {
@@ -483,7 +490,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     countForCenter[2] = _counts[2] + _countsSearchFirst[2];
 
     socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: countForCenter });
-    this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, totalVote: this.totalVote, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
+    this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, totalCnt: this.totalUserCnt, totalVote: this.totalVote, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
 ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {

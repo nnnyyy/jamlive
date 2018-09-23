@@ -82,7 +82,8 @@ var GlobalValue = function() {
     this.sockid = '';
     this.isLogin = false;
     this.connUserElem = $('#conn-cnt');
-    this.banElem = $('#ban-cnt');
+    this.totalConnUserElem = $('#total-conn-cnt');
+    //this.banElem = $('#ban-cnt');
     //this.weekdayElem = $('next-quizday');
     this.quizinfoElem = $('next-quiz-info');
     this.usersMap = new Map();
@@ -666,7 +667,8 @@ VoteObject.prototype.onVoteData = function(data) {
     showKin(data.searchlist);
     var users = votedata.users;
     G.connUserElem.text(users);
-    G.banElem.text(votedata.bans);
+    G.totalConnUserElem.text(votedata.totalCnt);
+    //G.banElem.text(votedata.bans);
 
     var total = [0,0,0];
 

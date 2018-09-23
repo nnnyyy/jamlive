@@ -64,7 +64,8 @@ class DistServer {
         const server = this;
         this.sendVoteDataIntervalId = setInterval( function() {
             var totalVote = server.servman.getTotalVoteData();
-            server.socket.emit('total-vote', {totalVote: totalVote });
+            var totalCnt = server.servman.getTotalUserCnt();
+            server.socket.emit('total-vote', {totalCnt: totalCnt, totalVote: totalVote });
         }, 300);
     }
 

@@ -163,6 +163,16 @@ class ServerManager {
         return data;
     }
 
+    getTotalUserCnt() {
+        let totalCnt = 0;
+        this.voteServMap.forEach(function(value, key){
+            const servinfo = value;
+            totalCnt += servinfo.usercnt;
+        })
+
+        return totalCnt;
+    }
+
     getVoteServerVoteData() {
         let data = [];
         this.voteServMap.forEach(function(value, key){
