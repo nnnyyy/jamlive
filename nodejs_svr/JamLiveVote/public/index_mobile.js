@@ -106,13 +106,6 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
         total[i] += votedata.cnt[i];
     }
 
-
-    if( !isShowMemberVoteOnly() ) {
-        for( var i = 0 ; i < votedata.guest_cnt.length ; ++i ) {
-            total[i] += votedata.guest_cnt[i];
-        }
-    }
-
     var totalCnt = 0;
     var maxVoteCnt = 0;
     for( var i = 0 ; i < total.length ; ++i ) {
