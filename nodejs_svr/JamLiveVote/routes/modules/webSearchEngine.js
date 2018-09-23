@@ -349,8 +349,6 @@ class WebSearchEngine {
         var cached = this.servman.getCachedSearchResult(sType, query);
         var packetCached = {data: cached, type: type, prefix: sPrefix};
         if( cached ) {
-            console.log(`cached - ${sType}, ${query}`)
-            console.log(cached);
             client.socket.emit(PROTOCOL, packetCached);
             return;
         }
