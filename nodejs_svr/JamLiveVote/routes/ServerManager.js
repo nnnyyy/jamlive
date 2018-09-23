@@ -1030,6 +1030,13 @@ function onSockVote(data) {
         }
 
         if( client.isClickable() ) {
+            if( servman.isLiveQuizTime() && client.auth < 2 ) {
+                client.incActivePoint( 4 );
+                servman.sendServerMsg(socket, '[튜토리얼] 레벨 2 이하의 투표는 결과에 반영되지는 않습니다. 그러나 연습 겸 레벨업을 위해서 투표해주세요.');
+                chatMan.Broadcast(servman.io, client, 'vote', '[투표] 소중한 한표 투척', false, -1 );
+                client.tLastClick = new Date();
+                return;
+            }
             servman.voteManager.vote(client, data.idx);
             servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
 
