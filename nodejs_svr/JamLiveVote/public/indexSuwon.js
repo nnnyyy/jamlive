@@ -664,7 +664,7 @@ VoteObject.prototype.onVoteData = function(data) {
     searchObj.onSearchRetRank(data.searchlist, data.slhash);
     var votedata = data.vote_data;
     voteObj.kinlist = data.kin;
-    //showKin(data.searchlist);
+    showKin(data.searchlist);
     var users = votedata.users;
     G.connUserElem.text(users);
     G.totalConnUserElem.text(votedata.totalCnt);
@@ -1737,7 +1737,7 @@ function showKin(datalist) {
     var kinlist = voteObj.kinlist;
 
     try {
-        getSearchArea(2).remove('#kindata');
+        $('#kindata').remove();
     }catch(e) {
         console.log(e);
     }
