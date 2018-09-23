@@ -663,7 +663,7 @@ VoteObject.prototype.onVoteData = function(data) {
     searchObj.onSearchRetRank(data.searchlist, data.slhash);
     var votedata = data.vote_data;
     voteObj.kinlist = data.kin;
-    showKin(data.searchlist);
+    //showKin(data.searchlist);
     var users = votedata.users;
     G.connUserElem.text(users);
     G.banElem.text(votedata.bans);
