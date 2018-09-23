@@ -1008,11 +1008,6 @@ function onSockVote(data) {
             return;
         }
 
-        if( servman.isLiveQuizTime() && client.auth < 1 ) {
-            servman.sendServerMsg(socket, '레벨 1 미만의 회원은 검색만 가능합니다. 검색과 자동퀴즈로 레벨을 올리세요.');
-            return;
-        }
-
         if( !client.isLogined() ) {
             var _counts = [0,0,0];
             servman.counts.forEach(function(value, key) {
