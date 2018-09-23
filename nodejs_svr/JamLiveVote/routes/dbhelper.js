@@ -194,6 +194,8 @@ exports.getPermanentBanList = function(cb) {
     try {
         dbpool.query("select * from permanent_ban_list", function(err, rows) {
             if(err) {
+                console.log(err);
+
                 cb({ret: -1});
                 return;
             }

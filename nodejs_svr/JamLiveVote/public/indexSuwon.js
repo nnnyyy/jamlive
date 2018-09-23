@@ -952,6 +952,7 @@ function setSocketEvent( socket ) {
     socket.on('search-naver-main', onSearchNaverMain);
     socket.on('search-daum', onSearchDaumGoogle);
     socket.on('search-image', onSearchImage);
+    socket.on('search-naver-api', onSearchNaverAPI);
 
     socket.on('update-notice', onUpdateNotice);
 }
@@ -1481,7 +1482,6 @@ function onSearchDic(data) {
 function onSearchNaverMain(data) {
     var itemMap = procSearchRet(data);
     var keys = itemMap.keys();
-    console.log(data);
     for( var i = 0 ; i < keys.length ; ++i ) {
         var key = keys[i];
         var items = itemMap.get(key);
@@ -1489,6 +1489,22 @@ function onSearchNaverMain(data) {
         if( !isShow ) return;
         var where = getWhere(key);
         setSearchRet(items, false, where, search_title_prefix[0], search_title_prefix_style_name[0]);
+    }
+}
+
+function onSearchNaverAPI(packet) {
+    var data = packet.data;
+    var type = packet.type;
+    var sPrefix = packet.prefix;
+
+    if( data && data.length > 0 ) {
+        var where = 1;
+        if( type % 2 ) {
+            where = 2;
+        }
+        var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+        data = data.slice(0, ret_cnt_val);
+        setSearchRet(data, false, where, sPrefix, search_title_prefix_style_name[type]);
     }
 }
 
@@ -1652,7 +1668,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
         chinese = true;
     }
 
-    var json = {nickname: nick, msg: query, isBroadcast : isBroadcast, searchDic: chinese, searchNaverMain: true }
+    var json = {nickname: nick, msg: query, isBroadcast : isBroadcast, searchDic: chinese, searchNaverMain: true, searchNaverMainAPI: true }
 
     var searched = false;
 

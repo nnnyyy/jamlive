@@ -856,8 +856,11 @@ function onSockSearch(data) {
 
         if( data.searchDic )
             servman.webSearchMan.searchDic(data.msg, client);
-        if( data.searchNaverMain )
-            servman.webSearchMan.searchNaverMain(data.msg, client);
+        if( data.searchNaverMainAPI && client.auth >= 4 ) {
+            servman.webSearchMan.searchNaverAPIs(data.msg, client);
+        }
+        //if( data.searchNaverMain && client.auth >= 4 )
+        //    servman.webSearchMan.searchNaverMain(data.msg, client);
         if( data.searchDaum )
             servman.webSearchMan.searchDaum(data.msg, client);
         if( data.searchImage )

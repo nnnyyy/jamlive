@@ -15,6 +15,8 @@ class WebSearchEngine {
     constructor(servman) {
         this.servman = servman;
         this.req_cnt = 0;
+        this.clientids = ['kChODmZtLjX7dHIAzwfE', 'j96P2WA6Gayk3krOxehd', '_iBtKrpgLolUtJhXPDUg', 'Til0PbZbqubnmFNgTvGL', '4NRIgHcJlNKT6R3gTvyv', 'ooCDH_d8imisrpnUcp1d', 'VZ9vuXcJh36t7IuDAeCW','zGJt30deH5ozVHAtGvu9', 'RrVyoeWlAzqS736WZDq3', 'V074_asyyV_2Etx5ZtLW', 'niwBM2EN40JlAgR2_B1B', 'UFEvdYw_RtvqrxVNKlYl', 'NhTno6hxnZpTGZUPffvI', 'x8DQ2xYWaeQqVGDZzdL4'];
+        this.secrets = ['eOlQyyDe_6', 'RRnTqf23kL', 'MleZciknEa', 'eOSv5IigLL', 'P4wN5u9RXR', 'TfQpAeDrwO', 'cP_ecRsKYR','kkusj_izbs', 'ZaMzW0bOM7', 'NCybd8sKXd', 'AltOR9YRrw', 'mKKbFNGP1G', 'foM4QTYU9U', 'vPCM314sAS'];
     }
 
     searchDic( query, client ) {
@@ -311,6 +313,78 @@ class WebSearchEngine {
                         console.log(e);
                     }
                 } else {
+                    //console.log('searchex failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
+                    client.socket.emit(PROTOCOL, []);
+                }
+            });
+        }
+        catch(e){
+            client.socket.emit(PROTOCOL, []);
+        }
+    }
+
+    searchNaverAPIs( query, client ) {
+        //var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
+        this.searchNaverAPI( 0, query , client );
+        this.searchNaverAPI( 1, query , client );
+        this.searchNaverAPI( 2, query , client );
+        //this.searchNaverAPI( 3, query , client );
+    }
+
+    searchNaverAPI( type, query, client ) {
+        const wse = this;
+        let PROTOCOL = 'search-naver-api';
+
+        query = query.trim();
+
+        var sType = 'encyc';
+        var sPrefix = '백과사전';
+        switch(type) {
+            case 0: sType="encyc"; sPrefix="백과사전"; break;
+            case 1: sType="webkr"; sPrefix="웹";break;
+            case 2: sType="news"; sPrefix="뉴스";break;
+        }
+
+        var cached = this.servman.getCachedSearchResult(sType, query);
+        if( cached ) {
+            client.socket.emit(PROTOCOL, cached);
+            return;
+        }
+
+        var api_url = 'https://openapi.naver.com/v1/search/'+ sType +'.json?display=10&query=' + encodeURI(query) + '&sort=sim';
+        var modcnt = this.clientids.length;
+
+
+        var clientid = this.clientids[this.req_cnt%modcnt];
+        var secret = this.secrets[this.req_cnt%modcnt];
+        this.req_cnt++;
+
+        var options = {
+            url: api_url,
+            headers: {'X-Naver-Client-Id':clientid, 'X-Naver-Client-Secret': secret}
+        };
+        try {
+            request.get(options, function (error, response, body) {
+                if (!error && response.statusCode == 200 && body) {
+                    try {
+                        var data = JSON.parse(body).items;
+                        var packet = {data: data, type: type, prefix: sPrefix};
+                        if( isArray(data) && data.length > 0 ) {
+                            data = data.slice(0,8);
+                            wse.servman.setCachedSearchResult(sType, query, data);
+                            console.log(PROTOCOL);
+                            console.log(data);
+                            client.socket.emit(PROTOCOL, packet);
+                        }
+                        else {
+                            client.socket.emit(PROTOCOL, packet);
+                        }
+                    }
+                    catch(e) {
+                        console.log(e);
+                    }
+                } else {
+                    var packet = {data: [], type: type};
                     //console.log('searchex failed : ' + error + ', ' + (typeof response != 'undefined' ? response.statusCode : '-1' ) );
                     client.socket.emit(PROTOCOL, []);
                 }
