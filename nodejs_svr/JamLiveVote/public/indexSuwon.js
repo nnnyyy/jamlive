@@ -146,9 +146,18 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         if( packet.prev_q ) {
             showAdminMsg('정답은 ' + packet.prev_q + '였습니다');
         }
-        chosungGameMan.questionType = packet.type;
-        var typeName = chosungGameMan.questionTypeName[chosungGameMan.questionType];
-        chosungGameMan.setText('[' + typeName + '] ' + packet.q);
+
+        var typeName = '';
+        if( packet.type == -1  ) {
+
+        }
+        else {
+            chosungGameMan.questionType = packet.type;
+            typeName = '[' + chosungGameMan.questionTypeName[chosungGameMan.questionType] + ']';
+        }
+
+
+        chosungGameMan.setText(typeName + packet.q);
     }
     else if( packet.step == 'msg' ) {
         chatObj.addChat('chat', false, '초성게임', packet.msg, false, 99, '', '' );
@@ -167,8 +176,16 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
     }
     else if( packet.step == 'q-hint') {
         chatObj.addChat('chat', false, '초성게임', '힌트가 도착했습니다', false, 99, '', '' );
-        var typeName = chosungGameMan.questionTypeName[chosungGameMan.questionType];
-        chosungGameMan.setText('[' + typeName + '] ' + packet.q);
+
+        if( packet.mode == 1 ) {
+            chosungGameMan.questionType = packet.type;
+            var typeName = chosungGameMan.questionTypeName[chosungGameMan.questionType];
+            chosungGameMan.setText('[' + typeName + '] ' + packet.q);
+        }
+        else {
+            var typeName = chosungGameMan.questionTypeName[chosungGameMan.questionType];
+            chosungGameMan.setText('[' + typeName + '] ' + packet.q);
+        }
     }
     else if( packet.step == 'fail') {
         var msg = '실패 했습니다! 답은 ' + packet.q;

@@ -19,6 +19,7 @@ class ChosungGame {
         this.tStart = 0;
         this.quizIdx = 0;
         this.words = [];
+        this.showType = false;
     }
 
     start() {
@@ -60,6 +61,7 @@ class ChosungGame {
     broadcastStartQuiz(words, man, callback) {
         man.io.sockets.emit('chosung', {step: 'start'});
         man.step = 1;
+        man.showType = false;
         man.words = words;
         man.quizIdx = 0;
         man.tStart = new Date();
@@ -74,7 +76,7 @@ class ChosungGame {
         for( var i = 0 ; i < word.length ; ++i ) {
             this.currentWord[i] = word.substring(i, i+1);
         }
-        this.questionWord = word;
+        this.questionWord = word.trim();
         this.questionType = type;
         this.question = [];
         const a = Hangul.d(word, true);
@@ -86,7 +88,7 @@ class ChosungGame {
 
         //console.log(`quiz : ${word} -> ${chosung}`);
 
-        this.io.sockets.emit('chosung', {step: 'q', q: chosung, type: type, prev_q: prev});
+        this.io.sockets.emit('chosung', {step: 'q', q: chosung, type: -1, prev_q: prev});
         this.tStartQuestion = new Date();
         this.tLastHint = new Date();
         this.nHintCnt = 0;
@@ -94,16 +96,33 @@ class ChosungGame {
 
     showHint() {
         if( this.question.length <= this.nHintCnt + 1 ) return;
+        var mode = 0;
 
-        this.question[this.nHintCnt] = this.currentWord[this.nHintCnt];
+        if( !this.showType ) {
+            var chosung = '';
+            for( var i = 0 ; i < this.question.length ; ++i) {
+                chosung += this.question[i];
+            }
+            this.showType = true;
+            mode = 1;
+            this.io.sockets.emit('chosung', {step: 'q-hint', mode: mode, q: chosung, type: this.questionType});
+        }
+        else {
+            this.question[this.nHintCnt] = this.currentWord[this.nHintCnt];
+            if( this.currentWord[this.nHintCnt] == ' ' ) {
+                this.nHintCnt++;
+                this.question[this.nHintCnt] = this.currentWord[this.nHintCnt];
+            }
 
-        var chosung = '';
-        for( var i = 0 ; i < this.question.length ; ++i) {
-            chosung += this.question[i];
+            var chosung = '';
+            for( var i = 0 ; i < this.question.length ; ++i) {
+                chosung += this.question[i];
+            }
+
+            this.io.sockets.emit('chosung', {step: 'q-hint', mode: mode, q: chosung});
+            this.nHintCnt++;
         }
 
-        this.io.sockets.emit('chosung', {step: 'q-hint', q: chosung});
-        this.nHintCnt++;
         this.tLastHint = new Date();
     }
 
