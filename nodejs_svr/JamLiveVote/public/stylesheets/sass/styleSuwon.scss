@@ -32,7 +32,7 @@ $vote-list-width: 400px;
   width: $vote-list-width;
   height: 400px;
   background-color: $color-main-back;
-  left: calc( (100vw - #{$vote-list-width}) / 2 );
+  left: 0px;
   z-index: 99999;
   text-align: center;
   border:2px dotted black;
@@ -979,9 +979,9 @@ wnd[role="settings"] {
 .user-menu{
   position: absolute;
   top: 0;
-  left: 50%;
+  left: 0;
   width: 400px;
-  margin-left: -200px;
+  margin-left: 10px;
   margin-top: 25px;
   padding: 20px;
   background-color: $color-main-back;
