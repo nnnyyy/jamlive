@@ -867,7 +867,7 @@ function onSockSearch(data) {
             servman.webSearchMan.searchImage(data.msg, client);
 
         if( client.auth < 1 && servman.isLiveQuizTime() ) {
-            client.incActivePoint( 60 );
+            client.incActivePoint( 6 );
         }
 
         client.tLastSearch = new Date();
