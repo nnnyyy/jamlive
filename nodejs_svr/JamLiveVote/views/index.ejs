@@ -29,12 +29,13 @@
     <script src="/myChart.js"></script>
     <link rel='stylesheet' href='/stylesheets/style_mobile.css' />
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <script src="/socket.io/socket.io.js"></script>
 <body>
 <!-- HTML Design -->
 <div id="root">
-<div id="top-title">라이브 퀴즈 공유기 - <current-server-name class="ip-name">왕야옹</current-server-name></div>
+<div id="top-title">라이브 퀴즈 공유기 <span v-show="name_visible">- <span v-text="name">왕야옹</span><span v-show="ap_visible">(<span v-text="ap">0</span> 점)</span></span></div>
 <div id="top-ads">
     <ins class="kakao_ad_area" style="display:none;width:100%"
          data-ad-unit    = "DAN-t87e91n4i053"
@@ -79,17 +80,20 @@
     <div type="btn" id="btn-logout"><img src="/images/btn_logout.png"/></div>
     <%}%>
 </div>
-<div id="settings">
+<div id="settings" v-show="visible">
     <div type="title">설정</div>
-    <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
+    <div type="checkbox"><input type="checkbox" :checked="maxVoteDuplicate.checked" @change="onChange(maxVoteDuplicate.storage, maxVoteDuplicate.checked, $event)"/>최다 투표 동률시 미표시</div>
     <div type="checkbox"><input type="checkbox" class="cb_show_member_vote_only"/>고정닉 투표 결과만 보기(로그인시)</div>
-    <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
+    <div type="checkbox"><input type="checkbox" :disabled="showAllServerVote.disabled" :checked="showAllServerVote.checked" @change="onChange(showAllServerVote.storage, showAllServerVote.checked, $event)"/>모든 서버 투표 보기 ( 4레벨 이상 )</div>
+    <div type="msg">아래 설정값이하 미표시 ( <span class="min_vote" v-text="min_vote">0</span>표 이하 ) </div>
     <div class="min_vote_slider"></div>
     <div type="checkbox"><input type="checkbox" id="cb_auto_scroll" checked/>강제 자동 스크롤 on/off</div>
     <div type="checkbox"><input type="checkbox" id="cb_notshowsearchchat"/>검색 채팅 안받기</div>
-    <div type="btn" id="btn-close-settings">닫기</div>
+    <div type="btn" @click="onBtnClose">닫기</div>
 </div>
-<div class="admin_msg"></div>
+<div v-show="show" id="admin-msg-root">
+    <div v-html="msg" :style="{opacity: opacity}" :class="{ opacity: isOpacity == 1, non_opacity: isNonOpacity == 1}"></div>
+</div>
 <div class="quiz_wnd">
     <div class="q_title">문제</div>
     <div style="height: 10px;"></div>

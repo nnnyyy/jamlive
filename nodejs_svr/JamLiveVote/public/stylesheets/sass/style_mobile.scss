@@ -1,23 +1,32 @@
 $primary-color: #1b3440;
 $main-font-color: #ffffff;
+$color-main-back: #ffffff;
+$color-shadow: #e4e6e8;
+$color-back: #f2f4f7;
+$color-main-font: #393939;
+$color-sub-font: #626262;
+$color-sub2-font: #6e6e6e;
+$color-yellow-font: #e9bd25;
+$color-border: #e5e5e5;
+
 $wnd-width: 100vw;
 $menu-width: 100px;
 $graph-height: 80px;
 $article-width: calc(100vw - #{$menu-width} );
-$font-title-size: 18px;
+$font-title-size: 15px;
 $font-chat-size: 11px;
 $font-quiz-text: 13px;
 $font-large: 15px;
 $sub-color: yellow;
 
 .ct-label {
-  color: $sub-color;
+  color: $color-main-font;
 }
 
 
 body {
-  background-color: $primary-color;
-  color: $main-font-color;
+  background-color: $color-main-back;
+  color: $color-main-font;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -36,21 +45,25 @@ div#bottom-ads {
   min-height: 50px;
 }
 
+$top-title-height: 20px;
+$top-title-margin: 4px;
 
 div#top-title {
-  $height: 40px;
-  height: $height;
+  height: $top-title-height;
   width: 100%;
-  line-height: $height;
+  line-height: $top-title-height;
   font-size: $font-title-size;
+  font-weight: bold;
   margin-left: 10px;
+  margin-top: $top-title-margin;
+  margin-bottom: $top-title-margin;
 }
 
 $vote-btn-height: 80px;
 
 div#chat-area {
   width: 100%;
-  height: calc(100vh - 150px - #{$graph-height} - 40px - #{$vote-btn-height} - 50px );
+  height: calc(100vh - 150px - #{$graph-height} - #{$top-title-height} - #{$top-title-margin} - #{$top-title-margin} - #{$vote-btn-height} - 50px );
   font-size: $font-chat-size;
 
   $margin: 8px;
@@ -183,7 +196,7 @@ div#settings {
   }
 }
 
-.admin_msg {
+#admin-msg-root {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -195,7 +208,7 @@ div#settings {
   text-align: center;
   line-height: 60px;
   font-size: $font-chat-size;
-  opacity: 0;
+  opacity: 1;
   overflow: hidden;
 }
 

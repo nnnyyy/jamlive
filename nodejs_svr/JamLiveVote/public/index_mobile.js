@@ -14,10 +14,62 @@ var GlobalValue = function() {
     this.btnSettings = $('#btn-settings');
     this.btnCloseSettings = $('#btn-close-settings');
     this.settingsUI = $('#settings');
-    this.myid = '';
+    this.socketid = '';
     this.isLogin = false;
 
-    this.adminMsg = $('.admin_msg');
+    this.vAdminMsg = new Vue({
+        el: '#admin-msg-root',
+        data: {
+            show: false,
+            msg: '',
+            isOpacity: 0,
+            isNonOpacity: 0,
+            opacity: 0
+        }
+    });
+
+    this.vSettings = new Vue({
+        el: '#settings',
+        data: {
+            visible: false,
+            maxVoteDuplicate: {
+                checked: false,
+                storage: 'max_vote_dupl'
+            },
+            showAllServerVote: {
+                checked: false,
+                storage: 'show_all_server_vote',
+                disabled: true
+            },
+            min_vote: 0
+        },
+        methods: {
+            onBtnClose: function() {
+                this.visible = false;
+            },
+            onChange: function(localStorageName, chekced, event) {
+                if( event.target.checked === true) {
+                    checked = true;
+                    localStorage.setItem(localStorageName, 1);
+                }
+                else {
+                    checked = false;
+                    localStorage.setItem(localStorageName, 0);
+                }
+            }
+        }
+    });
+
+    this.vTopTitle = new Vue({
+        el: '#top-title',
+        data: {
+            name: '',
+            name_visible: false,
+            ap: 0,
+            ap_visible: false
+        }
+    })
+
     this.animOpacityTimerID = -1;
 
     this.quizWnd = $('.quiz_wnd');
@@ -32,7 +84,6 @@ GlobalValue.prototype.init = function(socket) {
     registerBtnListener(this);
     registerSocketListener(this);
 
-    setVisible(this.settingsUI, false);
     setVisible(this.quizWnd, false);
 
     setShowMemberVoteOnlyListener();
@@ -122,11 +173,17 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
         }
     }
 
+    if( isShowAllServerVote() ) {
+        for( var i = 0 ; i < 3 ; ++i ) {
+            total[i] += votedata.totalVote[i];
+        }
+    }
+
     if( isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
         total = [0,0,0];
     }
 
-    var minVoteVal = Number($('min_vote').text());
+    var minVoteVal = Number(global.vSettings.min_vote);
 
     if( totalCnt <= minVoteVal) {
         total = [0,0,0];
@@ -148,16 +205,18 @@ function showAdminMsg(msg) {
     if( global.animOpacityTimerID != -1 ) {
         clearTimeout(global.animOpacityTimerID);
         global.animOpacityTimerID = -1;
-        global.adminMsg.removeClass('opacity');
-        global.adminMsg.addClass('non_opacity');
+        global.vAdminMsg.isOpacity = false;
+        global.vAdminMsg.isNonOpacity = true;
     }
-    global.adminMsg.addClass('opacity');
-    global.adminMsg.removeClass('non_opacity');
-    global.adminMsg.html(msg);
-    global.adminMsg.css('opacity', '0.85');
+    global.vAdminMsg.show = true;
+    global.vAdminMsg.isOpacity = true;
+    global.vAdminMsg.isNonOpacity = false;
+    global.vAdminMsg.msg = msg;
+    global.vAdminMsg.opacity = 0.85;
     global.animOpacityTimerID = setTimeout(function() {
-        global.adminMsg.css('opacity', '0');
-    }, 7000);
+        global.vAdminMsg.opacity = 0;
+        global.vAdminMsg.show = false;
+    }, 2000);
 
 }
 
@@ -193,14 +252,19 @@ GlobalValue.prototype.onEmoticon = function( _data ) {
     }
 }
 
-GlobalValue.prototype.onMyID = function(data) {
-    global.myid = data.socket;
+GlobalValue.prototype.onLoginInfo = function(data) {
+    global.socketid = data.socket;
     global.isLogin = data.isLogined;
-
-    console.log(data.isLogined + ' : ' + global.isLogin);
+    global.auth = data.auth;;
 
     setNickName( data.nick );
     setShowMemberVoteOnlyListener();
+    setShowAllServerVote();
+}
+
+GlobalValue.prototype.onAP = function(data) {
+    global.vTopTitle.ap = data.ap;
+    global.vTopTitle.ap_visible = true;
 }
 
 GlobalValue.prototype.onServMsg = function(data) {
@@ -312,7 +376,8 @@ function getNickName() {
 }
 
 function setNickName( nick ) {
-    global.nick.text(nick);
+    global.vTopTitle.name_visible = true;
+    global.vTopTitle.name = nick;
 }
 
 function logout() {
@@ -399,7 +464,6 @@ function setShowMemberVoteOnlyListener() {
 }
 
 function setShowMemberVoteOnlyListener() {
-    console.log(global.isLogin);
     if( !global.isLogin ) {
         $('.cb_show_member_vote_only').attr('checked', false );
         $('.cb_show_member_vote_only').attr('disabled', true);
@@ -431,11 +495,11 @@ function isShowMemberVoteOnly() {
 }
 
 function isMaxVoteDuplicateChecked() {
-    if($('.cb_max_vote_duplicate').is(':checked')) {
-        return true;
-    }
+    return global.vSettings.maxVoteDuplicate.checked;
+}
 
-    return false;
+function isShowAllServerVote() {
+    return global.auth >=4 && global.vSettings.showAllServerVote.checked;
 }
 
 function isShowSearchChat() {
@@ -455,12 +519,12 @@ function setMinVoteSliderListener() {
         max: 10,
         slide: function( event, ui ) {
             localStorage.setItem('min_vote', ui.value);
-            $( "min_vote" ).text( ui.value );
+            global.vSettings.min_vote = ui.value;
         }
     });
 
     $('.min_vote_slider').slider('value', min_vote_val);
-    $( "min_vote" ).text( min_vote_val );
+    global.vSettings.min_vote = min_vote_val;
 
     var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
     $('.ret_cnt_slider').slider({
@@ -477,16 +541,20 @@ function setMinVoteSliderListener() {
     $('.ret_cnt_slider').slider('value', ret_cnt_val);
     $( "ret_cnt" ).text( ret_cnt_val );
 
-    var max_vote_dupl = localStorage.getItem('max_vote_dupl') || 0;
-    $('.cb_max_vote_duplicate').attr('checked', max_vote_dupl == 1 ? true : false );
-    $('.cb_max_vote_duplicate').change(function() {
-        if( $(this).is(':checked') ) {
-            localStorage.setItem('max_vote_dupl', 1);
-        }
-        else {
-            localStorage.setItem('max_vote_dupl', 0);
-        }
-    })
+    var max_vote_dupl = localStorage.getItem(global.vSettings.maxVoteDuplicate.storage) || 0;
+    global.vSettings.maxVoteDuplicate.checked = max_vote_dupl == 1 ? true : false;
+}
+
+function setShowAllServerVote() {
+    if( global.auth < 4 ) {
+        global.vSettings.showAllServerVote.disabled = true;
+        global.vSettings.showAllServerVote.checked = false;
+    }
+    else {
+        global.vSettings.showAllServerVote.disabled = false;
+        var max_vote_dupl = localStorage.getItem(global.vSettings.showAllServerVote.storage) || 0;
+        global.vSettings.showAllServerVote.checked = max_vote_dupl == 1 ? true : false;
+    }
 }
 
 function registerBtnListener(g) {
@@ -506,11 +574,13 @@ function registerBtnListener(g) {
     })
 
     g.btnSettings.click(function(e) {
-        setVisible( g.settingsUI, true );
+        g.vSettings.visible = true;
     });
 
     g.btnCloseSettings.click(function(e) {
-        setVisible( g.settingsUI, false );
+        e.stopPropagation();
+        e.preventDefault();
+        g.vSettings.visible = false;
     })
 }
 
@@ -519,7 +589,8 @@ function registerSocketListener(g) {
     g.socket.on('admin-msg', onAdminMsg);
     g.socket.on('vote_data', g.onProcessVoteData);
     g.socket.on('emoticon', g.onEmoticon);
-    g.socket.on('myid', g.onMyID);
+    g.socket.on('loginInfo', g.onLoginInfo);
+    g.socket.on('ap', g.onAP);
     g.socket.on('serv_msg', g.onServMsg);
     g.socket.on('quiz', g.onQuiz);
     g.socket.on('quizret', g.onQuizRet);

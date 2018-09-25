@@ -1,10 +1,10 @@
 .ct-label {
-  color: yellow;
+  color: #393939;
 }
 
 body {
-  background-color: #1b3440;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #393939;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -24,16 +24,19 @@ div#bottom-ads {
 }
 
 div#top-title {
-  height: 40px;
+  height: 20px;
   width: 100%;
-  line-height: 40px;
-  font-size: 18px;
+  line-height: 20px;
+  font-size: 15px;
+  font-weight: bold;
   margin-left: 10px;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 div#chat-area {
   width: 100%;
-  height: calc(100vh - 150px - 80px - 40px - 80px - 50px );
+  height: calc(100vh - 150px - 80px - 20px - 4px - 4px - 80px - 50px );
   font-size: 11px;
 }
 div#chat-area ul.chat-ui {
@@ -146,7 +149,7 @@ div#settings div[type="btn"] {
   color: #ffffff;
 }
 
-.admin_msg {
+#admin-msg-root {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -158,7 +161,7 @@ div#settings div[type="btn"] {
   text-align: center;
   line-height: 60px;
   font-size: 11px;
-  opacity: 0;
+  opacity: 1;
   overflow: hidden;
 }
 
