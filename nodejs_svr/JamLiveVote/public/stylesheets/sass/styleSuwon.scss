@@ -11,6 +11,13 @@ $color-sub2-font: #6e6e6e;
 $color-yellow-font: #e9bd25;
 $color-border: #e5e5e5;
 
+$search-font-size-basic: 17px;
+$search-font-size-large: 18px;
+$search-font-size-basic-line-height: 18px;
+$search-font-size-large-line-height: 20px;
+$search-color-find-bg: #e9bd25;
+$search-color-find-other-bg: #0ABE64;
+
 
 body {
   background-color: $color-back;
@@ -241,18 +248,18 @@ $top-bottom-margin: 5px;
   }
 
   .search_ret_desc {
-    font-size: 15px;
+    font-size: $search-font-size-basic;
     margin-bottom: 8px;
-    line-height: 19px;
+    line-height: $search-font-size-large-line-height;
 
     b {
-      font-size: 16px;
-      background-color: $color-yellow-font;
+      font-size: $search-font-size-large;
+      background-color: $search-color-find-bg;
     }
 
     strong.hl {
-      font-size: 16px;
-      background-color: $color-yellow-font;
+      font-size: $search-font-size-large;
+      background-color: $search-color-find-bg;
     }
   }
 
@@ -294,7 +301,7 @@ $top-bottom-margin: 5px;
       color: $color-main-font;
       z-index: 100;
       font-family: 'Nanum Barun Gothic', sans-serif;
-      font-size: 15px;
+      font-size: $search-font-size-basic;
     }
 
     #site-info-notice {
@@ -487,7 +494,7 @@ $top-bottom-margin: 5px;
       overflow-y: auto;
       z-index: 100;
       font-family: 'Nanum Barun Gothic', sans-serif;
-      font-size: 15px;
+      font-size: $search-font-size-basic;
     }
 
     #video-ads-area {
@@ -1013,9 +1020,9 @@ wnd[role="settings"] {
 }
 
 search-top-ret {
-  background-color: #ff9284;
+  background-color: $search-color-find-other-bg;
   color: black;
-  font-size: 17px;
+  font-size: $search-font-size-large;
   font-weight: bold;
 }
 

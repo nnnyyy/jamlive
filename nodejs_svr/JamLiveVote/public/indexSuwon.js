@@ -1523,7 +1523,7 @@ function onSearchNaverAPI(packet) {
         }
         var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
         data = data.slice(0, ret_cnt_val);
-        setSearchRet(data, false, where, sPrefix, search_title_prefix_style_name[type]);
+        setSearchRet(data, false, where, '[' + sPrefix + ']', search_title_prefix_style_name[type]);
     }
 }
 
