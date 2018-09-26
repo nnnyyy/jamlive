@@ -153,8 +153,20 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
 
     var total = [0,0,0];
 
+    //  상위 레벨 투표 결과
+    for( var i = 0 ; i < votedata.searched_cnt.length ; ++i ) {
+        total[i] += votedata.searched_cnt[i];
+    }
+
+    //  일반 레벨 (로그인한) 투표 결과
     for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
         total[i] += votedata.cnt[i];
+    }
+
+    if( isShowAllServerVote() ) {
+        for( var i = 0 ; i < 3 ; ++i ) {
+            total[i] += votedata.totalVote[i];
+        }
     }
 
     var totalCnt = 0;
@@ -173,11 +185,6 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
         }
     }
 
-    if( isShowAllServerVote() ) {
-        for( var i = 0 ; i < 3 ; ++i ) {
-            total[i] += votedata.totalVote[i];
-        }
-    }
 
     if( isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
         total = [0,0,0];
