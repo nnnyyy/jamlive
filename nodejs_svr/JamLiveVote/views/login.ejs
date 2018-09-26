@@ -12,15 +12,18 @@
     </script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
-    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
     <link rel='stylesheet' href='/stylesheets/style_signin.css' />
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <body>
 <!-- HTML Design -->
-<div class="main_frame">
-    <div class="center_wnd">
+<div id="main_frame">
+    <div id="center_wnd">
+        <div>
+            <img src="/images/_logo.png"/>
+        </div>
         <% if( !username ){ %>
-        <div class="top_notice">서버1은 300명 넘을 시 자동인증</div>
         <table class="tb_signup">
             <tr>
                 <th>아이디</th>
@@ -36,11 +39,17 @@
                 </td>
             </tr>
         </table>
+        <div style="width: 320px;height:100px; margin: 0 auto;">
+            <ins class="kakao_ad_area" style="display:none;"
+                 data-ad-unit    = "DAN-s4univ46zz1w"
+                 data-ad-width   = "320"
+                 data-ad-height  = "100"></ins>
+            <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+        </div>
         <%}else {%>
         <div class="top_notice">이미 로그인 되어 있습니다.</div>
         <a href="/"><div class="btn_gohome">공유기로 이동</div></a>
         <%}%>
-
         <div class="alert_msg"></div>
     </div>
 </div>

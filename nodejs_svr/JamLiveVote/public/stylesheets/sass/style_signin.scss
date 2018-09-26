@@ -1,0 +1,33 @@
+$primary-color: #1b3440;
+$main-font-color: #ffffff;
+$color-main-back: #ffffff;
+$color-shadow: #e4e6e8;
+$color-back: #f2f4f7;
+$color-main-font: #393939;
+$color-sub-font: #626262;
+$color-sub2-font: #6e6e6e;
+$color-yellow-font: #e9bd25;
+$color-border: #e5e5e5;
+
+body {
+  background-color: $color-main-back;
+  color: $color-main-font;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+#main_frame {
+  text-align: center;
+  margin-top: calc( 50vh - 100px );
+
+  #center_wnd {
+    display:block;
+  }
+
+  .tb_signup {
+    margin: 0 auto;
+  }
+}
