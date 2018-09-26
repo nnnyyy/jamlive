@@ -83,11 +83,11 @@
 <div id="settings" v-show="visible">
     <div type="title">설정</div>
     <div type="checkbox"><input type="checkbox" :checked="maxVoteDuplicate.checked" @change="onChange(maxVoteDuplicate.storage, maxVoteDuplicate, $event)"/>최다 투표 동률시 미표시</div>
-    <div type="checkbox"><input type="checkbox" :disabled="showMemberVoteOnly.disabled" :checked="showMemberVoteOnly.checked" @change="onChange(showMemberVoteOnly.storage, showMemberVoteOnly, $event)"/>고정닉 투표 결과만 보기(로그인시)</div>
-    <div type="checkbox"><input type="checkbox" :disabled="showAllServerVote.disabled" :checked="showAllServerVote.checked" @change="onChange(showAllServerVote.storage, showAllServerVote, $event)"/>모든 서버 투표 보기 ( 4레벨 이상 )</div>
+    <div type="checkbox"><input type="checkbox" :disabled="showMemberVoteOnly.disabled" :checked="showMemberVoteOnly.checked" @change="onChange(showMemberVoteOnly.storage, showMemberVoteOnly, $event)"/>렙4 이하 투표 거르기</div>
+    <div type="checkbox"><input type="checkbox" :disabled="showAllServerVote.disabled" :checked="showAllServerVote.checked" @change="onChange(showAllServerVote.storage, showAllServerVote, $event)"/>모든 서버 투표 보기</div>
     <div type="msg">아래 설정값이하 미표시 ( <span class="min_vote" v-text="min_vote">0</span>표 이하 ) </div>
     <div class="min_vote_slider"></div>
-    <div type="checkbox"><input type="checkbox" id="cb_auto_scroll" checked/>강제 자동 스크롤 on/off</div>
+    <div type="checkbox"><input type="checkbox" :checked="autoScroll.checked" @change="onChange(autoScroll.storage, autoScroll, $event)" />강제 자동 스크롤 on/off</div>
     <div type="checkbox"><input type="checkbox" id="cb_notshowsearchchat"/>검색 채팅 안받기</div>
     <div type="btn" @click="onBtnClose">닫기</div>
 </div>

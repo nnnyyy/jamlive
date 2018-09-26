@@ -46,6 +46,10 @@ var GlobalValue = function() {
                 storage: 'show_high_level_vote_only',
                 disabled: true
             },
+            autoScroll: {
+                checked: false,
+                storage: 'auto_scroll'
+            },
             min_vote: 0
         },
         methods: {
@@ -92,6 +96,9 @@ GlobalValue.prototype.init = function(socket) {
     setVisible(this.quizWnd, false);
 
     setMinVoteSliderListener();
+
+    var val = localStorage.getItem(global.vSettings.autoScroll.storage) || 0;
+    global.vSettings.autoScroll.checked = val == 1 ? true : false;
 
     setInterval(function() {
         global.bFlushByTimer = true;
