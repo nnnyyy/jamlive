@@ -47,13 +47,13 @@ var GlobalValue = function() {
             onBtnClose: function() {
                 this.visible = false;
             },
-            onChange: function(localStorageName, chekced, event) {
+            onChange: function(localStorageName, obj, event) {
                 if( event.target.checked === true) {
-                    checked = true;
+                    obj.checked = true;
                     localStorage.setItem(localStorageName, 1);
                 }
                 else {
-                    checked = false;
+                    obj.checked = false;
                     localStorage.setItem(localStorageName, 0);
                 }
             }
