@@ -361,7 +361,7 @@ GlobalValue.prototype.FlushChat = function( mode ) {
         }
 
         if( (global.chatUI.get(0).scrollTop == (global.chatUI.get(0).scrollHeight - chatwndheight - 20/* padding */) ) ||
-            $('#cb_auto_scroll').is(':checked')) {
+            global.vSettings.autoScroll.checked ) {
             bAutoMoveToBottom = true;
         }
 
