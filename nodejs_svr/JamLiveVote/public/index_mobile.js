@@ -41,6 +41,11 @@ var GlobalValue = function() {
                 storage: 'show_all_server_vote',
                 disabled: true
             },
+            showMemberVoteOnly: {
+                checked: false,
+                storage: 'show_high_level_vote_only',
+                disabled: true
+            },
             min_vote: 0
         },
         methods: {
@@ -86,7 +91,6 @@ GlobalValue.prototype.init = function(socket) {
 
     setVisible(this.quizWnd, false);
 
-    setShowMemberVoteOnlyListener();
     setMinVoteSliderListener();
 
     setInterval(function() {
@@ -159,8 +163,10 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
     }
 
     //  일반 레벨 (로그인한) 투표 결과
-    for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
-        total[i] += votedata.cnt[i];
+    if( !isShowMemberVoteOnly() ) {
+        for( var i = 0 ; i < votedata.cnt.length ; ++i ) {
+            total[i] += votedata.cnt[i];
+        }
     }
 
     if( isShowAllServerVote() ) {
@@ -265,8 +271,8 @@ GlobalValue.prototype.onLoginInfo = function(data) {
     global.auth = data.auth;;
 
     setNickName( data.nick );
-    setShowMemberVoteOnlyListener();
     setShowAllServerVote();
+    setShowMemberVoteOnly();
 }
 
 GlobalValue.prototype.onAP = function(data) {
@@ -446,67 +452,16 @@ function setVisible(elem, visible) {
     elem.css('display', visible ? 'inline-block' : 'none');
 }
 
-function setShowMemberVoteOnlyListener() {
-
-    if( !global.isLogin ) {
-        $('.cb_show_member_vote_only').attr('checked', false );
-        $('.cb_show_member_vote_only').attr('disabled', true);
-        return;
-    }
-    else {
-        $('.cb_show_member_vote_only').attr('disabled', false);
-    }
-    var only = localStorage.getItem('cb_show_member_vote_only') || 0;
-
-    $('.cb_show_member_vote_only').attr('checked', only == 1 ? true : false );
-
-    $('.cb_show_member_vote_only').change(function() {
-        if( $(this).is(':checked') ) {
-            localStorage.setItem('cb_show_member_vote_only', 1);
-        }
-        else {
-            localStorage.setItem('cb_show_member_vote_only', 0);
-        }
-    })
-}
-
-function setShowMemberVoteOnlyListener() {
-    if( !global.isLogin ) {
-        $('.cb_show_member_vote_only').attr('checked', false );
-        $('.cb_show_member_vote_only').attr('disabled', true);
-        return;
-    }
-    else {
-        $('.cb_show_member_vote_only').attr('disabled', false);
-    }
-    var only = localStorage.getItem('cb_show_member_vote_only') || 0;
-
-    $('.cb_show_member_vote_only').attr('checked', only == 1 ? true : false );
-
-    $('.cb_show_member_vote_only').change(function() {
-        if( $(this).is(':checked') ) {
-            localStorage.setItem('cb_show_member_vote_only', 1);
-        }
-        else {
-            localStorage.setItem('cb_show_member_vote_only', 0);
-        }
-    })
-}
-
-function isShowMemberVoteOnly() {
-    if($('.cb_show_member_vote_only').is(':checked')) {
-        return true;
-    }
-
-    return false;
-}
-
 function isMaxVoteDuplicateChecked() {
     return global.vSettings.maxVoteDuplicate.checked;
 }
 
 function isShowAllServerVote() {
     return global.auth >=4 && global.vSettings.showAllServerVote.checked;
+}
+
+function isShowMemberVoteOnly() {
+    return global.vSettings.showMemberVoteOnly.checked;
 }
 
 function isShowSearchChat() {
@@ -561,6 +516,18 @@ function setShowAllServerVote() {
         global.vSettings.showAllServerVote.disabled = false;
         var max_vote_dupl = localStorage.getItem(global.vSettings.showAllServerVote.storage) || 0;
         global.vSettings.showAllServerVote.checked = max_vote_dupl == 1 ? true : false;
+    }
+}
+
+function setShowMemberVoteOnly() {
+    if( !global.isLogin ) {
+        global.vSettings.showMemberVoteOnly.disabled = true;
+        global.vSettings.showMemberVoteOnly.checked = false;
+    }
+    else {
+        global.vSettings.showMemberVoteOnly.disabled = false;
+        var max_vote_dupl = localStorage.getItem(global.vSettings.showMemberVoteOnly.storage) || 0;
+        global.vSettings.showMemberVoteOnly.checked = max_vote_dupl == 1 ? true : false;
     }
 }
 
