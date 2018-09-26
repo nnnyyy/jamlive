@@ -521,7 +521,7 @@ exports.getTodayQuizList = function( cb ) {
             cb({ret: 0, tableList: rows[0] });
         });
     }catch(err) {
-        Log.logger.debug('DB Failed - getBanCnt');
+        console.log(err);
         cb({ret: -1});
     }
 }

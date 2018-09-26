@@ -170,6 +170,7 @@ var ServerMan = function() {
     this.todayQuizTableList = [];
 
     this.curDay = -1;
+    this.tLastUpdateQuizTimeTable = 0;
     this.totalVote = [0,0,0];
     this.totalUserCnt = 0;
 }
@@ -567,8 +568,8 @@ ServerMan.prototype.updateLong = function() {
 
     try {
         //  오늘의 퀴즈쇼 알림
-        if( this.curDay != cur.getDay() ) {
-            this.curDay = cur.getDay();
+        if( cur - this.tLastUpdateQuizTimeTable >= 5 * 60 * 1000 ) {
+            this.tLastUpdateQuizTimeTable = cur;
             dbhelper.getTodayQuizList(function(result) {
                 servman.todayQuizTableList = result.tableList;
             })
