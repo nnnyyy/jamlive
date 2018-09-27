@@ -231,12 +231,12 @@ Options.prototype.init = function() {
         max: 10,
         slide: function( event, ui ) {
             localStorage.setItem('min_vote', ui.value);
-            $( "min_vote" ).text( ui.value );
+            $( ".min_vote" ).text( ui.value );
         }
     });
 
     $('.min_vote_slider').slider('value', min_vote_val);
-    $( "min_vote" ).text( min_vote_val );
+    $( ".min_vote" ).text( min_vote_val );
 
 
     //  결과 몇개까지 보여줄까?
@@ -248,12 +248,12 @@ Options.prototype.init = function() {
         max: 4,
         slide: function( event, ui ) {
             localStorage.setItem('ret_cnt', ui.value);
-            $( "ret_cnt" ).text( ui.value );
+            $( ".ret_cnt" ).text( ui.value );
         }
     });
 
     $('.ret_cnt_slider').slider('value', ret_cnt_val);
-    $( "ret_cnt" ).text( ret_cnt_val );
+    $( ".ret_cnt" ).text( ret_cnt_val );
 
     //  투표 동률일 때 표시?
     var max_vote_dupl = localStorage.getItem('max_vote_dupl') || 0;
@@ -330,6 +330,30 @@ Options.prototype.init = function() {
 }
 
 Options.prototype.initSettings = function() {
+    this.vSettings = new Vue({
+        el: '#settings',
+        data: {
+            visible: false,
+            showHighLevelVoteOnly: {
+                disabled: false,
+                checked: false,
+                storage: 'showHighLevelVoteOnly'
+            }
+        },
+        methods: {
+            onChange: function(localStorageName, obj, event) {
+                if( event.target.checked === true) {
+                    obj.checked = true;
+                    localStorage.setItem(localStorageName, 1);
+                }
+                else {
+                    obj.checked = false;
+                    localStorage.setItem(localStorageName, 0);
+                }
+            }
+        }
+    });
+
     var cbs_name = ['cb0', 'cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7'];
     var rbs_name = ['sb0', 'sb1', 'sb2', 'sb3', 'sb4', 'sb5', 'sb6', 'sb7'];
     var cbs = [$('#cb_s0'), $('#cb_s1'), $('#cb_s2'), $('#cb_s3'), $('#cb_s4'), $('#cb_s5'), $('#cb_s6'), $('#cb_s7')];
@@ -390,26 +414,16 @@ Options.prototype.setShowMemberVoteOnly = function() {
 }
 
 Options.prototype.setSearchUserVoteOnly = function() {
-    //  고정닉 투표만 보기 ( 손님투표 거르기 )
     if( !G.isLogin ) {
-        $('.cb_show_search_user_vote_only').attr('checked', false );
-        $('.cb_show_search_user_vote_only').attr('disabled', true);
+        options.vSettings.showHighLevelVoteOnly.disabled = true;
+        options.vSettings.showHighLevelVoteOnly.checked = false;
     }
     else {
-        $('.cb_show_search_user_vote_only').attr('disabled', false);
-        var only = localStorage.getItem('cb_show_search_user_vote_only') || 0;
+        options.vSettings.showHighLevelVoteOnly.disabled = false;
+        var storageData = localStorage.getItem(options.vSettings.showHighLevelVoteOnly.storage) || 0;
 
-        $('.cb_show_search_user_vote_only').attr('checked', only == 1 ? true : false );
+        options.vSettings.showHighLevelVoteOnly.checked = storageData == 1 ? true : false;
     }
-
-    $('.cb_show_search_user_vote_only').change(function() {
-        if( $(this).is(':checked') ) {
-            localStorage.setItem('cb_show_search_user_vote_only', 1);
-        }
-        else {
-            localStorage.setItem('cb_show_search_user_vote_only', 0);
-        }
-    })
 }
 
 Options.prototype.isShowMemberVoteOnly = function() {
@@ -423,13 +437,7 @@ Options.prototype.isShowMemberVoteOnly = function() {
 }
 
 Options.prototype.isShowSearchUserVoteOnly = function() {
-
-    if($('.cb_show_search_user_vote_only').is(':checked')) {
-        return true;
-    }
-
-
-    return false;
+    return options.vSettings.showHighLevelVoteOnly.checked;
 }
 
 Options.prototype.isMaxVoteDuplicateChecked = function() {
@@ -713,7 +721,7 @@ VoteObject.prototype.onVoteData = function(data) {
         total = [0,0,0];
     }
 
-    var minVoteVal = Number($('min_vote').text());
+    var minVoteVal = Number($('.min_vote').text());
 
     if( totalCnt <= minVoteVal) {
         total = [0,0,0];
@@ -1162,8 +1170,7 @@ function onInputMsgKeyUp(e) {
 }
 
 function setBtnEvent() {
-    var settingsElem = $('wnd[role="settings"]');
-    setVisible(settingsElem, false);
+    options.vSettings.visible = false;
     $('#btn-settings').click(onBtnSettings);
     $('#btn-help').click(onBtnHelp);
     $('#notice-wrapper').click(function(e) {
@@ -1289,9 +1296,8 @@ function onBtnLikeListBtn(e) {
 
 function onBtnSettings(e) {
     e.stopPropagation();
-    var settingsWnd = $('wnd[role="settings"]');
-    settingsWnd.css('display','inline-block');
-
+    options.vSettings.visible = true;
+    var settingsWnd = $('#settings');
     settingsWnd.css({left: 0});
 
     settingsWnd.click(function(e) {

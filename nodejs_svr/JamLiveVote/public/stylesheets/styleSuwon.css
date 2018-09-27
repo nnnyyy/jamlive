@@ -715,7 +715,7 @@ body {
   overflow-y: auto;
 }
 
-wnd[role="settings"] {
+#settings {
   position: fixed;
   top: 0;
   left: -300px;
@@ -729,7 +729,7 @@ wnd[role="settings"] {
   text-align: center;
   overflow-y: auto;
 }
-wnd[role="settings"] div[type="title"] {
+#settings div[type="title"] {
   width: 100%;
   height: 30px;
   line-height: 30px;
@@ -737,42 +737,42 @@ wnd[role="settings"] div[type="title"] {
   margin-bottom: 5px;
   font-weight: bold;
 }
-wnd[role="settings"] div[type="line"] {
+#settings div[type="line"] {
   height: 1px;
   width: 270px;
   background-color: #1b3440;
   margin: 0 auto;
 }
-wnd[role="settings"] div[type="checkbox"] {
+#settings div[type="checkbox"] {
   font-size: 14px;
   width: calc( 100% - 30px );
   height: 30px;
   text-align: left;
   margin: 9px;
 }
-wnd[role="settings"] div[type="msg"] {
+#settings div[type="msg"] {
   font-size: 14px;
   width: 100%;
   margin-top: 5px;
   margin-bottom: 5px;
 }
-wnd[role="settings"] .min_vote_slider {
+#settings .min_vote_slider {
   width: calc(90% - 20px);
   height: 10px;
   margin: 10px auto;
   z-index: 0;
 }
-wnd[role="settings"] .min_vote_slider .ui-slider-handle {
+#settings .min_vote_slider .ui-slider-handle {
   width: 15px;
   height: 15px;
 }
-wnd[role="settings"] .ret_cnt_slider {
+#settings .ret_cnt_slider {
   width: calc(90% - 20px);
   height: 10px;
   margin: 10px auto;
   z-index: 0;
 }
-wnd[role="settings"] .ret_cnt_slider .ui-slider-handle {
+#settings .ret_cnt_slider .ui-slider-handle {
   width: 15px;
   height: 15px;
 }

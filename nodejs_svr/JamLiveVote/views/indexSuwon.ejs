@@ -41,6 +41,7 @@
     <link rel='stylesheet' href='/stylesheets/styleSuwon.css' />
     <link href='https://cdn.rawgit.com/openhiun/hangul/14c0f6faa2941116bb53001d6a7dcd5e82300c3f/nanumbarungothic.css' rel='stylesheet' type='text/css'>
     <script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 <script src="/socket.io/socket.io.js"></script>
 <body>
@@ -102,12 +103,6 @@
             </div>
             <span id="clock"></span>
         </div>
-        <!--
-        <div id="area-top-center">
-            <div id="quizinfo-title"><%= __('next-live-quiz')%></div>
-            <div id="quizinfo-main"><next-quizday>오늘</next-quizday> <next-quiz-info><next-quiz-type>잼라이브</next-quiz-type> 20시 00분</next-quiz-info></div>
-        </div>
-        -->
         <div id="area-top-right">
             <div class="area-top-btn" id="btn-settings"><%=__('menu-settings')%></div>
             <div class="area-top-btn" id="btn-help"><%=__('menu-help')%></div>
@@ -136,9 +131,6 @@
                     </div>
                 </div>
                 <div id="notice">
-                    <div type="msg" style="font-color: red">정확하게 아는 것만 투표 해 주세요 ( 헷갈리면 투표 X )</div>
-                    <div type="msg">##영구밴## 기준은 카페를 참고하세요</div>
-                    <div type="msg" style="color: whitesmoke; font-size: 20px; background-color: #40a070">지식의 바다에 지식을 공유해주세요! <a style="color:yellow" href="/kin" target="_blank">바로가기</a></div>
                 </div>
             </div>
             <div id="hint">
@@ -282,50 +274,33 @@
     </div>
 </div>
 
-<wnd role="settings">
+<div id="settings" v-show="visible">
     <div type="title"> - <%= __('vote')%> - </div>
     <div type="line"></div>
     <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
-    <div type="checkbox"><input type="checkbox" class="cb_show_search_user_vote_only"/>레벨 4이상 유저 투표만 보기(로그인시)</div>
-    <div type="msg">아래 설정값이하 미표시 ( <min_vote>0</min_vote>표 이하 ) </div>
+    <div type="checkbox"><input type="checkbox" :disabled="showHighLevelVoteOnly.disabled" :checked="showHighLevelVoteOnly.checked" @change="onChange(showHighLevelVoteOnly.storage, showHighLevelVoteOnly, $event)" class="cb_show_search_user_vote_only"/>레벨 4이상 유저 투표만 보기(로그인시)</div>
+    <div type="msg">아래 설정값이하 미표시 ( <span class="min_vote">0</span>표 이하 ) </div>
     <div class="min_vote_slider"></div>
     <div type="line"></div>
     <div type="title"> - 검색 - </div>
     <div type="line"></div>
-    <div type="msg">검색당 결과 수 ( <ret_cnt>0</ret_cnt>표 이하 ) </div>
+    <div type="msg">검색당 결과 수 ( <span class="ret_cnt">0</span>표 이하 ) </div>
     <div class="ret_cnt_slider"></div>
-    <!--
-    <div type="checkbox"><input type="checkbox" id="cb_s0"/>네이버 - 웹
-        <input type="radio" name="radio_s0" value="1" >왼쪽
-        <input type="radio" name="radio_s0" value="2" checked>오른쪽</div>
-    <div type="checkbox"><input type="checkbox" id="cb_s1"/>네이버 - 지식인
-        <input type="radio" name="radio_s1" value="1" checked>왼쪽
-        <input type="radio" name="radio_s1" value="2">오른쪽</div>
-    </div>
-    <div type="checkbox"><input type="checkbox" id="cb_s2"/>네이버 - 블로그
-        <input type="radio" name="radio_s2" value="1" checked>왼쪽
-        <input type="radio" name="radio_s2" value="2">오른쪽</div>
-    </div>
-    <div type="checkbox"><input type="checkbox" id="cb_s3"/>네이버 - 뉴스
-        <input type="radio" name="radio_s3" value="1" checked>왼쪽
-        <input type="radio" name="radio_s3" value="2">오른쪽</div>
-    </div>
-    -->
     <div type="checkbox"><input type="checkbox" id="cb_s4"/>네이버 - 이미지
         <input type="radio" name="radio_s4" value="1" checked>왼쪽
-        <input type="radio" name="radio_s4" value="2">오른쪽</div>
+        <input type="radio" name="radio_s4" value="2">오른쪽
     </div>
     <div type="checkbox"><input type="checkbox" id="cb_s5"/>구글(다음으로 대체)
         <input type="radio" name="radio_s5" value="1" >왼쪽
-        <input type="radio" name="radio_s5" value="2"checked>오른쪽</div>
+        <input type="radio" name="radio_s5" value="2"checked>오른쪽
     </div>
     <div type="checkbox"><input type="checkbox" id="cb_s6"/>사이트 기출DB
         <input type="radio" name="radio_s6" value="1" >왼쪽
-        <input type="radio" name="radio_s6" value="2"checked>오른쪽</div>
+        <input type="radio" name="radio_s6" value="2"checked>오른쪽
     </div>
     <div type="checkbox"><input type="checkbox" id="cb_s7"/>어학사전
         <input type="radio" name="radio_s7" value="1" >왼쪽
-        <input type="radio" name="radio_s7" value="2"checked>오른쪽</div>
+        <input type="radio" name="radio_s7" value="2"checked>오른쪽
     </div>
     <div type="checkbox"><input type="checkbox" id="cb_top_five"/>검색 top 5 보기</div>
     <div type="line"></div>
@@ -334,7 +309,7 @@
     <div type="checkbox"><input type="checkbox" id="cb_auto_scroll" checked />강제 자동 스크롤 on/off</div>
     <div type="checkbox"><input type="checkbox" id="cb_notshowchat"/>일반 채팅 안받기(성능)</div>
     <div type="checkbox"><input type="checkbox" id="cb-notice-disable"/>채팅량 일정 이상시 초기화(성능)</div>
-</wnd>
+</div>
 
 <div class="admin_msg"></div>
 <div class="user-menu">
@@ -378,7 +353,6 @@
 </div>
 </body>
 <script type="text/javascript" src="/indexSuwon.js"></script>
-<script type="text/javascript" src="/js/modules/sly.min.js"></script>
 <script>
     $(document).ready(function() {
         if( isMobile() ) {

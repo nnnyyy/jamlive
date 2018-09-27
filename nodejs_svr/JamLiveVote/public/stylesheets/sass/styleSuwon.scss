@@ -905,7 +905,7 @@ $top-bottom-margin: 5px;
   }
 }
 
-wnd[role="settings"] {
+#settings {
   $width: 300px;
   $line-width: $width / 10 * 9;
   position: fixed;
