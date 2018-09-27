@@ -63,6 +63,7 @@ class ChosungGame {
         man.step = 1;
         man.showType = false;
         man.words = words;
+        //console.log(words);
         man.quizIdx = 0;
         man.tStart = new Date();
         callback( null );
@@ -79,6 +80,7 @@ class ChosungGame {
         this.questionWord = word.trim();
         this.questionType = type;
         this.question = [];
+        this.showType = false;
         const a = Hangul.d(word, true);
         var chosung = '';
         for( var i = 0 ; i < a.length ; ++i) {
@@ -105,6 +107,7 @@ class ChosungGame {
             }
             this.showType = true;
             mode = 1;
+            //console.log(`${this.questionWord} : ${this.questionType}`);
             this.io.sockets.emit('chosung', {step: 'q-hint', mode: mode, q: chosung, type: this.questionType});
         }
         else {
@@ -175,7 +178,7 @@ class ChosungGame {
             this.broadcastQuestion();
         }
 
-        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 10 ) {
+        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 1 ) {
             this.showHint();
         }
 
