@@ -412,12 +412,6 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     let cur = new Date();
 
     if( this.chosung.isRunning() ) {
-
-        if( this.isLiveQuizTime() ) {
-            //this.chosung.stop();
-            //return;
-        }
-
         this.chosung.update( cur );
     }
 
@@ -577,6 +571,11 @@ ServerMan.prototype.updateLong = function() {
 
         //  지식의 바다
         KinMan.update( cur );
+
+        //  자동 초성 퀴즈
+        if( this.chosung.isChosungTime(this) ) {
+            this.chosung.start();
+        }
 
         //  자동 퀴즈쇼 모드
         if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.isAbleCreateQuizData() ) {
@@ -991,8 +990,8 @@ function onSockChat(data) {
         if( servman.chosung.isRunning() ) {
             if( servman.chosung.checkAnswer(client.nick, data.msg) ) {
                 //  성공 !
-                client.incActivePoint(20);
-                servman.sendServerMsg(client.socket, '+20점');
+                client.incActivePoint(5);
+                servman.sendServerMsg(client.socket, '+5점 획득!');
             }
         }
 

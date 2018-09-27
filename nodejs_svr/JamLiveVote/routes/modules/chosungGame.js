@@ -18,6 +18,7 @@ class ChosungGame {
         this.step = 0;
         this.tStart = 0;
         this.quizIdx = 0;
+        this.lastGameHash = -1;
         this.words = [];
         this.showType = false;
     }
@@ -27,6 +28,9 @@ class ChosungGame {
             console.log('already start');
             return;
         }
+
+        const tCur = new Date();
+        this.lastGameHash = tCur.getHours();
         this.bRunning = true;
         this.quizIdx = 0;
 
@@ -157,6 +161,16 @@ class ChosungGame {
 
     isRunning() {
         return this.bRunning;
+    }
+
+    isChosungTime(servman) {
+        if( servman.isLiveQuizTime() ) return false;
+        const tCur = new Date();
+        if( this.lastGameHash != tCur.getHours() ) {
+            return true;
+        }
+
+        return false;
     }
 
     sendState(socket) {
