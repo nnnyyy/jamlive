@@ -71,8 +71,10 @@ socketToCenterServer.on('connect', function () {
         try {
             const totalVote = packet.totalVote;
             const totalUserCnt = packet.totalCnt;
+            const searchQueries = packet.searchQueries;
             servman.setAllServerVote( totalVote );
             servman.setTotalUserCnt( totalUserCnt );
+            servman.setSearchQueries( searchQueries );
         }
         catch(e) {
             console.log(e);
@@ -173,6 +175,8 @@ var ServerMan = function() {
     this.tLastUpdateQuizTimeTable = 0;
     this.totalVote = [0,0,0];
     this.totalUserCnt = 0;
+
+    this.searchQueries = [];
 }
 
 var servman = new ServerMan();
@@ -189,6 +193,10 @@ ServerMan.prototype.setAllServerVote = function( totalVote ) {
 
 ServerMan.prototype.setTotalUserCnt = function( totalCnt ) {
     this.totalUserCnt = totalCnt;
+}
+
+ServerMan.prototype.setSearchQueries = function( searchQueries ) {
+    this.searchQueries = searchQueries;
 }
 
 ServerMan.prototype.reloadBanList = function() {
@@ -467,13 +475,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         _countsSearchFirst[2] += value[2];
     })
 
-    var searchlist = this.searchQueryMap.values();
-    searchlist.sort(function(item1, item2) {
-        return item2.cnt - item1.cnt;
-    })
-
-    searchlist = searchlist.slice(0, 7);
-
+    var searchlist = this.searchQueries;
     let s = '';
     for( var i = 0 ; i < searchlist.length ; ++i ) {
         s += searchlist[i].query;
@@ -655,6 +657,8 @@ ServerMan.prototype.isAbleCreateQuizData = function() {
 }
 
 ServerMan.prototype.addSearchQuery = function( query, bCount ) {
+    socketToCenterServer.emit('search-query', { query: query, isCounting: bCount });
+    /*
     if( !this.searchQueryMap.get( query ) ) {
         this.searchQueryMap.set( query, { query: query, cnt: 1, tLast: new Date() });
     }
@@ -664,6 +668,7 @@ ServerMan.prototype.addSearchQuery = function( query, bCount ) {
             d.cnt += 1;
         d.tLast = new Date();
     }
+    */
 }
 
 ServerMan.prototype.updateNotice = function( noticeData ) {

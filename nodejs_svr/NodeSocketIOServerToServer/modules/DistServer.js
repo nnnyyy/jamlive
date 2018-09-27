@@ -42,6 +42,14 @@ class DistServer {
                 console.log(e);
             }
         })
+
+        socket.on('search-query', function(packet) {
+            try {
+                distServ.servman.addSearchQuery(packet.query, packet.isCounting);
+            }catch(e) {
+                console.log(e);
+            }
+        })
     }
 
     sendCount() {
@@ -65,7 +73,8 @@ class DistServer {
         this.sendVoteDataIntervalId = setInterval( function() {
             var totalVote = server.servman.getTotalVoteData();
             var totalCnt = server.servman.getTotalUserCnt();
-            server.socket.emit('total-vote', {totalCnt: totalCnt, totalVote: totalVote });
+            var searchQueryList = server.servman.getSearchQueries();
+            server.socket.emit('total-vote', {totalCnt: totalCnt, totalVote: totalVote, searchQueries: searchQueryList });
         }, 300);
     }
 

@@ -42,6 +42,8 @@ class ServerManager {
         this.voteServMap = new HashMap();
         this.servinfo = new HashMap();
 
+        this.searchQueryMap = new HashMap();
+
         async.waterfall(
             [
                 async.apply(this.setServerInfo, this),
@@ -197,6 +199,24 @@ class ServerManager {
         return voteTotal;
     }
 
+    getSearchQueries() {
+        const servman = this;
+        var tCur = new Date();
+        this.searchQueryMap.forEach(function(value, key) {
+            if( tCur - value.tLast > 12 * 1000 ) {
+                servman.searchQueryMap.delete(key);
+            }
+        })
+
+        var searchlist = this.searchQueryMap.values();
+        searchlist.sort(function(item1, item2) {
+            return item2.cnt - item1.cnt;
+        });
+        searchlist = searchlist.slice(0, 7);
+
+        return searchlist;
+    }
+
     broadcastMsg( msg ) {
         this.voteServMap.forEach(function(value, key){
             const distServer = value;
@@ -223,6 +243,18 @@ class ServerManager {
                 }
             }
         });
+    }
+
+    addSearchQuery(query, isCounting) {
+        if( !this.searchQueryMap.get( query ) ) {
+            this.searchQueryMap.set( query, { query: query, cnt: 1, tLast: new Date() });
+        }
+        else {
+            var d = this.searchQueryMap.get( query );
+            if( isCounting )
+                d.cnt += 1;
+            d.tLast = new Date();
+        }
     }
 
     banReload() {
