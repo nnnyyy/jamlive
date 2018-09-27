@@ -178,7 +178,7 @@ class ChosungGame {
             this.broadcastQuestion();
         }
 
-        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 1 ) {
+        if( this.step == 2 && tCur - this.tLastHint >= 1000 * 5 ) {
             this.showHint();
         }
 
