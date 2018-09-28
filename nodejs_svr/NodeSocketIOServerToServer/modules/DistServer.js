@@ -12,7 +12,7 @@ class DistServer {
         this.type;
         this.usercnt = 0;
         this.userlimit = 0;
-        this.voteCnts = [0,0,0];
+        this.voteCnts = [0,0,0,0];
         this.url = '';
         this.idx = 0;
 

@@ -95,6 +95,9 @@ Client.prototype.incActivePoint = function( point ) {
     if( !this.isLogined() ) return;
 
     this.socket.handshake.session.userinfo.ap += point;
+
+    this.servman.updateInfo(this.socket, this );
+
     if( this.socket.handshake.session.userinfo.ap <= 0 ) {
         this.socket.handshake.session.userinfo.ap = 0;
     }

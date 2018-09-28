@@ -186,13 +186,14 @@ class ServerManager {
     }
 
     getTotalVoteData() {
-        let voteTotal = [0,0,0];
+        let voteTotal = [0,0,0,0];
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
             if( servinfo.usercnt >= 120 ) {
                 voteTotal[0] += servinfo.voteCnts[0];
                 voteTotal[1] += servinfo.voteCnts[1];
                 voteTotal[2] += servinfo.voteCnts[2];
+                voteTotal[3] += servinfo.voteCnts[3];
             }
         })
 

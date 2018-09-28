@@ -112,7 +112,7 @@
             <div class="area-top-btn" id="btn-login"><%=__('menu-login')%></div>
             <%}else {%>
             <div class="area-top-btn" id="btn-logout"><%=__('menu-logout')%></div>
-            <div class="area-login-info"><%-userinfo.usernick%>(<ap><%-userinfo.ap%> 점</ap>)<%=__('menu-connector')%></div>
+            <div class="area-login-info"><%-userinfo.usernick%>(<span v-text="ap"><%-userinfo.ap%></span> 점)<%=__('menu-connector')%></div>
             <%}%>
 
         </div>

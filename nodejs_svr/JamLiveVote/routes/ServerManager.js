@@ -176,7 +176,7 @@ var ServerMan = function() {
 
     this.curDay = -1;
     this.tLastUpdateQuizTimeTable = 0;
-    this.totalVote = [0,0,0];
+    this.totalVote = [0,0,0,0];
     this.totalUserCnt = 0;
 
     this.searchQueries = [];
@@ -288,7 +288,7 @@ ServerMan.prototype.register = function(socket) {
             client.getUserInfo().auth += 1;
             dbhelper.updateAuth( client.getUserId(), client.auth, function( result ) {
                 servman.sendServerMsg(client.socket, `레벨 업!!`);
-                servman.updateInfo();
+                servman.updateInfo(client.socket, client );
             } );
         }
     }
@@ -442,7 +442,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     cur /= VOTEPERTIME;
 
     if( this.counts.get(cur) == null ) {
-        this.counts.set(cur, [0,0,0]);
+        this.counts.set(cur, [0,0,0,0]);
         this.countslist.push(cur);
         if( this.counts.count() > 10 ) {
             this.counts.delete(this.countslist[0]);
@@ -451,7 +451,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     }
 
     if( this.countsForGuest.get(cur) == null ) {
-        this.countsForGuest.set(cur, [0,0,0]);
+        this.countsForGuest.set(cur, [0,0,0,0]);
         this.countslistForGuest.push(cur);
         if( this.countsForGuest.count() > 10 ) {
             this.countsForGuest.delete(this.countslistForGuest[0]);
@@ -460,7 +460,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     }
 
     if( this.countsSearchFirst.get(cur) == null ) {
-        this.countsSearchFirst.set(cur, [0,0,0]);
+        this.countsSearchFirst.set(cur, [0,0,0,0]);
         this.countslistSearchFirst.push(cur);
         if( this.countsSearchFirst.count() > 10 ) {
             this.countsSearchFirst.delete(this.countslistSearchFirst[0]);
@@ -468,26 +468,29 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         }
     }
 
-    let _counts = [0,0,0];
-    let _countsForGuest = [0,0,0];
-    let _countsSearchFirst = [0,0,0];
+    let _counts = [0,0,0,0];
+    let _countsForGuest = [0,0,0,0];
+    let _countsSearchFirst = [0,0,0,0];
 
     this.counts.forEach(function(value, key) {
         _counts[0] += value[0];
         _counts[1] += value[1];
         _counts[2] += value[2];
+        _counts[3] += value[3];
     })
 
     this.countsForGuest.forEach(function(value, key) {
         _countsForGuest[0] += value[0];
         _countsForGuest[1] += value[1];
         _countsForGuest[2] += value[2];
+        _countsForGuest[3] += value[3];
     })
 
     this.countsSearchFirst.forEach(function(value, key) {
         _countsSearchFirst[0] += value[0];
         _countsSearchFirst[1] += value[1];
         _countsSearchFirst[2] += value[2];
+        _countsSearchFirst[3] += value[3];
     })
 
     var searchlist = this.searchQueries;
@@ -496,10 +499,11 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         s += searchlist[i].query;
     }
 
-    let countForCenter = [0,0,0];
+    let countForCenter = [0,0,0,0];
     countForCenter[0] = _counts[0] + _countsSearchFirst[0];
     countForCenter[1] = _counts[1] + _countsSearchFirst[1];
     countForCenter[2] = _counts[2] + _countsSearchFirst[2];
+    countForCenter[3] = _counts[3] + _countsSearchFirst[3];
 
     socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: countForCenter });
     this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, totalCnt: this.totalUserCnt, totalVote: this.totalVote, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
@@ -515,7 +519,7 @@ ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
 
     var obj = _counts.get(cur);
     if( obj == null ) {
-        _counts.set(cur, [0,0,0]);
+        _counts.set(cur, [0,0,0,0]);
         _countslist.push(cur);
         if( _counts.count() > 10 ) {
             _counts.delete(_countslist[0]);
@@ -1038,14 +1042,15 @@ function onSockVote(data) {
         }
 
         if( !client.isLogined() ) {
-            var _counts = [0,0,0];
+            var _counts = [0,0,0,0];
             servman.counts.forEach(function(value, key) {
                 _counts[0] += value[0];
                 _counts[1] += value[1];
                 _counts[2] += value[2];
+                _counts[3] += value[3];
             })
 
-            var total = _counts[0] + _counts[1] + _counts[2];
+            var total = _counts[0] + _counts[1] + _counts[2] + _counts[3];
 
             if( servman.isLiveQuizTime() && total <= 0 ) {
                 servman.sendServerMsg(socket, '손님은 회원 투표 전까지 투표 불가능합니다.');
@@ -1061,15 +1066,18 @@ function onSockVote(data) {
                 client.tLastClick = new Date();
                 return;
             }
+            var banCnt = client.getBanCnt();
             servman.voteManager.vote(client, data.idx);
             servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
 
             if( servman.quizdata && !servman.quizdata.isEnd() ) {
                 servman.quizdata.vote(data.idx);
-                client.incActivePoint( 1 );
+                client.incActivePoint( 2 );
             }
-            if( client.isLogined() && client.auth >= 1 ) {
+
+            if( client.isHighLevelUser() && banCnt <= 0 ) {
                 servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
+                client.incActivePoint( 2 );
             }
             client.tLastClick = new Date();
 
@@ -1081,10 +1089,9 @@ function onSockVote(data) {
                 client.incActivePoint( 2 );
             }
 
-            var banCnt = client.getBanCnt();
             var clientMsg = `[투표] ${number}번!`;
             if( banCnt >= 2 )
-                clientMsg = `[투표] ${number}번  ...  이달에 밴을 ${banCnt}번 당한 유저입니다`;
+                clientMsg = `[투표] ${number}번  ...  밴을 ${banCnt}번 당한 유저`;
 
             chatMan.Broadcast(servman.io, client, 'vote', clientMsg, false, banCnt >= 2 ? -1 : data.idx );
         }

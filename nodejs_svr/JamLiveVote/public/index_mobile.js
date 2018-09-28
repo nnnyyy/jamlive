@@ -162,7 +162,7 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
     $('[type="conn-cnt"]').text(users + '명');
     //$('vote_except').text(votedata.bans);
 
-    var total = [0,0,0];
+    var total = [0,0,0,0];
 
     //  상위 레벨 투표 결과
     for( var i = 0 ; i < votedata.searched_cnt.length ; ++i ) {
@@ -177,7 +177,7 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
     }
 
     if( isShowAllServerVote() ) {
-        for( var i = 0 ; i < 3 ; ++i ) {
+        for( var i = 0 ; i < votedata.totalVote.length ; ++i ) {
             total[i] += votedata.totalVote[i];
         }
     }
@@ -200,16 +200,16 @@ GlobalValue.prototype.onProcessVoteData = function( data ) {
 
 
     if( isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
-        total = [0,0,0];
+        total = [0,0,0,0];
     }
 
     var minVoteVal = Number(global.vSettings.min_vote);
 
     if( totalCnt <= minVoteVal) {
-        total = [0,0,0];
+        total = [0,0,0,0];
     }
 
-    showBarChart('.ct-chart',['1번','2번','3번'],[total], {
+    showBarChart('.ct-chart',['1번','2번','3번','4번'],[total], {
         seriesBarDistance: 10,
         height: 80,
         axisX: {

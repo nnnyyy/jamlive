@@ -90,6 +90,12 @@ var GlobalValue = function() {
     this.connUserList = $('#conn-users-list');
     this.tLastUserUpdate = 0;
     this.auth = -1;
+    this.vUserInfo = new Vue({
+        el: '#area-top-right',
+        data: {
+            ap: -1
+        }
+    });
 }
 
 /*
@@ -693,7 +699,7 @@ VoteObject.prototype.onVoteData = function(data) {
     G.totalConnUserElem.text(votedata.totalCnt);
     //G.banElem.text(votedata.bans);
 
-    var total = [0,0,0];
+    var total = [0,0,0,0];
 
     //  상위 레벨 투표 결과
     for( var i = 0 ; i < votedata.searched_cnt.length ; ++i ) {
@@ -733,16 +739,16 @@ VoteObject.prototype.onVoteData = function(data) {
     }
 
     if( options.isMaxVoteDuplicateChecked() && duplicatedMaxVoteCnt >= 2 ) {
-        total = [0,0,0];
+        total = [0,0,0,0];
     }
 
     var minVoteVal = Number($('.min_vote').text());
 
     if( totalCnt <= minVoteVal) {
-        total = [0,0,0];
+        total = [0,0,0,0];
     }
 
-    showBarChart('.ct-chart',['1번','2번','3번'],[total], {
+    showBarChart('.ct-chart',['1번','2번','3번', '4번'],[total], {
         seriesBarDistance: 10,
         height: 120,
         axisX: {
@@ -1031,7 +1037,7 @@ function onGlobalKeyDown(e) {
         localStorage.setItem('refreshtime', tCur.toString());
     }
 
-    if( (code >= 97 && code <= 99) ) {
+    if( (code >= 97 && code <= 100) ) {
         var curTime = new Date();
         if( curTime - voteObj.tClick < 500 ) {
             return;
@@ -1044,11 +1050,12 @@ function onGlobalKeyDown(e) {
         var clicked = (idx+1);
         voteObj.vote({idx: idx });
     }
-    else if( code == 37 || code == 40 || code == 39 ) {
+    else if( code == 37 || code == 40 || code == 39 || code == 38 ) {
         var idx = -1;
         if( code == 37 ) idx = 0;
         if( code == 40 ) idx = 1;
         if( code == 39 ) idx = 2;
+        if( code == 38 ) idx = 3;
         voteObj.vote({idx: idx });
     }
     else if( code >= 49 && code <= 55 ) {
@@ -1153,6 +1160,10 @@ function onInputMsgKeyPress(e) {
         else if( msg == "3") {
             voteObj.vote({idx:2});
             isvote = 2;
+        }
+        else if( msg == "4") {
+            voteObj.vote({idx:3});
+            isvote = 3;
         }
 
         if( isvote != -1 ) {
@@ -1512,7 +1523,7 @@ function showNextQuizTimeLeft(table) {
 }
 
 function onUpdateInfo(data) {
-
+    G.vUserInfo.ap = data.ap;
 }
 
 function onGetTimeTable(packet) {
@@ -2279,7 +2290,7 @@ function onUpdateUser(data) {
 }
 
 function onAP(data) {
-    $('ap').text(data.ap + ' 점');
+    G.vUserInfo.ap = data.ap;
 }
 
 function onGo(data) {
