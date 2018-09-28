@@ -1766,14 +1766,14 @@ function showKin(datalist) {
 
         for( var i = 0 ; i < kinlist.length ; ++i ) {
             var item = kinlist[i];
-            var div = '<div class="search_ret_desc">' +
+            var div = ' <div class="search_ret_desc"> ' +
                 strip(item.word) + ' : ' + strip(item.desc) +
-                '</div>';
+                ' </div> ';
             desc_total += div;
         }
 
-        var kin_total_desc = '<div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div>' +
-                            desc_total + '<div class="separator"></div>';
+        var kin_total_desc = ' <div class="search_ret_title kin_style">[지식의 바다] 의 결과 입니다</div> ' +
+                            desc_total + ' <div class="separator"></div> ';
 
         searchObj.duplicateMap.clear();
         for( var i = 0 ; i < datalist.length ; ++i ) {
@@ -1782,15 +1782,15 @@ function showKin(datalist) {
                 //if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
                 if( searchObj.duplicateMap.containsKey( words[w]) ) continue;
                 var exp = new RegExp(words[w], "gi");
-                kin_total_desc = kin_total_desc.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
+                kin_total_desc = kin_total_desc.replace(exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
 
                 searchObj.duplicateMap.put(words[w], 1);
             }
         }
 
-        var kin_total_html = '<div id="kindata" class="search_ret_root">' +
+        var kin_total_html = ' <div id="kindata" class="search_ret_root"> ' +
             kin_total_desc +
-            '</div>';
+            ' </div> ';
 
         getSearchArea(2).prepend(kin_total_html);
     }
