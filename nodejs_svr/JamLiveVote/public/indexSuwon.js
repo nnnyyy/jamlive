@@ -631,10 +631,12 @@ ChatObject.prototype.clearChat = function() {
 }
 
 ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid ) {
-    var aIpSplited = ip.split('.');
-    if( aIpSplited.length >= 4 ) {
-        aIpSplited[3] = 'xx';
-        ip = aIpSplited.join('.');
+    if( ip ) {
+        var aIpSplited = ip.split('.');
+        if( aIpSplited.length >= 4 ) {
+            aIpSplited[3] = 'xx';
+            ip = aIpSplited.join('.');
+        }
     }
     var li =    '<li mode="' + mode +'">' +
                     '<div class="chat-msg-item">' +
