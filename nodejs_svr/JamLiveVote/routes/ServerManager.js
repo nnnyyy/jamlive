@@ -12,6 +12,7 @@ var chatMan = require('./modules/chatMan');
 var Chosung = require('./modules/chosungGame');
 var KinMan = require('./modules/KinManager');
 const VoteMan = require('./modules/voteManager');
+const SearchMan = require('./modules/searchManager');
 const WebSearchEngine = require('./modules/webSearchEngine');
 
 var config = require('../config');
@@ -167,6 +168,7 @@ var ServerMan = function() {
 
     this.autoQuizForcedOff = false;
     this.voteManager = new VoteMan();
+    this.searchManager = new SearchMan();
     this.webSearchMan = new WebSearchEngine(this);
 
     this.todayQuizTableList = [];
@@ -300,6 +302,7 @@ ServerMan.prototype.register = function(socket) {
     socket.on('server-info-reload', onServerInfoReload);
     socket.on('ban-reload', onBanReload);
     socket.on('get-vote-list', onGetVoteList);
+    socket.on('get-search-list', onGetSearchList);
 }
 
 
@@ -866,6 +869,8 @@ function onSockSearch(data) {
             return;
         }
 
+        servman.searchManager.search(client, data.msg);
+
         if( data.searchDic )
             servman.webSearchMan.searchDic(data.msg, client);
         if( data.searchNaverMainAPI && client.auth >= 4 ) {
@@ -1252,6 +1257,14 @@ function onGetVoteList(packet) {
 
     const list = servman.voteManager.getVoteList();
     this.emit('get-vote-list', list);
+}
+
+function onGetSearchList(packet) {
+    var client = servman.getClient(this.id);
+    if( !client ) return;
+
+    const list = servman.searchManager.getSearchList();
+    this.emit('get-search-list', list);
 }
 
 module.exports = servman;

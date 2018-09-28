@@ -14,7 +14,7 @@ body {
 
 #vote-list {
   position: fixed;
-  width: 400px;
+  width: 600px;
   height: 400px;
   background-color: #ffffff;
   left: 0px;
@@ -584,6 +584,14 @@ body {
   margin: 0 0 0 25px;
 }
 #area-article #article-right #chat-wnd-root [type="top-menu"] #btn-get-vote-list {
+  float: right;
+  margin-right: 14px;
+  font-size: 16px;
+  height: 46px;
+  line-height: 46px;
+  cursor: pointer;
+}
+#area-article #article-right #chat-wnd-root [type="top-menu"] #btn-get-search-list {
   float: right;
   margin-right: 14px;
   font-size: 16px;

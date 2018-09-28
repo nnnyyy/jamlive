@@ -46,11 +46,11 @@
 <script src="/socket.io/socket.io.js"></script>
 <body>
 <div id="root">
-    <div id="vote-list">
-        <div class="top-bar">
+    <div id="vote-list" v-show="visible">
+        <div class="top-bar" v-text="sTitle">
             투표자
         </div>
-        <div id="vote-list-inner">
+        <div id="vote-list-inner" v-html="listHtml">
             <table style="width: 100%">
                 <tr>
                     <td>닉네임</td>
@@ -259,7 +259,10 @@
                         <%= __('clear-chat')%>
                     </div>
                     <div id="btn-get-vote-list">
-                        투표한 사람 보기
+                        [투표한 사람]
+                    </div>
+                    <div id="btn-get-search-list">
+                        [검색한 사람]
                     </div>
                 </div>
                 <div id="chat">

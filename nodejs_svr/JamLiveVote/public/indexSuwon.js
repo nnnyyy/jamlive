@@ -56,8 +56,6 @@ function init( socket, stringTable ) {
     var tCur = new Date();
     localStorage.setItem('refreshtime', tCur.toString());
 
-    setVisibleBlock($('#vote-list'), false);
-
     searchObj.init();
     hintObj.init();
     chatObj.init();
@@ -75,6 +73,8 @@ function init( socket, stringTable ) {
         autoControls: false,
         pager: false
     });
+
+    chatObj.vSearchVoteList.visible = false;
 }
 
 var GlobalValue = function() {
@@ -571,6 +571,14 @@ function ChatObject() {
     this.autoScrollElem = $('#cb_auto_scroll');
     this.cbNoticeDisable = $('#cb-notice-disable');
     this.tLastClear = 0;
+
+    this.vSearchVoteList = new Vue({
+        el: '#vote-list',
+        data: {
+            visible: false,
+            sTitle: '투표자'
+        }
+    });
 }
 
 ChatObject.prototype.init = function() {
@@ -954,6 +962,7 @@ function setSocketEvent( socket ) {
     socket.on('loginInfo', onLoginInfo);
     socket.on('update-info', onUpdateInfo);
     socket.on('get-vote-list', onGetVoteListResult);
+    socket.on('get-search-list', onGetSearchListResult);
     socket.on('vote_data', voteObj.onVoteData);
     socket.on('quiz', quizObj.onQuiz);
     socket.on('quizret', quizObj.onQuizRet);
@@ -1187,6 +1196,7 @@ function setBtnEvent() {
 
     $('#btn-clear-chat').click(onClearChat);
     $('#btn-get-vote-list').click(onGetVoteList);
+    $('#btn-get-search-list').click(onGetSearchList);
     $('#btn-vote-list-close').click(onBtnVoteListClose);
     $('#quiz-timetable-icon').click(onBtnTimeTable);
 
@@ -1329,9 +1339,14 @@ function onGetVoteList(e) {
    G.socket.emit('get-vote-list', {});
 }
 
+function onGetSearchList(e) {
+    G.socket.emit('get-search-list', {});
+}
+
 function onGetVoteListResult(packet) {
 
-    setVisibleBlock($('#vote-list'), true);
+    chatObj.vSearchVoteList.sTitle = '투표자'
+    chatObj.vSearchVoteList.visible = true;
 
     var desc = '';
     for( var i = 0 ; i < packet.length ; ++i ) {
@@ -1345,11 +1360,30 @@ function onGetVoteListResult(packet) {
     }
 
     var html = '<table style="width: 100%;"><tr><td>닉네임</td><td>투표번호</td><td>시간</td><td>액션</td><td>액션</td></tr>' + desc + '</table>';
-    $('#vote-list-inner').html(html);
+    chatObj.vSearchVoteList.listHtml = html;
+}
+
+function onGetSearchListResult(packet) {
+
+    chatObj.vSearchVoteList.sTitle = '검색리스트'
+    chatObj.vSearchVoteList.visible = true;
+
+    var desc = '';
+    for( var i = 0 ; i < packet.length ; ++i ) {
+        var d = new Date(packet[i].time);
+        desc += '<tr>' +
+            '<td>'+ packet[i].nick + '</td>' +
+            '<td style="font-weight: bold;">'+ packet[i].query + '</td>' +
+            '<td>'+ d.toTimeString().split(' ')[0] + '</td>' +
+            '<td class="btn-ban-list-ban" nick="'+ packet[i].nick +'">밴하기</td>';
+    }
+
+    var html = '<table style="width: 100%;"><tr><td>닉네임</td><td>검색어</td><td>시간</td><td>액션</td></tr>' + desc + '</table>';
+    chatObj.vSearchVoteList.listHtml = html;
 }
 
 function onBtnVoteListClose(e) {
-    setVisibleBlock($('#vote-list'), false);
+    chatObj.vSearchVoteList.visible = false;
 }
 
 function onBtnTimeTable(e) {

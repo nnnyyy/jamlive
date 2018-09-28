@@ -32,7 +32,7 @@ body {
   font-family: 'Nanum Barun Gothic', sans-serif;
 }
 
-$vote-list-width: 400px;
+$vote-list-width: 600px;
 
 #vote-list {
   position: fixed;
@@ -742,6 +742,15 @@ $top-bottom-margin: 5px;
         }
 
         #btn-get-vote-list {
+          float: right;
+          margin-right: 14px;
+          font-size: 16px;
+          height: $top-menu-height;
+          line-height: $top-menu-height;
+          cursor: pointer;
+        }
+
+        #btn-get-search-list {
           float: right;
           margin-right: 14px;
           font-size: 16px;
