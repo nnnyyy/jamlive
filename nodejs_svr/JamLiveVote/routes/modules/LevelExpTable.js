@@ -24,7 +24,7 @@ class LevelExpTable {
         if( currentAuth >= this.lvTable.length - 1 ) return false;
         var nextLevelExp = this.lvTable[currentAuth];
 
-        console.log(`cur lv : ${currentAuth}, cur pt : ${curPoint}, nextLevelExp: ${nextLevelExp}`);
+        //console.log(`cur lv : ${currentAuth}, cur pt : ${curPoint}, nextLevelExp: ${nextLevelExp}`);
 
         if( curPoint >= nextLevelExp ) {
             return true;
