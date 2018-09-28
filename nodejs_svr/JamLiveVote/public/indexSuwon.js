@@ -582,7 +582,8 @@ function ChatObject() {
         el: '#vote-list',
         data: {
             visible: false,
-            sTitle: '투표자'
+            sTitle: '투표자',
+            listHtml:''
         }
     });
 }
