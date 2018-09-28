@@ -122,4 +122,10 @@ Client.prototype.getUserName = function() {
     return this.socket.handshake.session.username;
 }
 
+Client.prototype.getUserInfo = function() {
+    if( !this.isLogined() ) return null;
+
+    return this.socket.handshake.session.userinfo;
+}
+
 module.exports = Client;

@@ -14,6 +14,7 @@ var KinMan = require('./modules/KinManager');
 const VoteMan = require('./modules/voteManager');
 const SearchMan = require('./modules/searchManager');
 const WebSearchEngine = require('./modules/webSearchEngine');
+const LevelExpTable = require('./modules/LevelExpTable');
 
 var config = require('../config');
 
@@ -280,6 +281,17 @@ ServerMan.prototype.register = function(socket) {
 
     connListMan.addUser(client);
     connListMan.updateListToClient(client);
+
+    if( client.isLogined() ) {
+        while( LevelExpTable.isAbleLevelUp(client.auth, client.getActivePoint() ) ) {
+            client.auth += 1;
+            client.getUserInfo().auth += 1;
+            dbhelper.updateAuth( client.getUserId(), client.auth, function( result ) {
+                servman.sendServerMsg(client.socket, `레벨 업!!`);
+                servman.updateInfo();
+            } );
+        }
+    }
 
     socket.emit('loginInfo', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
