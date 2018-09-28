@@ -23,9 +23,9 @@ exports.signup = function(id, pw, nick, cb) {
     }
 };
 
-exports.login = function(id, pw, cb) {
+exports.login = function(id, pw, ip, cb) {
     try {
-        dbpool.query("CALL login(?,?, @ret); select @ret;", [id, pw] , function(err, rows) {
+        dbpool.query("CALL login(?,?,?, @ret); select @ret;", [id, pw, ip] , function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 cb({ret: -99});

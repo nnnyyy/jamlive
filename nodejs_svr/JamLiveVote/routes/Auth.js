@@ -26,7 +26,8 @@ exports.login = function(req, res, next) {
 }
 
 function requestLogin( req, callback ) {
-    dbhelper.login(req.body.id, req.body.pw, function(json) {
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress.substr(7);
+    dbhelper.login(req.body.id, req.body.pw, ip, function(json) {
         if( json.ret != 0 ){
             //res.json(json.ret);
             callback(json.ret);
