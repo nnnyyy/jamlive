@@ -221,7 +221,7 @@ body {
   overflow-y: auto;
   background-color: #ffffff;
   color: #393939;
-  z-index: 100;
+  z-index: 20000;
   font-family: 'Nanum Barun Gothic', sans-serif;
   font-size: 17px;
 }
@@ -380,7 +380,7 @@ body {
   background-color: #ffffff;
   color: #393939;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 20000;
   font-family: 'Nanum Barun Gothic', sans-serif;
   font-size: 17px;
 }
@@ -544,7 +544,7 @@ body {
 }
 #area-article #article-right #chat-wnd-root div#search-ret-rank {
   position: absolute;
-  top: 293px;
+  top: 353px;
   width: 400px;
   height: 300px;
   padding: 8px;

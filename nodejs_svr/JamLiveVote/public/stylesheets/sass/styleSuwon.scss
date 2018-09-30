@@ -696,7 +696,7 @@ $top-bottom-margin: 5px;
 
       div#search-ret-rank {
         position: absolute;
-        top: $top-height + $top-bottom-margin + $vote-data-height + $bottom-margin + $ads-banner-center-height;
+        top: $top-height + $top-bottom-margin + $vote-data-height + $bottom-margin + $ads-banner-center-height + 60px;
         width: 400px;
         height: 300px;
         padding: 8px;
