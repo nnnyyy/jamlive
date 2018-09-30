@@ -620,8 +620,6 @@ ChatObject.prototype.FlushChat = function( mode ) {
                 }
             }
 
-            console.log(options.vSettings.autoScroll.checked);
-
             if ((chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
                 options.vSettings.autoScroll.checked ) {
                 bAutoMoveToBottom = true;
@@ -780,7 +778,7 @@ function SearchObject() {
     this.tLastSearch = 0;
     this.totalCnt = 0;
     this.isRunning = false;
-    this.kinHtml = '';
+    this.isKinModifying = false;
     this.duplicateMap = new Map();
 
     this.vSearchAreaCenter = new Vue({
@@ -1816,6 +1814,8 @@ function searchWebRoot( socket, query, isBroadcast ) {
 
 function showKin(datalist) {
     if( !searchObj.isRunning ) return;
+    if( searchObj.isKinModifying ) return;
+    searchObj.isKinModifying = true;
     var desc_total = '';
     var kinlist = voteObj.kinlist;
 
@@ -1858,6 +1858,8 @@ function showKin(datalist) {
 
         searchObj.vSearchAreaCenter.kinHtml = kin_total_html;
     }
+
+    searchObj.isKinModifying = false;
 }
 
 var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];

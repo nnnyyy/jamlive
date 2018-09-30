@@ -1063,7 +1063,6 @@ function onSockVote(data) {
 
         if( client.isClickable() ) {
             if( servman.isLiveQuizTime() && client.auth < 2 ) {
-                console.log('!!');
                 client.incActivePoint( 4 );
                 var msgLowLevel = `[투표] ${number}번`;
                 chatMan.Broadcast(servman.io, client, 'vote', msgLowLevel, false, -1 );
