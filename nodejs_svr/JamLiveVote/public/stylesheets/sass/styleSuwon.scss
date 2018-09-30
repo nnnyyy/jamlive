@@ -299,7 +299,7 @@ $top-bottom-margin: 5px;
       overflow-y: auto;
       background-color: $color-main-back;
       color: $color-main-font;
-      z-index: 100;
+      z-index: 20000;
       font-family: 'Nanum Barun Gothic', sans-serif;
       font-size: $search-font-size-basic;
     }
@@ -492,7 +492,7 @@ $top-bottom-margin: 5px;
       background-color: $color-main-back;
       color: $color-main-font;
       overflow-y: auto;
-      z-index: 100;
+      z-index: 20000;
       font-family: 'Nanum Barun Gothic', sans-serif;
       font-size: $search-font-size-basic;
     }

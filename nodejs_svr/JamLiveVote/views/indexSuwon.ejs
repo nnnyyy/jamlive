@@ -119,7 +119,12 @@
     </div>
     <div id="area-article">
         <div id="article-left">
-            <div id="search-area-left">
+            <div id="search-area-left" v-show="visible">
+                <div class="search_ret_root" v-for="article in articles">
+                    <div class="search_ret_title" v-html="article.title"></div>
+                    <div class="search_ret_desc" v-html="article.desc"></div>
+                    <div class="separator"></div>
+                </div>
             </div>
             <div id="site-info-notice">
                 <div id="site-info">
@@ -161,7 +166,13 @@
             </div>
         </div>
         <div id="article-center">
-            <div id="search-area-center">
+            <div id="search-area-center" v-show="visible">
+                <div v-html="kinHtml"></div>
+                <div class="search_ret_root" v-for="article in articles">
+                    <div class="search_ret_title" v-html="article.title"></div>
+                    <div class="search_ret_desc" v-html="article.desc"></div>
+                    <div class="separator"></div>
+                </div>
             </div>
             <div id="video-ads-area">
                 <div id="slider" style="width: 100%; height: 100%; text-align: center">

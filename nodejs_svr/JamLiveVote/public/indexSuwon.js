@@ -775,28 +775,44 @@ function SearchObject() {
     this.isRunning = false;
     this.kinHtml = '';
     this.duplicateMap = new Map();
+
+    this.vSearchAreaCenter = new Vue({
+        el: '#search-area-center',
+        data: {
+            visible: false,
+            kinHtml: '',
+            articles: [
+            ]
+        }
+    })
+
+    this.vSearchAreaLeft = new Vue({
+        el: '#search-area-left',
+        data: {
+            visible: false,
+            articles: [
+            ]
+        }
+    })
 }
 
 SearchObject.prototype.init = function() {
-    for( var i = 0 ; i < this.area.length ; ++i ) {
-        setVisible(this.area[i], false);
-    }
+    searchObj.vSearchAreaCenter.visible = false;
+    searchObj.vSearchAreaLeft.visible = false;
 }
 
 SearchObject.prototype.initSearch = function() {
-    for( var i = 0 ; i < this.area.length ; ++i ) {
-        this.area[i].html('');
-        setVisible(this.area[i], true);
-    }
+    searchObj.vSearchAreaCenter.articles.splice(0);
+    searchObj.vSearchAreaLeft.articles.splice(0);
+    searchObj.vSearchAreaCenter.visible = true;
+    searchObj.vSearchAreaLeft.visible = true;
 
     searchObj.isRunning = true;
 }
 
 SearchObject.prototype.restoreSearch = function() {
-    for( var i = 0 ; i < this.area.length ; ++i ) {
-        this.area[i].html('');
-        setVisible(this.area[i], false);
-    }
+    searchObj.vSearchAreaCenter.visible = false;
+    searchObj.vSearchAreaLeft.visible = false;
 
     searchObj.lastSearchQuery = '';
     searchObj.isRunning = false;
@@ -832,27 +848,27 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
 
         searchObj.slhash = hash;
 
-        var html = getSearchArea(1).html();
-        var html2 = getSearchArea(2).html();
-
         var bChanged = false;
         for( var i = 0 ; i < datalist.length ; ++i ) {
             var words = datalist[i].query.split(' ');
             for( var w = 0 ; w < words.length ; ++w ) {
                 if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
-                if( searchObj.duplicateMap.containsKey( words[w]) ) continue;
                 var exp = new RegExp(words[w], "gi");
-                html = html.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
-                html2 = html2.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
+
+                for( var sai = 1 ; sai <= 2 ; ++sai ) {
+                    var articles = getSearchArea(sai).articles;
+
+                    for( var ia = 0 ; ia < articles.length ; ++ ia ) {
+                        var item = {title: articles[ia].title, desc: articles[ia].desc };
+                        item.title = item.title.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
+                        item.desc = item.desc.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
+                        articles.splice(ia, 1, item);
+                    }
+                }
 
                 searchObj.duplicateMap.put(words[w], 1);
                 bChanged = true;
             }
-        }
-
-        if( bChanged ) {
-            getSearchArea(1).html(html);
-            getSearchArea(2).html(html2);
         }
     }
 }
@@ -1702,6 +1718,7 @@ function stopVideo() {
 
 function searchWebRoot( socket, query, isBroadcast ) {
     stopVideo();
+
     var tCur = new Date();
     if( tCur - searchObj.tLastSearch <= 500 ) {
         showAdminMsg('검색은 여유를 두고!');
@@ -1795,12 +1812,6 @@ function showKin(datalist) {
     var desc_total = '';
     var kinlist = voteObj.kinlist;
 
-    try {
-        $('#kindata').remove();
-    }catch(e) {
-        console.log(e);
-    }
-
     if( kinlist.length > 0 ) {
         /*
         kinlist.sort(function(item1, item2) {
@@ -1838,7 +1849,7 @@ function showKin(datalist) {
             kin_total_desc +
             ' </div> ';
 
-        getSearchArea(2).prepend(kin_total_html);
+        searchObj.vSearchAreaCenter.kinHtml = kin_total_html;
     }
 }
 
@@ -2102,24 +2113,11 @@ function setSearchDB(data, where) {
                 sub += '<b>' + (j+1) + '. ' + item.answer[j].trim() + '</b><br>';
             }
         }
-        var div = '<div class="search_ret_root" type="fromDB">' +
-            '<div class="search_ret_title">' +
-            '[기출문제] ' + item.question +
-            '</div><div class="search_ret_desc">' +
-            (sub) +
-            '</div><div class="separator"></div>' +
-            '</div>';
 
-        html += div;
-        if( cnt < 2 )
-            htmlforleft += div;
+        var title = '[기출문제] ' + item.question;
+
+        getSearchArea(where).articles.push({title: title, desc: sub })
     }
-
-    if( items.length == 0 ) {
-        htmlforleft = html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
-    }
-
-    getSearchArea(where).prepend(htmlforleft);
 
     clearTimeout(searchObj.timerIDForDB);
     searchObj.timerIDForDB = setTimeout(function() {
@@ -2130,21 +2128,14 @@ function setSearchDB(data, where) {
 
 
 function setSearchRetImage(items, first, where) {
-    var html = '';
-    var div = '<div class="search_ret_root"><div class="search_ret_desc">';
+    var div = '';
     for( var i = 0 ; i < items.length ; ++i) {
         var item = items[i];
         var image = '<img class="img_search" src="'+ item.thumbnail + '"/>';
         div += image;
     }
-    div += '</div></div>';
-    html = div;
 
-    if( items.length == 0 ) {
-        html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
-    }
-
-    getSearchArea(where).prepend(html);
+    getSearchArea(where).articles.push({title:'', desc: div});
 
     clearTimeout(searchObj.timerID);
     searchObj.timerID = setTimeout(function() {
@@ -2157,7 +2148,6 @@ function setSearchRet(items, first, where, title_prefix, title_prefix_style) {
     try {
         title_prefix = '<title-prefix class="'+ title_prefix_style + '">' + title_prefix + '</title-prefix>';
 
-        var html = '';
         for( var i = 0 ; i < items.length ; ++i) {
             var item = items[i];
             if( item.category && item.category != '') {
@@ -2167,26 +2157,19 @@ function setSearchRet(items, first, where, title_prefix, title_prefix_style) {
             var hidxend = item.description.indexOf('[난이도]');
             if( hidxend == -1 ) hidxend = hidx + 20;
             var hinfo = '<b>' + item.description.slice(hidx, hidxend).trim() + '</b>';
-            var div = '<div class="search_ret_root">' +
-                '<div class="search_ret_title">' +
-                title_prefix + ' ' + item.title + ' ' + hinfo +
-                '</div><div class="search_ret_desc">' +
-                (item.description) +
-                '</div><div class="separator"></div>' +
-                '</div>';
 
-            html += div;
+            var title = title_prefix + ' ' + item.title + ' ' + hinfo;
+            var desc = item.description;
+
+            var k = { title : title, desc: desc };
+            if( first ) {
+                getSearchArea(where).articles.unshift( k );
+            }
+            else {
+                getSearchArea(where).articles.push( k );
+            }
         }
 
-        if( items.length == 0 ) {
-            //html = '<div style="text-align:center;">검색 결과가 없습니다. 좀 더 신중한 검색!</div>';
-        }
-        if( first ) {
-            getSearchArea(where).prepend(html);
-        }
-        else {
-            getSearchArea(where).append(html);
-        }
     }
     catch(e) {
 
@@ -2200,10 +2183,10 @@ function setSearchRet(items, first, where, title_prefix, title_prefix_style) {
 
 function getSearchArea(where) {
     if( where == 1 ) {
-        return searchObj.area[0];
+        return searchObj.vSearchAreaLeft;
     }
     else {
-        return searchObj.area[1];
+        return searchObj.vSearchAreaCenter;
     }
 }
 
