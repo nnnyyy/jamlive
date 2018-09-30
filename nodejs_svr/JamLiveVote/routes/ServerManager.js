@@ -1058,11 +1058,15 @@ function onSockVote(data) {
             }
         }
 
+        var number = Number(data.idx) + 1;
+        var nick = client.nick;
+
         if( client.isClickable() ) {
             if( servman.isLiveQuizTime() && client.auth < 2 ) {
+                console.log('!!');
                 client.incActivePoint( 4 );
-                servman.sendServerMsg(socket, '[튜토리얼] 레벨 2 이하의 투표는 결과에 반영되지는 않습니다. 그러나 연습 겸 레벨업을 위해서 투표해주세요.');
-                chatMan.Broadcast(servman.io, client, 'vote', '[투표] 소중한 한표 투척', false, -1 );
+                var msgLowLevel = `[투표] ${number}번`;
+                chatMan.Broadcast(servman.io, client, 'vote', msgLowLevel, false, -1 );
                 client.tLastClick = new Date();
                 return;
             }
@@ -1080,10 +1084,6 @@ function onSockVote(data) {
                 client.incActivePoint( 2 );
             }
             client.tLastClick = new Date();
-
-            var number = Number(data.idx) + 1;
-
-            var nick = client.nick;
 
             if( servman.isLiveQuizTime() ) {
                 client.incActivePoint( 2 );
