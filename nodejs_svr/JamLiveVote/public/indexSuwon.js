@@ -333,6 +333,9 @@ Options.prototype.init = function() {
             localStorage.setItem('cb-notice-disable', 0);
         }
     })
+
+    var storageData = localStorage.getItem(options.vSettings.autoScroll.storage) || 0;
+    options.vSettings.autoScroll.checked = storageData == 1 ? true : false;
 }
 
 Options.prototype.initSettings = function() {
@@ -344,6 +347,10 @@ Options.prototype.initSettings = function() {
                 disabled: false,
                 checked: false,
                 storage: 'showHighLevelVoteOnly'
+            },
+            autoScroll: {
+                checked: true,
+                storage: 'autoScroll'
             }
         },
         methods: {
@@ -427,7 +434,6 @@ Options.prototype.setSearchUserVoteOnly = function() {
     else {
         options.vSettings.showHighLevelVoteOnly.disabled = false;
         var storageData = localStorage.getItem(options.vSettings.showHighLevelVoteOnly.storage) || 0;
-
         options.vSettings.showHighLevelVoteOnly.checked = storageData == 1 ? true : false;
     }
 }
@@ -574,7 +580,6 @@ function ChatObject() {
     this.bTrigger = false;
     this.tLastFlushByInterval = 0;
     this.isFlushing = false;
-    this.autoScrollElem = $('#cb_auto_scroll');
     this.cbNoticeDisable = $('#cb-notice-disable');
     this.tLastClear = 0;
 
@@ -615,8 +620,10 @@ ChatObject.prototype.FlushChat = function( mode ) {
                 }
             }
 
+            console.log(options.vSettings.autoScroll.checked);
+
             if ((chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
-                chatObj.autoScrollElem.is(':checked')) {
+                options.vSettings.autoScroll.checked ) {
                 bAutoMoveToBottom = true;
             }
 
