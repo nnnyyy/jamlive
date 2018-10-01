@@ -611,7 +611,7 @@ ChatObject.prototype.FlushChat = function( mode ) {
             var chatwndheight = chatObj.chatUI.height();
 
             var list = chatObj.chatUI.find('li');
-            if (list.length > 50) {
+            if (list.length > 38) {
                 if( options.isClearChatAuto() ) {
                     chatObj.clearChat();
                 }
