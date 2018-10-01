@@ -1723,6 +1723,7 @@ function stopVideo() {
 
 function searchWebRoot( socket, query, isBroadcast ) {
     stopVideo();
+    searchObj.vSearchAreaCenter.kinHtml = '';
 
     var tCur = new Date();
     if( tCur - searchObj.tLastSearch <= 500 ) {
