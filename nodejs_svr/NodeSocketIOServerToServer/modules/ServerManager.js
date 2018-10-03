@@ -6,6 +6,7 @@ const HashMap = require('hashmap');
 const DistServer = require('./DistServer');
 var dbhelper = require('../dbhelper');
 const async = require('async');
+const GlobalHintMan = require('./GlobalHintMan');
 
 const Redis = require('ioredis');
 
@@ -43,6 +44,7 @@ class ServerManager {
         this.servinfo = new HashMap();
 
         this.searchQueryMap = new HashMap();
+        this.globalHintMan = new GlobalHintMan(this);
 
         async.waterfall(
             [
@@ -137,8 +139,8 @@ class ServerManager {
         })
     }
 
-    getServer( socket ) {
-        this.chServMap.get(socket.id);
+    getVoteServerMap() {
+        return this.voteServMap;
     }
 
     removeServer( socket ) {

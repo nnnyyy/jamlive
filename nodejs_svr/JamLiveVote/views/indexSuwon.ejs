@@ -140,17 +140,25 @@
             </div>
             <div id="hint">
                 <div type="top-menu">
-                    <hint-provider>잼라이브</hint-provider><%= __('hint-provider')%>
-                    <div id="btn-modify-hint">
+                    <span class="hint-provider" v-text="hintProvider">잼라이브</span><%= __('hint-provider')%>
+                    <div :style="globalTab.style" @click="onBtnGlobal">
+                        All
+                    </div>
+                    <div :style="localTab.style" @click="onBtnLocal">
+                        This
+                    </div>
+                    <div id="btn-modify-hint" @click="onBtnModifyHint" v-text="sBtnModifyHintTitle">
                         수정하기
                     </div>
-                    <div id="btn-modify-hint-cancel">
+                    <div id="btn-modify-hint-cancel" @click="onBtnModifyHintCancel" v-show="isModify">
                         취소
                     </div>
                 </div>
-                <div id="hint-article-area">
+                <div id="hint-article-area" v-show="type == 'local' && !isModify" v-html="localTab.articleArea.html">
                 </div>
-                <div id="hint-modify-area">
+                <div id="hint-article-area" v-show="type == 'global' && !isModify" v-html="globalTab.articleArea.html">
+                </div>
+                <div id="hint-modify-area" v-show="isModify">
                     <textarea id ='memo-area' class="memo-area"></textarea>
                 </div>
             </div>

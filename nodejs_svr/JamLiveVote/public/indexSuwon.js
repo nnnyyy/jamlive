@@ -489,17 +489,64 @@ var options = new Options();
 
 //  힌트 관련 변수
 function HintObject() {
-    this.hint = '';
-    this.provider = '';
-    this.modifyArea = $('#hint-modify-area');
     this.modifyTextArea = $('.memo-area');
-    this.articleArea = $('#hint-article-area');
-    this.btnModifyHint = $('#btn-modify-hint');
-    this.btnModifyHint.click(onBtnModifyHint);
-    this.btnModifyCancel = $('#btn-modify-hint-cancel');
-    this.btnModifyCancel.click(onBtnModifyHintCancel);
     this.bModifyMode = false;
-    this.hintProviderElem = $('hint-provider');
+
+    this.vHintRoot = new Vue({
+        el: '#hint',
+        data: {
+            type: 'global',
+            isModify: true,
+            hintProvider: '',
+            sBtnModifyHintTitle: '수정하기',
+            globalTab: {
+                style: {
+                    float: 'left',
+                    cursor: 'pointer',
+                    padding: '0 8px',
+                    backgroundColor: '#DE5B49'
+                },
+                articleArea: {
+                    provider: '',
+                    visible: false,
+                    html: ''
+                }
+            },
+            localTab: {
+                style: {
+                    float: 'left',
+                    cursor: 'pointer',
+                    padding: '0 8px',
+                    backgroundColor: '#3AA84B'
+                },
+                articleArea: {
+                    provider: '',
+                    visible: true,
+                    html: ''
+                }
+            },
+            btnCancel: {
+                visible: false
+            }
+        },
+        methods: {
+            onBtnModifyHint: onBtnModifyHint,
+            onBtnModifyHintCancel: onBtnModifyHintCancel,
+            getCurTypeHtml: function() {
+                return this.type == 'global' ? this.globalTab.articleArea.html : this.localTab.articleArea.html;
+            },
+            onBtnGlobal: function(e) {
+                if( this.isModify ) return;
+                this.hintProvider = this.globalTab.articleArea.provider;
+                this.type = 'global';
+            },
+            onBtnLocal: function(e) {
+                if( this.isModify ) return;
+                this.hintProvider = this.localTab.articleArea.provider;
+                this.type = 'local';
+            }
+        }
+    });
 }
 
 HintObject.prototype.init = function() {
@@ -508,35 +555,41 @@ HintObject.prototype.init = function() {
 }
 
 HintObject.prototype.setHintMode = function( bModify ) {
-    setVisible(this.modifyArea, bModify );
-    setVisible(this.articleArea, !bModify );
-    setVisible(this.btnModifyCancel, bModify);
+    this.vHintRoot.isModify = bModify;
     this.bModifyMode = bModify;
     var str = bModify == true ? G.stringTable['modify-hint-complete'] : G.stringTable['modify-hint'];
-    this.btnModifyHint.text(str);
+    this.vHintRoot.sBtnModifyHintTitle = str;
 
+    var html = this.vHintRoot.getCurTypeHtml().replace(/<br>/gi,'\n');
     if( bModify ) {
-        CKEDITOR.instances['memo-area'].setData(this.articleArea.html().replace(/<br>/gi,'\n'));
+        CKEDITOR.instances['memo-area'].setData(html);
     }
 }
 
 HintObject.prototype.sendHint = function() {
     var modifiedHint = CKEDITOR.instances['memo-area'].getData();
+    var hintType = this.vHintRoot.type;
     //modifiedHint = modifiedHint.replace(/(?:\r\n|\r|\n)/g, '<br>');
-    G.socket.emit('memo', {memo: modifiedHint });
+    G.socket.emit('memo', {type: hintType, mode:'set', memo: modifiedHint });
 }
 
 HintObject.prototype.sendIsUsableHint = function() {
-    G.socket.emit('memo', {mode: 'isUsable' });
+    var hintType = this.vHintRoot.type;
+    G.socket.emit('memo', {type: hintType, mode: 'isUsable' });
 }
 
 HintObject.prototype.sendCancel = function() {
-    G.socket.emit('memo', {mode: 'cancel' });
+    var hintType = this.vHintRoot.type;
+    G.socket.emit('memo', {type: hintType, mode: 'cancel' });
 }
 
 HintObject.prototype.updateHint = function() {
-    this.articleArea.html(this.provider ? this.hint : '');
-    this.hintProviderElem.text(this.provider);
+    if( this.vHintRoot.type == 'global' ) {
+        this.vHintRoot.hintProvider = this.vHintRoot.globalTab.articleArea.provider;
+    }
+    else {
+        this.vHintRoot.hintProvider = this.vHintRoot.localTab.articleArea.provider;
+    }
 }
 
 HintObject.prototype.onMemo = function(data) {
@@ -549,8 +602,25 @@ HintObject.prototype.onMemo = function(data) {
         hintObj.setHintMode(false);
     }
     else {
-        hintObj.hint = data.memo;
-        hintObj.provider = data.memo_provider;
+        hintObj.vHintRoot.localTab.articleArea.html = data.local.hint;
+        hintObj.vHintRoot.localTab.articleArea.provider = data.local.provider;
+        hintObj.setHintMode(false);
+        hintObj.updateHint();
+    }
+}
+
+HintObject.prototype.onGlobalHint = function( packet ) {
+    if( packet.mode == 'isUsable') {
+        if( packet.isAble == true ) {
+            hintObj.setHintMode( true );
+        }
+    }
+    else if ( packet.mode == 'cancel' ) {
+        hintObj.setHintMode( false );
+    }
+    else if ( packet.mode == 'set') {
+        hintObj.vHintRoot.globalTab.articleArea.html = packet.global.hint;
+        hintObj.vHintRoot.globalTab.articleArea.provider = packet.global.provider;
         hintObj.setHintMode(false);
         hintObj.updateHint();
     }
@@ -1026,6 +1096,7 @@ function setSocketEvent( socket ) {
     socket.on('search-naver-api', onSearchNaverAPI);
 
     socket.on('update-notice', onUpdateNotice);
+    socket.on('global-memo', onGlobalHint);
 }
 
 function setKeyEvent() {
@@ -1617,6 +1688,10 @@ function onSearchImage(data) {
 
 function onUpdateNotice(data) {
     $('#notice').html(data.noticeData);
+}
+
+function onGlobalHint(packet) {
+    hintObj.onGlobalHint(packet);
 }
 
 var animOpacityTimerID = -1;

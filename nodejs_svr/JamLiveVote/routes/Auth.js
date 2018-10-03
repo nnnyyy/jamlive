@@ -35,7 +35,7 @@ function requestLogin( req, callback ) {
         }
 
         req.session.username = json.id;
-        req.session.userinfo = { usernick: json.nick, auth: json.auth }
+        req.session.userinfo = { usernick: json.nick, auth: json.auth, adminMemberVal: json.adminMemberVal }
         //res.json(json.ret);
         callback(null,req);
     })

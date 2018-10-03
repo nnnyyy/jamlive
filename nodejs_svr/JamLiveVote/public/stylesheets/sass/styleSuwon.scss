@@ -381,7 +381,7 @@ $top-bottom-margin: 5px;
         line-height: $top-menu-height;
         border-bottom: 1px solid $color-border;
 
-        hint-provider {
+        .hint-provider {
           margin: 0 0 0 25px;
           color: $color-yellow-font;
         }

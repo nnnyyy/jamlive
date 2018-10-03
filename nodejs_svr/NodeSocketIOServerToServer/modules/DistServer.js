@@ -8,6 +8,7 @@ const HashMap = require('hashmap');
 class DistServer {
     constructor(servman, socket) {
         this.servman = servman;
+        this.globalHintMan = servman.globalHintMan;
         this.socket = socket;
         this.type;
         this.usercnt = 0;
@@ -50,6 +51,26 @@ class DistServer {
                 console.log(e);
             }
         })
+
+        socket.on('global-hint' , function( packet ) {
+            try {
+                distServ.globalHintMan.onPacket( distServ, packet );
+            }
+            catch(e) {
+                console.log(e);
+            }
+        })
+
+        socket.on('disconnect-user', function( packet ) {
+            try {
+                distServ.globalHintMan.checkCancel('', packet.nick);
+            }
+            catch(e) {
+                console.log(e);
+            }
+        })
+
+        this.globalHintMan.sendInitPacket(this);
     }
 
     sendCount() {
@@ -76,6 +97,10 @@ class DistServer {
             var searchQueryList = server.servman.getSearchQueries();
             server.socket.emit('total-vote', {totalCnt: totalCnt, totalVote: totalVote, searchQueries: searchQueryList });
         }, 300);
+    }
+
+    sendPacket( protocol, oPacket ) {
+        this.socket.emit( protocol, oPacket );
     }
 
     setPremiumListener() {

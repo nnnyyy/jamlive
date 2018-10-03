@@ -91,6 +91,10 @@ Client.prototype.isAbleChat = function() {
     return (tCur - this.tLastChat >= 950);
 }
 
+Client.prototype.isAdminMembers = function() {
+    return this.isAdmin() || this.socket.handshake.session.userinfo.adminMemberVal >= 1;
+}
+
 Client.prototype.incActivePoint = function( point ) {
     if( !this.isLogined() ) return;
 

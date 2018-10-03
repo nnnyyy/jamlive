@@ -106,6 +106,14 @@ socketToCenterServer.on('connect', function () {
             console.log(e);
         }
     })
+
+    this.on('global-hint', function(packet) {
+        try {
+            servman.onGlobalHint(packet);
+        }catch(e) {
+            console.log(e);
+        }
+    })
 });
 
 
@@ -180,6 +188,13 @@ var ServerMan = function() {
     this.totalUserCnt = 0;
 
     this.searchQueries = [];
+
+    this.globalHint = {
+        isModifying: false,
+        modifier: '',
+        hint: '',
+        provider: ''
+    }
 }
 
 var servman = new ServerMan();
@@ -243,6 +258,10 @@ ServerMan.prototype.register = function(socket) {
     socket.on('disconnect', function(){
         var client = servman.getClient(this.id);
         servman.removeSocket(this.id);
+
+        //  힌트 수정자를 취소 시키기 위한 로직
+        socketToCenterServer.emit('disconnect-user', {nick: client.nick});
+
         if( client && client.isLogined() ) {
             if( servman.modifyingUser == client.nick ) {
                 servman.modifyingUser = '';
@@ -295,7 +314,10 @@ ServerMan.prototype.register = function(socket) {
 
     socket.emit('loginInfo', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
-    socket.emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
+    var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
+    var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
+    socket.emit('global-memo', { mode: 'set', global: MemoObj })
+    socket.emit('memo', {memo_provider: servman.memo_provider , local: localMemoObj });
     socket.emit('update-notice', {noticeData: this.noticeData});
 
     if( this.chosung.isRunning() ) {
@@ -1152,48 +1174,113 @@ function onAnalysis(data) {
     }
 }
 
+ServerMan.prototype.onGlobalHint = function( packet ) {
+    switch( packet.mode ) {
+        case 'isUsable':
+        {
+            const client = servman.getClient(packet.id);
+            if( !client ) {
+                console.log(`not found user : ${packet.id}`);
+                return;
+            }
+
+            if( packet.ret == 0 ) {
+                this.globalHint.modifier = packet.desc.modifier;
+                this.globalHint.isModifying = true;
+            }
+
+            const oPacket = {mode: packet.mode, isAble: packet.desc.isAbleModify, modifier: packet.desc.modifier };
+            client.socket.emit('global-memo', oPacket);
+            break;
+        }
+
+        case 'cancel':
+        {
+            this.globalHint.modifier = '';
+            this.globalHint.isModifying = false;
+
+            if( packet.id != '' ) {
+                const client = servman.getClient(packet.id);
+                const oPacket = {mode: packet.mode };
+                client.socket.emit('global-memo', oPacket);
+            }
+            break;
+        }
+
+        case 'set':
+        {
+            this.globalHint.provider = packet.desc.provider;
+            this.globalHint.hint = packet.desc.hint;
+            this.globalHint.modifier = '';
+            this.globalHint.isModifying = false;
+            var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
+            servman.io.sockets.in('auth').emit('global-memo', { mode: packet.mode, global: MemoObj });
+            break;
+        }
+
+    }
+}
+
 function onMemo(data) {
     try {
         var client = servman.getClient(this.id);
         if( !client ) return;
 
-        if( client.auth < 3 ) {
-            servman.sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
-            return;
-        }
-
-        if( data.mode == 'isUsable' ) {
-            var bAble = false;
-            if( servman.bMemoModifying ) {
-                servman.sendServerMsg(client.socket, `${servman.modifyingUser}님이 수정 중입니다.`);
+        if( data.type == 'global' ) {
+            if( !client.isAdminMembers() ) {
+                servman.sendServerMsg(client.socket, '권한이 없습니다');
+                return;
             }
-            else {
-                bAble = true;
-                servman.modifyingUser = client.nick;
+            if( data.mode == 'isUsable' && servman.globalHint.isModifying ) {
+                servman.sendServerMsg(client.socket, `${servman.globalHint.modifier}님이 수정 중입니다.`);
+                return;
+            }
+            data.id = client.socket.id;
+            data.nick = client.nick;
+            socketToCenterServer.emit('global-hint', data);
+        }
+        else if ( data.type == 'local') {
+
+            if( client.auth < 4 ) {
+                servman.sendServerMsg(client.socket, '등급이 낮아 힌트 제공이 불가능합니다');
+                return;
+            }
+
+            if( data.mode == 'isUsable' ) {
+                var bAble = false;
+                if( servman.bMemoModifying ) {
+                    servman.sendServerMsg(client.socket, `${servman.modifyingUser}님이 수정 중입니다.`);
+                }
+                else {
+                    bAble = true;
+                    servman.modifyingUser = client.nick;
                     servman.bMemoModifying = true;
+                }
+                if(client.socket)
+                    client.socket.emit('memo', {mode: data.mode, isAble: bAble, modifier: servman.modifyingUser });
+                return;
             }
-            if(client.socket)
-                client.socket.emit('memo', {mode: data.mode, isAble: bAble, modifier: servman.modifyingUser });
-            return;
-        }
-        else if( data.mode == 'cancel' ) {
-            servman.modifyingUser = '';
+            else if( data.mode == 'cancel' ) {
+                servman.modifyingUser = '';
+                servman.bMemoModifying = false;
+                if(client.socket)
+                    client.socket.emit('memo', {mode: data.mode });
+                return;
+            }
+
             servman.bMemoModifying = false;
-            if(client.socket)
-                client.socket.emit('memo', {mode: data.mode });
-            return;
+            servman.modifyingUser = '';
+            servman.memo = data.memo;
+            servman.memo_provider = client.nick;
+
+            const memoinfo = JSON.stringify({memo: servman.memo, provider: servman.memo_provider });
+            servman.redis.set('jamlive-memo-info:' + config.serv_name, memoinfo,  (err, info) => {
+            } );
+
+            var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
+            servman.io.sockets.in('auth').emit('memo', {memo_provider: servman.memo_provider , local: localMemoObj });
+
         }
-
-        servman.bMemoModifying = false;
-        servman.modifyingUser = '';
-        servman.memo = data.memo;
-        servman.memo_provider = client.nick;
-
-        const memoinfo = JSON.stringify({memo: servman.memo, provider: servman.memo_provider });
-        servman.redis.set('jamlive-memo-info:' + config.serv_name, memoinfo,  (err, info) => {
-        } );
-
-        servman.io.sockets.in('auth').emit('memo', {memo_provider: servman.memo_provider , memo: servman.memo });
     }
     catch(e) {
 
