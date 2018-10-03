@@ -504,7 +504,9 @@ function HintObject() {
                     float: 'left',
                     cursor: 'pointer',
                     padding: '0 8px',
-                    backgroundColor: '#DE5B49'
+                    backgroundColor: '#DE5B49',
+                    fontWeight: 'bold',
+                    opacity: 1
                 },
                 articleArea: {
                     provider: '',
@@ -517,7 +519,9 @@ function HintObject() {
                     float: 'left',
                     cursor: 'pointer',
                     padding: '0 8px',
-                    backgroundColor: '#3AA84B'
+                    backgroundColor: '#3AA84B',
+                    fontWeight: 'normal',
+                    opacity: 0.5
                 },
                 articleArea: {
                     provider: '',
@@ -539,11 +543,19 @@ function HintObject() {
                 if( this.isModify ) return;
                 this.hintProvider = this.globalTab.articleArea.provider;
                 this.type = 'global';
+                this.globalTab.style.fontWeight = 'bold';
+                this.globalTab.style.opacity = 1;
+                this.localTab.style.fontWeight = 'normal';
+                this.localTab.style.opacity = 0.5;
             },
             onBtnLocal: function(e) {
                 if( this.isModify ) return;
                 this.hintProvider = this.localTab.articleArea.provider;
                 this.type = 'local';
+                this.globalTab.style.fontWeight = 'normal';
+                this.globalTab.style.opacity = 0.5;
+                this.localTab.style.fontWeight = 'bold';
+                this.localTab.style.opacity = 1;
             }
         }
     });
