@@ -8,6 +8,7 @@ var Client = function(servman, socket) {
     this.servman = servman;
     this.socket = socket;
     this.tLastClick = 0;
+    this.tLastSaved = new Date();
     this.auth = -1;
     this.nick = '';
     this.ip = '';
@@ -99,6 +100,16 @@ Client.prototype.incActivePoint = function( point ) {
     if( !this.isLogined() ) return;
 
     this.socket.handshake.session.userinfo.ap += point;
+
+    const tCur = new Date();
+
+    //  30분에 한번씩 필요하면 강제 저장
+    if( tCur - this.tLastSaved >= 30 * 60 * 1000 ) {
+        dbhelper.updateActivePoint(this.getUserId(), this.socket.handshake.session.userinfo.ap, function( result) {
+            if( result.ret == 0 )
+                this.tLastSaved = tCur;
+        });
+    }
 
     this.servman.updateInfo(this.socket, this );
 
