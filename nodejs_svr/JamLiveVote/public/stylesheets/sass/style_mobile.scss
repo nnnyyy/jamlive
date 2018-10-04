@@ -78,7 +78,7 @@ div#chat-area {
     border: 2px solid gray;
     padding: $padding;
     width: calc(100% - #{$margin} - #{$margin});
-    height: calc(100% - #{$margin} - #{$margin});
+    height: calc(100% - #{$margin} - #{$margin} - 30px );
     background-color: white;
     color: $primary-color;
 
@@ -119,6 +119,19 @@ div#chat-area {
       }
     }
   }
+
+  #ip-msg {
+    float: left;
+    width: 70%;
+    height: 15px;
+  }
+
+  #btn-send-msg {
+    float: left;
+    width: 25%;
+    height: 25px;
+    margin-left: 4px;
+  }
 }
 
 div#vote-btn-area {
@@ -140,8 +153,8 @@ div#vote-btn-area {
 div#fix-btn-area {
   opacity: 0.8;
   position: fixed;
-  right: 0;
-  bottom: calc( #{$vote-btn-height} + 50px );
+  right: 8px;
+  bottom: calc( #{$vote-btn-height} + 80px );
   margin-top: -10px;
   width: 60px;
   height: 145px;
