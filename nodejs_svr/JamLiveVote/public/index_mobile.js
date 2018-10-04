@@ -16,6 +16,7 @@ var GlobalValue = function() {
     this.settingsUI = $('#settings');
     this.socketid = '';
     this.isLogin = false;
+    this.eChatMsg = $('#ip-msg');
 
     this.vAdminMsg = new Vue({
         el: '#admin-msg-root',
@@ -92,6 +93,7 @@ GlobalValue.prototype.init = function(socket) {
     //  모든 초기화는 여기에서
     registerBtnListener(this);
     registerSocketListener(this);
+    registerKeyListener(this);
 
     setVisible(this.quizWnd, false);
 
@@ -588,6 +590,110 @@ function registerSocketListener(g) {
         }
         return;
     });
+}
 
+function registerKeyListener(g) {
+    g.eChatMsg.keypress(onInputMsgKeyPress);
+}
 
+function onInputMsgKeyPress(e) {
+    var code = (e.which ? e.which : e.keyCode );
+    if( code == 13 ) {
+        var nick = getNickName();
+        var msg = $(this).val();
+        if( strip(msg).length > 60 ) {
+            alert('메시지는 짧게');
+            $(this).val('');
+            return;
+        }
+
+        if( strip(msg).length <= 0 ) {
+            return;
+        }
+
+        var mode = "";
+        var emoticon = "";
+        if( msg == "ㅃㅃㅃ" ) {
+            mode = "emoticon";
+            emoticon = "bbam";
+        }
+        else if( msg == "ㄸㄸ") {
+            mode = "emoticon";
+            emoticon = "ddk";
+        }
+        else if( msg == "예~") {
+            mode = "emoticon";
+            emoticon = "yeee";
+        }
+        else if( msg == "ㅎㅇ") {
+            mode = "emoticon";
+            emoticon = "hi";
+        }
+        else if( msg == "빵야") {
+            mode = "emoticon";
+            emoticon = "by";
+        }
+        else if( msg == "대박") {
+            mode = "emoticon";
+            emoticon = "daebak";
+        }
+        else if( msg == "으아") {
+            mode = "emoticon";
+            emoticon = "ua";
+        }
+
+        if( msg == '#cls') {
+            $(this).val('');
+            chatObj.clearChat();
+            return;
+        }
+
+        if( msg == '#server-reload') {
+            global.socket.emit('server-info-reload', {});
+            $(this).val('');
+            return;
+        }
+
+        if( msg == '#ban-reload') {
+            global.socket.emit('ban-reload', {});
+            $(this).val('');
+            return;
+        }
+
+        if( msg[0] == '/' ) {
+            $(this).val('');
+            var query = msg.substr(1);
+            searchWebRoot(G.socket, query, true);
+            $(this).blur();
+            return;
+        }
+
+        var isvote = -1;
+
+        if( msg == "1") {
+            voteObj.vote({idx:0});
+            isvote = 0;
+        }
+        else if( msg == "2" ) {
+            voteObj.vote({idx:1});
+            isvote = 1;
+        }
+        else if( msg == "3") {
+            voteObj.vote({idx:2});
+            isvote = 2;
+        }
+        else if( msg == "4") {
+            voteObj.vote({idx:3});
+            isvote = 3;
+        }
+
+        if( isvote != -1 ) {
+            $(this).val('');
+            return;
+        }
+
+        nick = nick.substr(0,14);
+        global.socket.emit('chat', {nickname: nick, msg: msg, isvote: isvote, mode: mode, emoticon: emoticon });
+        $(this).val('');
+    }
 }

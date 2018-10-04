@@ -82,8 +82,9 @@ div#chat-area ul.chat-ui div[type="msg-root"] div[type="msg"] {
 }
 div#chat-area #ip-msg {
   float: left;
-  width: 70%;
+  width: 90%;
   height: 15px;
+  margin-left: 8px;
 }
 div#chat-area #btn-send-msg {
   float: left;
