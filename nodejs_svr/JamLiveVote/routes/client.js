@@ -93,7 +93,13 @@ Client.prototype.isAbleChat = function() {
 }
 
 Client.prototype.isAdminMembers = function() {
-    return this.isAdmin() || this.socket.handshake.session.userinfo.adminMemberVal >= 1;
+    if( !this.isLogined() ) return false;
+
+    try {
+        return this.isAdmin() || this.socket.handshake.session.userinfo.adminMemberVal >= 1;
+    }catch(e) {
+        return false;
+    }
 }
 
 Client.prototype.incActivePoint = function( point ) {
