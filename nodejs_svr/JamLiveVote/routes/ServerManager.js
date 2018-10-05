@@ -282,7 +282,7 @@ ServerMan.prototype.register = function(socket) {
         client.auth = socket.handshake.session.userinfo.auth;
     }
 
-    if( isServerLimit() ) {
+    if( isServerLimit() && !client.isAdminMembers() ) {
         socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
         return;
     }

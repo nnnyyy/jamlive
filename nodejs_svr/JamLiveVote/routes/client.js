@@ -54,14 +54,14 @@ Client.prototype.incBanCnt = function() {
 Client.prototype.isClickable = function() {
     var cur = new Date();
     var _auth = this.socket.handshake.session.username ? this.socket.handshake.session.userinfo.auth : -1;
-    if( _auth >= 3 ) {
-        return (cur - this.tLastClick) > 3000;
+    if( _auth >= 4 ) {
+        return (cur - this.tLastClick) > 7000;
     }
     else if ( _auth == 0 ) {
-        return (cur - this.tLastClick) > 5000;
+        return (cur - this.tLastClick) > 10000;
     }
 
-    return (cur - this.tLastClick) > 7000;
+    return (cur - this.tLastClick) > 12000;
 }
 
 Client.prototype.isInSearchedUser = function() {
@@ -104,7 +104,7 @@ Client.prototype.incActivePoint = function( point ) {
     const tCur = new Date();
 
     //  30분에 한번씩 필요하면 강제 저장
-    if( tCur - this.tLastSaved >= 30 * 60 * 1000 ) {
+    if( !this.servman.isLiveQuizTime() && tCur - this.tLastSaved >= 30 * 60 * 1000 ) {
         dbhelper.updateActivePoint(this.getUserId(), this.socket.handshake.session.userinfo.ap, function( result) {
             if( result.ret == 0 )
                 this.tLastSaved = tCur;
