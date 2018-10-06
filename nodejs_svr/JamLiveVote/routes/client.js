@@ -109,12 +109,11 @@ Client.prototype.incActivePoint = function( point ) {
 
     const tCur = new Date();
 
-    //  30분에 한번씩 필요하면 강제 저장
-    if( !this.servman.isLiveQuizTime() && tCur - this.tLastSaved >= 30 * 60 * 1000 ) {
-        dbhelper.updateActivePoint(this.getUserId(), this.socket.handshake.session.userinfo.ap, function( result) {
-            if( result.ret == 0 )
-                this.tLastSaved = tCur;
-        });
+    if( tCur - this.tLastSaved >= 10 * 60 * 1000 ) {
+        this.tLastSaved = tCur;
+        const userinfo = JSON.stringify(this.socket.handshake.session.userinfo);
+        this.servman.redis.set(this.getUserId(), userinfo,  (err, info) => {
+        } );
     }
 
     this.servman.updateInfo(this.socket, this );

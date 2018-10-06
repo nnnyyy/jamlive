@@ -15,6 +15,7 @@ const VoteMan = require('./modules/voteManager');
 const SearchMan = require('./modules/searchManager');
 const WebSearchEngine = require('./modules/webSearchEngine');
 const LevelExpTable = require('./modules/LevelExpTable');
+const PS = require('../Common/PacketProtocols');
 
 var config = require('../config');
 
@@ -242,7 +243,7 @@ ServerMan.prototype.updateInfo = function( socket, client ) {
     try {
         if( !socket || !client ) return;
 
-        socket.emit('update-info', { ap: client.getActivePoint(), auth: client.auth })
+        socket.emit(PS.SERV_TO_CLIENT.UPDATE_INFO, { ap: client.getActivePoint(), auth: client.auth })
     }
     catch(e) {
         console.log('update info error');
@@ -312,31 +313,32 @@ ServerMan.prototype.register = function(socket) {
         }
     }
 
-    socket.emit('loginInfo', {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
-    socket.emit('next-quiz', { data: servman.nextQuizShowdata });
+    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
     var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
     var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
-    socket.emit('global-memo', { mode: 'set', global: MemoObj })
-    socket.emit('memo', {memo_provider: servman.memo_provider , local: localMemoObj });
-    socket.emit('update-notice', {noticeData: this.noticeData});
+    socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })
+    socket.emit(PS.SERV_TO_CLIENT.LOCAL_HINT, {memo_provider: servman.memo_provider , local: localMemoObj });
+    socket.emit(PS.SERV_TO_CLIENT.UPDATE_NOTICE, {noticeData: this.noticeData});
+
+    socket.emit('next-quiz', { data: servman.nextQuizShowdata });
 
     if( this.chosung.isRunning() ) {
         this.chosung.sendState(socket);
     }
 
-    socket.on('vote', onSockVote);
-    socket.on('chat', onSockChat);
-    socket.on('search', onSockSearch);
-    socket.on('ban', onSockBan);
-    socket.on('permanentban', onSockPermanentBan);
-    socket.on('like', onSockLike);
-    socket.on('analysis', onAnalysis);
-    socket.on('memo', onMemo);
-    socket.on('go', onGo);
-    socket.on('server-info-reload', onServerInfoReload);
-    socket.on('ban-reload', onBanReload);
-    socket.on('get-vote-list', onGetVoteList);
-    socket.on('get-search-list', onGetSearchList);
+    socket.on(PS.CLIENT_TO_SERV.VOTE, onSockVote);
+    socket.on(PS.CLIENT_TO_SERV.CHAT, onSockChat);
+    socket.on(PS.CLIENT_TO_SERV.SEARCH, onSockSearch);
+    socket.on(PS.CLIENT_TO_SERV.BAN, onSockBan);
+    socket.on(PS.CLIENT_TO_SERV.PERMANENT_BAN, onSockPermanentBan);
+    socket.on(PS.CLIENT_TO_SERV.LIKE, onSockLike);
+    socket.on(PS.CLIENT_TO_SERV.LOCAL_HINT, onMemo);
+    socket.on(PS.CLIENT_TO_SERV.SELECT_SERVER, onGo);
+    socket.on(PS.CLIENT_TO_SERV.GET_VOTE_LIST, onGetVoteList);
+    socket.on(PS.CLIENT_TO_SERV.GET_SEARCH_LIST, onGetSearchList);
+
+    socket.on(PS.CLIENT_TO_SERV.SERV_INFO_RELOAD, onServerInfoReload);
+    socket.on(PS.CLIENT_TO_SERV.BAN_RELOAD, onBanReload);
 }
 
 
@@ -1017,7 +1019,7 @@ function onSockChat(data) {
         }
 
         if( data.msg == "#quiz" ) {
-            if( ( client.isAdmin() || (auth_state && auth_state >= 3)) && servman.isAbleCreateQuizData() ) {
+            if( !servman.isLiveQuizTime() && ( client.isAdmin() || (auth_state && auth_state >= 3)) && servman.isAbleCreateQuizData() ) {
                 dbhelper.getRandomQuiz(function(result) {
                     if( result.ret == 0 ){
                         servman.createQuizData(client.nick, result.quizdata);
@@ -1027,6 +1029,7 @@ function onSockChat(data) {
             }
             else {
                 servman.sendServerMsg(client.socket, '퀴즈를 아직 낼 수 없습니다.');
+                return;
             }
         }
 
@@ -1311,7 +1314,7 @@ function onGo(data) {
                 return;
             }
 
-            if( servinfo.cnt >= servinfo.limit ) {
+            if( servinfo.cnt >= servinfo.limit && !client.isAdminMembers() ) {
                 client.socket.emit('go', {ret: -1, msg: '서버에 인원이 너무 많아요. 다른서버로.'});
                 return;
             }
