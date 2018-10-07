@@ -1019,7 +1019,7 @@ function onSockChat(data) {
         }
 
         if( data.msg == "#quiz" ) {
-            if( !servman.isLiveQuizTime() && ( client.isAdmin() || (auth_state && auth_state >= 3)) && servman.isAbleCreateQuizData() ) {
+            if( ( client.isAdmin() || (auth_state && auth_state >= 4)) && servman.isAbleCreateQuizData() ) {
                 dbhelper.getRandomQuiz(function(result) {
                     if( result.ret == 0 ){
                         servman.createQuizData(client.nick, result.quizdata);
@@ -1028,7 +1028,7 @@ function onSockChat(data) {
                 return;
             }
             else {
-                servman.sendServerMsg(client.socket, '퀴즈를 아직 낼 수 없습니다.');
+                servman.sendServerMsg(client.socket, '퀴즈를 낼 수 없습니다.');
                 return;
             }
         }
