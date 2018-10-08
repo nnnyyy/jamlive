@@ -6,15 +6,30 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
     const serverMan = req.serverMan;
+    let isAccessApprove = false;
+    let isLogined = req.session.username != null;
+
+    try {
+        if( isLogined ) {
+            if( req.session.userinfo.adminMemberVal >= 1 ) {
+                isAccessApprove = true;
+            }
+        }
+    }catch(e) {
+
+    }
+
     serverMan.redis.get('global-notice', (err,info) => {
         if( !err ) {
-            const parsedInfo = JSON.parse(info);
-            if( parsedInfo ) {
-                res.render('index', parsedInfo);
+            let parsedInfo = JSON.parse(info);
+            if( !parsedInfo ) {
+                parsedInfo = {notice: ''};
             }
-            else {
-                res.render('index', {notice: ''});
-            }
+
+            parsedInfo.isLogined = isLogined;
+            parsedInfo.isAcessable = isAccessApprove;
+
+            res.render('index', parsedInfo);
         }
         else {
             res.json({ret: 'error'});

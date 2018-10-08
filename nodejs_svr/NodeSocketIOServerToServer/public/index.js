@@ -40,5 +40,23 @@ function init() {
         ajaxHelper.postJson('/banbyip', { ip: msg.trim() }, function(result) {
             alert(result.ret);
         });
-    })
+    });
+
+    initVueObject();
 }
+
+function initVueObject() {
+    G.app = new Vue({
+        el:'#root',
+        data: {
+            logined: false,
+            isAccessable: false
+        }
+    });
+}
+
+var GlobalValue = function() {
+
+}
+
+var G = new GlobalValue();

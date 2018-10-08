@@ -11,12 +11,30 @@ const servman = new ServerManager(io, http);
 var path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+var session = require('express-session');
+const redis = require('redis');
+const redisStore = require('connect-redis')(session);
+const client = redis.createClient();
 
 //  HTTP Server Setup
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
+var sessionMiddleware = session({
+    secret: 'dhkddPtlr',
+    resave: true,
+    saveUninitialized: false,
+    store: new redisStore({
+        host: '127.0.0.1',
+        port: 6379,
+        client: client,
+        prefix: "session-jamlive.net:",
+        db: 0
+    })
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -27,6 +45,8 @@ app.use(function(req, res, next) {
     req.serverMan = servman;
     next();
 })
+
+app.use(sessionMiddleware);
 
 const routes = require('./routes/index');
 app.use('/', routes);
