@@ -634,6 +634,10 @@ body {
   margin: 0;
   /* 채팅 아이템 */
 }
+#area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .chat-time {
+  font-size: 4px;
+  color: #7f7f7f;
+}
 #area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .nick-area {
   cursor: pointer;
   float: left;
@@ -907,4 +911,5 @@ title-prefix.cb6 {
 .btn-ban-list-like {
   cursor: pointer;
 }
+
 /*# sourceMappingURL=styleSuwon.css.map */

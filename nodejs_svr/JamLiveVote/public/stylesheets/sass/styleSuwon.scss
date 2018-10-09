@@ -806,6 +806,12 @@ $top-bottom-margin: 5px;
 
           /* 채팅 아이템 */
           li div.chat-msg-item {
+
+            .chat-time {
+              font-size: 4px;
+              color: #7f7f7f;
+            }
+
             .nick-area {
               cursor: pointer;
               float: left;

@@ -782,7 +782,7 @@ ChatObject.prototype.clearChat = function() {
     chatObj.chatUI.empty();
 }
 
-ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid ) {
+ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid, time ) {
     if( ip ) {
         var aIpSplited = ip.split('.');
         if( aIpSplited.length >= 4 ) {
@@ -790,6 +790,7 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
             ip = aIpSplited.join('.');
         }
     }
+
     var li =    '<li mode="' + mode +'">' +
                     '<div class="chat-msg-item">' +
                         '<div class="nick-area">' +
@@ -798,7 +799,7 @@ ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth,
                             (ip ? '<div class="ip">('+ ip + ')</div>' : '') +
                         '</div>' +
                         '<div class="msg-area">' +
-                            msg +
+                            msg
                         '</div>' +
                     '</div>' +
                 '</li>';
@@ -1580,6 +1581,10 @@ function onBtnTimeTable(e) {
 }
 
 function onChat( data ) {
+
+    var d = new Date(data.time);
+    d =  '<span class="chat-time"> (' + d.toTimeString().split(' ')[0] + ')</span>';
+
     if( data.mode == "vote" ) {
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
@@ -1594,7 +1599,7 @@ function onChat( data ) {
             //
         }
         else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ ( data.vote == -1 ? 'black' : color[data.vote] ) + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ ( data.vote == -1 ? 'black' : color[data.vote] ) + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid, data.time);
         }
     }
     else if( data.mode == "search") {
@@ -1602,25 +1607,25 @@ function onChat( data ) {
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid, data.time);
     }
     else if ( data.mode == "notice") {
         if( isDisableNoticeShow() ) return;
-        chatObj.addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
+        chatObj.addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid, data.time);
     }
     else if ( data.mode == "ban") {
-        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid, data.time);
     }
     else {
         if( options.isNotShowChat() ) return;
         if( data.admin ) {
-            chatObj.addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + '</div>', false, data.auth, data.ip, data.sockid);
+            chatObj.addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + d + '</div>', false, data.auth, data.ip, data.sockid, data.time);
         }
         else if( data.isLogin ) {
-            chatObj.addChat( data.mode, data.isBaned, '<div class="logined_font">' + data.nickname + '</div>', data.msg, true, data.auth, data.ip, data.sockid);
+            chatObj.addChat( data.mode, data.isBaned, '<div class="logined_font">' + data.nickname + '</div>', data.msg + d, true, data.auth, data.ip, data.sockid, data.time);
         }
         else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, data.msg, true, data.auth, data.ip, data.sockid );
+            chatObj.addChat( data.mode, data.isBaned, data.nickname, data.msg + d, true, data.auth, data.ip, data.sockid, data.time );
         }
 
     }
