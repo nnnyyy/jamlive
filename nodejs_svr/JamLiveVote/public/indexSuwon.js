@@ -239,6 +239,12 @@ SiteMenu.prototype.init = function() {
                 e.preventDefault();
                 e.stopPropagation();
                 window.open('http://quiz.jamlive.net/','_blank');
+            },
+            onBtnHelp: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                setVisible($('#notice-wrapper'), true);
+                this.visible = false;
             }
         }
     })
