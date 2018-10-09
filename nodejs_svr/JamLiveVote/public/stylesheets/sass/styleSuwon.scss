@@ -849,6 +849,16 @@ $top-bottom-margin: 5px;
               min-height: 25px;
               line-height: $line-height;
             }
+
+            .admin {
+              font-weight: bold;
+              color: #7c2929;
+            }
+
+            .admin-nick {
+              font-weight: bold;
+              color: #7c2929;
+            }
           }
         }
       }

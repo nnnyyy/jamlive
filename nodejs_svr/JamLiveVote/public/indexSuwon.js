@@ -129,12 +129,25 @@ ChosungGameMan.prototype.setText = function(word) {
 ChosungGameMan.prototype.onPacket = function( packet ) {
     stopVideo();
 
+    var item = {
+        mode: 'chat',
+        auth: 99,
+        isBaned: false,
+        sockid: '',
+        ip: '',
+        nick: '초성',
+        msg: '',
+        isAdmin: false,
+        vote: 0
+    }
+
     if( packet.step == 'start' ) {
         chosungGameMan.setText('#### 곧 초성게임이 시작 됩니다! ####');
         chosungGameMan.setUI();
     }
     else if( packet.step == 'q') {
-        chatObj.addChat('chat', false, '초성게임', '새로운 문제가 출제 되었습니다 - ' + packet.q, false, 99, '', '' );
+        item.msg = '새로운 문제가 출제 되었습니다 - ' + packet.q;
+        chatObj.addChat( item );
         if( packet.prev_q ) {
             showAdminMsg('정답은 ' + packet.prev_q + '였습니다');
         }
@@ -152,10 +165,12 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         chosungGameMan.setText(typeName + packet.q);
     }
     else if( packet.step == 'msg' ) {
-        chatObj.addChat('chat', false, '초성게임', packet.msg, false, 99, '', '' );
+        item.msg = packet.msg;
+        chatObj.addChat( item );
     }
     else if( packet.step == 'result' ) {
-        chatObj.addChat('chat', false, '초성게임', '퀴즈가 종료 되었습니다', false, 99, '', '' );
+        item.msg = '퀴즈가 종료 되었습니다';
+        chatObj.addChat( item );
         chosungGameMan.closeUI();
     }
     else if( packet.step == 'wait') {
@@ -167,7 +182,8 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         chosungGameMan.closeUI();
     }
     else if( packet.step == 'q-hint') {
-        chatObj.addChat('chat', false, '초성게임', '힌트가 도착했습니다', false, 99, '', '' );
+        item.msg = '힌트가 도착했습니다';
+        chatObj.addChat( item );
 
         if( packet.mode == 1 ) {
             chosungGameMan.questionType = packet.type;
@@ -181,7 +197,8 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
     }
     else if( packet.step == 'fail') {
         var msg = '실패 했습니다! 답은 ' + packet.q;
-        chatObj.addChat('chat', false, '초성게임', msg, false, 99, '', '' );
+        item.msg = msg;
+        chatObj.addChat( item );
         showAdminMsg(msg);
     }
 }
@@ -718,11 +735,68 @@ function ChatObject() {
     this.vSearchVoteList = new Vue({
         el: '#vote-list',
         data: {
+            isScroll: false,
             visible: false,
             sTitle: '투표자',
             listHtml:''
         }
     });
+
+    this.vChat = new Vue({
+        el: '#chat',
+        data: {
+            chatMsgList: [
+            ]
+        },
+        methods: {
+            grade: getGradeImage,
+            ip: function(ip) {
+                if( ip ) {
+                    var aIpSplited = ip.split('.');
+                    if( aIpSplited.length >= 4 ) {
+                        aIpSplited[3] = 'xx';
+                        ip = aIpSplited.join('.');
+                    }
+                }
+                return '(' + ip + ')';
+            },
+            getMsgStyle: function(item) {
+                if( item.mode != 'vote' ) {
+                    return {};
+                }
+                else {
+                    var style =
+                    {
+                        color: (item.vote == -1) ? 'black' : color[item.vote]
+                    };
+
+                    return style;
+                }
+            },
+            checkScroll: function(bForced) {
+                var container = document.querySelector(".chat-ui");
+                var scrollHeight = container.scrollHeight;
+                if( container.scrollTop == ( scrollHeight - container.clientHeight ) || bForced ) {
+                    this.isScroll = true;
+                }
+            },
+            scrollToEnd: function() {
+                var container = document.querySelector(".chat-ui");
+                var scrollHeight = container.scrollHeight;
+
+                if( this.isScroll ) {
+                    container.scrollTop = scrollHeight;
+                    this.isScroll = false;
+                }
+            }
+        },
+        mounted: function() {
+            this.scrollToEnd();
+        },
+        updated: function() {
+            this.scrollToEnd();
+        }
+    })
 }
 
 ChatObject.prototype.init = function() {
@@ -737,35 +811,20 @@ ChatObject.prototype.FlushChat = function( mode ) {
         if ( mode == 'vote' || (chatObj.bFlushByTimer && !chatObj.isFlushing )) {
             chatObj.isFlushing = true;
             chatObj.bFlushByTimer = false;
-            var bAutoMoveToBottom = false;
-            var chatwndheight = chatObj.chatUI.height();
 
-            var list = chatObj.chatUI.find('li');
+            var list = chatObj.vChat.chatMsgList;
             if (list.length > 35) {
                 if( options.isClearChatAuto() ) {
                     chatObj.clearChat();
                 }
                 else {
-                    list.eq(0).remove();
+                    chatObj.vChat.chatMsgList.shift();
                 }
             }
 
-            if ((chatObj.chatUI.get(0).scrollTop == (chatObj.chatUI.get(0).scrollHeight - chatwndheight/* padding */) ) ||
-                options.vSettings.autoScroll.checked ) {
-                bAutoMoveToBottom = true;
-            }
+            chatObj.vChat.checkScroll( options.vSettings.autoScroll.checked );
 
-            var html = '';
-            for (var i = 0; i < chatObj.chatBuffer.length; ++i) {
-                html += chatObj.chatBuffer[i];
-            }
-
-            chatObj.chatUI.append(html);
-
-            //  끝 정렬
-            if (bAutoMoveToBottom) {
-                chatObj.chatUI.scrollTop(chatObj.chatUI.get(0).scrollHeight);
-            }
+            chatObj.vChat.chatMsgList = chatObj.vChat.chatMsgList.concat( chatObj.chatBuffer );
 
             chatObj.chatBuffer = [];
             chatObj.isFlushing = false;
@@ -777,34 +836,13 @@ ChatObject.prototype.FlushChat = function( mode ) {
 }
 
 ChatObject.prototype.clearChat = function() {
-    chatObj.chatUI.empty();
+    chatObj.vChat.chatMsgList = [];
 }
 
-ChatObject.prototype.addChat = function( mode, isbaned , nick, msg, bStrip,auth, ip, sockid, time ) {
-    if( ip ) {
-        var aIpSplited = ip.split('.');
-        if( aIpSplited.length >= 4 ) {
-            aIpSplited[3] = 'xx';
-            ip = aIpSplited.join('.');
-        }
-    }
+ChatObject.prototype.addChat = function( item ) {
+    this.chatBuffer.push(item);
 
-    var li =    '<li mode="' + mode +'">' +
-                    '<div class="chat-msg-item">' +
-                        '<div class="nick-area">' +
-                            '<div class="grade"><img src="' + getGradeImage(auth, isbaned) + '"></div>' +
-                            '<div class="nick" ip="'+ ip +'" sockid="'+ sockid +'">' + nick + '</div>' +
-                            (ip ? '<div class="ip">('+ ip + ')</div>' : '') +
-                        '</div>' +
-                        '<div class="msg-area">' +
-                            msg
-                        '</div>' +
-                    '</div>' +
-                '</li>';
-
-    this.chatBuffer.push(li);
-
-    chatObj.FlushChat( mode );
+    chatObj.FlushChat( item.mode );
 }
 
 ChatObject.prototype.setMsgVisible = function(mode, isVisible) {
@@ -1076,7 +1114,19 @@ QuizObject.prototype.onQuiz = function(data) {
 
     setVisibleBlock(quizObj.quizWnd, true);
 
-    chatObj.addChat( "", false, '<div class="notice_font">퀴즈</div>', data.quizdata.question + '</br>' + html, false);
+    var item = {
+        mode: 'quiz',
+        auth: 99,
+        isBaned: false,
+        sockid: '',
+        ip: '',
+        nick: '퀴즈',
+        msg: data.quizdata.question + '</br>' + html,
+        isAdmin: data.admin,
+        vote: data.vote
+    }
+
+    chatObj.addChat( item );
 
     quizObj.tStartQuiz = new Date();
 
@@ -1102,7 +1152,19 @@ QuizObject.prototype.onQuizRet = function( data ) {
             if( !collect_rate ) {
                 collect_rate = 0;
             }
-            chatObj.addChat( "", false, '<div class="notice_font">퀴즈 정답</div>', '<b><div style="color:' + color[i] + '">' + (i+1) + '번 '+ quizObj.quizData.answer[i]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>', false);
+            var item = {
+                mode: 'quiz',
+                auth: 99,
+                isBaned: false,
+                sockid: '',
+                ip: '',
+                nick: '퀴즈정답',
+                msg: '<b><div style="color:' + color[i] + '">' + (i+1) + '번 '+ quizObj.quizData.answer[i]  + ' ( 정답률 : ' + collect_rate + '% )</div></b>',
+                isAdmin: data.admin,
+                vote: data.vote
+            }
+
+            chatObj.addChat( item );
             setTimeout(function() {
                 setVisibleBlock( quizObj.centerVideoElem, true );
                 setVisibleBlock( quizObj.randomQuizRootElem, false );
@@ -1582,54 +1644,59 @@ function onChat( data ) {
 
     var d =  '<span class="chat-time"> (' + data.time + ')</span>';
 
-    if( data.mode == "vote" ) {
-        if( data.isLogin ) {
-            data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
-        }
+    var item = {
+        mode: data.mode,
+        auth: data.auth,
+        isBaned: data.isBaned,
+        sockid: data.sockid,
+        ip: data.ip,
+        nick: data.nickname,
+        msg: ( data.admin ? data.msg : strip(data.msg) ) + d,
+        isAdmin: data.admin,
+        vote: data.vote
+    }
 
+    if( data.mode == "vote" ) {
         if( options.isShowMemberVoteOnly() &&
             ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
         ) {
-            //chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>투표했습니다.</b>', false, data.auth, data.ip, data.sockid );
         }
         else if( options.isShowSearchUserVoteOnly() && data.auth < 4 ) {
             //
         }
         else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ ( data.vote == -1 ? 'black' : color[data.vote] ) + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+            chatObj.addChat( item );
         }
     }
     else if( data.mode == "search") {
         if( !isShowSearchChat() ) return;
-        if( data.isLogin ) {
-            data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
-        }
-        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+        chatObj.addChat( item );
     }
     else if ( data.mode == "notice") {
-        if( isDisableNoticeShow() ) return;
-        chatObj.addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
+        chatObj.addChat( item );
     }
     else if ( data.mode == "ban") {
-        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
+        chatObj.addChat( item );
     }
     else {
         if( options.isNotShowChat() ) return;
-        if( data.admin ) {
-            chatObj.addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + d + '</div>', false, data.auth, data.ip, data.sockid);
-        }
-        else if( data.isLogin ) {
-            chatObj.addChat( data.mode, data.isBaned, '<div class="logined_font">' + data.nickname + '</div>', data.msg + d, true, data.auth, data.ip, data.sockid);
-        }
-        else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, data.msg + d, true, data.auth, data.ip, data.sockid );
-        }
-
+        chatObj.addChat( item );
     }
 }
 
 function onAdminMsg(data) {
-    chatObj.addChat( "admin", false, "서버메시지", '<b>' + data.msg + '</b>', false, 50, '', 0 );
+    var item = {
+        mode: 'admin',
+        auth: 50,
+        isBaned: false,
+        sockid: '',
+        ip: data.ip,
+        nick: '[서버]',
+        msg: data.msg,
+        isAdmin: true
+    }
+
+    chatObj.addChat( item );
 }
 
 function onServMsg(data) {
@@ -2355,35 +2422,52 @@ function getSearchArea(where) {
 }
 
 function onEmoticon(_data) {
+
+    var item = {
+        mode: 'emoticon',
+        auth: _data.auth,
+        isBaned: _data.isBaned,
+        sockid: _data.sockid,
+        ip: _data.ip,
+        nick: _data.nick,
+        msg: '',
+        isAdmin: _data.admin,
+        vote: _data.vote
+    }
+
+    var emoticonName = 'hong_shock';
+
     switch( _data.name ) {
         case "bbam":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hong_shock.png"/>', false, _data.auth);
+            emoticonName = 'hong_shock';
             break;
-
         case "ddk":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ddoddoke.png"/>', false, _data.auth);
+            emoticonName = 'ddoddoke';
             break;
 
         case "yeee":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/yeee.png"/>', false, _data.auth);
+            emoticonName = 'yeee';
             break;
 
         case "hi":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/hi.png"/>', false, _data.auth);
+            emoticonName = 'hi';
             break;
 
         case "by":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/by.png"/>', false, _data.auth);
+            emoticonName = 'by';
             break;
 
         case "daebak":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/emo_daebak.png"/>', false, _data.auth);
+            emoticonName = 'emo_daebak';
             break;
 
         case "ua":
-            chatObj.addChat( "", false, _data.nick, '<img style="width:80px; height:80px;" src="/images/ua.png"/>', false, _data.auth);
+            emoticonName = 'ua';
             break;
     }
+
+    item.msg = '<img style="width:80px; height:80px;" src="/images/' + emoticonName + '.png"/>';
+    chatObj.addChat( item );
 }
 
 function openUserMenu( name, sockid, nick ) {

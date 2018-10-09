@@ -672,6 +672,14 @@ body {
   min-height: 25px;
   line-height: 23px;
 }
+#area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .admin {
+  font-weight: bold;
+  color: #7c2929;
+}
+#area-article #article-right #chat-wnd-root #chat ul.chat-ui li div.chat-msg-item .admin-nick {
+  font-weight: bold;
+  color: #7c2929;
+}
 #area-article #article-right #chat-wnd-root #chat-input-area {
   height: 38px;
 }

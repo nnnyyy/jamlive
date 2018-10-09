@@ -297,6 +297,22 @@
                 </div>
                 <div id="chat">
                     <ul class="chat-ui">
+                        <li :mode="item.mode" v-for="item in chatMsgList">
+                            <div class="chat-msg-item">
+                                <div class="nick-area">
+                                    <div class="grade">
+                                        <img :src="grade(item.auth, item.isBaned)">
+                                    </div>
+                                    <div class="nick" :ip="item.ip" :sockid="item.sockid">
+                                        <div :class="{'admin-nick': item.isAdmin}" v-text="item.nick">
+                                        </div>
+                                    </div>
+                                    <div class="ip" v-text="ip(item.ip)"></div>
+                                </div>
+                                <div class="msg-area" v-html="item.msg" :class="{admin: item.isAdmin}" :style="getMsgStyle(item)">
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div id="chat-input-area">
