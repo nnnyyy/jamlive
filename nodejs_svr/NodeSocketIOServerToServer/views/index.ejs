@@ -52,13 +52,13 @@
         <div>관리자 페이지</div>
         <div>
             <input type="text" id="ip-msg"/>
-            <input type="button" id="btn-send" value="보내기"/>
+            <button @click="onBtnSendAdminMsg">보내기</button>
         </div>
 
         <div>
             <div>닉으로 밴하기</div>
             <input type="text" id="ip-ban-nick"/>
-            <input type="button" id="btn-permanent-ban-by-nick" value="밴합니다"/>
+            <button @click="onBtnPermanentBanBynick">밴하기</button>
         </div>
     </div>
     <div v-else-if="logined == false">

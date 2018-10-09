@@ -19,29 +19,6 @@ AjaxHelper.prototype.postJson = function( url, jsondata, cbSuccess ) {
 var ajaxHelper = new AjaxHelper();
 
 function init() {
-    $('#btn-send').click(function(e) {
-        var msg = $('#ip-msg').val();
-        if( msg.trim() == '' ) return;
-        ajaxHelper.postJson('/msg', { msg: msg }, null);
-        $('#ip-msg').val('');
-    })
-
-    $('#btn-permanent-ban-by-nick').click(function(e) {
-        var msg = $('#ip-ban-nick').val();
-        if( msg.trim() == '' ) return;
-        ajaxHelper.postJson('/banbynick', { nick: msg.trim() }, function(result) {
-            alert(result.ret);
-        });
-    })
-
-    $('#btn-permanent-ban-by-ip').click(function(e) {
-        var msg = $('#ip-ban-ip').val();
-        if( msg.trim() == '' ) return;
-        ajaxHelper.postJson('/banbyip', { ip: msg.trim() }, function(result) {
-            alert(result.ret);
-        });
-    });
-
     initVueObject();
 }
 
@@ -51,6 +28,25 @@ function initVueObject() {
         data: {
             logined: false,
             isAccessable: false
+        },
+        methods: {
+            onBtnSendAdminMsg: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var msg = $('#ip-msg').val();
+                if( msg.trim() == '' ) return;
+                ajaxHelper.postJson('/msg', { msg: msg }, null);
+                $('#ip-msg').val('');
+            },
+            onBtnPermanentBanBynick: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var msg = $('#ip-ban-nick').val();
+                if( msg.trim() == '' ) return;
+                ajaxHelper.postJson('/banbynick', { nick: msg.trim() }, function(result) {
+                    alert(result.ret);
+                });
+            }
         }
     });
 }
