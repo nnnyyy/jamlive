@@ -986,8 +986,8 @@ function onSockChat(data) {
         }
 
         if( !client.isAbleChat() ) {
-            //servman.sendServerMsg(socket, '여유를 가지고 채팅 해 주세요.');
-            //return;
+            servman.sendServerMsg(socket, '여유를 가지고 채팅 해 주세요.');
+            return;
         }
 
         client.tLastChat = new Date();
