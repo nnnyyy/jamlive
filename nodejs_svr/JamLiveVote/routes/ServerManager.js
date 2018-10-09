@@ -1204,6 +1204,7 @@ ServerMan.prototype.onGlobalHint = function( packet ) {
 
             if( packet.id != '' ) {
                 const client = servman.getClient(packet.id);
+                if( !client ) return;
                 const oPacket = {mode: packet.mode };
                 client.socket.emit('global-memo', oPacket);
             }
