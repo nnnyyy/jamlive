@@ -734,8 +734,6 @@ ChatObject.prototype.init = function() {
 
 ChatObject.prototype.FlushChat = function( mode ) {
     try {
-        var tCur = new Date();
-
         if ( mode == 'vote' || (chatObj.bFlushByTimer && !chatObj.isFlushing )) {
             chatObj.isFlushing = true;
             chatObj.bFlushByTimer = false;
@@ -743,7 +741,7 @@ ChatObject.prototype.FlushChat = function( mode ) {
             var chatwndheight = chatObj.chatUI.height();
 
             var list = chatObj.chatUI.find('li');
-            if (list.length > 38) {
+            if (list.length > 35) {
                 if( options.isClearChatAuto() ) {
                     chatObj.clearChat();
                 }
@@ -1582,8 +1580,7 @@ function onBtnTimeTable(e) {
 
 function onChat( data ) {
 
-    var d = new Date(data.time);
-    d =  '<span class="chat-time"> (' + d.toTimeString().split(' ')[0] + ')</span>';
+    var d =  '<span class="chat-time"> (' + data.time + ')</span>';
 
     if( data.mode == "vote" ) {
         if( data.isLogin ) {
@@ -1599,7 +1596,7 @@ function onChat( data ) {
             //
         }
         else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ ( data.vote == -1 ? 'black' : color[data.vote] ) + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid, data.time);
+            chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: '+ ( data.vote == -1 ? 'black' : color[data.vote] ) + '">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
         }
     }
     else if( data.mode == "search") {
@@ -1607,25 +1604,25 @@ function onChat( data ) {
         if( data.isLogin ) {
             data.nickname = '<div class="logined_font">' + data.nickname + '</div>';
         }
-        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid, data.time);
+        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b style="color: #1b3440">' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "notice") {
         if( isDisableNoticeShow() ) return;
-        chatObj.addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid, data.time);
+        chatObj.addChat( data.mode, data.isBaned, '<notice-nick>알림</notice-nick>', '<notice-nick>' + data.msg + '</notice-nick>', false, data.auth, data.ip, data.sockid);
     }
     else if ( data.mode == "ban") {
-        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid, data.time);
+        chatObj.addChat( data.mode, data.isBaned, data.nickname, '<b>' + data.msg + '</b>', false, data.auth, data.ip, data.sockid);
     }
     else {
         if( options.isNotShowChat() ) return;
         if( data.admin ) {
-            chatObj.addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + d + '</div>', false, data.auth, data.ip, data.sockid, data.time);
+            chatObj.addChat( data.mode, data.isBaned, '<div class="admin-nick">' + data.nickname + '</div>', '<div class="admin-nick">' + data.msg + d + '</div>', false, data.auth, data.ip, data.sockid);
         }
         else if( data.isLogin ) {
-            chatObj.addChat( data.mode, data.isBaned, '<div class="logined_font">' + data.nickname + '</div>', data.msg + d, true, data.auth, data.ip, data.sockid, data.time);
+            chatObj.addChat( data.mode, data.isBaned, '<div class="logined_font">' + data.nickname + '</div>', data.msg + d, true, data.auth, data.ip, data.sockid);
         }
         else {
-            chatObj.addChat( data.mode, data.isBaned, data.nickname, data.msg + d, true, data.auth, data.ip, data.sockid, data.time );
+            chatObj.addChat( data.mode, data.isBaned, data.nickname, data.msg + d, true, data.auth, data.ip, data.sockid );
         }
 
     }

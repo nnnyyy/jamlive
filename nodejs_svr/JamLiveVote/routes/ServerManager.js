@@ -788,7 +788,7 @@ function onSockPermanentBan(data) {
             //return;
         }
 
-        dbhelper.updateBanUser(toBanClient.ip, ret => {
+        dbhelper.updateBanUserIP(toBanClient.ip, ret => {
             servman.sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
             toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
             chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.ip}을 영구밴 시켰습니다`, false);
@@ -804,8 +804,8 @@ function onSockPermanentBan(data) {
                 }
             });
         });
-        if( toBanClient.isLogined() && toBanClient.socket.handshake.session.username ){
-            dbhelper.updateBanUser( toBanClient.socket.handshake.session.username, ret => {
+        if( toBanClient.isLogined() && toBanClient.getUserId() ){
+            dbhelper.updateBanUserID( toBanClient.getUserId(), ret => {
                 servman.sendServerMsg(socket, `${toBanClient.nick} 영구밴 완료!`);
                 toBanClient.socket.emit('reconn-server', {logined: toBanClient.isLogined(), url: 'jamlive.net'});
                 chatMan.Broadcast(servman.io, client, 'ban', `${toBanClient.nick}님을 영구밴 시켰습니다`, false);
@@ -984,13 +984,6 @@ function onSockChat(data) {
             servman.sendServerMsg(socket, '가입 후 채팅 가능');
             return;
         }
-
-        /*
-        if( servman.checkBaned(client.ip) ) {
-         servman.sendServerMsg(socket, '밴유저는 채팅 참여가 불가능합니다.');
-            return;
-        }
-        */
 
         if( !client.isAbleChat() ) {
             servman.sendServerMsg(socket, '여유를 가지고 채팅 해 주세요.');

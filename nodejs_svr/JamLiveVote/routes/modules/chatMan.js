@@ -4,7 +4,8 @@ var ChatMan =  function() {
 
 ChatMan.prototype.Broadcast = function( io, client, mode, msg, baned, voteidx ) {
     const tCur = new Date();
-    const jsondata = {sockid: client.socket.id, nickname: client.nick, msg: msg, mode: mode, isBaned: baned, admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip, vote: voteidx, isSearched: client.isInSearchedUser(), time: tCur };
+    const sTime = tCur.toTimeString().split(' ')[0];
+    const jsondata = {sockid: client.socket.id, nickname: client.nick, msg: msg, mode: mode, isBaned: baned, admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip, vote: voteidx, isSearched: client.isInSearchedUser(), time: sTime };
     io.sockets.in('auth').emit('chat', jsondata);
 }
 

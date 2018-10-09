@@ -185,14 +185,14 @@ exports.getNextQuizshowTime = function( cb ) {
             cb({ret: 0, data: data});
         });
     }catch(err) {
-        Log.logger.debug('DB Failed - getPermanentBanList');
+        Log.logger.debug('DB Failed - getNextQuizshowTime');
         cb({ret: -1});
     }
 }
 
 exports.getPermanentBanList = function(cb) {
     try {
-        dbpool.query("select * from permanent_ban_list", function(err, rows) {
+        dbpool.query("select * from permanentbanlist", function(err, rows) {
             if(err) {
                 console.log(err);
 
@@ -202,7 +202,10 @@ exports.getPermanentBanList = function(cb) {
             var data = new HashMap();
             for( var i  = 0; i < rows.length ; ++i ) {
                 var d = rows[i];
-                data.set(d.ip_or_id, 1);
+                if( d.ip != '' )
+                    data.set(d.ip, 1);
+                if( d.id != '')
+                    data.set(d.id, 1);
             }
 
             cb({ret: 0, list: data});
@@ -212,9 +215,9 @@ exports.getPermanentBanList = function(cb) {
         cb({ret: -1});
     }
 }
-exports.updateBanUser = function( idorip, cb ) {
+exports.updateBanUserIP = function( ip, cb ) {
     try {
-        dbpool.query(`insert into permanent_ban_list ( ip_or_id ) values ('${idorip}')`, function(err, rows) {
+        dbpool.query(`insert into permanentbanlist ( ip ) values ('${ip}')`, function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 cb({ret: -99});
@@ -228,6 +231,24 @@ exports.updateBanUser = function( idorip, cb ) {
         cb({ret: -1});
     }
 }
+
+exports.updateBanUserID = function( id, cb ) {
+    try {
+        dbpool.query(`insert into permanentbanlist ( id ) values ('${id}')`, function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - updateBanUser');
+        cb({ret: -1});
+    }
+}
+
 
 exports.searchUser = function( nick, cb ) {
     try {
