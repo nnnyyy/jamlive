@@ -11,14 +11,6 @@
         gtag('config', 'UA-122840650-1');
     </script>
 
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-3598320494828213",
-            enable_page_level_ads: true
-        });
-    </script>
-
     <title><%= __('title')%></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
     <meta name="description" content="라이브 퀴즈쇼(잼라이브, 꿀잼 퀴즈방, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
@@ -67,54 +59,84 @@
     <div id="area-top">
         <div id="area-top-left">
             <div id="logo">
-                <img src="/images/logo.png"/>
+                <img src="/images/_logo.png"/>
             </div>
-            <div id="server-list">
-                <div>
-                    <div class="serv" id="btn-serv-1"><%= __('server')%>1</div>
-                    <div class="serv" id="btn-serv-2"><%= __('server')%>2</div>
-                    <div class="serv" id="btn-serv-3"><%= __('server')%>3</div>
-                    <div class="serv" id="btn-serv-4"><%= __('server')%>4</div>
-                    <div class="serv" id="btn-serv-5"><%= __('server')%>5</div>
-                    <div class="serv" id="btn-serv-6"><%= __('server')%>6</div>
-                    <div class="serv" id="btn-serv-7"><%= __('server')%>7</div>
-                    <div class="serv" id="btn-serv-8"><%= __('server')%>8</div>
-                </div>
-                <div>
-                    <div class="serv" id="btn-serv-9"><%= __('server')%>9</div>
-                    <div class="serv" id="btn-serv-10"><%= __('server')%>10</div>
-                    <div class="serv" id="btn-serv-11"><%= __('server')%>11</div>
-                    <div class="serv" id="btn-serv-12"><%= __('server')%>12</div>
-                    <div class="serv" id="btn-serv-13"><%= __('server')%>13</div>
-                    <div class="serv" id="btn-serv-14"><%= __('server')%>14</div>
-                    <div class="serv" id="btn-serv-15"><%= __('server')%>15</div>
-                    <div class="serv" id="btn-serv-16"><%= __('server')%>16</div>
-                </div>
+            <div id="serv-info">
+                <img class='icon' src="/images/cnt_global_icon.png"/>
+                <span class="info" id="total-conn-cnt">0</span>
+                <img class='icon' src="/images/cnt_local_icon.png"/>
+                <span class="info" id="conn-cnt">0</span>
             </div>
-            <div class="curserv"><%= __('current-server-name')%> : <nc><%- servname %></nc></div>
-            <div class="left topitem" >
-                <a style="text-decoration: none; color: darkgreen; font-weight: bold;" href="/kin" target="_blank">지식의 바다</a>
-            </div>
-            <div class="left topitem" >
-                <a href="https://cafe.naver.com/livequizshare" target="_blank"><img id="naver-cafe-icon" src="/images/naver_cafe_icon.png"/></a>
-            </div>
-            <div class="left topitem" >
-                <img id="quiz-timetable-icon" src="/images/quiz_timetable_icon.png"/>
-            </div>
+        </div>
+        <div id="area-top-center">
             <span id="clock"></span>
         </div>
         <div id="area-top-right">
+            <div class="area-top-btn" id="btn-site-menu">
+                사이트 메뉴
+            </div>
+            <div class="curserv"><%= __('current-server-name')%> : <nc><%- servname %></nc></div>
             <div class="area-top-btn" id="btn-settings"><%=__('menu-settings')%></div>
-            <div class="area-top-btn" id="btn-help"><%=__('menu-help')%></div>
             <%
             if( !username ) {%>
-            <div class="area-top-btn" id="btn-signup"><%=__('menu-signup')%></div>
-            <div class="area-top-btn" id="btn-login"><%=__('menu-login')%></div>
             <%}else {%>
-            <div class="area-top-btn" id="btn-logout"><%=__('menu-logout')%></div>
-            <div class="area-login-info"><%-userinfo.usernick%>(<span v-text="ap"><%-userinfo.ap%></span> 점)<%=__('menu-connector')%></div>
+            <div class="area-login-info"><%-userinfo.usernick%>(<span v-text="ap"><%-userinfo.ap%></span> 점)</div>
             <%}%>
-
+        </div>
+    </div>
+    <div id="site-menu" v-show="visible" @click="onClick">
+        <div class="inner">
+            <ul>
+                <li>
+                    <dl class="server-list">
+                        <dt>서버 리스트 1</dt>
+                        <dd class="serv" id="btn-serv-1">서버1</dd>
+                        <dd class="serv" id="btn-serv-2">서버2</dd>
+                        <dd class="serv" id="btn-serv-3">서버3</dd>
+                        <dd class="serv" id="btn-serv-4">서버4</dd>
+                        <dd class="serv" id="btn-serv-5">서버5</dd>
+                        <dd class="serv" id="btn-serv-6">서버6</dd>
+                        <dd class="serv" id="btn-serv-7">서버7</dd>
+                        <dd class="serv" id="btn-serv-8">서버8</dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl class="server-list">
+                        <dt>서버 리스트 2</dt>
+                        <dd class="serv" id="btn-serv-9">서버9</dd>
+                        <dd class="serv" id="btn-serv-10">서버10</dd>
+                        <dd class="serv" id="btn-serv-11">서버11</dd>
+                        <dd class="serv" id="btn-serv-12">서버12</dd>
+                        <dd class="serv" id="btn-serv-13">서버13</dd>
+                        <dd class="serv" id="btn-serv-14">서버14</dd>
+                        <dd class="serv" id="btn-serv-15">서버15</dd>
+                        <dd class="serv" id="btn-serv-16">서버16(전체서버투표 미반영)</dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>기타</dt>
+                        <dd @click="onBtnKin" :style="btnStyleKin">지식의 바다</dd>
+                        <dd id="quiz-timetable-icon">퀴즈 스케쥴표</dd>
+                        <dd @click="onBtnQuizSite" :style="btnStyle">기출 문제 실전 풀이</dd>
+                        <dd @click="onBtnCafe" :style="btnStyle"><img id="naver-cafe-icon" src="/images/naver_cafe_icon.png"/></dd>
+                        <dd id="btn-help">사이트 이용안내</dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>유저 메뉴</dt>
+                        <%
+                        if( !username ) {%>
+                        <dd @click="onBtnLogin" :style="btnStyle">로그인</dd>
+                        <dd @click="onBtnSignUp" :style="btnStyle">회원가입</dd>
+                        <%}else {%>
+                        <dd @click="onBtnLogout" :style="btnStyle">로그아웃</dd>
+                        <dd>비밀번호 변경</dd>
+                        <%}%>
+                    </dl>
+                </li>
+            </ul>
         </div>
     </div>
     <div id="area-article">
@@ -126,17 +148,13 @@
                     <div class="separator"></div>
                 </div>
             </div>
-            <div id="site-info-notice">
-                <div id="site-info">
-                    <div id="conn-cnt-wrapper">
-                        <div>전체접속</div>
-                        <div id="total-conn-cnt">0</div>
-                        <div>접속</div>
-                        <div id="conn-cnt">0</div>
-                    </div>
-                </div>
-                <div id="notice">
-                </div>
+            <div id="notice"></div>
+            <div class="ads">
+                <ins class="kakao_ad_area" style="display:none;width:100%"
+                     data-ad-unit    = "DAN-rh5ikhi3t46a"
+                     data-ad-width   = "320"
+                     data-ad-height  = "50"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
             </div>
             <div id="hint">
                 <div type="top-menu">
@@ -162,6 +180,7 @@
                     <textarea id ='memo-area' class="memo-area"></textarea>
                 </div>
             </div>
+            <!--
             <div id="user-list-area">
                 <div type="top-menu">
                     접속자 목록
@@ -172,6 +191,7 @@
                     </ul>
                 </div>
             </div>
+            -->
         </div>
         <div id="article-center">
             <div id="search-area-center" v-show="visible">
@@ -222,9 +242,6 @@
                     </div>
                 </div>
             </div>
-            <a href="http://www.pcarmall.com/" target="_blank"><div style="text-align: center;width: 100%; background-color: #000312; margin-top:13px;">
-                <image src="/images/ads/ads1.jpg" style="height:50px; margin: 0 auto;"></image>
-            </div></a>
             <div id="ads-banner-center">
                 <ins class="kakao_ad_area" style="display:none;"
                      data-ad-unit    = "DAN-1iyeys41mnepk"
@@ -239,13 +256,7 @@
                      data-ad-height  = "50"></ins>
                 <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
             </div>
-            <div id="ads-img1-center">
-                <ins class="kakao_ad_area" style="display:none;"
-                     data-ad-unit    = "DAN-tofpljkyvq06"
-                     data-ad-width   = "300"
-                     data-ad-height  = "250"></ins>
-                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-            </div>
+
         </div>
         <div id="article-right">
             <div id="vote-data">

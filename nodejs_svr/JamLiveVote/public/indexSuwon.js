@@ -60,6 +60,7 @@ function init( socket, stringTable ) {
     hintObj.init();
     chatObj.init();
     options.init();
+    siteMenu.init();
     chosungGameMan.init();
     setSocketEvent(socket);
     setKeyEvent();
@@ -97,22 +98,6 @@ var GlobalValue = function() {
         }
     });
 }
-
-/*
-GlobalValue.prototype.onNextQuiz = function (data) {
-    var weekdayname = ['월요일', '화요일','수요일','목요일','금요일','토요일','일요일'];
-    var tTime = new Date('1980-01-01T' + data.data.time);
-    var tCur = new Date();
-    var bToday = false;
-    if( data.data.weekday === ( tCur.getDay() - 1 )) {
-        bToday = true;
-    }
-
-    var qinfo = '<next-quiz-type>' + data.data.name + '</next-quiz-type>' + ' ' + tTime.getHours() + G.stringTable['hour'] + ' ' + tTime.getMinutes().toString() + G.stringTable['minute'];
-    G.weekdayElem.text(bToday? G.stringTable['today'] : weekdayname[data.data.weekday]);
-    G.quizinfoElem.html(qinfo);
-}
-*/
 
 function ChosungGameMan() {
     this.questionTypeName = ['사전', '음식', '관용표현', '해산물', '날씨', '식물', '영화-주인공', '나루토', '과일', '화가', '장소', '한국영화'];
@@ -199,6 +184,64 @@ ChosungGameMan.prototype.onPacket = function( packet ) {
         chatObj.addChat('chat', false, '초성게임', msg, false, 99, '', '' );
         showAdminMsg(msg);
     }
+}
+
+function SiteMenu() {
+
+}
+
+SiteMenu.prototype.init = function() {
+    this.vMenu = new Vue({
+        el: '#site-menu',
+        data: {
+            visible: false,
+            btnStyle: {
+                cursor: 'pointer'
+            },
+            btnStyleKin: {
+                cursor: 'pointer',
+                color: '#098100',
+                fontWeight: 'bold'
+            }
+        },
+        methods: {
+            onClick: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.visible = false;
+            },
+            onBtnLogin: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = '/signin';
+            },
+            onBtnSignUp: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = '/signup';
+            },
+            onBtnLogout: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                logout();
+            },
+            onBtnKin: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('/kin','_blank');
+            },
+            onBtnCafe: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('https://cafe.naver.com/livequizshare','_blank');
+            },
+            onBtnQuizSite: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('http://quiz.jamlive.net/','_blank');
+            }
+        }
+    })
 }
 
 function Options() {
@@ -486,6 +529,7 @@ var topMenuObj = new TopMenuObject();
 var chosungGameMan = new ChosungGameMan();
 var quizObj = new QuizObject();
 var options = new Options();
+var siteMenu = new SiteMenu();
 
 //  힌트 관련 변수
 function HintObject() {
@@ -970,14 +1014,17 @@ function TopMenuObject() {
 }
 
 function onBtnLogin(e) {
+    e.stopPropagation();
     window.location.href = '/signin';
 }
 
 function onBtnSignup(e) {
+    e.stopPropagation();
     window.location.href = '/signup';
 }
 
 function onBtnLogout(e) {
+    e.stopPropagation();
     logout();
 }
 
@@ -1305,6 +1352,7 @@ function setBtnEvent() {
     options.vSettings.visible = false;
     $('#btn-settings').click(onBtnSettings);
     $('#btn-help').click(onBtnHelp);
+
     $('#notice-wrapper').click(function(e) {
         localStorage.setItem('notice-first', 1);
         setVisible($('#notice-wrapper'), false);
@@ -1315,6 +1363,11 @@ function setBtnEvent() {
     $('#btn-get-search-list').click(onGetSearchList);
     $('#btn-vote-list-close').click(onBtnVoteListClose);
     $('#quiz-timetable-icon').click(onBtnTimeTable);
+
+    $('#btn-site-menu').click(function( e ) {
+        e.preventDefault();
+        siteMenu.vMenu.visible = !siteMenu.vMenu.visible;
+    })
 
     $('#btn-serv-1').click(onBtnGoServ1);
     $('#btn-serv-2').click(onBtnGoServ2);
@@ -1429,7 +1482,9 @@ function onBtnLikeListBtn(e) {
 
 function onBtnSettings(e) {
     e.stopPropagation();
+    e.preventDefault();
     options.vSettings.visible = true;
+    siteMenu.vMenu.visible = false;
     var settingsWnd = $('#settings');
     settingsWnd.css({left: 0});
 
@@ -1499,10 +1554,14 @@ function onGetSearchListResult(packet) {
 }
 
 function onBtnVoteListClose(e) {
+    e.stopPropagation();
+
     chatObj.vSearchVoteList.visible = false;
 }
 
 function onBtnTimeTable(e) {
+    e.stopPropagation();
+
     var winHeight = document.body.clientHeight;	// 현재창의 높이
     var winWidth = document.body.clientWidth;	// 현재창의 너비
     var winX = window.screenLeft;	// 현재창의 x좌표

@@ -18,6 +18,12 @@ $search-font-size-large-line-height: 20px;
 $search-color-find-bg: #e9bd25;
 $search-color-find-other-bg: #0ABE64;
 
+* {
+  margin: 0;
+  padding: 0;
+  max-height: 1000000px;
+  box-sizing: border-box;
+}
 
 body {
   background-color: $color-back;
@@ -78,7 +84,7 @@ $top-bottom-margin: 5px;
     float: left;
     height: $height;
     line-height: $height;
-    margin-left: 56px;
+    margin-left: 23px;
 
     img {
       vertical-align: middle;
@@ -86,33 +92,22 @@ $top-bottom-margin: 5px;
     }
 
     #logo {
-      float: left;
+      display: inline-block;
     }
 
-    #server-list {
-      float: left;
-      margin: 0 0 0 26px;
-      height: $height;
+    #serv-info {
+      font-family: 'Nanum Barun Gothic', sans-serif;
+      display: inline-block;
+      margin: 0 0 0 20px;
 
-      .serv {
-        float: left;
-        margin: 0 4px 0 0;
-        height: $height / 2;
-        line-height: $height / 2;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 12px;
+      .icon {
+        height: 26px;
       }
-    }
 
-    .curserv {
-      float: left;
-      margin: 0 25px 0 0;
-      font-size: 20px;
-      font-weight: bold;
-
-      nc {
-        color: $color-yellow-font;
+      .info {
+        display: inline-block;
+        min-width: 50px;
+        margin: 0 6px;
       }
     }
 
@@ -124,14 +119,24 @@ $top-bottom-margin: 5px;
       margin: 0 8px;
     }
 
-    #naver-cafe-icon {
-      height: calc( #{$top-height} - 20px );
-    }
+  }
 
-    #quiz-timetable-icon {
-      height: calc( #{$top-height} - 20px );
-      cursor: pointer;
-    }
+  #area-top-center {
+    $width: 400px;
+    $font-size-sub: 17px;
+    $font-size-main: 20px;
+
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: $width;
+    height: $height;
+    line-height: $height;
+    margin-left:  ($width * -1) / 2;
+    text-align: center;
+    color:$color-main-font;
+    font-family: 'Nanum Barun Gothic', sans-serif;
+    font-weight: bold;
 
     #clock {
       font-weight: bold;
@@ -144,41 +149,7 @@ $top-bottom-margin: 5px;
     }
   }
 
-  #area-top-center {
-    $width: 360px;
-    $font-size-sub: 17px;
-    $font-size-main: 20px;
-
-    position: absolute;
-    width: $width;
-    height: $height;
-    top: 0;
-    left: 50%;
-    margin-left:  ($width * -1) / 2;
-    text-align: center;
-    color:$color-main-font;
-    font-family: 'Nanum Barun Gothic', sans-serif;
-    font-weight: bold;
-
-    #quizinfo-title {
-      font-size: $font-size-sub;
-      height: 15px;
-      padding-top: 10px;
-    }
-
-    #quizinfo-main {
-      font-size: $font-size-main;
-      height: 45px;
-      line-height: 50px;
-
-      next-quiz-type {
-        color: $color-yellow-font;
-      }
-    }
-  }
-
   #area-top-right {
-
     float: right;
     height: $height;
     line-height: $height;
@@ -198,9 +169,72 @@ $top-bottom-margin: 5px;
       margin: 0 30px 0 0;
     }
 
-    #btn-login {
-      color: #0086B3;
+    .curserv {
+      float: left;
+      margin: 0 25px 0 0;
+      font-size: 20px;
+      font-weight: bold;
+
+      nc {
+        color: $color-yellow-font;
+      }
     }
+  }
+}
+
+#site-menu {
+  position: absolute;
+  top: $top-height;
+  left: 0;
+  width: 100%;
+  z-index: 200001;
+  background-color: $color-main-back;
+  border-bottom: 1px solid $color-main-font;
+
+  .inner {
+    width: 1280px;
+    background-color: yellow;
+    margin: 0 auto;
+  }
+
+  ul li {
+    float: left;
+    width: 25%;
+    list-style: none;
+    margin: 8px 0;
+    text-align: center;
+  }
+
+  ul li:nth-child(4n + 1) {
+    clear: left;
+  }
+
+  dt {
+    font-weight: bolder;
+    font-size: 18px;
+    color: #1e2a5d;
+  }
+
+  dt,dd {
+    margin: 6px 0;
+  }
+
+  .server-list {
+    .serv {
+      cursor: pointer;
+    }
+  }
+
+  #naver-cafe-icon {
+    height: 50px;
+  }
+
+  #quiz-timetable-icon {
+    cursor: pointer;
+  }
+
+  #btn-login {
+    color: #0086B3;
   }
 }
 
@@ -276,12 +310,13 @@ $top-bottom-margin: 5px;
   #article-left {
     $global-hint-height: 0px;
     $bottom-margin: 13px;
+    $ads-height: 63px;
     $notice-height: 160px - $bottom-margin;
-    $hint-height: calc( 100vh - 13px - #{$top-height} - #{$top-bottom-margin} - #{$notice-height} - #{$global-hint-height});
+    $hint-height: calc( 100vh - 13px - #{$top-height} - #{$top-bottom-margin} - #{$notice-height} - #{$global-hint-height} - #{$ads-height});
     $article-left-width: calc(35% - 13px);
     $user-list-width: 130px;
     $user-list-width-without-gap: calc( #{$user-list-width} - 16px - 2px );
-    $hint-width: calc(100% - #{$user-list-width} );
+    $hint-width: 100%;
     $article-left-width-ie: ( 35vh / 100vh * 100% );
 
     float: left;
@@ -304,59 +339,32 @@ $top-bottom-margin: 5px;
       font-size: $search-font-size-basic;
     }
 
-    #site-info-notice {
-      $site-info-width: 80px;
-      $margin-right: 13px;
-      $notice-width: calc( 100% - #{$site-info-width} - #{$margin-right} - 2px - 2px );
-      width: 100%;
+    #notice {
+      width: $hint-width;
       height: $notice-height;
+      background-color: $color-main-back;
       margin-bottom: $bottom-margin;
+      border: 1px solid $color-border;
       font-family: 'Nanum Barun Gothic', sans-serif;
-      overflow-y: hidden;
+      overflow-y: auto;
 
-      #site-info {
-        float: left;
-        width: $site-info-width;
-        height: $notice-height;
-        border: 1px solid $color-border;
-        margin: 0 $margin-right 0 0;
-        background-color: $color-main-back;
-
-        #conn-cnt-wrapper {
-          text-align: center;
-          font-size: 18px;
-          font-weight: bold;
-          height: $notice-height;
-          width: $site-info-width;
-          display: table-cell;
-          vertical-align: middle;
-          line-height: 23px;
-        }
+      [type="title"] {
+        margin: 12px 0 12px 0;
+        color: $primary-color;
+        font-size: 24px;
+        font-weight: bold;
       }
-
-      #notice {
-        width: $notice-width;
-        height: 100%;
-        float: left;
-        background-color: $color-main-back;
-        margin-bottom: $bottom-margin;
-        border: 1px solid $color-border;
-        font-family: 'Nanum Barun Gothic', sans-serif;
-        overflow-y: auto;
-
-        [type="title"] {
-          margin: 12px 0 12px 0;
-          color: $primary-color;
-          font-size: 24px;
-          font-weight: bold;
-        }
-        [type="msg"] {
-          font-size: 15px;
-          color: black;
-          font-weight: bold;
-          margin: 6px 0 6px 0;
-        }
+      [type="msg"] {
+        font-size: 15px;
+        color: black;
+        font-weight: bold;
+        margin: 6px 0 6px 0;
       }
+    }
+
+    .ads {
+      width: 100%;
+      height: $ads-height;
     }
 
     #global-hint {
@@ -617,9 +625,7 @@ $top-bottom-margin: 5px;
     #ads-img1-center {
       margin: $bottom-margin 0 0 0;
       float: left;
-      width: 300px;
-      height: 250px;
-      border: 1px solid $color-border;
+      width: 100%;
     }
 
     #conn-users-list {
@@ -924,7 +930,7 @@ $top-bottom-margin: 5px;
   height: 100%;
   background-color: $main-font-color;
   color: $primary-color;
-  z-index: 102;
+  z-index: 200000;
   box-shadow: 5px 0 0 0 $primary-color;
   text-align: center;
   overflow-y: auto;
