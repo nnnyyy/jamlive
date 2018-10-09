@@ -133,6 +133,10 @@ body {
 #area-top #area-top-right .curserv nc {
   color: #e9bd25;
 }
+#area-top #area-top-right #btn-site-menu {
+  font-weight: bolder;
+  color: #810000;
+}
 
 #site-menu {
   position: absolute;
@@ -903,5 +907,4 @@ title-prefix.cb6 {
 .btn-ban-list-like {
   cursor: pointer;
 }
-
 /*# sourceMappingURL=styleSuwon.css.map */
