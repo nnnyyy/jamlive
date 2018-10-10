@@ -222,9 +222,7 @@ SiteMenu.prototype.init = function() {
             }
         },
         methods: {
-            onClick: function(e) {
-                e.preventDefault();
-                e.stopPropagation();
+            onMouseLeave: function(e) {
                 this.visible = false;
             },
             onBtnLogin: function(e) {
@@ -1431,7 +1429,7 @@ function setBtnEvent() {
     $('#btn-vote-list-close').click(onBtnVoteListClose);
     $('#quiz-timetable-icon').click(onBtnTimeTable);
 
-    $('#btn-site-menu').click(function( e ) {
+    $('#btn-site-menu').mouseover(function( e ) {
         e.preventDefault();
         siteMenu.vMenu.visible = !siteMenu.vMenu.visible;
     })
