@@ -796,7 +796,7 @@ function ChatObject() {
                 }
             },
             getIpStyle: function(item) {
-                if( item.mode != 'chat' ) {
+                if( item.mode != 'chat' || item.vote == -1 ) {
                     return {};
                 }
                 else {
