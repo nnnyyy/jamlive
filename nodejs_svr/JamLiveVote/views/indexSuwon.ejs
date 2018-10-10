@@ -59,7 +59,7 @@
     <div id="area-top">
         <div id="area-top-left">
             <div id="logo">
-                <img src="/images/logoh.png"/>
+                <img src="/images/_logo.png"/>
             </div>
             <div id="serv-info">
                 <img class='icon' src="/images/cnt_global_icon.png"/>
@@ -120,7 +120,7 @@
                         <dd id="quiz-timetable-icon">퀴즈 스케쥴표</dd>
                         <dd @click="onBtnQuizSite" :style="btnStyle">기출 문제 실전 풀이</dd>
                         <dd @click="onBtnCafe" :style="btnStyle"><img id="naver-cafe-icon" src="/images/naver_cafe_icon.png"/></dd>
-                        <dd @click="onBtnHelp" :style="btnStyle">사이트 이용안내</dd>
+                        <dd @click="onBtnHelp" :style="btnStyle">도움말</dd>
                     </dl>
                 </li>
                 <li>
@@ -370,35 +370,67 @@
         <div type="btn" id="um-cancel">취소</div>
     </div>
 </div>
-<div id="notice-wrapper">
-    <div id="notice-wnd">
-        <h2>투표 방법</h2>
-        <p>키보드 오른쪽 키패드 1,2,3번</p>
-        <p>키보드 화살표 왼쪽(1번) 아래쪽(2번) 오른쪽(3번)</p>
-        <p>채팅창에서 번호 입력 후 엔터</p>
-        <h2>검색 방법</h2>
-        <p>채팅창에서 슬래시(/) 입력 후 검색어 입력</p>
-        <h2>등급</h2>
-        <p>
-            <img style="width: 20px; height: 20px;" src="/images/star0.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star1.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star2.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star3.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star4.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star5.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star6.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star7.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star8.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star9.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star10.png"/>
-            <img style="width: 20px; height: 20px;" src="/images/star11.png"/>
-        </p>
-        <h2>영구밴 당하는 방법</h2>
-        <p>욕설을 한다</p>
-        <p>지속적인 낚시 투표를 한다</p>
-        <p>사적인 광고를 반복적으로 올린다</p>
-        <p>더퀴라 초이스 문제에서 신고를 한다</p>
-    </div>
+<div id="help" v-show="visible" @click="onClick">
+    <dl>
+        <dt>공유기란?</dt>
+        <dd>
+            모바일 퀴즈쇼를 하면서 자신이 아는 문제를 서로 공유함으로써 우승 확률을 높일 수 있게끔 도와주는 사이트입니다.
+            <dl>
+                <dt>사용방법</dt>
+                <dd>
+                    <dl>
+                        <dt>투표</dt>
+                        <dd> - 키보드를 통해서 하게 됩니다.</dd>
+                        <dd> - 키보드 우측의 '키패드' 1,2,3,4 를 누르시면 투표가 가능합니다.</dd>
+                        <dd> - 우측 키패드가 없을 시에는 방향키로도 투표하실 수 있습니다 ( 왼쪽 : 1번 아래쪽 : 2번 오른쪽 : 3번 위쪽 : 4번 )</dd>
+                        <dd> - 채팅 창에서 숫자를 입력하고 엔터를 누르는 것으로도 투표가 가능합니다.</dd>
+                    </dl>
+                </dd>
+                <dd>
+                    <dl>
+                        <dt>검색</dt>
+                        <dd> - 채팅창에 슬래시(/) 를 입력한 뒤 검색하고 싶은 단어를 그 뒤에 바로 이어서 씁니다.</dd>
+                        <dd> - ex) /정답 공유기</dd>
+                        <dd> - 검색결과는 약 15초간 유지 됩니다.</dd>
+                    </dl>
+                </dd>
+                <dd>
+                    <dl>
+                        <dt>채팅</dt>
+                        <dd> - 사이트 오른쪽에는 채팅을 할 수 있는 공간이 있습니다. </dd>
+                        <dd> - 매너 채팅 부탁 드립니다. </dd>
+                    </dl>
+                </dd>
+                <dd>
+                    <dl>
+                        <dt>레벨 ( 점수 ) 관련</dt>
+                        <dd> - 사이트를 이용하시다보면 자연스럽게 점수가 쌓이게 됩니다 </dd>
+                        <dd> - 일정 점수에 도달하면 등급이 상승합니다 </dd>
+                        <dd> - [등급별 점수 기준] 1렙 100,
+                            2렙 300,
+                            3렙 500,
+                            4렙 1000,
+                            5렙 2000,
+                            6렙 4000,
+                            7렙 6000,
+                            8렙 8000,
+                            9렙 10000,
+                            10렙 15000,
+                            11렙 20000 </dd>
+                    </dl>
+                </dd>
+            </dl>
+            <dl>
+                <dt>주의사항</dt>
+                <dd> - 투표는 정확히 아는 것에만 합니다 </dd>
+                <dd> - 조금이라도 헷갈리는 것에 대해서는 투표해선 안됩니다 </dd>
+                <dd> - 투표 실수 및 고의 낚시는 '신고' 되실 수 있습니다. </dd>
+                <dd> - 욕설은 이유 불문하고 '영구밴' 입니다. </dd>
+                <dd> - 다른 '영구밴' 사유에 대한 것은 공식 카페를 참고하세요. </dd>
+            </dl>
+        </dd>
+    </dl>
+    <h1>화면을 클릭하면 도움말이 사라집니다</h1>
 </div>
 </body>
 <script type="text/javascript" src="/indexSuwon.js"></script>

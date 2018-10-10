@@ -258,11 +258,23 @@ SiteMenu.prototype.init = function() {
             onBtnHelp: function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                setVisible($('#notice-wrapper'), true);
                 this.visible = false;
+                siteMenu.vHelp.visible = true;
             }
         }
     })
+
+    this.vHelp = new Vue({
+        el: '#help',
+        data: {
+            visible: false
+        },
+        methods: {
+            onClick: function(e) {
+                this.visible = false;
+            }
+        }
+    });
 }
 
 function Options() {
@@ -1416,12 +1428,6 @@ function onInputMsgKeyUp(e) {
 function setBtnEvent() {
     options.vSettings.visible = false;
     $('#btn-settings').click(onBtnSettings);
-    $('#btn-help').click(onBtnHelp);
-
-    $('#notice-wrapper').click(function(e) {
-        localStorage.setItem('notice-first', 1);
-        setVisible($('#notice-wrapper'), false);
-    });
 
     $('#btn-clear-chat').click(onClearChat);
     $('#btn-get-vote-list').click(onGetVoteList);
@@ -1564,7 +1570,7 @@ function onBtnSettings(e) {
 
 function onBtnHelp(e) {
     e.stopPropagation();
-    setVisible($('#notice-wrapper'), true);
+    e.preventDefault();
 }
 
 function onClearChat(e) {
