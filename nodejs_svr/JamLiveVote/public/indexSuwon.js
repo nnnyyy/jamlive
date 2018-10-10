@@ -412,6 +412,9 @@ Options.prototype.init = function() {
 
     var storageData = localStorage.getItem(options.vSettings.autoScroll.storage) || 0;
     options.vSettings.autoScroll.checked = storageData == 1 ? true : false;
+
+    storageData = localStorage.getItem(options.vSettings.arrowVote.storage) || 0;
+    options.vSettings.arrowVote.checked = storageData == 1 ? true : false;
 }
 
 Options.prototype.initSettings = function() {
@@ -419,6 +422,11 @@ Options.prototype.initSettings = function() {
         el: '#settings',
         data: {
             visible: false,
+            arrowVote: {
+                disabled: false,
+                checked: false,
+                storage: 'arrowVote'
+            },
             showHighLevelVoteOnly: {
                 disabled: false,
                 checked: false,
@@ -536,6 +544,10 @@ Options.prototype.isMaxVoteDuplicateChecked = function() {
 
 
     return false;
+}
+
+Options.prototype.isAbleArrowVote = function() {
+    return options.vSettings.arrowVote.checked;
 }
 
 Options.prototype.isNotShowChat = function() {
@@ -1279,7 +1291,7 @@ function onGlobalKeyDown(e) {
         var clicked = (idx+1);
         voteObj.vote({idx: idx });
     }
-    else if( code == 37 || code == 40 || code == 39 || code == 38 ) {
+    else if( options.isAbleArrowVote() && ( code == 37 || code == 40 || code == 39 || code == 38 ) ) {
         var idx = -1;
         if( code == 37 ) idx = 0;
         if( code == 40 ) idx = 1;

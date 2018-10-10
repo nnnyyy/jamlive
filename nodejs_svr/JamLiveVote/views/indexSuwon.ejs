@@ -326,6 +326,7 @@
 <div id="settings" v-show="visible">
     <div type="title"> - <%= __('vote')%> - </div>
     <div type="line"></div>
+    <div type="checkbox"><input type="checkbox" :disabled="arrowVote.disabled" :checked="arrowVote.checked" @change="onChange(arrowVote.storage, arrowVote, $event)" class="cb_vote_arrow_btn"/>방향키로 투표하기</div>
     <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
     <div type="checkbox"><input type="checkbox" :disabled="showHighLevelVoteOnly.disabled" :checked="showHighLevelVoteOnly.checked" @change="onChange(showHighLevelVoteOnly.storage, showHighLevelVoteOnly, $event)" class="cb_show_search_user_vote_only"/>레벨 4이상 유저 투표만 보기(로그인시)</div>
     <div type="msg">아래 설정값이하 미표시 ( <span class="min_vote">0</span>표 이하 ) </div>
