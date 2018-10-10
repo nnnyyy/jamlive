@@ -14,6 +14,7 @@ var Client = function(servman, socket) {
     this.ip = '';
     this.tLastChat = 0;
     this.tLastSearch = 0;
+    this.lastVoteIdx = -1;
 }
 
 Client.prototype.getBanCnt = function() {
@@ -149,6 +150,14 @@ Client.prototype.getUserInfo = function() {
     if( !this.isLogined() ) return null;
 
     return this.socket.handshake.session.userinfo;
+}
+
+Client.prototype.getLastVote = function(tCur) {
+    if( tCur - this.tLastClick >= 10 * 1000 ) {
+        return -1;
+    }
+
+    return this.lastVoteIdx;
 }
 
 module.exports = Client;

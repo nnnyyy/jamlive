@@ -1078,6 +1078,7 @@ function onSockVote(data) {
 
         var number = Number(data.idx) + 1;
         var nick = client.nick;
+        client.lastVoteIdx =  data.idx;
 
         if( client.isClickable() ) {
             if( servman.isLiveQuizTime() && client.auth < 2 ) {

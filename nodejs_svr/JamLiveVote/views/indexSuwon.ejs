@@ -307,7 +307,7 @@
                                         <div :class="{'admin-nick': item.isAdmin}" v-text="item.nick">
                                         </div>
                                     </div>
-                                    <div class="ip" v-text="ip(item.ip)"></div>
+                                    <div class="ip" v-text="ip(item.ip)" :style="getIpStyle(item)"></div>
                                 </div>
                                 <div class="msg-area" v-html="item.msg" :class="{admin: item.isAdmin}" :style="getMsgStyle(item)">
                                 </div>

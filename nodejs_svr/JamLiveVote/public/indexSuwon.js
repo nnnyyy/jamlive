@@ -795,6 +795,20 @@ function ChatObject() {
                     return style;
                 }
             },
+            getIpStyle: function(item) {
+                if( item.mode != 'chat' ) {
+                    return {};
+                }
+                else {
+                    var style =
+                    {
+                        color: (item.vote == -1) ? 'black' : color[item.vote],
+                        fontWeight: 'bold'
+                    };
+
+                    return style;
+                }
+            },
             checkScroll: function(bForced) {
                 var container = document.querySelector(".chat-ui");
                 var scrollHeight = container.scrollHeight;
@@ -1671,6 +1685,8 @@ function onChat( data ) {
         isAdmin: data.admin,
         vote: data.vote
     }
+
+    console.log(item);
 
     if( data.mode == "vote" ) {
         if( options.isShowMemberVoteOnly() &&
