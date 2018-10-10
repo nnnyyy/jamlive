@@ -1078,13 +1078,13 @@ function onSockVote(data) {
 
         var number = Number(data.idx) + 1;
         var nick = client.nick;
-        client.lastVoteIdx =  data.idx;
 
         if( client.isClickable() ) {
             if( servman.isLiveQuizTime() && client.auth < 2 ) {
                 client.incActivePoint( 4 );
                 var msgLowLevel = `[투표] ${number}번`;
                 chatMan.Broadcast(servman.io, client, 'vote', msgLowLevel, false, -1 );
+                client.lastVoteIdx =  data.idx;
                 client.tLastClick = new Date();
                 return;
             }
@@ -1101,6 +1101,7 @@ function onSockVote(data) {
                 servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
                 client.incActivePoint( 2 );
             }
+            client.lastVoteIdx =  data.idx;
             client.tLastClick = new Date();
 
             if( servman.isLiveQuizTime() ) {
