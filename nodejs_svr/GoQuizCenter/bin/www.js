@@ -1,0 +1,21 @@
+/**
+ * Created by nnnyyy on 2018-10-11.
+ */
+const app = require('../app');
+const http = require('http');
+const io = require('socket.io');
+
+const DEFAULT_PORT = 10000;
+const ioOptions = {
+    origins: '*:*',
+    pingInterval: 5000,
+    pingTimeout: 10000,
+    transports: ['websocket','polling']
+}
+
+const httpServer = http.createServer(app);
+const ioServer = io(httpServer, ioOptions);
+
+ioServer.on('connection', function(socket) {
+    console.log('connected');
+})
