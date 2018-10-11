@@ -1,7 +1,7 @@
 /**
  * Created by nnnyyy on 6/3/2018.
  */
-var color = ['#DE5B49','#3AA84B', '#F0CA4D', '#006b9d' ];
+var color = ['#DE5B49','#3AA84B', '#eb9500', '#006b9d' ];
 
 function showBarChart(ct_elem_name, labelSeries, dataSeries, options) {
     var data = {
