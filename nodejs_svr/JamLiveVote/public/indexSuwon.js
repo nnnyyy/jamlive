@@ -1686,8 +1686,6 @@ function onChat( data ) {
         vote: data.vote
     }
 
-    console.log(item);
-
     if( data.mode == "vote" ) {
         if( options.isShowMemberVoteOnly() &&
             ( (typeof data.auth == 'undefined') || (data.auth < 0 ) )
