@@ -16,6 +16,8 @@ const ioOptions = {
 const httpServer = http.createServer(app);
 const ioServer = io(httpServer, ioOptions);
 
-ioServer.on('connection', function(socket) {
-    console.log('connected');
-})
+
+httpServer.listen(DEFAULT_PORT);
+ioServer.on('connection', function(socket){
+    console.log('socket connected');
+});

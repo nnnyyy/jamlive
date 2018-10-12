@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack"
   },
   "dependencies": {
     "connect-redis": "^3.4.0",
@@ -11,8 +11,24 @@
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "http": "0.0.0",
+    "jquery": "^3.3.1",
     "path": "^0.12.7",
     "redis": "^2.8.0",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.23.1",
+    "vue-cli": "^2.9.6",
+    "vue-loader": "^15.4.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
   }
 }
