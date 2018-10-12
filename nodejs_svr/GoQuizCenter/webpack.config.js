@@ -17,13 +17,9 @@ const rulesBabelLoader = {
     exclude: /node_modules/,
     loader: 'babel-loader',
     options: {
-        presets: [[
-            'env', {
-                targets: {
-                    browsers: ['last 2 versions']
-                }
-            }
-        ]]
+        presets: [
+            ["@babel/preset-env", {"targets": {"browsers": ["last 2 versions"] }}]
+        ]
     }
 };
 
