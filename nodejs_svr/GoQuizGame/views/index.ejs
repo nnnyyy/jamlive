@@ -1,0 +1,25 @@
+<html>
+<head>
+    <title>공유기 퀴즈쇼에 오신 것을 환영합니다</title>
+    <meta name="description" content="라이브 퀴즈 공유기(라퀴공) 전용 퀴즈쇼 페이지"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라퀴공 퀴즈쇼">
+    <meta property="og:description" content="라이브 퀴즈 공유기(라퀴공) 전용 퀴즈쇼 페이지">
+    <meta property="og:url" content="http://live.jamlive.net">
+    <meta charset="utf-8">
+</head>
+<body>
+<script type="text/javascript" src="bundle.js"></script>
+<div id="root">
+    <div v-if="logined == true">
+        <div id="quiz-area">
+            <div class="msg-area" v-text="msg"></div>
+        </div>
+        <div id="user-area"></div>
+    </div>
+    <div v-else>
+        로그인 해주세요 <button @click="onBtnLogin"> 로그인 </button>
+    </div>
+</div>
+</body>
+</html>

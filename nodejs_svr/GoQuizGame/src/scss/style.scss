@@ -1,0 +1,25 @@
+@import "common.scss";
+
+$quiz-area-height: 550px;
+
+#quiz-area {
+  $msg-area-height: 180px;
+  width: 100%;
+  height: $quiz-area-height;
+  background-color: #009999;
+  text-align: center;
+
+  .msg-area {
+    width: 600px;
+    height: $msg-area-height;
+    margin: 0 auto;
+    padding: 40px 0 0 0;
+    font-size: 18px;
+  }
+}
+
+#user-area {
+  width: 100%;
+  height: calc( 100vh - #{$quiz-area-height} );
+  background-color: #528CE0;
+}
