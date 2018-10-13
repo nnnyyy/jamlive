@@ -11,6 +11,7 @@ const redis = require('redis');
 const redisStore = require('connect-redis')(session);
 const redisClient = redis.createClient();
 const routes = require('./routes/index');
+const ServerManager = require('./server/modules/ServerManager');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,5 +38,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use(sessionMiddleware);
 
 app.use('/', routes);
+
+app.ServerManager = new ServerManager();
 
 module.exports = app;

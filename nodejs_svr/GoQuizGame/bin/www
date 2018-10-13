@@ -4,7 +4,6 @@
 const app = require('../app');
 const http = require('http');
 const io = require('socket.io');
-const PT = require('../src/common/protocols');
 
 const DEFAULT_PORT = 10000;
 const ioOptions = {
@@ -16,10 +15,7 @@ const ioOptions = {
 
 const httpServer = http.createServer(app);
 const ioServer = io(httpServer, ioOptions);
+app.ServerManager.init(ioServer);
 
 
 httpServer.listen(DEFAULT_PORT);
-ioServer.on('connection', function(socket){
-    console.log('socket connected');
-    socket.emit(PT.CHAT, { msg : '서버 데이터 입니다'});
-});

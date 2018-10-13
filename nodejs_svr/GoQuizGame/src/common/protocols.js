@@ -5,7 +5,10 @@
 const PT = {
     TEST: 'test',
     QUIZ: 'quiz',
-    CHAT: 'chat'
+    CHAT: 'chat',
+    SVR: {
+        CHAT: 'chat'
+    }
 };
 
 module.exports = PT;

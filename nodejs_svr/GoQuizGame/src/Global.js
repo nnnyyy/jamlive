@@ -30,10 +30,8 @@ class Global {
     initSocketListener() {
         const g = this;
         this.socket.on(PT.QUIZ, p => { g.qm.onPacket( p ) });
-        this.socket.on(PT.CHAT, p => {
-            g.vApp.$bus.$emit('test', p);
-            g.cm.onPacket( p )
-        });
+        this.socket.on(PT.CHAT, p => {g.cm.onPacket( p ) });
+        this.socket.emit(PT.SVR.CHAT, {msg: 'Test Message'});
     }
 }
 
