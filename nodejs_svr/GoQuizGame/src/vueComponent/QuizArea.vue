@@ -1,0 +1,20 @@
+<template>
+    <div>{{ text }}</div>
+</template>
+
+<script>
+    export default {
+        name: 'quiz-area',
+        data: function() {
+            return {
+                text: '퀴즈쇼!'
+            }
+        },
+        created: function() {
+            const v = this;
+            this.$bus.$on('test' , function(p) {
+                v.text = p.msg;
+            })
+        }
+    }
+</script>

@@ -3,6 +3,7 @@
   padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  background-color: #009999;
   color: white;
 }
 
@@ -19,11 +20,25 @@
   padding: 40px 0 0 0;
   font-size: 18px;
 }
+#quiz-area .select-area {
+  width: 600px;
+  height: 300px;
+  margin: 0 auto;
+  padding: 35px 0 0 0;
+  background-color: red;
+}
 
 #user-area {
   width: 100%;
   height: calc( 100vh - 550px );
   background-color: #528CE0;
+}
+
+#login-area {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #009999;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -4,8 +4,11 @@
 import './scss/style.css'
 import $ from 'jquery'
 import io from 'socket.io-client'
+import Vue from 'vue';
 import Global from './Global'
 
 $(document).ready(function() {
+    Vue.prototype.$bus = new Vue();
+
     const G = new Global(io());
 });

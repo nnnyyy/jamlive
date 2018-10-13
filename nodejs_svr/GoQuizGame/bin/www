@@ -21,5 +21,5 @@ const ioServer = io(httpServer, ioOptions);
 httpServer.listen(DEFAULT_PORT);
 ioServer.on('connection', function(socket){
     console.log('socket connected');
-    socket.emit(PT.TEST, {});
+    socket.emit(PT.CHAT, { msg : '서버 데이터 입니다'});
 });

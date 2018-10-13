@@ -7,6 +7,8 @@ import ChatManager from './ChatManager';
 import Vue from 'vue';
 import PT from './common/protocols';
 
+import App from './vueComponent/App.vue';
+
 class Global {
     constructor(socket) {
         const g = this;
@@ -16,23 +18,22 @@ class Global {
         this.socket = socket;
         this.initSocketListener();
 
-        this.vRoot = new Vue({
-            el: '#root',
-            data: {
-                logined: false
-            },
-            methods: {
-                onBtnLogin: function(e) {
-                    this.logined = true;
-                }
+        this.vApp = new Vue({
+            el: '#app',
+            template: '<App/>',
+            components: {
+                App
             }
-        })
+        });
     }
 
     initSocketListener() {
         const g = this;
         this.socket.on(PT.QUIZ, p => { g.qm.onPacket( p ) });
-        this.socket.on(PT.CHAT, p => { g.cm.onPacket( p ) });
+        this.socket.on(PT.CHAT, p => {
+            g.vApp.$bus.$emit('test', p);
+            g.cm.onPacket( p )
+        });
     }
 }
 
