@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "devserver": "webpack-dev-server --config webpack.config.js"
   },
   "dependencies": {
     "connect-redis": "^3.4.0",
@@ -29,10 +30,13 @@
     "babel-preset-env": "^1.7.0",
     "css-loader": "^1.0.0",
     "style-loader": "^0.23.1",
+    "uglifyjs-webpack-plugin": "^2.0.1",
     "vue-cli": "^2.9.6",
     "vue-loader": "^15.4.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9",
+    "webpack-node-externals": "^1.7.2"
   }
 }

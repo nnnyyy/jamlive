@@ -3,7 +3,9 @@
  */
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const webpack = require('webpack')
+const webpack = require('webpack');
+const UglifyWebpackPlugin = require('uglifyjs-webpack-plugin');
+const WebpackNodeExternals = require('webpack-node-externals');
 
 const rulesCssLoader = {
     test: /\.css$/,
@@ -30,7 +32,7 @@ const rulesVueLoader = {
 };
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     resolve: {
         alias: {
             vue: 'vue/dist/vue.min.js'
@@ -50,9 +52,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new VueLoaderPlugin(),
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
-        })
+        new VueLoaderPlugin()
     ]
 };
