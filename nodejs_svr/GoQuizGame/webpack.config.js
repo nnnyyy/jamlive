@@ -33,6 +33,9 @@ const rulesVueLoader = {
 
 module.exports = {
     mode: 'development',
+    externals: {
+
+    },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.min.js'
