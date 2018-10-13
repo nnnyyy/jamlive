@@ -181,24 +181,29 @@
                             <input type="radio" value="2" v-model="search.dicKor.where" :checked="search.dicKor.where == 2" @change="onRadioChange(search.dicKor)">오른쪽
                         </dd>
                         <dd>
-                            <input type="checkbox" :disabled="search.naverEncyc.disabled" :checked="search.naverEncyc.checked" @change="onChange(search.naverEncyc.storage, search.naverEncyc, $event)" />네이버 - 백과사전
+                            <input type="checkbox" title="레벨4부터 가능" :disabled="search.naverEncyc.disabled" :checked="search.naverEncyc.checked" @change="onChange(search.naverEncyc.storage, search.naverEncyc, $event)" />네이버 - 백과사전
                             <input type="radio" value="1" v-model="search.naverEncyc.where" :checked="search.naverEncyc.where == 1" @change="onRadioChange(search.naverEncyc)">왼쪽
                             <input type="radio" value="2" v-model="search.naverEncyc.where" :checked="search.naverEncyc.where == 2" @change="onRadioChange(search.naverEncyc)">오른쪽
                         </dd>
                         <dd>
-                            <input type="checkbox" :disabled="search.naverWeb.disabled" :checked="search.naverWeb.checked" @change="onChange(search.naverWeb.storage, search.naverWeb, $event)" />네이버 - 웹
+                            <input type="checkbox" title="레벨4부터 가능" :disabled="search.naverWeb.disabled" :checked="search.naverWeb.checked" @change="onChange(search.naverWeb.storage, search.naverWeb, $event)" />네이버 - 웹
                             <input type="radio" value="1" v-model="search.naverWeb.where" :checked="search.naverWeb.where == 1" @change="onRadioChange(search.naverWeb)">왼쪽
                             <input type="radio" value="2" v-model="search.naverWeb.where" :checked="search.naverWeb.where == 2" @change="onRadioChange(search.naverWeb)">오른쪽
                         </dd>
                         <dd>
-                            <input type="checkbox" :disabled="search.naverNews.disabled" :checked="search.naverNews.checked" @change="onChange(search.naverNews.storage, search.naverNews, $event)" />네이버 - 뉴스
+                            <input type="checkbox" title="레벨4부터 가능" :disabled="search.naverNews.disabled" :checked="search.naverNews.checked" @change="onChange(search.naverNews.storage, search.naverNews, $event)" />네이버 - 뉴스
                             <input type="radio" value="1" v-model="search.naverNews.where" :checked="search.naverNews.where == 1" @change="onRadioChange(search.naverNews)">왼쪽
                             <input type="radio" value="2" v-model="search.naverNews.where" :checked="search.naverNews.where == 2" @change="onRadioChange(search.naverNews)">오른쪽
                         </dd>
                         <dd>
-                            <input type="checkbox" :disabled="search.naverKin.disabled" :checked="search.naverKin.checked" @change="onChange(search.naverKin.storage, search.naverKin, $event)" />네이버 - 지식인 
+                            <input type="checkbox" title="레벨4부터 가능" :disabled="search.naverKin.disabled" :checked="search.naverKin.checked" @change="onChange(search.naverKin.storage, search.naverKin, $event)" />네이버 - 지식인
                             <input type="radio" value="1" v-model="search.naverKin.where" :checked="search.naverKin.where == 1" @change="onRadioChange(search.naverKin)">왼쪽
                             <input type="radio" value="2" v-model="search.naverKin.where" :checked="search.naverKin.where == 2" @change="onRadioChange(search.naverKin)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" title="레벨4부터 가능" :disabled="search.naverBlog.disabled" :checked="search.naverBlog.checked" @change="onChange(search.naverBlog.storage, search.naverBlog, $event)" />네이버 - 블로그
+                            <input type="radio" value="1" v-model="search.naverBlog.where" :checked="search.naverBlog.where == 1" @change="onRadioChange(search.naverBlog)">왼쪽
+                            <input type="radio" value="2" v-model="search.naverBlog.where" :checked="search.naverBlog.where == 2" @change="onRadioChange(search.naverBlog)">오른쪽
                         </dd>
                         <dd>
                             <input type="checkbox" :disabled="showOtherSearch.disabled" :checked="showOtherSearch.checked" @change="onChange(showOtherSearch.storage, showOtherSearch, $event)"/>

@@ -913,8 +913,17 @@ function onSockSearch(data) {
 
         if( data.searchDic )
             servman.webSearchMan.searchDic(data.msg, client);
-        if( data.searchNaverMainAPI && client.auth >= 4 ) {
-            servman.webSearchMan.searchNaverAPIs(data.msg, client);
+        if( client.auth >= 4 ) {
+            var bSearch = false;
+            for( var i = 0 ; i < data.searchNaverMainAPI.length ; ++i ) {
+                if( data.searchNaverMainAPI[i] ) {
+                    bSearch = true;
+                    break;
+                }
+            }
+            if( bSearch ) {
+                servman.webSearchMan.searchNaverAPIs(data.msg, client, data.searchNaverMainAPI);
+            }
         }
         //if( data.searchNaverMain && client.auth >= 4 )
         //    servman.webSearchMan.searchNaverMain(data.msg, client);

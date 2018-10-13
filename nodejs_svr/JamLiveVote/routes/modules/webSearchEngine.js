@@ -323,12 +323,12 @@ class WebSearchEngine {
         }
     }
 
-    searchNaverAPIs( query, client ) {
+    searchNaverAPIs( query, client, checkedList ) {
         //var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
-        this.searchNaverAPI( 0, query , client );
-        this.searchNaverAPI( 1, query , client );
-        this.searchNaverAPI( 2, query , client );
-        this.searchNaverAPI( 3, query , client );
+        for( var i = 0 ; i < checkedList.length ; ++i ) {
+            if( checkedList[i] )
+                this.searchNaverAPI( i, query , client );
+        }
     }
 
     searchNaverAPI( type, query, client ) {
@@ -344,6 +344,7 @@ class WebSearchEngine {
             case 1: sType="webkr"; sPrefix="웹";break;
             case 2: sType="news"; sPrefix="뉴스";break;
             case 3: sType="kin"; sPrefix="지식인";break;
+            case 4: sType="blog"; sPrefix="블로그";break;
         }
 
         var cached = this.servman.getCachedSearchResult(sType, query);
