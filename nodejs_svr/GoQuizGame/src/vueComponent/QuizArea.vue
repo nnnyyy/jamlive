@@ -1,5 +1,8 @@
 <template>
-    <div>{{ text }}</div>
+    <div id="quiz-area">
+        <div class="msg-area">{{ text }}</div>
+        <div class="select-area"></div>
+    </div>
 </template>
 
 <script>
