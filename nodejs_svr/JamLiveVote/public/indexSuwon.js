@@ -464,7 +464,7 @@ Options.prototype.initSettings = function() {
             search: {
                 naverImage: {
                     disabled: false,
-                    checked: false,
+                    checked: true,
                     storage: 'naverImage',
                     where: 1,
                     rStorage: 'naverImageR'
@@ -478,16 +478,16 @@ Options.prototype.initSettings = function() {
                 },
                 dicEng: {
                     disabled: false,
-                    checked: false,
+                    checked: true,
                     storage: 'dicEng',
-                    where: 1,
+                    where: 2,
                     rStorage: 'dicEngR'
                 },
                 dicKor: {
                     disabled: false,
-                    checked: false,
+                    checked: true,
                     storage: 'dicKor',
-                    where: 1,
+                    where: 2,
                     rStorage: 'dicKorR'
                 },
                 dicHan: {
@@ -499,21 +499,21 @@ Options.prototype.initSettings = function() {
                 },
                 naverEncyc: {   //  백과사전
                     disabled: false,
-                    checked: false,
+                    checked: true,
                     storage: 'naverEncyc',
-                    where: 1,
+                    where: 2,
                     rStorage: 'naverEncycR'
                 },
                 naverWeb: {   //  웹
                     disabled: false,
-                    checked: false,
+                    checked: true,
                     storage: 'naverWeb',
                     where: 1,
                     rStorage: 'naverWebR'
                 },
                 naverNews: {   //  뉴스
                     disabled: false,
-                    checked: false,
+                    checked: true,
                     storage: 'naverNews',
                     where: 1,
                     rStorage: 'naverNewsR'
@@ -615,6 +615,23 @@ Options.prototype.setShowHighLevelVoteOnly = function() {
         options.vSettings.showHighLevelVoteOnly.disabled = false;
         var storageData = localStorage.getItem(options.vSettings.showHighLevelVoteOnly.storage) || 0;
         options.vSettings.showHighLevelVoteOnly.checked = storageData == 1 ? true : false;
+    }
+}
+
+Options.prototype.setSearchOptions = function() {
+    var searchOptionList = [
+        options.vSettings.search.naverEncyc,
+        options.vSettings.search.naverWeb,
+        options.vSettings.search.naverNews,
+        options.vSettings.search.naverKin
+    ]
+
+    if( G.auth < 4 ) {
+        for( var i = 0 ; i < searchOptionList.length ; ++i ) {
+            var item = searchOptionList[i];
+            item.checked = false;
+            item.disabled = true;
+        }
     }
 }
 
@@ -1153,6 +1170,8 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
             var words = datalist[i].query.split(' ');
             for( var w = 0 ; w < words.length ; ++w ) {
                 if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
+                if( '<search-top-ret>'.indexOf(words[w]) != -1) continue;
+
                 var exp = new RegExp(words[w], "gi");
 
                 for( var sai = 1 ; sai <= 2 ; ++sai ) {
@@ -1160,9 +1179,19 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
 
                     for( var ia = 0 ; ia < articles.length ; ++ ia ) {
                         if( articles[ia].except ) continue;
-                        var item = {title: articles[ia].title, desc: articles[ia].desc };
+                        var item = {title: articles[ia].title, desc: articles[ia].desc, usedKeyword: articles[ia].usedKeyword };
+                        if( item.usedKeyword ) {
+                            if( item.usedKeyword.indexOf(words[w]) != -1 ) {
+                                continue;
+                            }
+                        }
                         item.title = item.title.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
                         item.desc = item.desc.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
+                        if( !item.usedKeyword ) {
+                            item.usedKeyword = [];
+                        }
+                        item.usedKeyword.push(words[w]);
+
                         articles.splice(ia, 1, item);
                     }
                 }
@@ -1827,6 +1856,7 @@ function onLoginInfo(data) {
     setNickName(data.nick);
     options.setShowMemberVoteOnly();
     options.setShowHighLevelVoteOnly();
+    options.setSearchOptions();
 
     showNextQuizTimeLeft(data.quizTable);
 }
@@ -2200,6 +2230,8 @@ function showKin(datalist) {
             for( var w = 0 ; w < words.length ; ++w ) {
                 //if( searchObj.lastSearchQuery.indexOf(words[w]) != -1) continue;
                 if( searchObj.duplicateMap.containsKey( words[w]) ) continue;
+                if( '<search-top-ret>'.indexOf(words[w]) != -1) continue;
+
                 var exp = new RegExp(words[w], "gi");
                 kin_total_desc = kin_total_desc.replace(exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
 
@@ -2219,37 +2251,6 @@ function showKin(datalist) {
 
 var search_title_prefix = ['[백과사전]', '[지식인]', '[블로그]', '[뉴스]', '[이미지]','[다음(구글)]', '[백과사전]', '[백과사전]'];
 var search_title_prefix_style_name = ['cb1', 'cb2', 'cb3', 'cb4', 'cb5', 'cb6', 'cb7', 'cb8'];
-function searchWeb( type, query, where ) {
-    var typeurl = type == 4 ? '/searchimage' : '/searchex';
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify({
-            query : query,
-            type: type,
-            sockid: G.sockid,
-        }),
-        contentType: 'application/json',
-        url: typeurl,
-        success: function(data) {
-            if( type != 4 ) {
-                var itemMap = procSearchRet(data);
-                var keys = itemMap.keys();
-                for( var i = 0 ; i < keys.length ; ++i ) {
-                    var key = keys[i];
-                    var items = itemMap.get(key);
-                    var isShow = getShow(key);
-                    if( !isShow ) return;
-                    var where = getWhere(key);
-                    setSearchRet(items, false, where, search_title_prefix[type], search_title_prefix_style_name[type]);
-                }
-            }
-            else {
-                setSearchRetImage(data, true, 1);
-            }
-        }
-    });
-}
 
 function getShow( key ) {
     //  웹 지식인 블로그 뉴스 포스트

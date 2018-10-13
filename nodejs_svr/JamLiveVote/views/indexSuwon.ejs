@@ -204,6 +204,9 @@
                 <li>
                     <dl>
                         <dt>채팅</dt>
+                        <dd>
+                            <input type="checkbox" :checked="autoScroll.checked" @change="onChange(autoScroll.storage, autoScroll, $event)" />강제 자동 스크롤 on/off
+                        </dd>
                     </dl>
                 </li>
             </ul>
