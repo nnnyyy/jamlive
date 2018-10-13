@@ -1185,8 +1185,8 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
                                 continue;
                             }
                         }
-                        item.title = item.title.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
-                        item.desc = item.desc.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
+                        item.title = item.title.replace( exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
+                        item.desc = item.desc.replace( exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
                         if( !item.usedKeyword ) {
                             item.usedKeyword = [];
                         }
@@ -2233,7 +2233,7 @@ function showKin(datalist) {
                 if( '<search-top-ret>'.indexOf(words[w]) != -1) continue;
 
                 var exp = new RegExp(words[w], "gi");
-                kin_total_desc = kin_total_desc.replace(exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
+                kin_total_desc = kin_total_desc.replace(exp, '<search-top-ret>' + words[w] + '</search-top-ret>');
 
                 searchObj.duplicateMap.put(words[w], 1);
             }
