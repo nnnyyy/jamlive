@@ -84,6 +84,131 @@
             <%}%>
         </div>
     </div>
+    <!--
+    <div id="settings" v-show="visible">
+        <div type="title"> - <%= __('vote')%> - </div>
+        <div type="line"></div>
+        <div type="checkbox"><input type="checkbox" :disabled="arrowVote.disabled" :checked="arrowVote.checked" @change="onChange(arrowVote.storage, arrowVote, $event)" class="cb_vote_arrow_btn"/>방향키로 투표하기</div>
+        <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
+        <div type="checkbox"><input type="checkbox" :disabled="showHighLevelVoteOnly.disabled" :checked="showHighLevelVoteOnly.checked" @change="onChange(showHighLevelVoteOnly.storage, showHighLevelVoteOnly, $event)" class="cb_show_search_user_vote_only"/>레벨 4이상 유저 투표만 보기(로그인시)</div>
+        <div type="msg">아래 설정값이하 미표시 ( <span class="min_vote">0</span>표 이하 ) </div>
+        <div class="min_vote_slider"></div>
+        <div type="line"></div>
+        <div type="title"> - 검색 - </div>
+        <div type="line"></div>
+        <div type="msg">검색당 결과 수 ( <span class="ret_cnt">0</span>표 이하 ) </div>
+        <div class="ret_cnt_slider"></div>
+        <div type="checkbox"><input type="checkbox" id="cb_s4"/>네이버 - 이미지
+            <input type="radio" name="radio_s4" value="1" checked>왼쪽
+            <input type="radio" name="radio_s4" value="2">오른쪽
+        </div>
+        <div type="checkbox"><input type="checkbox" id="cb_s5"/>구글(다음으로 대체)
+            <input type="radio" name="radio_s5" value="1" >왼쪽
+            <input type="radio" name="radio_s5" value="2"checked>오른쪽
+        </div>
+        <div type="checkbox"><input type="checkbox" id="cb_s6"/>사이트 기출DB
+            <input type="radio" name="radio_s6" value="1" >왼쪽
+            <input type="radio" name="radio_s6" value="2"checked>오른쪽
+        </div>
+        <div type="checkbox"><input type="checkbox" id="cb_s7"/>어학사전
+            <input type="radio" name="radio_s7" value="1" >왼쪽
+            <input type="radio" name="radio_s7" value="2"checked>오른쪽
+        </div>
+        <div type="checkbox"><input type="checkbox" id="cb_top_five"/>검색 top 5 보기</div>
+        <div type="line"></div>
+        <div type="title"> - 채팅 - </div>
+        <div type="line"></div>
+        <div type="checkbox"><input type="checkbox" :checked="autoScroll.checked" @change="onChange(autoScroll.storage, autoScroll, $event)" />강제 자동 스크롤 on/off</div>
+        <div type="checkbox"><input type="checkbox" id="cb_notshowchat"/>일반 채팅 안받기(성능)</div>
+        <div type="checkbox"><input type="checkbox" id="cb-notice-disable"/>채팅량 일정 이상시 초기화(성능)</div>
+    </div>
+    -->
+    <div id="settings" v-show="visible" @mouseleave="onMouseLeave">
+        <div class="inner">
+            <ul>
+                <li>
+                    <dl>
+                        <dt>투표</dt>
+                        <dd>
+                            <input type="checkbox" :disabled="arrowVote.disabled" :checked="arrowVote.checked" @change="onChange(arrowVote.storage, arrowVote, $event)" class="cb_vote_arrow_btn"/>
+                            방향키로 투표하기
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="duplVoteNotShow.disabled" :checked="duplVoteNotShow.checked" @change="onChange(duplVoteNotShow.storage, duplVoteNotShow, $event)"/>
+                            최다 투표 동률시 미표시
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="showHighLevelVoteOnly.disabled" :checked="showHighLevelVoteOnly.checked" @change="onChange(showHighLevelVoteOnly.storage, showHighLevelVoteOnly, $event)"/>
+                            레벨 4이상 유저 투표만 보기(로그인시)
+                        </dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>검색</dt>
+                        <dd>보여 줄 결과 수 : <span class="ret_cnt">0</span></dd>
+                        <dd>
+                            <div class="ret_cnt_slider"></div>
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.naverImage.disabled" :checked="search.naverImage.checked" @change="onChange(search.naverImage.storage, search.naverImage, $event)" />이미지
+                            <input type="radio" value="1" v-model="search.naverImage.where" :checked="search.naverImage.where == 1" @change="onRadioChange(search.naverImage)">왼쪽
+                            <input type="radio" value="2" v-model="search.naverImage.where" :checked="search.naverImage.where == 2" @change="onRadioChange(search.naverImage)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.daum.disabled" :checked="search.daum.checked" @change="onChange(search.daum.storage, search.daum, $event)" />Daum 포털
+                            <input type="radio" value="1" v-model="search.daum.where" :checked="search.daum.where == 1" @change="onRadioChange(search.daum)">왼쪽
+                            <input type="radio" value="2" v-model="search.daum.where" :checked="search.daum.where == 2" @change="onRadioChange(search.daum)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.dicEng.disabled" :checked="search.dicEng.checked" @change="onChange(search.dicEng.storage, search.dicEng, $event)" />영어사전
+                            <input type="radio" value="1" v-model="search.dicEng.where" :checked="search.dicEng.where == 1" @change="onRadioChange(search.dicEng)">왼쪽
+                            <input type="radio" value="2" v-model="search.dicEng.where" :checked="search.dicEng.where == 2" @change="onRadioChange(search.dicEng)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.dicHan.disabled" :checked="search.dicHan.checked" @change="onChange(search.dicHan.storage, search.dicHan, $event)" />한자사전
+                            <input type="radio" value="1" v-model="search.dicHan.where" :checked="search.dicHan.where == 1" @change="onRadioChange(search.dicHan)">왼쪽
+                            <input type="radio" value="2" v-model="search.dicHan.where" :checked="search.dicHan.where == 2" @change="onRadioChange(search.dicHan)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.dicKor.disabled" :checked="search.dicKor.checked" @change="onChange(search.dicKor.storage, search.dicKor, $event)" />국어사전
+                            <input type="radio" value="1" v-model="search.dicKor.where" :checked="search.dicKor.where == 1" @change="onRadioChange(search.dicKor)">왼쪽
+                            <input type="radio" value="2" v-model="search.dicKor.where" :checked="search.dicKor.where == 2" @change="onRadioChange(search.dicKor)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.naverEncyc.disabled" :checked="search.naverEncyc.checked" @change="onChange(search.naverEncyc.storage, search.naverEncyc, $event)" />네이버 - 백과사전
+                            <input type="radio" value="1" v-model="search.naverEncyc.where" :checked="search.naverEncyc.where == 1" @change="onRadioChange(search.naverEncyc)">왼쪽
+                            <input type="radio" value="2" v-model="search.naverEncyc.where" :checked="search.naverEncyc.where == 2" @change="onRadioChange(search.naverEncyc)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.naverWeb.disabled" :checked="search.naverWeb.checked" @change="onChange(search.naverWeb.storage, search.naverWeb, $event)" />네이버 - 웹
+                            <input type="radio" value="1" v-model="search.naverWeb.where" :checked="search.naverWeb.where == 1" @change="onRadioChange(search.naverWeb)">왼쪽
+                            <input type="radio" value="2" v-model="search.naverWeb.where" :checked="search.naverWeb.where == 2" @change="onRadioChange(search.naverWeb)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.naverNews.disabled" :checked="search.naverNews.checked" @change="onChange(search.naverNews.storage, search.naverNews, $event)" />네이버 - 뉴스
+                            <input type="radio" value="1" v-model="search.naverNews.where" :checked="search.naverNews.where == 1" @change="onRadioChange(search.naverNews)">왼쪽
+                            <input type="radio" value="2" v-model="search.naverNews.where" :checked="search.naverNews.where == 2" @change="onRadioChange(search.naverNews)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="search.naverKin.disabled" :checked="search.naverKin.checked" @change="onChange(search.naverKin.storage, search.naverKin, $event)" />네이버 - 지식인 
+                            <input type="radio" value="1" v-model="search.naverKin.where" :checked="search.naverKin.where == 1" @change="onRadioChange(search.naverKin)">왼쪽
+                            <input type="radio" value="2" v-model="search.naverKin.where" :checked="search.naverKin.where == 2" @change="onRadioChange(search.naverKin)">오른쪽
+                        </dd>
+                        <dd>
+                            <input type="checkbox" :disabled="showOtherSearch.disabled" :checked="showOtherSearch.checked" @change="onChange(showOtherSearch.storage, showOtherSearch, $event)"/>
+                            다른 유저 검색 결과 보기
+                        </dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>채팅</dt>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
     <div id="site-menu" v-show="visible" @mouseleave="onMouseLeave">
         <div class="inner">
             <ul>
@@ -322,45 +447,6 @@
         </div>
     </div>
 </div>
-
-<div id="settings" v-show="visible">
-    <div type="title"> - <%= __('vote')%> - </div>
-    <div type="line"></div>
-    <div type="checkbox"><input type="checkbox" :disabled="arrowVote.disabled" :checked="arrowVote.checked" @change="onChange(arrowVote.storage, arrowVote, $event)" class="cb_vote_arrow_btn"/>방향키로 투표하기</div>
-    <div type="checkbox"><input type="checkbox" class="cb_max_vote_duplicate"/>최다 투표 동률시 미표시</div>
-    <div type="checkbox"><input type="checkbox" :disabled="showHighLevelVoteOnly.disabled" :checked="showHighLevelVoteOnly.checked" @change="onChange(showHighLevelVoteOnly.storage, showHighLevelVoteOnly, $event)" class="cb_show_search_user_vote_only"/>레벨 4이상 유저 투표만 보기(로그인시)</div>
-    <div type="msg">아래 설정값이하 미표시 ( <span class="min_vote">0</span>표 이하 ) </div>
-    <div class="min_vote_slider"></div>
-    <div type="line"></div>
-    <div type="title"> - 검색 - </div>
-    <div type="line"></div>
-    <div type="msg">검색당 결과 수 ( <span class="ret_cnt">0</span>표 이하 ) </div>
-    <div class="ret_cnt_slider"></div>
-    <div type="checkbox"><input type="checkbox" id="cb_s4"/>네이버 - 이미지
-        <input type="radio" name="radio_s4" value="1" checked>왼쪽
-        <input type="radio" name="radio_s4" value="2">오른쪽
-    </div>
-    <div type="checkbox"><input type="checkbox" id="cb_s5"/>구글(다음으로 대체)
-        <input type="radio" name="radio_s5" value="1" >왼쪽
-        <input type="radio" name="radio_s5" value="2"checked>오른쪽
-    </div>
-    <div type="checkbox"><input type="checkbox" id="cb_s6"/>사이트 기출DB
-        <input type="radio" name="radio_s6" value="1" >왼쪽
-        <input type="radio" name="radio_s6" value="2"checked>오른쪽
-    </div>
-    <div type="checkbox"><input type="checkbox" id="cb_s7"/>어학사전
-        <input type="radio" name="radio_s7" value="1" >왼쪽
-        <input type="radio" name="radio_s7" value="2"checked>오른쪽
-    </div>
-    <div type="checkbox"><input type="checkbox" id="cb_top_five"/>검색 top 5 보기</div>
-    <div type="line"></div>
-    <div type="title"> - 채팅 - </div>
-    <div type="line"></div>
-    <div type="checkbox"><input type="checkbox" :checked="autoScroll.checked" @change="onChange(autoScroll.storage, autoScroll, $event)" />강제 자동 스크롤 on/off</div>
-    <div type="checkbox"><input type="checkbox" id="cb_notshowchat"/>일반 채팅 안받기(성능)</div>
-    <div type="checkbox"><input type="checkbox" id="cb-notice-disable"/>채팅량 일정 이상시 초기화(성능)</div>
-</div>
-
 <div class="admin_msg"></div>
 <div class="user-menu">
     <div type="name"><name>왕야옹</name> 님을</div>

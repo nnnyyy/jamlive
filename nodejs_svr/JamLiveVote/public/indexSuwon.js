@@ -302,7 +302,7 @@ Options.prototype.init = function() {
 
 
     this.setShowMemberVoteOnly();
-    this.setSearchUserVoteOnly();
+    this.setShowHighLevelVoteOnly();
 
     //  투표 몇 표 이상일 경우 보여줄까?
     var min_vote_val = localStorage.getItem('min_vote') || 0;
@@ -326,7 +326,7 @@ Options.prototype.init = function() {
     $('.ret_cnt_slider').slider({
         range: "min",
         value: 3,
-        min: 2,
+        min: 1,
         max: 4,
         slide: function( event, ui ) {
             localStorage.setItem('ret_cnt', ui.value);
@@ -336,19 +336,6 @@ Options.prototype.init = function() {
 
     $('.ret_cnt_slider').slider('value', ret_cnt_val);
     $( ".ret_cnt" ).text( ret_cnt_val );
-
-    //  투표 동률일 때 표시?
-    var max_vote_dupl = localStorage.getItem('max_vote_dupl') || 0;
-    $('.cb_max_vote_duplicate').attr('checked', max_vote_dupl == 1 ? true : false );
-    $('.cb_max_vote_duplicate').change(function() {
-        if( $(this).is(':checked') ) {
-            localStorage.setItem('max_vote_dupl', 1);
-        }
-        else {
-            localStorage.setItem('max_vote_dupl', 0);
-        }
-    })
-
 
     // 검색 Top 5 보기
     var checked = localStorage.getItem('cb_searchTopFive') || 0;
@@ -415,6 +402,34 @@ Options.prototype.init = function() {
 
     storageData = localStorage.getItem(options.vSettings.arrowVote.storage) || 0;
     options.vSettings.arrowVote.checked = storageData == 1 ? true : false;
+
+    storageData = localStorage.getItem(options.vSettings.duplVoteNotShow.storage) || 0;
+    options.vSettings.duplVoteNotShow.checked = storageData == 1 ? true : false;
+
+    storageData = localStorage.getItem(options.vSettings.showOtherSearch.storage) || 0;
+    options.vSettings.showOtherSearch.checked = storageData == 1 ? true : false;
+
+
+    // 검색 옵션
+    var searchOptionList = [
+        options.vSettings.search.naverImage,
+        options.vSettings.search.daum,
+        options.vSettings.search.dicKor,
+        options.vSettings.search.dicEng,
+        options.vSettings.search.dicHan,
+        options.vSettings.search.naverEncyc,
+        options.vSettings.search.naverWeb,
+        options.vSettings.search.naverNews,
+        options.vSettings.search.naverKin
+    ]
+
+    for( var i = 0 ; i < searchOptionList.length ; ++i ) {
+        var item = searchOptionList[i];
+        var storageData = localStorage.getItem(item.storage) || 0;
+        item.checked = storageData == 1 ? true : false;
+        storageData = localStorage.getItem(item.rStorage) || 1;
+        item.where = storageData;
+    }
 }
 
 Options.prototype.initSettings = function() {
@@ -427,6 +442,11 @@ Options.prototype.initSettings = function() {
                 checked: false,
                 storage: 'arrowVote'
             },
+            duplVoteNotShow: {
+                disabled: false,
+                checked: false,
+                storage: 'duplVoteNotshow'
+            },
             showHighLevelVoteOnly: {
                 disabled: false,
                 checked: false,
@@ -435,6 +455,76 @@ Options.prototype.initSettings = function() {
             autoScroll: {
                 checked: true,
                 storage: 'autoScroll'
+            },
+            showOtherSearch: {
+                disabled: false,
+                checked: false,
+                storage: 'showOtherSearch'
+            },
+            search: {
+                naverImage: {
+                    disabled: false,
+                    checked: false,
+                    storage: 'naverImage',
+                    where: 1,
+                    rStorage: 'naverImageR'
+                },
+                daum: {
+                    disabled: false,
+                    checked: false,
+                    storage: 'daum',
+                    where: 1,
+                    rStorage: 'daumR'
+                },
+                dicEng: {
+                    disabled: false,
+                    checked: false,
+                    storage: 'dicEng',
+                    where: 1,
+                    rStorage: 'dicEngR'
+                },
+                dicKor: {
+                    disabled: false,
+                    checked: false,
+                    storage: 'dicKor',
+                    where: 1,
+                    rStorage: 'dicKorR'
+                },
+                dicHan: {
+                    disabled: false,
+                    checked: false,
+                    storage: 'dicHan',
+                    where: 1,
+                    rStorage: 'dicHanR'
+                },
+                naverEncyc: {   //  백과사전
+                    disabled: false,
+                    checked: false,
+                    storage: 'naverEncyc',
+                    where: 1,
+                    rStorage: 'naverEncycR'
+                },
+                naverWeb: {   //  웹
+                    disabled: false,
+                    checked: false,
+                    storage: 'naverWeb',
+                    where: 1,
+                    rStorage: 'naverWebR'
+                },
+                naverNews: {   //  뉴스
+                    disabled: false,
+                    checked: false,
+                    storage: 'naverNews',
+                    where: 1,
+                    rStorage: 'naverNewsR'
+                },
+                naverKin: {   //  지식인
+                    disabled: false,
+                    checked: false,
+                    storage: 'naverKin',
+                    where: 1,
+                    rStorage: 'naverKinR'
+                }
             }
         },
         methods: {
@@ -447,6 +537,12 @@ Options.prototype.initSettings = function() {
                     obj.checked = false;
                     localStorage.setItem(localStorageName, 0);
                 }
+            },
+            onRadioChange: function( item ) {
+                localStorage.setItem(item.rStorage, item.where);
+            },
+            onMouseLeave: function(e) {
+                this.visible =false;
             }
         }
     });
@@ -510,7 +606,7 @@ Options.prototype.setShowMemberVoteOnly = function() {
     })
 }
 
-Options.prototype.setSearchUserVoteOnly = function() {
+Options.prototype.setShowHighLevelVoteOnly = function() {
     if( !G.isLogin ) {
         options.vSettings.showHighLevelVoteOnly.disabled = true;
         options.vSettings.showHighLevelVoteOnly.checked = false;
@@ -537,13 +633,7 @@ Options.prototype.isShowSearchUserVoteOnly = function() {
 }
 
 Options.prototype.isMaxVoteDuplicateChecked = function() {
-
-    if($('.cb_max_vote_duplicate').is(':checked')) {
-        return true;
-    }
-
-
-    return false;
+    return options.vSettings.duplVoteNotShow.checked;
 }
 
 Options.prototype.isAbleArrowVote = function() {
@@ -1033,7 +1123,7 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
     var tCur = new Date();
     var searchRetRankList = searchObj.searchRank;
 
-    var checked = localStorage.getItem('cb_searchTopFive') || 0;
+    var checked = options.vSettings.showOtherSearch.checked;
 
     if( datalist.length <= 0 || checked == 0) {
         searchRetRankList.empty();
@@ -1069,6 +1159,7 @@ SearchObject.prototype.onSearchRetRank = function( datalist, hash ) {
                     var articles = getSearchArea(sai).articles;
 
                     for( var ia = 0 ; ia < articles.length ; ++ ia ) {
+                        if( articles[ia].except ) continue;
                         var item = {title: articles[ia].title, desc: articles[ia].desc };
                         item.title = item.title.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
                         item.desc = item.desc.replace( exp, ' <search-top-ret> ' + words[w] + ' </search-top-ret> ');
@@ -1453,7 +1544,6 @@ function onInputMsgKeyUp(e) {
 
 function setBtnEvent() {
     options.vSettings.visible = false;
-    $('#btn-settings').click(onBtnSettings);
 
     $('#btn-clear-chat').click(onClearChat);
     $('#btn-get-vote-list').click(onGetVoteList);
@@ -1463,7 +1553,13 @@ function setBtnEvent() {
 
     $('#btn-site-menu').mouseover(function( e ) {
         e.preventDefault();
-        siteMenu.vMenu.visible = !siteMenu.vMenu.visible;
+        siteMenu.vMenu.visible = true;
+        options.vSettings.visible = false;
+    });
+    $('#btn-settings').mouseover(function(e) {
+        e.preventDefault();
+        options.vSettings.visible = true;
+        siteMenu.vMenu.visible = false;
     })
 
     $('#btn-serv-1').click(onBtnGoServ1);
@@ -1582,16 +1678,6 @@ function onBtnSettings(e) {
     e.preventDefault();
     options.vSettings.visible = true;
     siteMenu.vMenu.visible = false;
-    var settingsWnd = $('#settings');
-    settingsWnd.css({left: 0});
-
-    settingsWnd.click(function(e) {
-        e.stopPropagation();
-    })
-
-    $(window).click(function() {
-        settingsWnd.css({left: -300});
-    })
 }
 
 function onBtnHelp(e) {
@@ -1740,7 +1826,7 @@ function onLoginInfo(data) {
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
     options.setShowMemberVoteOnly();
-    options.setSearchUserVoteOnly();
+    options.setShowHighLevelVoteOnly();
 
     showNextQuizTimeLeft(data.quizTable);
 }
@@ -1800,22 +1886,30 @@ function onGetTimeTable(packet) {
 }
 
 function onSearchDic(data) {
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    if( ret_cnt_val >= 2 ) {
+        ret_cnt_val = 2;
+    }
+
     try {
         if( data.data ) {
-            data.data = data.data.slice(0,2);
+            data.data = data.data.slice(0,ret_cnt_val);
         }
 
         if( data.hdata ) {
-            data.hdata = data.hdata.slice(0,2);
+            data.hdata = data.hdata.slice(0,ret_cnt_val);
         }
 
         if( data.edata ) {
-            data.edata = data.edata.slice(0,2);
+            data.edata = data.edata.slice(0,ret_cnt_val);
         }
 
-        setSearchRet(data.data, true, searchObj.whereSearchDic, '[국어사전]', 'krdic');
-        setSearchRet(data.hdata, true, searchObj.whereSearchDic, '[한자사전]', 'hdic');
-        setSearchRet(data.edata, true, searchObj.whereSearchDic, '[영어사전]', 'edic');
+        if( options.vSettings.search.dicKor.checked )
+            setSearchRet(data.data, true, searchObj.whereSearchDicKor, '[국어사전]', 'krdic');
+        if( options.vSettings.search.dicHan.checked )
+            setSearchRet(data.hdata, true, searchObj.whereSearchDicHan, '[한자사전]', 'hdic');
+        if( options.vSettings.search.dicEng.checked )
+            setSearchRet(data.edata, true, searchObj.whereSearchDicEng, '[영어사전]', 'edic');
     }catch( e ) {
         console.log(e);
         clearTimeout(searchObj.timerID);
@@ -1843,18 +1937,27 @@ function onSearchNaverAPI(packet) {
     var type = packet.type;
     var sPrefix = packet.prefix;
 
+    //  type : 백과사전 , 웹, 뉴스, 지식인
+    var typeEnableList = [
+        {enabled: options.vSettings.search.naverEncyc.checked, where: options.vSettings.search.naverEncyc.where, first: true },
+        {enabled: options.vSettings.search.naverWeb.checked, where: options.vSettings.search.naverWeb.where, first: false },
+        {enabled: options.vSettings.search.naverNews.checked, where: options.vSettings.search.naverNews.where, first: false },
+        {enabled: options.vSettings.search.naverKin.checked, where: options.vSettings.search.naverKin.where, first: false }
+    ];
+
+    if( !typeEnableList[type].enabled ) return;
+
     if( data && data.length > 0 ) {
-        var where = 1;
-        if( type % 2 ) {
-            where = 2;
-        }
+        var where = typeEnableList[type].where;
         var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
         data = data.slice(0, ret_cnt_val);
-        setSearchRet(data, false, where, '[' + sPrefix + ']', search_title_prefix_style_name[type]);
+        setSearchRet(data, typeEnableList[type].first, where, '[' + sPrefix + ']', search_title_prefix_style_name[type]);
     }
 }
 
 function onSearchDaumGoogle(data) {
+    var ret_cnt_val = localStorage.getItem('ret_cnt') || 3;
+    data = data.slice(0, ret_cnt_val);
     setSearchRet(data, true, searchObj.whereSearchDaum, '[다음(구글)]', "cb6");
 }
 
@@ -2020,28 +2123,28 @@ function searchWebRoot( socket, query, isBroadcast ) {
         chinese = true;
     }
 
-    var json = {nickname: nick, msg: query, isBroadcast : isBroadcast, searchDic: chinese, searchNaverMain: true, searchNaverMainAPI: true }
+    var json = {
+        nickname: nick,
+        msg: query,
+        isBroadcast : isBroadcast,
+        searchDic: options.vSettings.search.dicEng.checked || options.vSettings.search.dicHan.checked || options.vSettings.search.dicKor.checked || chinese,
+        searchNaverMain: true,
+        searchNaverMainAPI: true,
+        searchImage: options.vSettings.search.naverImage.checked,
+        searchDaum: options.vSettings.search.daum.checked
+    }
 
-    var searched = false;
-
-    if( $('#cb_s4').is(':checked')) {
-        var where = $('input[name=radio_s4]:checked').attr('value');
-        json.searchImage = true;
-        searchObj.whereSearchImage = where;
-        searched = true;
-    } //  구글
-
-    if( $('#cb_s5').is(':checked')) {
-        var where = $('input[name=radio_s5]:checked').attr('value');
-        json.searchDaum = true;
-        searchObj.whereSearchDaum = where;
-        searched = true;
-    } //  구글
-
-    if( chinese ) {
-        var where = $('input[name=radio_s7]:checked').attr('value');
-        searchObj.whereSearchDic = where;
-        searched = true;
+    var searched = true;
+    if( json.searchImage ) {
+        searchObj.whereSearchImage = options.vSettings.search.naverImage.where;
+    }
+    if( json.searchDaum ) {
+        searchObj.whereSearchDaum = options.vSettings.search.daum.where;
+    }
+    if( json.searchDic ) {
+        searchObj.whereSearchDicEng = options.vSettings.search.dicEng.where;
+        searchObj.whereSearchDicKor = options.vSettings.search.dicKor.where;
+        searchObj.whereSearchDicHan = options.vSettings.search.dicHan.where;
     }
 
     if( dongyo ) {
@@ -2377,7 +2480,7 @@ function setSearchDB(data, where) {
 
         var title = '[기출문제] ' + item.question;
 
-        getSearchArea(where).articles.push({title: title, desc: sub })
+        getSearchArea(where).articles.push({title: title, desc: sub, except: true })
     }
 
     clearTimeout(searchObj.timerIDForDB);
@@ -2396,7 +2499,7 @@ function setSearchRetImage(items, first, where) {
         div += image;
     }
 
-    getSearchArea(where).articles.push({title:'', desc: div});
+    getSearchArea(where).articles.push({title:'', desc: div, except: true});
 
     clearTimeout(searchObj.timerID);
     searchObj.timerID = setTimeout(function() {
@@ -2422,7 +2525,7 @@ function setSearchRet(items, first, where, title_prefix, title_prefix_style) {
             var title = title_prefix + ' ' + item.title + ' ' + hinfo;
             var desc = item.description;
 
-            var k = { title : title, desc: desc };
+            var k = { title : title, desc: desc, except: false };
             if( first ) {
                 getSearchArea(where).articles.unshift( k );
             }
