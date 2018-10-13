@@ -3,7 +3,8 @@
  */
 
 const EBPT = {
-    SetLoginState: "set-login-state"
+    SetLoginState: "set-login-state",
+    SetLoginStateRet: "set-login-state-ret"
 };
 
 module.exports = EBPT;

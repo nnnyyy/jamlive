@@ -34,6 +34,9 @@ class ServerManager {
     setSocketListener(socket) {
         const sm = this;
         socket.on(PT.SVR.CHAT, p => { sm.cm.onPacket(p) });
+        socket.on(PT.LOGIN, p=> {
+            socket.emit(PT.LOGIN, { ret: 'success'});
+        })
     }
 }
 

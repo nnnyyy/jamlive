@@ -6,6 +6,7 @@ const PT = {
     TEST: 'test',
     QUIZ: 'quiz',
     CHAT: 'chat',
+    LOGIN: 'login',
     SVR: {
         CHAT: 'chat'
     }

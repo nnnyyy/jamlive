@@ -12,6 +12,7 @@
     import QuizArea from './QuizArea.vue'
     import LoginArea from './LoginArea.vue'
     import Vue from 'vue';
+
     import EProtocol from '../common/eventBusProtocol';
 
     export default {
@@ -22,10 +23,10 @@
             }
         },
         created: function() {
-            this.$bus.$on(EProtocol.SetLoginState, this.onBusSetLoginState);
+            this.$bus.$on(EProtocol.SetLoginStateRet, this.onBusSetLoginStateRet);
         },
         methods: {
-            onBusSetLoginState: function(p) {
+            onBusSetLoginStateRet: function(p) {
                 this.logined = true;
             }
         },

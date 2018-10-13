@@ -9,6 +9,5 @@ import Global from './Global'
 
 $(document).ready(function() {
     Vue.prototype.$bus = new Vue();
-
-    const G = new Global(io());
+    Global.init(io());
 });
