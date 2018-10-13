@@ -412,6 +412,7 @@ Options.prototype.init = function() {
 
     // 검색 옵션
     var searchOptionList = [
+        options.vSettings.search.localDB,
         options.vSettings.search.naverImage,
         options.vSettings.search.daum,
         options.vSettings.search.dicKor,
@@ -462,6 +463,13 @@ Options.prototype.initSettings = function() {
                 storage: 'showOtherSearch'
             },
             search: {
+                localDB: {
+                    disabled: false,
+                    checked: true,
+                    storage: 'localDB',
+                    where: 1,
+                    rStorage: 'localDBR'
+                },
                 naverImage: {
                     disabled: false,
                     checked: true,
@@ -2109,6 +2117,11 @@ function searchWebRoot( socket, query, isBroadcast ) {
     stopVideo();
     searchObj.vSearchAreaCenter.kinHtml = '';
 
+    if( !G.isLogin ) {
+        showAdminMsg('검색은 로그인 후에 가능합니다');
+        return;
+    }
+
     var tCur = new Date();
     if( tCur - searchObj.tLastSearch <= 500 ) {
         showAdminMsg('검색은 여유를 두고!');
@@ -2164,17 +2177,20 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searchDaum: options.vSettings.search.daum.checked
     }
 
-    var searched = true;
+    var searched = false;
     if( json.searchImage ) {
         searchObj.whereSearchImage = options.vSettings.search.naverImage.where;
+        searched = true;
     }
     if( json.searchDaum ) {
         searchObj.whereSearchDaum = options.vSettings.search.daum.where;
+        searched = true;
     }
     if( json.searchDic ) {
         searchObj.whereSearchDicEng = options.vSettings.search.dicEng.where;
         searchObj.whereSearchDicKor = options.vSettings.search.dicKor.where;
         searchObj.whereSearchDicHan = options.vSettings.search.dicHan.where;
+        searched = true;
     }
 
     if( dongyo ) {
@@ -2182,8 +2198,9 @@ function searchWebRoot( socket, query, isBroadcast ) {
         searched = true;
     }
 
-    if( $('#cb_s6').is(':checked')) {
-        var where = $('input[name=radio_s6]:checked').attr('value');
+    if( options.vSettings.search.localDB.checked ) {
+        console.log('db');
+        var where = options.vSettings.search.localDB.where;
         searchFromDB(query, where);
         searched = true;
     }

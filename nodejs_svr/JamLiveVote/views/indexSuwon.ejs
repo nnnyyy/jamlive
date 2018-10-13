@@ -151,6 +151,11 @@
                             <div class="ret_cnt_slider"></div>
                         </dd>
                         <dd>
+                            <input type="checkbox" :disabled="search.localDB.disabled" :checked="search.localDB.checked" @change="onChange(search.localDB.storage, search.localDB, $event)" />기출문제
+                            <input type="radio" value="1" v-model="search.localDB.where" :checked="search.localDB.where == 1" @change="onRadioChange(search.localDB)">왼쪽
+                            <input type="radio" value="2" v-model="search.localDB.where" :checked="search.localDB.where == 2" @change="onRadioChange(search.localDB)">오른쪽
+                        </dd>
+                        <dd>
                             <input type="checkbox" :disabled="search.naverImage.disabled" :checked="search.naverImage.checked" @change="onChange(search.naverImage.storage, search.naverImage, $event)" />이미지
                             <input type="radio" value="1" v-model="search.naverImage.where" :checked="search.naverImage.where == 1" @change="onRadioChange(search.naverImage)">왼쪽
                             <input type="radio" value="2" v-model="search.naverImage.where" :checked="search.naverImage.where == 2" @change="onRadioChange(search.naverImage)">오른쪽
