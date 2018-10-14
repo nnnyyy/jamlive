@@ -36,7 +36,11 @@
                         {{ item.question }} - <span :class="{collect: item.collect_idx==0}">1.{{ item.answer1 }}</span> <span :class="{collect: item.collect_idx==1}">2.{{ item.answer2 }}</span> <span :class="{collect: item.collect_idx==2}">3.{{ item.answer3 }}</span><button @click="onBtnModify(item, $event)">수정</button>
                     </div>
                     <div v-show="item.isModifying">
-                        <input type="text" v-model="item.question">
+                        <textarea class="question" v-model="item.questionM"></textarea>
+                        <div>1.<input type="text" v-model="item.answer1M"/></div>
+                        <div>2.<input type="text" v-model="item.answer2M"/></div>
+                        <div>3.<input type="text" v-model="item.answer3M"/></div>
+                        <button>수정하기</button> <button @click="onBtnCancel(item)">취소하기</button>
                     </div>
                 </div>
             </div>

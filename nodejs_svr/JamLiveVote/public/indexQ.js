@@ -32,6 +32,15 @@ GlobalValue.prototype.init = function() {
                 var v = this;
                 ajaxHelper.postJson('/quizSearch', {keyword: this.searchKeyword}, function(result) {
                     if( result.ret == 0 ) {
+                        result.list.forEach(function(item) {
+                            item.isModifying = false;
+                            item.questionM = item.question;
+                            item.answer1M = item.answer1;
+                            item.answer2M = item.answer2;
+                            item.answer3M = item.answer3;
+                            item.collect_idxM = item.collect_idx;
+                        });
+
                         v.searchItems = result.list;
                     }
                 });
@@ -39,6 +48,17 @@ GlobalValue.prototype.init = function() {
             onBtnModify: function(item, e) {
                 var v = this;
                 item.isModifying = true;
+            },
+            onBtnCancel: function(item) {
+                item.questionM = item.question;
+                item.answer1M = item.answer1;
+                item.answer2M = item.answer2;
+                item.answer3M = item.answer3;
+                item.collect_idxM = item.collect_idx;
+                item.isModifying = false;
+            },
+            isModifying: function(item) {
+                return item.isModifying;
             }
         }
     });

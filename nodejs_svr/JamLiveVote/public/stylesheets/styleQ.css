@@ -23,5 +23,9 @@ input {
   margin: 0 8px;
   width: 90px;
 }
+#search-quiz-ret .question {
+  width: 600px;
+  height: 50px;
+}
 
 /*# sourceMappingURL=styleQ.css.map */
