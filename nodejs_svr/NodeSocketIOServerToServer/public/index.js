@@ -39,13 +39,23 @@ function initVueObject() {
                 $('#ip-msg').val('');
             },
             onBtnPermanentBanBynick: function(e) {
+                var v = this;
                 e.preventDefault();
                 e.stopPropagation();
                 var msg = $('#ip-ban-nick').val();
                 if( msg.trim() == '' ) return;
                 ajaxHelper.postJson('/banbynick', { nick: msg.trim() }, function(result) {
-                    alert(result.ret);
+                    v.showPermanentMsg(result.ret);
                 });
+            },
+            showPermanentMsg(ret) {
+                var msg = '';
+                switch(ret) {
+                    case 0: msg = '정상적으로 밴 처리 되었습니다.'; break;
+                    case -1: msg = '유저가 존재하지 않습니다.'; break;
+                }
+
+                alert(msg);
             }
         }
     });

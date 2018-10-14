@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#root {
+  margin: 20px;
+}
+#root input#ip-msg, #root input#ip-ban-nick {
+  width: 600px;
+  height: 30px;
+}
+#root input#ip-ban-nick {
+  width: 200px;
+}
+#root button {
+  width: 100px;
+  height: 30px;
+}
+#root .sub {
+  margin: 10px 0;
+}
+
+#notice-root {
+  margin: 20px;
+}
+#notice-root button {
+  margin: 20px 0;
+  width: 200px;
+  height: 60px;
+}
+#notice-root .sub {
+  margin: 10px 0;
+}
+
+/*# sourceMappingURL=style.css.map */

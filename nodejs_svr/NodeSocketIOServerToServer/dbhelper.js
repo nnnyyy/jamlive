@@ -34,7 +34,7 @@ exports.updatePermanentBanByNick = function( nick, cb ) {
                 return;
             }
 
-            if( cb ) cb({ret: 0 });
+            if( cb ) cb({ret: rows[1][0]['ret'] });
         });
     }catch(err) {
         //Log.logger.debug('DB Failed - updatePermanentBanByNick');

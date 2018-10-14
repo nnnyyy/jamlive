@@ -1,0 +1,37 @@
+@import "common.scss";
+
+#root {
+  margin: 20px;
+
+  input#ip-msg, input#ip-ban-nick {
+    width: 600px;
+    height: 30px;
+  }
+
+  input#ip-ban-nick {
+    width: 200px;
+  }
+
+  button {
+    width: 100px;
+    height: 30px;
+  }
+
+  .sub {
+    margin: 10px 0;
+  }
+}
+
+#notice-root {
+  margin: 20px;
+
+  button {
+    margin: 20px 0;
+    width: 200px;
+    height: 60px;
+  }
+
+  .sub {
+    margin: 10px 0;
+  }
+}

@@ -24,39 +24,23 @@
     <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
     <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     <script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
-    <script>
-        function AjaxHelper() {
-
-        }
-
-        AjaxHelper.prototype.postJson = function( url, jsondata, cbSuccess ) {
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify(jsondata),
-                contentType: 'application/json',
-                url: url,
-                success: cbSuccess
-            });
-        }
-
-        var ajaxHelper = new AjaxHelper();
-    </script>
+    <link rel='stylesheet' href='/scss/style.css' />
 </head>
 <body>
 <div id="root">
     <div v-if="logined == true && isAccessable == true">
-        <div>관리자 페이지</div>
+        <h1>관리자 페이지</h1>
         <div>
+            <div class="sub">전체 서버 메시지</div>
             <input type="text" id="ip-msg"/>
             <button @click="onBtnSendAdminMsg">보내기</button>
         </div>
 
         <div>
-            <div>닉으로 밴하기</div>
+            <div class="sub">닉으로 밴하기</div>
             <input type="text" id="ip-ban-nick"/>
             <button @click="onBtnPermanentBanBynick">밴하기</button>
         </div>
@@ -69,10 +53,11 @@
     </div>
 </div>
 <div id="notice-root" style="width: 600px;">
+    <div class="sub">서버 전체 공지사항</div>
     <textarea id ='notice-area' class="notice-area"></textarea>
-    <div id="btn-update-notice">
+    <button id="btn-update-notice">
         공지 업데이트
-    </div>
+    </button>
 </div>
 </body>
 <script type="text/javascript" src="/index.js"></script>
@@ -82,9 +67,6 @@
 
         G.app.logined = <%- isLogined %>;
         G.app.isAccessable = <%- isAcessable %>;
-
-        console.log(G.app.logined);
-        console.log(G.app.isAccessable);
 
         if( G.app.logined && G.app.isAccessable ) {
             $('#notice-root').css('display', 'block');
