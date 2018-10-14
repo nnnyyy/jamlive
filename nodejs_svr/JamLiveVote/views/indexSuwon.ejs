@@ -271,6 +271,7 @@
                         <%}else {%>
                         <dd @click="onBtnLogout" :style="btnStyle">로그아웃</dd>
                         <dd>비밀번호 변경</dd>
+                        <dd v-show="isAdminMembers" @click="onBtnAdminMode" :style="btnStyle" class="admin">관리자 모드</dd>
                         <%}%>
                     </dl>
                 </li>

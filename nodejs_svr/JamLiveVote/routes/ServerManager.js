@@ -313,7 +313,7 @@ ServerMan.prototype.register = function(socket) {
         }
     }
 
-    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
+    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
     var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
     var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
     socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })

@@ -219,7 +219,8 @@ SiteMenu.prototype.init = function() {
                 cursor: 'pointer',
                 color: '#098100',
                 fontWeight: 'bold'
-            }
+            },
+            isAdminMembers: false
         },
         methods: {
             onMouseLeave: function(e) {
@@ -260,6 +261,11 @@ SiteMenu.prototype.init = function() {
                 e.stopPropagation();
                 this.visible = false;
                 siteMenu.vHelp.visible = true;
+            },
+            onBtnAdminMode: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('http://databucket.duckdns.org:7777','_blank');
             }
         }
     })
@@ -1870,6 +1876,8 @@ function onLoginInfo(data) {
     G.sockid = data.socket;
     G.isLogin = data.isLogined;
     G.auth = data.auth;
+    G.isAdminMembers = data.isAdminMembers;
+    siteMenu.vMenu.isAdminMembers = data.isAdminMembers;
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
     options.setShowMemberVoteOnly();

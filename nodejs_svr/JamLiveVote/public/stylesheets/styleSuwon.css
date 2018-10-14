@@ -182,6 +182,10 @@ body {
 #site-menu #btn-login {
   color: #0086B3;
 }
+#site-menu .admin {
+  color: #880003;
+  font-weight: bolder;
+}
 
 #settings {
   position: absolute;
