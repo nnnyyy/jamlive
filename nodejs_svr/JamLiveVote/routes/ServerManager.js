@@ -409,6 +409,8 @@ ServerMan.prototype.setIO = function(io, redis) {
     this.io = io;
     this.redis = redis;
 
+    this.isCleanServer = (config.type == 'clean');
+
     this.chosung = new Chosung(io);
 
     servman.redis.get('jamlive-memo-info:' + config.serv_name,  (err, info) => {
@@ -1068,6 +1070,13 @@ function onSockVote(data) {
             return;
         }
 
+        var banCnt = client.getBanCnt();
+
+        if( servman.isCleanServer && ( client.auth < 3 || banCnt >= 2 ) ) {
+            servman.sendServerMsg(socket, '이 서버에서는 레벨3 이하나 일정 이상 밴 당한 유저는 투표에 참여 불가능합니다.');
+            return;
+        }
+
         if( !client.isLogined() ) {
             var _counts = [0,0,0,0];
             servman.counts.forEach(function(value, key) {
@@ -1097,7 +1106,6 @@ function onSockVote(data) {
                 client.tLastClick = new Date();
                 return;
             }
-            var banCnt = client.getBanCnt();
             servman.voteManager.vote(client, data.idx);
             servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
 

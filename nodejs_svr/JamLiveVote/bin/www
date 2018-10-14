@@ -33,6 +33,11 @@ process.argv.forEach(function(val, idx, arr) {
     config.mode = val;
   }
 
+
+  if( before == '-type') {
+    config.type = val;
+  }
+
   before = val;
 })
 
