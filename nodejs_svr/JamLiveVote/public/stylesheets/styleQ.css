@@ -1,0 +1,27 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  height: 30px;
+}
+
+#app {
+  margin: 20px;
+}
+
+#search-quiz-ret .searched {
+  margin: 8px 0;
+}
+#search-quiz-ret .collect {
+  background-color: #0ABE64;
+}
+#search-quiz-ret button {
+  margin: 0 8px;
+  width: 90px;
+}
+
+/*# sourceMappingURL=styleQ.css.map */

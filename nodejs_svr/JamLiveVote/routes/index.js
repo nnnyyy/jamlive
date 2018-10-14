@@ -5,6 +5,7 @@ var router = express.Router();
 var config = require('../config');
 var Auth = require('./Auth');
 const Kin = require('./modules/KinProc');
+const QMain = require('./modules/QMain');
 var dbhelper = require('./dbhelper');
 
 /* GET home page. */
@@ -21,6 +22,10 @@ router.get('/kin', function(req,res, next) {
   dbhelper.getKinRecentRegisterList(function(result) {
     res.render('kin', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo, data: result.data});
   })
+})
+
+router.get('/quizSet', function(req,res, next) {
+  res.render('quizSettingsMain', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 })
 
 router.get('/timetable', function(req, res , next) {
@@ -69,5 +74,7 @@ router.post('/search-word', Kin.SearchWord);
 router.post('/search-word-register', Kin.Register);
 router.post('/search-word-modify', Kin.Modify);
 router.post('/search-word-delete', Kin.Delete);
+
+router.post('/quizSearch', QMain.QuizSearch );
 
 module.exports = router;

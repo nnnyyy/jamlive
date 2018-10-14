@@ -546,3 +546,22 @@ exports.getTodayQuizList = function( cb ) {
         cb({ret: -1});
     }
 }
+
+exports.searchQuiz = function( keyword, cb ) {
+    try {
+        dbpool.query("CALL searchQuiz( ? )", [keyword], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            var list = rows[0];
+
+            if( cb ) cb({ret: 0, list: list });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - searchQuiz');
+        if( cb ) cb({ret: -1});
+    }
+}

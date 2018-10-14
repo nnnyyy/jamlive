@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122840650-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-122840650-1');
+    </script>
+
+    <title>라이브 퀴즈 공유기 퀴즈 설정 페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈 공유기의 기출 문제를 검토할 수 있는 페이지"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="라이브 퀴즈 공유기의 기출 문제를 검토할 수 있는 페이지">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <link rel='stylesheet' href='/stylesheets/styleQ.css' />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<body>
+<!-- HTML Design -->
+<div id="app">
+    <div v-if="isPermitted">
+        찾기<input type="text" v-model="searchKeyword" @keyup="onChangeSearchKeyword"/>
+        <div id="search-quiz-ret">
+            <div v-for="item in searchItems">
+                <div class="searched">
+                    <div v-show="!item.isModifying">
+                        {{ item.question }} - <span :class="{collect: item.collect_idx==0}">1.{{ item.answer1 }}</span> <span :class="{collect: item.collect_idx==1}">2.{{ item.answer2 }}</span> <span :class="{collect: item.collect_idx==2}">3.{{ item.answer3 }}</span><button @click="onBtnModify(item, $event)">수정</button>
+                    </div>
+                    <div v-show="item.isModifying">
+                        <input type="text" v-model="item.question">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        권한이 없거나 로그인이 안되어있습니다.
+    </div>
+</div>
+</body>
+<script>
+    var USERINFO = {}
+    USERINFO.data = <%- JSON.stringify(userinfo) %>;
+</script>
+<script type="text/javascript" src="/indexQ.js"></script>
+</html>

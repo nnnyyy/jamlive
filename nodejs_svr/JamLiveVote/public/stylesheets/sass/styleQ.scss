@@ -1,0 +1,31 @@
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+input {
+  height:30px;
+}
+
+
+#app {
+  margin: 20px;
+}
+
+#search-quiz-ret {
+  .searched {
+    margin: 8px 0;
+  }
+
+  .collect {
+    background-color: #0ABE64;
+  }
+
+  button {
+    margin: 0 8px;
+    width: 90px;
+  }
+}
