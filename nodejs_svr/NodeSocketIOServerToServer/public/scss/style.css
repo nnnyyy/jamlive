@@ -5,8 +5,15 @@
           box-sizing: border-box;
 }
 
+li {
+  list-style: none;
+}
+
 #root {
   margin: 20px;
+}
+#root .sub {
+  margin: 10px 0;
 }
 #root input#ip-msg, #root input#ip-ban-nick {
   width: 600px;
@@ -19,8 +26,17 @@
   width: 100px;
   height: 30px;
 }
-#root .sub {
+#root #servers .sub {
   margin: 10px 0;
+}
+#root #servers li {
+  margin: 8px 8px;
+}
+#root #servers li .user {
+  width: 80px;
+  height: 30px;
+  margin: 0 0 0 8px;
+  text-align: right;
 }
 
 #notice-root {

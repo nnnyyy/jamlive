@@ -28,6 +28,7 @@ router.get('/', function(req, res, next) {
 
             parsedInfo.isLogined = isLogined;
             parsedInfo.isAcessable = isAccessApprove;
+            parsedInfo.servers = serverMan.servinfo.values();
 
             res.render('index', parsedInfo);
         }

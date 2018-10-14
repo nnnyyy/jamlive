@@ -1,7 +1,12 @@
 @import "common.scss";
 
 #root {
+
   margin: 20px;
+
+  .sub {
+    margin: 10px 0;
+  }
 
   input#ip-msg, input#ip-ban-nick {
     width: 600px;
@@ -17,8 +22,25 @@
     height: 30px;
   }
 
-  .sub {
-    margin: 10px 0;
+  #servers {
+    .sub {
+      margin: 10px 0;
+    }
+
+    li {
+      margin: 8px 8px;
+
+      .user {
+        width: 80px;
+        height: 30px;
+        margin: 0 0 0 8px;
+        text-align: right;
+      }
+    }
+
+    li:nth-child(4n + 1) {
+
+    }
   }
 }
 

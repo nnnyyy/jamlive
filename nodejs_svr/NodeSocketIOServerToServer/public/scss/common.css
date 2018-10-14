@@ -5,4 +5,8 @@
           box-sizing: border-box;
 }
 
+li {
+  list-style: none;
+}
+
 /*# sourceMappingURL=common.css.map */

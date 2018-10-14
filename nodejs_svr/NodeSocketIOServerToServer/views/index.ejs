@@ -44,6 +44,14 @@
             <input type="text" id="ip-ban-nick"/>
             <button @click="onBtnPermanentBanBynick">밴하기</button>
         </div>
+        <div>
+            <div class="sub">서버 제한</div>
+            <ul id="servers" v-for="item in servers">
+                <li>
+                    {{item.name}} 제한: <input class="user" type="text" v-model="item.limit">명 <button @click="onBtnSetServerLimit(item,$event)">설정</button>
+                </li>
+            </ul>
+        </div>
     </div>
     <div v-else-if="logined == false">
         로그인을 하고 다시 찾아주세요^^
@@ -67,6 +75,20 @@
 
         G.app.logined = <%- isLogined %>;
         G.app.isAccessable = <%- isAcessable %>;
+        var servItems = [];
+        <% for( var i = 0 ; i < servers.length ; ++i ) {%>
+            var item = {};
+            item.name = '<%- servers[i].name %>';
+            item.idx = <%- servers[i].idx %>;
+            item.limit = '<%- servers[i].limit %>';
+            servItems.push(item);
+        <%}%>
+
+        servItems.sort(function(item1, item2) {
+            return item1.idx - item2.idx;
+        });
+
+        G.app.servers = servItems;
 
         if( G.app.logined && G.app.isAccessable ) {
             $('#notice-root').css('display', 'block');

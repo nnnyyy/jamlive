@@ -27,7 +27,9 @@ function initVueObject() {
         el:'#root',
         data: {
             logined: false,
-            isAccessable: false
+            isAccessable: false,
+            servers: [
+            ]
         },
         methods: {
             onBtnSendAdminMsg: function(e) {
@@ -47,6 +49,11 @@ function initVueObject() {
                 ajaxHelper.postJson('/banbynick', { nick: msg.trim() }, function(result) {
                     v.showPermanentMsg(result.ret);
                 });
+            },
+            onBtnSetServerLimit: function(server, e) {
+                e.preventDefault();
+                e.stopPropagation();
+                alert('기능 제작 중');
             },
             showPermanentMsg(ret) {
                 var msg = '';
