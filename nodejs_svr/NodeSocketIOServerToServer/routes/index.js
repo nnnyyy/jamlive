@@ -48,9 +48,13 @@ router.post('/banbynick', function(req, res, next) {
     serverMan.permanentBanByNick(req.body.nick, res);
 })
 
-router.post('/banbyip', function(req, res, next) {
+router.post('/setServerLimit', function(req,res, next) {
     const serverMan = req.serverMan;
-    serverMan.permanentBanByIp(req.body.ip, res);
+    if( req.session.userinfo.adminMemberVal < 1 ) {
+        res.json({ret: -1});
+        return;
+    }
+    serverMan.setServerLimit(req.body.name, req.body.limit, res);
 })
 
 router.post('/update-notice', function(req, res, next) {

@@ -42,6 +42,23 @@ exports.updatePermanentBanByNick = function( nick, cb ) {
     }
 }
 
+exports.updateServerLimit = function( name, limit, cb ) {
+    try {
+        dbpool.query("CALL updateServerLimit( ?, ? )", [name, limit], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            if( cb ) cb({ret: 0 });
+        });
+    }catch(err) {
+        //Log.logger.debug('DB Failed - updatePermanentBanByNick');
+        if( cb ) cb({ret: -1});
+    }
+}
+
 exports.updatePermanentBanByIp = function( ip, cb ) {
     try {
         dbpool.query("CALL updatePermanentBanByIp( ? )", [ip], function(err, rows) {

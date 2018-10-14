@@ -284,14 +284,13 @@ class ServerManager {
         });
     }
 
-    permanentBanByIp(ip, res) {
-        const servman = this;
-        dbhelper.updatePermanentBanByIp(ip, function(result) {
-            if( result.ret == 0 )
-                servman.banReload();
-
+    setServerLimit(name, limit, res) {
+        const sm = this;
+        dbhelper.updateServerLimit(name, limit, function(result) {
+            var serv = sm.servinfo.get(name);
+            serv.limit = limit;
             res.json(result);
-        });
+        })
     }
 
     broadcastUpdateNotice( noticeData ) {
