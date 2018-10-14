@@ -289,6 +289,10 @@ class ServerManager {
         dbhelper.updateServerLimit(name, limit, function(result) {
             var serv = sm.servinfo.get(name);
             serv.limit = limit;
+            let distServ = sm.chServMapByName.get(name);
+            if( distServ ) {
+                distServ.userlimit = limit;
+            }
             res.json(result);
         })
     }
