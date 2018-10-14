@@ -368,7 +368,8 @@ Options.prototype.init = function() {
     });
 
     //  전체 서버 결과 보기
-    var checked = localStorage.getItem('cb-show-all-server-vote') || 0;
+    checked = localStorage.getItem('cb-show-all-server-vote') || 0;
+    $('#cb-show-all-server-vote').attr('checked', checked == 1 ? true : false);
     $('#cb-show-all-server-vote').change(function() {
         if( $(this).is(':checked') ) {
             if( G.auth < 4 ) {
