@@ -20,12 +20,12 @@ app.set('view engine', 'ejs');
 const sessionMiddleware = session( {
     secret: 'goquiz',
     resave: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: new redisStore({
         host: '127.0.0.1',
-        port: '6379',
+        port: 6379,
         client: redisClient,
-        prefix: 'goquiz',
+        prefix: 'goquiz-',
         db: 0
     })
 });
@@ -39,6 +39,7 @@ app.use(sessionMiddleware);
 
 app.use('/', routes);
 
+app.session = sessionMiddleware;
 app.ServerManager = new ServerManager();
 
 module.exports = app;

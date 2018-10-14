@@ -4,6 +4,7 @@
 const app = require('../app');
 const http = require('http');
 const io = require('socket.io');
+const sharedsession = require("express-socket.io-session");
 
 const DEFAULT_PORT = 10000;
 const ioOptions = {
@@ -15,6 +16,8 @@ const ioOptions = {
 
 const httpServer = http.createServer(app);
 const ioServer = io(httpServer, ioOptions);
+
+ioServer.use(sharedsession(app.session));
 app.ServerManager.init(ioServer);
 
 

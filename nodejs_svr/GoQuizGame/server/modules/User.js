@@ -3,11 +3,17 @@
  */
 class User {
     constructor( socket ) {
+        this.socket = socket;
+        this.tDisconnected = 0;
+    }
+
+    disconnect() {
+        this.tDisconnected = new Date();
     }
 
     static isLogined( socket ) {
         try {
-            if( socket.handshake.session.username ) {
+            if( socket.handshake.session.authData ) {
                 return true;
             }
             else {
@@ -20,7 +26,7 @@ class User {
 
     static getIDFromSession( socket ) {
         try {
-            return socket.handshake.session.username;
+            return socket.handshake.session.authData.id;
         }catch(e) {
             return null;
         }
