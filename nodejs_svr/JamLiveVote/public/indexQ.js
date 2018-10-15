@@ -49,6 +49,14 @@ GlobalValue.prototype.init = function() {
                 var v = this;
                 item.isModifying = true;
             },
+            onBtnDelete: function(item,e) {
+                var v = this;
+                if( confirm('정말 삭제하실 건가요?') ) {
+                    ajaxHelper.postJson('/quizDelete', {sn: item.sn}, function(result) {
+                        v.onChangeSearchKeyword();
+                    });
+                }
+            },
             onRadioChange: function(item) {
                 console.log(item.collect_idxM);
             },

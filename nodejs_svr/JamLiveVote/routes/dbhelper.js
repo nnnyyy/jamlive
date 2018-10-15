@@ -582,3 +582,21 @@ exports.modifyQuiz = function( sn, q, a1, a2, a3, collect, cb ) {
         if( cb ) cb({ret: -1});
     }
 }
+
+
+exports.deleteQuiz = function(sn, cb) {
+    try {
+        dbpool.query("CALL deleteQuiz( ? )", [sn], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            if( cb ) cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - deleteQuiz');
+        if( cb ) cb({ret: -1});
+    }
+}

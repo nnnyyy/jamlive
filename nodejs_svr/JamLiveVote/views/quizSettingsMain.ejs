@@ -39,7 +39,7 @@
                             <dd><span :class="{collect: item.collect_idx==1}">2.{{ item.answer2 }}</span></dd>
                             <dd><span :class="{collect: item.collect_idx==2}">3.{{ item.answer3 }}</span></dd>
                         </dl>
-                        <button @click="onBtnModify(item, $event)">수정</button>
+                        <button @click="onBtnModify(item, $event)">수정</button><button @click="onBtnDelete(item, $event)">삭제</button>
                     </div>
                     <div v-show="item.isModifying">
                         <textarea class="question" v-model="item.questionM"></textarea>

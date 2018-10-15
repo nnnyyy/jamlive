@@ -15,3 +15,9 @@ exports.QuizModify = function(req, res, next) {
         res.json(result);
     });
 }
+
+exports.QuizDelete = function( req, res , next ) {
+    dbhelper.deleteQuiz(req.body.sn, function(result) {
+        res.json(result);
+    });
+}
