@@ -1078,9 +1078,14 @@ function onSockVote(data) {
 
         var banCnt = client.getBanCnt();
 
-        if( servman.isCleanServer && ( client.auth < 3 || banCnt >= 2 ) ) {
-            servman.sendServerMsg(socket, '이 서버에서는 레벨3 이하나 일정 이상 밴 당한 유저는 투표에 참여 불가능합니다.');
-            return;
+        if( servman.isCleanServer && ( client.auth < 3 || banCnt >= 3 ) ) {
+            if( servman.quizdata && !servman.quizdata.isEnd() ) {
+                //  자동 퀴즈가 나오면 투표 가능하도록
+            }
+            else {
+                servman.sendServerMsg(socket, '이 서버에서는 레벨3 이하나 일정 이상 밴 당한 유저는 투표에 참여 불가능합니다.');
+                return;
+            }
         }
 
         if( !client.isLogined() ) {
