@@ -39,8 +39,9 @@ process.argv.forEach(function(val, idx, arr) {
     config.type = val;
   }
 
-  if( before == '-autoquiz') {
+  if( val == '-autoquiz') {
     config.autoQuiz = true;
+      console.log('autoQuiz True');
   }
 
   before = val;
