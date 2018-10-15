@@ -25,7 +25,15 @@ GlobalValue.prototype.init = function() {
         data: {
             isPermitted: false,
             searchKeyword: '',
-            searchItems:[]
+            searchItems:[],
+            rmode: 'modify',
+            visibleSearch: true,
+            visibleAdd: false,
+            insertQuestion: '',
+            insAnswer1: '',
+            insAnswer2: '',
+            insAnswer3: '',
+            insCollectIdx: 0
         },
         methods: {
             onChangeSearchKeyword: function() {
@@ -55,6 +63,42 @@ GlobalValue.prototype.init = function() {
                     ajaxHelper.postJson('/quizDelete', {sn: item.sn}, function(result) {
                         v.onChangeSearchKeyword();
                     });
+                }
+            },
+            onBtnInsertQuiz: function() {
+                if( this.insertQuestion == '' ||
+                    this.insAnswer1 == '' ||
+                    this.insAnswer2 == '' ||
+                    this.insAnswer3 == ''
+                ) {
+                    alert('비어있는 곳이 있습니다.');
+                    return;
+                }
+
+                if(confirm('정답이' + (Number(this.insCollectIdx) + 1 ) + '번 맞습니까?')) {
+                    var v = this;
+                    var packet = {};
+                    packet.q = this.insertQuestion;
+                    packet.a1 = this.insAnswer1;
+                    packet.a2 = this.insAnswer2;
+                    packet.a3 = this.insAnswer3;
+                    packet.ci = this.insCollectIdx;
+                    ajaxHelper.postJson('/quizInsert', packet, function(result) {
+                        v.insertQuestion = '';
+                        v.insAnswer1 = '';
+                        v.insAnswer2 = '';
+                        v.insAnswer3 = '';
+                        v.insCollectIdx = 0;
+                    });
+                }
+            },
+            onModeRadio: function() {
+                if( this.rmode == 'add' ) {
+                    this.visibleAdd = true;
+                    this.visibleSearch = false;
+                }else {
+                    this.visibleAdd = false;
+                    this.visibleSearch = true;
                 }
             },
             onRadioChange: function(item) {

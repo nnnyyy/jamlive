@@ -21,3 +21,9 @@ exports.QuizDelete = function( req, res , next ) {
         res.json(result);
     });
 }
+
+exports.QuizInsert = function( req, res, next ) {
+    dbhelper.insertQuiz(req.body.q, req.body.a1, req.body.a2, req.body.a3, req.body.ci, function(result) {
+        res.json(result);
+    });
+}

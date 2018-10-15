@@ -600,3 +600,20 @@ exports.deleteQuiz = function(sn, cb) {
         if( cb ) cb({ret: -1});
     }
 }
+
+exports.insertQuiz = function(q, a1,a2,a3,ci, cb) {
+    try {
+        dbpool.query("CALL insertQuiz( ?,?,?,?,? )", [q,a1,a2,a3,ci], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            if( cb ) cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - insertQuiz');
+        if( cb ) cb({ret: -1});
+    }
+}

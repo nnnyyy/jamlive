@@ -28,9 +28,13 @@
 <!-- HTML Design -->
 <div id="app">
     <div v-if="isPermitted">
-        찾기<input type="text" v-model="searchKeyword" @keyup="onChangeSearchKeyword"/>
-        <div id="search-quiz-ret">
-            <div v-for="item in searchItems">
+        <div class="menu">
+            수정<input name="rmode" type="radio" value="modify" @change="onModeRadio" v-model="rmode" checked/>
+            추가<input name="rmode" type="radio" value="add" @change="onModeRadio" v-model="rmode"/>
+        </div>
+        <div id="search-quiz-ret" v-show="visibleSearch">
+            찾기<input type="text" v-model="searchKeyword" @keyup="onChangeSearchKeyword"/>
+            <div  v-for="item in searchItems">
                 <div class="searched">
                     <div v-show="!item.isModifying">
                         <dl>
@@ -50,6 +54,37 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="addView" v-show="visibleAdd">
+            <table>
+                <tr>
+                    <td>문제</td>
+                    <td>
+                        <textarea id="ta-insert-question" v-model="insertQuestion"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>보기1</td>
+                    <td>
+                        <input type="text" v-model="insAnswer1"> <input type="radio" name="rinsert" v-model="insCollectIdx" value="0" checked>
+                    </td>
+                </tr>
+                <tr>
+                    <td>보기2</td>
+                    <td>
+                        <input type="text" v-model="insAnswer2"> <input type="radio" name="rinsert" v-model="insCollectIdx" value="1">
+                    </td>
+                </tr>
+                <tr>
+                    <td>보기3</td>
+                    <td>
+                        <input type="text" v-model="insAnswer3"> <input type="radio" name="rinsert" v-model="insCollectIdx" value="2">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button id="btn-insert" @click="onBtnInsertQuiz">입력하기</button></td>
+                </tr>
+            </table>
         </div>
     </div>
     <div v-else>
