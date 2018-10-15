@@ -19,6 +19,7 @@ var parsed = JSON.parse(fs.readFileSync(configPath, 'UTF-8'));
 var port = normalizePort(process.env.PORT || '4647');
 
 var before = '';
+config.autoQuiz = false;
 process.argv.forEach(function(val, idx, arr) {
   console.log(idx + ': ' + val);
   if( before == '-p') {
@@ -36,6 +37,10 @@ process.argv.forEach(function(val, idx, arr) {
 
   if( before == '-type') {
     config.type = val;
+  }
+
+  if( before == '-autoquiz') {
+    config.autoQuiz = true;
   }
 
   before = val;

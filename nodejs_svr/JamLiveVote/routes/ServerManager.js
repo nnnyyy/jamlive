@@ -619,18 +619,20 @@ ServerMan.prototype.updateLong = function() {
         //  지식의 바다
         KinMan.update( cur );
 
-        //  자동 초성 퀴즈
-        if( this.chosung.isChosungTime(this) ) {
-            this.chosung.start();
-        }
+        if( config.autoQuiz ) {
+            //  자동 초성 퀴즈
+            if( this.chosung.isChosungTime(this) ) {
+                this.chosung.start();
+            }
 
-        //  자동 퀴즈쇼 모드
-        if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.isAbleCreateQuizData() ) {
-            dbhelper.getRandomQuiz(function(result) {
-                if( result.ret == 0 ){
-                    servman.createQuizData('자동퀴즈', result.quizdata);
-                }
-            });
+            //  자동 퀴즈쇼 모드
+            if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.isAbleCreateQuizData() ) {
+                dbhelper.getRandomQuiz(function(result) {
+                    if( result.ret == 0 ){
+                        servman.createQuizData('자동퀴즈', result.quizdata);
+                    }
+                });
+            }
         }
 
         this.searchQueryMap.forEach(function(value, key) {
@@ -1023,6 +1025,10 @@ function onSockChat(data) {
         }
 
         if( data.msg == "#quiz" ) {
+            if( !config.autoQuiz ) {
+                servman.sendServerMsg(client.socket, '퀴즈를 낼 수 없는 서버 입니다.');
+                return;
+            }
             if( ( client.isAdmin() || (auth_state && auth_state >= 4)) && servman.isAbleCreateQuizData() ) {
                 dbhelper.getRandomQuiz(function(result) {
                     if( result.ret == 0 ){
