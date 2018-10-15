@@ -33,7 +33,13 @@
             <div v-for="item in searchItems">
                 <div class="searched">
                     <div v-show="!item.isModifying">
-                        {{ item.question }} - <span :class="{collect: item.collect_idx==0}">1.{{ item.answer1 }}</span> <span :class="{collect: item.collect_idx==1}">2.{{ item.answer2 }}</span> <span :class="{collect: item.collect_idx==2}">3.{{ item.answer3 }}</span><button @click="onBtnModify(item, $event)">수정</button>
+                        <dl>
+                            <dt>{{ item.question }}</dt>
+                            <dd><span :class="{collect: item.collect_idx==0}">1.{{ item.answer1 }}</span></dd>
+                            <dd><span :class="{collect: item.collect_idx==1}">2.{{ item.answer2 }}</span></dd>
+                            <dd><span :class="{collect: item.collect_idx==2}">3.{{ item.answer3 }}</span></dd>
+                        </dl>
+                        <button @click="onBtnModify(item, $event)">수정</button>
                     </div>
                     <div v-show="item.isModifying">
                         <textarea class="question" v-model="item.questionM"></textarea>

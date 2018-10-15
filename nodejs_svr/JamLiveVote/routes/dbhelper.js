@@ -565,3 +565,20 @@ exports.searchQuiz = function( keyword, cb ) {
         if( cb ) cb({ret: -1});
     }
 }
+
+exports.modifyQuiz = function( sn, q, a1, a2, a3, collect, cb ) {
+    try {
+        dbpool.query("CALL modifyQuiz( ?,?,?,?,?,? )", [sn,q,a1,a2,a3,collect], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            if( cb ) cb({ret: 0 });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - modifyQuiz');
+        if( cb ) cb({ret: -1});
+    }
+}

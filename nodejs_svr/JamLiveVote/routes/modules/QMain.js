@@ -11,11 +11,7 @@ exports.QuizSearch = function( req, res, next ) {
 }
 
 exports.QuizModify = function(req, res, next) {
-    console.log(req.body.sn);
-    console.log(req.body.collect_idxM);
-    console.log(req.body.questionM);
-    console.log(req.body.answer1M);
-    console.log(req.body.answer2M);
-    console.log(req.body.answer3M);
-    res.json({ret: 0});
+    dbhelper.modifyQuiz(req.body.sn, req.body.questionM, req.body.answer1M, req.body.answer2M, req.body.answer3M, req.body.collect_idxM, function(result) {
+        res.json(result);
+    });
 }
