@@ -266,6 +266,11 @@ SiteMenu.prototype.init = function() {
                 e.preventDefault();
                 e.stopPropagation();
                 window.open('http://databucket.duckdns.org:7777','_blank');
+            },
+            onBtnSetQuizMode: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open('/quizSet/','_blank');
             }
         }
     })
