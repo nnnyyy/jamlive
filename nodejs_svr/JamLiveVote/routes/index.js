@@ -76,5 +76,6 @@ router.post('/search-word-modify', Kin.Modify);
 router.post('/search-word-delete', Kin.Delete);
 
 router.post('/quizSearch', QMain.QuizSearch );
+router.post('/quizModify', QMain.QuizModify );
 
 module.exports = router;

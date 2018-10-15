@@ -37,10 +37,10 @@
                     </div>
                     <div v-show="item.isModifying">
                         <textarea class="question" v-model="item.questionM"></textarea>
-                        <div>1.<input type="text" v-model="item.answer1M"/></div>
-                        <div>2.<input type="text" v-model="item.answer2M"/></div>
-                        <div>3.<input type="text" v-model="item.answer3M"/></div>
-                        <button>수정하기</button> <button @click="onBtnCancel(item)">취소하기</button>
+                        <div><input type="radio" value="0" v-model="item.collect_idxM" :name="item.sn" :checked="item.collect_idxM == 0" @change="onRadioChange(item)">1.<input type="text" v-model="item.answer1M"/></div>
+                        <div><input type="radio" value="1" v-model="item.collect_idxM" :name="item.sn" :checked="item.collect_idxM == 1" @change="onRadioChange(item)">2.<input type="text" v-model="item.answer2M"/></div>
+                        <div><input type="radio" value="2" v-model="item.collect_idxM" :name="item.sn" :checked="item.collect_idxM == 2" @change="onRadioChange(item)">3.<input type="text" v-model="item.answer3M"/></div>
+                        <button @click="onBtnSendModify(item)">수정하기</button> <button @click="onBtnCancel(item)">취소하기</button>
                     </div>
                 </div>
             </div>

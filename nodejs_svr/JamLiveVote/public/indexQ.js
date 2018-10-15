@@ -49,6 +49,16 @@ GlobalValue.prototype.init = function() {
                 var v = this;
                 item.isModifying = true;
             },
+            onRadioChange: function(item) {
+                console.log(item.collect_idxM);
+            },
+            onBtnSendModify: function(item) {
+                var v = this;
+                var packet = item;
+                ajaxHelper.postJson('/quizModify', packet, function(result) {
+                    v.onChangeSearchKeyword();
+                });
+            },
             onBtnCancel: function(item) {
                 item.questionM = item.question;
                 item.answer1M = item.answer1;
