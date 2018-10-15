@@ -1127,7 +1127,7 @@ function onSockVote(data) {
             client.lastVoteIdx =  data.idx;
             client.tLastClick = new Date();
 
-            if( servman.isLiveQuizTime() && this.socketmap.count() >= 200 ) {
+            if( servman.isLiveQuizTime() && servman.socketmap.count() >= 200 ) {
                 client.incActivePoint( 2 );
             }
 
