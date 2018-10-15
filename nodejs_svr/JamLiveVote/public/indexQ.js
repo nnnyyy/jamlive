@@ -69,6 +69,8 @@ GlobalValue.prototype.init = function() {
 var G = new GlobalValue();
 
 $(document).ready(function() {
-    G.UserInfo = USERINFO.data;
+    if( USERINFO ) {
+        G.UserInfo = USERINFO.data;
+    }
     G.init();
 });

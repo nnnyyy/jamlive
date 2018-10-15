@@ -53,7 +53,9 @@
 </body>
 <script>
     var USERINFO = {}
+    <% if(userinfo) {%>
     USERINFO.data = <%- JSON.stringify(userinfo) %>;
+    <%}%>
 </script>
 <script type="text/javascript" src="/indexQ.js"></script>
 </html>
