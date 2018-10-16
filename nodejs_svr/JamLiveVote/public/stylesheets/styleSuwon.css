@@ -438,6 +438,38 @@ body {
   font-family: 'Nanum Barun Gothic', sans-serif;
   font-size: 17px;
 }
+#area-article #article-center #statistics {
+  width: 100%;
+  height: 200px;
+  background-color: #ffffff;
+}
+#area-article #article-center #statistics .menu {
+  width: 100%;
+  height: 40px;
+  border-bottom: 2px solid #e4e6e8;
+}
+#area-article #article-center #statistics .tab {
+  margin: 8px;
+  height: 144px;
+  overflow-y: auto;
+}
+#area-article #article-center #statistics .selected {
+  background-color: #0ABE64;
+  color: white;
+}
+#area-article #article-center #statistics .tab-btn {
+  height: 40px;
+  float: left;
+  cursor: pointer;
+  line-height: 40px;
+  padding: 0 8px;
+}
+#area-article #article-center #center-info-area {
+  margin: 13px 0;
+  width: 100%;
+  height: 300px;
+  background-color: red;
+}
 #area-article #article-center #video-ads-area {
   width: 100%;
   height: 297px;

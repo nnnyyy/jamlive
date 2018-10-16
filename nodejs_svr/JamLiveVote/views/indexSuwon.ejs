@@ -342,6 +342,47 @@
                     <div class="separator"></div>
                 </div>
             </div>
+
+            <div id="statistics">
+                <div class="menu">
+                    <div class="tab-btn" :class="{selected: tabIndex == 0 }" @click="onBtnTab(0)">주의사항</div>
+                    <div class="tab-btn" :class="{selected: tabIndex == 1 }" @click="onBtnTab(1)">영구밴 기준</div>
+                    <div class="tab-btn" :class="{selected: tabIndex == 2 }" @click="onBtnTab(2)">레벨별 경험치</div>
+                    <div class="tab-btn" :class="{selected: tabIndex == 3 }" @click="onBtnTab(3)">각종 순위</div>
+                </div>
+                <div class="tab" v-if="tabIndex == 0">
+                    준비중
+                </div>
+                <div class="tab" v-else-if="tabIndex == 1">
+                    준비중
+                </div>
+                <div class="tab" v-else-if="tabIndex == 2">
+                    준비중
+                </div>
+                <div class="tab" v-else-if="tabIndex == 3">
+                    <table>
+                        <tr>
+                            <td>순위</td>
+                            <td>닉네임</td>
+                            <td>점수</td>
+                        </tr>
+                        <tr v-for="(item,idx) in ranker">
+                            <td>{{ idx+1 }}</td>
+                            <td>{{ item.nick }}</td>
+                            <td>{{ item.ap }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="ads-banner2-center">
+                <ins class="kakao_ad_area" style="display:none;width:100%"
+                     data-ad-unit    = "DAN-uvjqvmlqkb3k"
+                     data-ad-width   = "320"
+                     data-ad-height  = "50"></ins>
+                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+            </div>
+
             <div id="video-ads-area">
                 <div id="slider" style="width: 100%; height: 100%; text-align: center">
                     <div style="width:100%; height: 297px;">
@@ -382,18 +423,17 @@
                     </div>
                 </div>
             </div>
+            <!--
+            <div id="center-info-area">
+
+            </div>
+            -->
+
             <div id="ads-banner-center">
                 <ins class="kakao_ad_area" style="display:none;"
                      data-ad-unit    = "DAN-1iyeys41mnepk"
                      data-ad-width   = "320"
                      data-ad-height  = "100"></ins>
-                <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-            </div>
-            <div id="ads-banner2-center">
-                <ins class="kakao_ad_area" style="display:none;width:100%"
-                     data-ad-unit    = "DAN-uvjqvmlqkb3k"
-                     data-ad-width   = "320"
-                     data-ad-height  = "50"></ins>
                 <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
             </div>
 

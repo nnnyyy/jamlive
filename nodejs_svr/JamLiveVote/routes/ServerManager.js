@@ -313,7 +313,7 @@ ServerMan.prototype.register = function(socket) {
         }
     }
 
-    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList });
+    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList, statistics: servman.rankerList });
     var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
     var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
     socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })
@@ -425,6 +425,10 @@ ServerMan.prototype.setIO = function(io, redis) {
         }
     } );
 
+    dbhelper.getStatistics(function(result) {
+        servman.rankerList = result.list;
+    });
+
     dbhelper.getPermanentBanList(function(ret) {
         if( ret.ret == 0 ) {
             console.log('getPermanentBanList success : ' + ret.ret);
@@ -455,6 +459,10 @@ ServerMan.prototype.setIO = function(io, redis) {
     setInterval(function() {
         servman.updateLong();
     }, 3000);
+
+    setInterval(function() {
+        servman.updateVerySlow();
+    }, 1000 * 60 * 30);
 }
 
 ServerMan.prototype.broadcastVoteInfo = function() {
@@ -608,6 +616,7 @@ ServerMan.prototype.updateLong = function() {
     var cur = new Date();
 
     try {
+
         //  오늘의 퀴즈쇼 알림
         if( cur - this.tLastUpdateQuizTimeTable >= 5 * 60 * 1000 ) {
             this.tLastUpdateQuizTimeTable = cur;
@@ -656,6 +665,18 @@ ServerMan.prototype.updateLong = function() {
         })
     }catch(e) {
         console.log('checkAllBaned error : ' + e);
+    }
+}
+
+ServerMan.prototype.updateVerySlow = function() {
+    var cur = new Date();
+
+    try {
+        dbhelper.getStatistics(function(result) {
+            servman.rankerList = result.list;
+        });
+    }catch(e) {
+        console.log('updateVerySlow error : ' + e);
     }
 }
 

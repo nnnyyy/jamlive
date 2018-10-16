@@ -561,6 +561,44 @@ $top-bottom-margin: 5px;
       font-size: $search-font-size-basic;
     }
 
+    #statistics {
+      width: 100%;
+      height: 200px;
+      background-color: $color-main-back;
+
+      .menu {
+        width: 100%;
+        height: 40px;
+        border-bottom: 2px solid $color-shadow;
+      }
+
+      .tab {
+        margin: 8px;
+        height: 144px;
+        overflow-y: auto;
+      }
+
+      .selected {
+        background-color: $search-color-find-other-bg;
+        color: white;
+      }
+
+      .tab-btn {
+        height: 40px;
+        float: left;
+        cursor: pointer;
+        line-height: 40px;
+        padding: 0 8px;
+      }
+    }
+
+    #center-info-area {
+      margin: $bottom-margin 0;
+      width: 100%;
+      height: 300px;
+      background-color: red;
+    }
+
     #video-ads-area {
       width: 100%;
       height: $random-quiz-height;

@@ -97,6 +97,22 @@ var GlobalValue = function() {
             ap: -1
         }
     });
+
+
+    this.vStatistics = new Vue({
+        el: '#statistics',
+        data: {
+            tabIndex: 0,
+            ranker: [
+                {id: 'nnnyyy84', nick: '왕야옹', score: 2000 }
+            ]
+        },
+        methods: {
+            onBtnTab(idx) {
+                this.tabIndex = idx;
+            }
+        }
+    });
 }
 
 function ChosungGameMan() {
@@ -1882,6 +1898,7 @@ function onLoginInfo(data) {
     G.isLogin = data.isLogined;
     G.auth = data.auth;
     G.isAdminMembers = data.isAdminMembers;
+    G.vStatistics.ranker = data.statistics;
     siteMenu.vMenu.isAdminMembers = data.isAdminMembers;
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);
