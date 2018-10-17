@@ -153,7 +153,7 @@ Client.prototype.getUserInfo = function() {
 }
 
 Client.prototype.getLastVote = function(tCur) {
-    if( tCur - this.tLastClick >= 35 * 1000 ) {
+    if( tCur - this.tLastClick >= 60 * 1000 ) {
         return -1;
     }
 

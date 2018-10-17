@@ -1689,7 +1689,7 @@ function setBtnEvent() {
 
         var name = user_menu.attr('nick');
         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
-            G.socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick')});
+            G.socket.emit('ban', {sockid: user_menu.attr('sockid'), nick: user_menu.attr('nick'), type: 'normal' });
         }
         e.preventDefault();
     });
@@ -1738,9 +1738,10 @@ function onBtnBanListBtn(e) {
     e.stopPropagation();
 
     var nick = $(this).attr('nick');
+    var type = $(this).attr('type');
 
     if( confirm( nick + "을(를) 밴 하시겠습니까?") ) {
-        G.socket.emit('ban', {sockid: '', nick: nick});
+        G.socket.emit('ban', {sockid: '', nick: nick, type: type });
     }
 }
 
@@ -1787,7 +1788,7 @@ function onGetVoteListResult(packet) {
                 '<td>'+ packet[i].nick + '</td>' +
             '<td style="color:'+ color[packet[i].voteIdx] +'; font-weight: bold;">'+ (Number(packet[i].voteIdx) + 1) + '번' + '</td>' +
             '<td>'+ d.toTimeString().split(' ')[0] + '</td>' +
-            '<td class="btn-ban-list-ban" nick="'+ packet[i].nick +'">밴하기</td>' +
+            '<td class="btn-ban-list-ban" type="wrongVote" nick="'+ packet[i].nick +'">오투표 신고</td>' +
             '<td class="btn-ban-list-like" nick="'+ packet[i].nick +'">칭찬하기</td></tr>';
     }
 

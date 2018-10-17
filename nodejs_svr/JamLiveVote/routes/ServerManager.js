@@ -746,6 +746,7 @@ ServerMan.prototype.updateNotice = function( noticeData ) {
 
 function onSockBan(data) {
     try {
+        var tCur = new Date();
         var client = servman.getClient(this.id);
         if( !client ) return;
         var toBanClient = data.sockid != '' ? servman.getClient(data.sockid) :  connListMan.getUser(data.nick);
@@ -755,6 +756,11 @@ function onSockBan(data) {
 
         if( !client.isLogined() ) {
             servman.sendServerMsg(socket, '손님은 밴 기능을 사용할 수 없습니다. 가입 후 사용 해 주세요.');
+            return;
+        }
+
+        if( data.type == 'wrongVote' && toBanClient.getLastVote(tCur) == -1) {
+            servman.sendServerMsg(socket, '오투표 신고는 1분 내에 해주세요');
             return;
         }
 
