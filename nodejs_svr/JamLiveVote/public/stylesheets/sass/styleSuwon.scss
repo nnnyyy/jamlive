@@ -563,7 +563,7 @@ $top-bottom-margin: 5px;
 
     #statistics {
       width: 100%;
-      height: 200px;
+      height: 250px;
       background-color: $color-main-back;
 
       .menu {
@@ -574,8 +574,19 @@ $top-bottom-margin: 5px;
 
       .tab {
         margin: 8px;
-        height: 144px;
+        height: 194px;
         overflow-y: auto;
+      }
+
+      table {
+        border-collapse: collapse;
+        border: 1px solid $color-main-font;
+        text-align: center;
+      }
+
+      th,tr,td {
+        border: 1px solid $color-main-font;
+        padding: 5px;
       }
 
       .tab0, .tab1 {
@@ -596,6 +607,11 @@ $top-bottom-margin: 5px;
             color: whitesmoke;
           }
         }
+      }
+
+      .tab2 .item {
+        float: left;
+        margin: 0 4px;
       }
 
       .selected {

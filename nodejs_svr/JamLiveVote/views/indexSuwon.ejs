@@ -366,21 +366,36 @@
                         <dd><span class="strong">낚시에 대한 옹호 발언 등 전반적으로 공유기의 목적과는 다른 분위기를 조성하는 발언</span></dd>
                     </dl>
                 </div>
-                <div class="tab" v-else-if="tabIndex == 2">
-                    <table>
-                        <tr><td>레벨</td><td>점수</td></tr>
-                        <tr><td>1</td><td>100</td></tr>
-                        <tr><td>2</td><td>300</td></tr>
-                        <tr><td>3</td><td>500</td></tr>
-                        <tr><td>4</td><td>1000</td></tr>
-                        <tr><td>5</td><td>2000</td></tr>
-                        <tr><td>6</td><td>4000</td></tr>
-                        <tr><td>7</td><td>6000</td></tr>
-                        <tr><td>8</td><td>8000</td></tr>
-                        <tr><td>9</td><td>10000</td></tr>
-                        <tr><td>10</td><td>15000</td></tr>
-                        <tr><td>11</td><td>20000</td></tr>
-                    </table>
+                <div class="tab tab2" v-else-if="tabIndex == 2">
+                    <div class="item">
+                        <table>
+                            <tr><td>레벨</td><td>점수</td></tr>
+                            <tr><td>1</td><td>100</td></tr>
+                            <tr><td>2</td><td>300</td></tr>
+                            <tr><td>3</td><td>500</td></tr>
+                            <tr><td>4</td><td>1000</td></tr>
+                            <tr><td>5</td><td>2000</td></tr>
+                        </table>
+                    </div>
+                    <div class="item">
+                        <table>
+                            <tr><td>레벨</td><td>점수</td></tr>
+                            <tr><td>6</td><td>4000</td></tr>
+                            <tr><td>7</td><td>6000</td></tr>
+                            <tr><td>8</td><td>8000</td></tr>
+                            <tr><td>9</td><td>10000</td></tr>
+                            <tr><td>10</td><td>15000</td></tr>
+                        </table>
+                    </div>
+                    <div class="item">
+                        <table>
+                            <tr><td>레벨</td><td>점수</td></tr>
+                            <tr><td>11</td><td>20000</td></tr>
+                        </table>
+                    </div>
+                    <div class="item">
+                        점수 올리는 방법은 추후에 게재하겠습니다
+                    </div>
                 </div>
                 <div class="tab" v-else-if="tabIndex == 3">
                     <table>

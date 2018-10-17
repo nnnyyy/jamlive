@@ -440,7 +440,7 @@ body {
 }
 #area-article #article-center #statistics {
   width: 100%;
-  height: 200px;
+  height: 250px;
   background-color: #ffffff;
 }
 #area-article #article-center #statistics .menu {
@@ -450,8 +450,17 @@ body {
 }
 #area-article #article-center #statistics .tab {
   margin: 8px;
-  height: 144px;
+  height: 194px;
   overflow-y: auto;
+}
+#area-article #article-center #statistics table {
+  border-collapse: collapse;
+  border: 1px solid #393939;
+  text-align: center;
+}
+#area-article #article-center #statistics th, #area-article #article-center #statistics tr, #area-article #article-center #statistics td {
+  border: 1px solid #393939;
+  padding: 5px;
 }
 #area-article #article-center #statistics .tab0, #area-article #article-center #statistics .tab1 {
   text-align: center;
@@ -468,6 +477,10 @@ body {
 #area-article #article-center #statistics .tab0 dd .red, #area-article #article-center #statistics .tab1 dd .red {
   background-color: #990000;
   color: whitesmoke;
+}
+#area-article #article-center #statistics .tab2 .item {
+  float: left;
+  margin: 0 4px;
 }
 #area-article #article-center #statistics .selected {
   background-color: #0ABE64;
