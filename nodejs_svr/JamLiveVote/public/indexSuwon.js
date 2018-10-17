@@ -108,7 +108,7 @@ var GlobalValue = function() {
             ]
         },
         methods: {
-            onBtnTab(idx) {
+            onBtnTab: function(idx) {
                 this.tabIndex = idx;
             }
         }
@@ -224,6 +224,8 @@ function SiteMenu() {
 }
 
 SiteMenu.prototype.init = function() {
+    console.log('~~!!!!~~~');
+
     this.vMenu = new Vue({
         el: '#site-menu',
         data: {
@@ -289,7 +291,9 @@ SiteMenu.prototype.init = function() {
                 window.open('/quizSet/','_blank');
             }
         }
-    })
+    });
+
+    console.log('~~!!!!~~~');
 
     this.vHelp = new Vue({
         el: '#help',
