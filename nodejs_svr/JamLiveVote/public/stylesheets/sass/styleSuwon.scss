@@ -367,8 +367,9 @@ $top-bottom-margin: 5px;
     $global-hint-height: 0px;
     $bottom-margin: 13px;
     $ads-height: 63px;
-    $notice-height: 160px - $bottom-margin;
-    $hint-height: calc( 100vh - 13px - #{$top-height} - #{$top-bottom-margin} - #{$notice-height} - #{$global-hint-height} - #{$ads-height});
+    //$notice-height: 160px - $bottom-margin;
+    $notice-height: 0px;
+    $hint-height: calc( 100vh - 13px - #{$top-height} - #{$top-bottom-margin} - #{$ads-height});
     $article-left-width: calc(35% - 13px);
     $user-list-width: 130px;
     $user-list-width-without-gap: calc( #{$user-list-width} - 16px - 2px );
@@ -394,7 +395,7 @@ $top-bottom-margin: 5px;
       font-family: 'Nanum Barun Gothic', sans-serif;
       font-size: $search-font-size-basic;
     }
-
+/*
     #notice {
       width: $hint-width;
       height: $notice-height;
@@ -417,7 +418,7 @@ $top-bottom-margin: 5px;
         margin: 6px 0 6px 0;
       }
     }
-
+*/
     .ads {
       width: 100%;
       height: $ads-height;
@@ -576,6 +577,16 @@ $top-bottom-margin: 5px;
         margin: 8px;
         height: 194px;
         overflow-y: auto;
+      }
+
+      .calc-item {
+        float: left;
+        margin: 12px 0;
+      }
+
+      .next {
+        margin: 12px 0;
+        clear: left;
       }
 
       table {

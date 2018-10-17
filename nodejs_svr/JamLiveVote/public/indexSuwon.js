@@ -105,11 +105,34 @@ var GlobalValue = function() {
             tabIndex: 0,
             ranker: [
                 {id: 'nnnyyy84', nick: '왕야옹', score: 2000 }
-            ]
+            ],
+            notice: '',
+            calc: [
+            ],
+            selectedCalc: 0
         },
         methods: {
             onBtnTab: function(idx) {
                 this.tabIndex = idx;
+            },
+            onBtnAddCalc: function() {
+                this.calc.push({idx: Number(this.selectedCalc)});
+            },
+            onBtnDeleteRecent: function() {
+                this.calc.pop();
+            },
+            onBtnReset: function() {
+                this.calc = [];
+            },
+            getCount: function(idx) {
+                var cnt = 0;
+                this.calc.forEach(function(item) {
+                    if(item.idx == idx ) {
+                        ++cnt;
+                    }
+                });
+
+                return cnt;
             }
         }
     });
@@ -2050,7 +2073,8 @@ function onSearchImage(data) {
 }
 
 function onUpdateNotice(data) {
-    $('#notice').html(data.noticeData);
+    //$('#notice').html(data.noticeData);
+    G.vStatistics.notice = data.noticeData;
 }
 
 function onGlobalHint(packet) {
