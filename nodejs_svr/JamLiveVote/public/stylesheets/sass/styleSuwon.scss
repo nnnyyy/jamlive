@@ -578,6 +578,26 @@ $top-bottom-margin: 5px;
         overflow-y: auto;
       }
 
+      .tab0, .tab1 {
+        text-align: center;
+
+        dd {
+          font-size: 18px;
+          line-height: 22px;
+          height: 22px;
+          margin: 8px 0;
+
+          .strong {
+            font-weight: bold;
+          }
+
+          .red {
+            background-color: #990000;
+            color: whitesmoke;
+          }
+        }
+      }
+
       .selected {
         background-color: $search-color-find-other-bg;
         color: white;

@@ -350,11 +350,21 @@
                     <div class="tab-btn" :class="{selected: tabIndex == 2 }" @click="onBtnTab(2)">레벨별 경험치</div>
                     <div class="tab-btn" :class="{selected: tabIndex == 3 }" @click="onBtnTab(3)">각종 순위</div>
                 </div>
-                <div class="tab" v-if="tabIndex == 0">
-                    준비중
+                <div class="tab tab0" v-if="tabIndex == 0">
+                    <!-- 주의사항 -->
+                    <dl>
+                        <dd> <span class="strong">'확실하게 아는 것'</span>만 투표 합니다.</dd>
+                        <dd> 잘 못 눌러서 실수로 투표가 돼도 <span class="strong">'신고 대상'</span> 입니다. </dd>
+                        <dd> <span class="strong red">욕설은 경/중을 따지지 않고 영구밴 대상이 됩니다.</span></dd>
+                    </dl>
                 </div>
-                <div class="tab" v-else-if="tabIndex == 1">
-                    준비중
+                <div class="tab tab1" v-else-if="tabIndex == 1">
+                    <dl>
+                        <dd><span class="strong">욕설 ( 초성 욕도 포함. 미친 등의 가벼운 것도 허용 X )</span></dd>
+                        <dd><span class="strong">실수/낚시 투표 후 해명 없는 도주 행위</span></dd>
+                        <dd><span class="strong">점수를 올리기 위해 고의로 여러번 투표하는 행위</span></dd>
+                        <dd><span class="strong">낚시에 대한 옹호 발언 등 전반적으로 공유기의 목적과는 다른 분위기를 조성하는 발언</span></dd>
+                    </dl>
                 </div>
                 <div class="tab" v-else-if="tabIndex == 2">
                     준비중

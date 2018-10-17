@@ -453,6 +453,22 @@ body {
   height: 144px;
   overflow-y: auto;
 }
+#area-article #article-center #statistics .tab0, #area-article #article-center #statistics .tab1 {
+  text-align: center;
+}
+#area-article #article-center #statistics .tab0 dd, #area-article #article-center #statistics .tab1 dd {
+  font-size: 18px;
+  line-height: 22px;
+  height: 22px;
+  margin: 8px 0;
+}
+#area-article #article-center #statistics .tab0 dd .strong, #area-article #article-center #statistics .tab1 dd .strong {
+  font-weight: bold;
+}
+#area-article #article-center #statistics .tab0 dd .red, #area-article #article-center #statistics .tab1 dd .red {
+  background-color: #990000;
+  color: whitesmoke;
+}
 #area-article #article-center #statistics .selected {
   background-color: #0ABE64;
   color: white;
