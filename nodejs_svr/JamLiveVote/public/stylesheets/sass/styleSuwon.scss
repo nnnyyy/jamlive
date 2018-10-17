@@ -582,11 +582,16 @@ $top-bottom-margin: 5px;
 
       .calc-item {
         float: left;
-        margin: 12px 0;
+        margin: 6px 0;
+      }
+
+      .calc-input button {
+        width: 68px;
+        height: 22px;
       }
 
       .next {
-        margin: 12px 0;
+        margin: 6px 0;
         clear: left;
       }
 

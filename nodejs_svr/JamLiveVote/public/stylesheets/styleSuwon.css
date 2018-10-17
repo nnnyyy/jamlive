@@ -459,10 +459,14 @@ body {
 }
 #area-article #article-center #statistics .calc-item {
   float: left;
-  margin: 12px 0;
+  margin: 6px 0;
+}
+#area-article #article-center #statistics .calc-input button {
+  width: 68px;
+  height: 22px;
 }
 #area-article #article-center #statistics .next {
-  margin: 12px 0;
+  margin: 6px 0;
   clear: left;
 }
 #area-article #article-center #statistics table {

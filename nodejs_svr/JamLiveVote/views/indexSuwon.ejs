@@ -397,7 +397,6 @@
                     <div v-for='(item,index) in calc'>
                         <div class="calc-item">
                             <table>
-                                <tr><td>{{ index+1 }}번</td></tr>
                                 <tr><td>{{ item.idx + 1 }}</td></tr>
                             </table>
                         </div>
@@ -413,9 +412,8 @@
                         </table>
                     </div>
                     <div class="next calc-input">
-                        <input type="radio" name="c" value="0" v-model="selectedCalc" :checked="selectedCalc == 0" />1번
-                        <input type="radio" name="c" value="1" v-model="selectedCalc" :checked="selectedCalc == 1"/>2번
-                        <input type="radio" name="c" value="2" v-model="selectedCalc" :checked="selectedCalc == 2"/>3번 <button @click="onBtnAddCalc">입력</button> <button @click="onBtnDeleteRecent">지우기</button> <button @click="onBtnReset">초기화</button>
+                        <div style="margin: 4px 0;"><button @click="onBtnAddCalc(0)">1번 추가</button> <button @click="onBtnAddCalc(1)">2번 추가</button> <button @click="onBtnAddCalc(2)">3번 추가</button></div>
+                        <div><button @click="onBtnAddCalc">입력</button> <button @click="onBtnDeleteRecent">지우기</button> <button @click="onBtnReset">초기화</button> <button @click="onShare">채팅 공유</button></div>
                     </div>
                 </div>
                 <div class="tab" v-else-if="tabIndex == 4">

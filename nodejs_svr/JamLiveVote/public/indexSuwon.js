@@ -115,14 +115,26 @@ var GlobalValue = function() {
             onBtnTab: function(idx) {
                 this.tabIndex = idx;
             },
-            onBtnAddCalc: function() {
-                this.calc.push({idx: Number(this.selectedCalc)});
+            onBtnAddCalc: function(idx) {
+                this.calc.push({idx: idx});
             },
             onBtnDeleteRecent: function() {
                 this.calc.pop();
             },
             onBtnReset: function() {
                 this.calc = [];
+            },
+            onShare: function() {
+                var msgRet = '정답 비율 현황 : ';
+                var idxs = [0,0,0];
+                for( var i = 0 ; i < this.calc.length ; ++i ) {
+                    if( i != 0 && i % 3 == 0 ) msgRet += ' / ';
+                    idxs[this.calc[i].idx]++;
+                    msgRet += (this.calc[i].idx + 1);
+                }
+                msgRet += '(' + idxs[0] + '/' + idxs[1] + '/' + idxs[2] + ')';
+
+                G.socket.emit('chat', {nickname: getNickName(), msg: msgRet, isvote: false, mode: 'chat', emoticon: '' });
             },
             getCount: function(idx) {
                 var cnt = 0;
