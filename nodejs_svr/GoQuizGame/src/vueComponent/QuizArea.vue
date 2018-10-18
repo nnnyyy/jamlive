@@ -3,7 +3,10 @@
         <div class="msg-area">{{ text }}</div>
         <div class="select-area">
             <ul v-for="item in items">
-                <li>{{ ( item.idx + 1 ) }}. {{ item.text }}<button @click="onSelectAnswer($event, item)"> 선택 </button></li>
+                <div style="height: 34px;">
+                    <div class="answer-1" style="position: relative;">{{ ( item.idx + 1 ) }}. {{ item.text }}</div>
+                    <div class="answer-2" style="position: relative;" @click="onSelectAnswer($event, item)"></div>
+                </div>
             </ul>
         </div>
     </div>
@@ -14,20 +17,13 @@
         name: 'quiz-area',
         data: function() {
             return {
-                text: '퀴즈쇼!',
+                text: '아직 퀴즈쇼가 없습니다! 퀴즈쇼를 등록 해 주세요',
                 items: [
-                    {text: '보기1번 예시', idx: 0},
-                    {text: '보기2번 예시', idx: 1},
-                    {text: '보기3번 예시', idx: 2}
                 ]
             }
         },
         created: function() {
             const v = this;
-            this.$bus.$on('test' , function(p) {
-                v.text = p.msg;
-                v.items = [];
-            })
         },
         methods: {
             onSelectAnswer: function(e, item) {

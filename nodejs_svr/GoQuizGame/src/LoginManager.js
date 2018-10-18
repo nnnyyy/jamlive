@@ -13,7 +13,7 @@ export default class LoginManager {
     }
 
     onPacket( packet ) {
-        Global.vApp.$bus.$emit(EProtocol.SetLoginStateRet);
+        Global.vApp.$bus.$emit(EProtocol.SetLoginStateRet, packet);
     }
 
     sendLogin(id, pw) {

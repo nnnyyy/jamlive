@@ -75,7 +75,7 @@ class ServerManager {
                  socket.handshake.session.authData = { id: ret.id };
                 socket.handshake.session.save();
             }
-            socket.emit(PT.LOGIN, {ret : ret} );
+            socket.emit(PT.LOGIN, {ret : ret.ret} );
         })
     }
 }
