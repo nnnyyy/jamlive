@@ -16,6 +16,7 @@ const SearchMan = require('./modules/searchManager');
 const WebSearchEngine = require('./modules/webSearchEngine');
 const LevelExpTable = require('./modules/LevelExpTable');
 const PS = require('../Common/PacketProtocols');
+const AutoQuizManager = require('../server/modules/AutoQuizManager');
 
 var config = require('../config');
 
@@ -412,6 +413,8 @@ ServerMan.prototype.setIO = function(io, redis) {
     this.isCleanServer = (config.type == 'clean');
 
     this.chosung = new Chosung(io);
+
+    this.autoQuizManager = new AutoQuizManager(this);
 
     servman.redis.get('jamlive-memo-info:' + config.serv_name,  (err, info) => {
         try {
