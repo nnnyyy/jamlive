@@ -1606,6 +1606,12 @@ function onInputMsgKeyPress(e) {
             return;
         }
 
+        if( msg[0] == '=') {
+            $(this).val('');
+            var query = msg.substr(1).trim();
+            msg = '[계산]' + query + ' = ' + eval(query);
+        }
+
         var isvote = -1;
 
         if( msg == "1") {
