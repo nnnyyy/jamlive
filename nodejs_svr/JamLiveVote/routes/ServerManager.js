@@ -5,7 +5,6 @@ var HashMap = require('hashmap');
 var Client = require('./client');
 require('./StringFunction');
 var dbhelper = require('./dbhelper');
-var quizDataObj = require('./quizman');
 var quizAnalysis = require('./quizAnalysis');
 
 var chatMan = require('./modules/chatMan');
@@ -475,6 +474,8 @@ ServerMan.prototype.broadcastVoteInfo = function() {
         this.chosung.update( cur );
     }
 
+    this.autoQuizManager.update(cur);
+
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
 
@@ -638,11 +639,8 @@ ServerMan.prototype.updateLong = function() {
             }
 
             //  자동 퀴즈쇼 모드
-            if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.isAbleCreateQuizData() ) {
-                dbhelper.getRandomQuiz(function(result) {
-                    if( result.ret == 0 ){
-                        servman.createQuizData('자동퀴즈', result.quizdata);
-                    }
+            if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.autoQuizManager.canMakeQuiz() ) {
+                this.autoQuizManager.makeQuiz('자동', function() {
                 });
             }
         }
@@ -713,18 +711,6 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
     }
 
     cachedType.searched.set(query, {data: data, tLast: new Date()});
-}
-
-ServerMan.prototype.createQuizData = function( nick, _quizdata ) {
-    if( this.quizdata && !this.quizdata.isEnd() ) {
-        return;
-    }
-    this.quizdata = new quizDataObj( nick, _quizdata, this.io );
-}
-
-ServerMan.prototype.isAbleCreateQuizData = function() {
-    var cur = new Date();
-    return !this.quizdata || ( this.quizdata.isEnd() && ( cur - this.quizdata.tLastEnd >= 7000 ) && !this.autoQuizForcedOff );
 }
 
 ServerMan.prototype.addSearchQuery = function( query, bCount ) {
@@ -1059,11 +1045,9 @@ function onSockChat(data) {
                 servman.sendServerMsg(client.socket, '퀴즈를 낼 수 없는 서버 입니다.');
                 return;
             }
-            if( ( client.isAdmin() || (auth_state && auth_state >= 4)) && servman.isAbleCreateQuizData() ) {
-                dbhelper.getRandomQuiz(function(result) {
-                    if( result.ret == 0 ){
-                        servman.createQuizData(client.nick, result.quizdata);
-                    }
+            if( ( client.isAdmin() || (auth_state && auth_state >= 4) )
+                && !this.chosung.isRunning() && this.autoQuizManager.canMakeQuiz() ) {
+                this.autoQuizManager.makeQuiz(nick, function() {
                 });
                 return;
             }
@@ -1109,7 +1093,7 @@ function onSockVote(data) {
         var banCnt = client.getBanCnt();
 
         if( servman.isCleanServer && ( client.auth < 3 || banCnt >= 3 ) ) {
-            if( servman.quizdata && !servman.quizdata.isEnd() ) {
+            if( servman.autoQuizManager.isVote() ) {
                 //  자동 퀴즈가 나오면 투표 가능하도록
             }
             else {
@@ -1150,8 +1134,8 @@ function onSockVote(data) {
             servman.voteManager.vote(client, data.idx);
             servman.click(data.idx, !client.isLogined(), client.isHighLevelUser());
 
-            if( servman.quizdata && !servman.quizdata.isEnd() ) {
-                servman.quizdata.vote(data.idx);
+            if( servman.autoQuizManager.isVote() ) {
+                servman.autoQuizManager.vote( client, data.idx);
                 client.incActivePoint( 2 );
             }
 

@@ -15,6 +15,9 @@ class AutoQuizManager {
     constructor(servman) {
         this.servman = servman;
         this.isRunning = false;
+        this.tQuizStart = 0;
+        this.tQuizEnd = 0;
+        this.mVoteClient = new Map();
     }
 
     makeQuiz( providerNick, callback ) {
@@ -26,11 +29,10 @@ class AutoQuizManager {
             ,
             function(err){
                 if( err == null ) {
-                    console.log('make Quiz Success');
                     callback();
                 }
                 else {
-                    console.log('make Quiz Failed');
+                    console.log(`make Quiz Failed - ${err}`);
                     callback();
                 }
             });
@@ -64,12 +66,53 @@ class AutoQuizManager {
         this.lastProviderNick = providerNick;
         this.isRunning = true;
         this.tQuizStart = new Date();
+        this.tQuizEnd = 0;
+        this.mVoteClient = new Map();
     }
 
     update(tCur) {
-        if( this.isRunning && tCur - this.tQuizStart >= 11 * 1000 ) {
+        const aqm = this;
+        if( this.isRunning &&  this.tQuizStart != 0 && tCur - this.tQuizStart >= 11 * 1000 ) {
+            this.tQuizEnd = tCur;
+            this.tQuizStart = 0;
+
+            let collectCnt = 0;
+            let totalCnt = this.mVoteClient.size;
+
+            this.mVoteClient.forEach(function(idx, key) {
+                if( aqm.curQuizData.collect == idx ) {
+                    collectCnt++;
+                }
+            });
+
+            this.servman.io.sockets.emit('quizret', {collect_cnt: collectCnt, total_cnt: totalCnt, collect_idx: this.curQuizData.collect });
+        }
+
+        if( this.isRunning && this.tQuizEnd != 0 && tCur - this.tQuizEnd >= 7 * 1000 ) {
             this.isRunning = false;
-            this.servman.io.sockets.emit('quizret', {collect_cnt: 0, total_cnt: 0, collect_idx: this.curQuizData.collect });
+            this.tQuizStart = 0;
+            this.tQuizEnd = 0;
+        }
+    }
+
+    canMakeQuiz() {
+        return !this.isRunning;
+    }
+
+    isVote() {
+        return this.isRunning && this.tQuizStart != 0;
+    }
+
+    vote( client, idx ) {
+        try {
+            if( !client ) {
+                return;
+            }
+
+            this.mVoteClient.set(client.nick, idx);
+
+        }catch(e) {
+            console.log(e);
         }
     }
 }
