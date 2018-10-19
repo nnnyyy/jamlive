@@ -1413,4 +1413,11 @@ function onGetSearchList(packet) {
     this.emit('get-search-list', list);
 }
 
+
+//  프로세스 종료 시 유저 데이터 저장
+process.on('SIGINT', () => {
+    console.info('SIGTERM signal received.');
+    process.exit();
+});
+
 module.exports = servman;
