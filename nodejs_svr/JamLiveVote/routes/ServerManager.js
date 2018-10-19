@@ -16,107 +16,12 @@ const WebSearchEngine = require('./modules/webSearchEngine');
 const LevelExpTable = require('./modules/LevelExpTable');
 const PS = require('../Common/PacketProtocols');
 const AutoQuizManager = require('../server/modules/AutoQuizManager');
+const CenterServer = require('../server/modules/Center');
 
 var config = require('../config');
 
 const connectedListMan = require('./modules/ConnectedListMan');
 const connListMan = new connectedListMan();
-
-const ioclient = require('socket.io-client');
-var socketToCenterServer = ioclient.connect('http://localhost:7777', {reconnect: true });
-
-var servInfoMan = new HashMap();
-var servnameConvert = new HashMap();
-servnameConvert.set('1', 'Server1');
-servnameConvert.set('2', 'Server2');
-servnameConvert.set('3', 'Server3');
-servnameConvert.set('4', 'Server4');
-servnameConvert.set('5', 'Server5');
-servnameConvert.set('6', 'Server6');
-servnameConvert.set('7', 'Server7');
-servnameConvert.set('8', 'Server8');
-servnameConvert.set('9', 'Server9');
-servnameConvert.set('10', 'Server10');
-servnameConvert.set('11', 'Server11');
-servnameConvert.set('12', 'Server12');
-servnameConvert.set('13', 'Server13');
-servnameConvert.set('14', 'Server14');
-servnameConvert.set('15', 'Server15');
-servnameConvert.set('16', 'Server16');
-
-var centerConnected = false;
-
-// Add a connect listener
-socketToCenterServer.on('connect', function () {
-    console.log('connect to center');
-    centerConnected = true;
-    this.emit('serv-info', { type: "vote-server", name: config.serv_name });
-    this.on('disconnect', function() {
-        this.off('user-cnt');
-        this.off('admin-msg');
-        this.off('ban-reload');
-        console.log('disconnect from center');
-    })
-
-    this.on('user-cnt', function(packet) {
-        try {
-            const data = packet.data;
-            for( var i = 0 ; i < data.length ; ++i ) {
-                servInfoMan.set(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
-            }
-        }
-        catch(e) {
-            console.log(e);
-        }
-    })
-
-    this.on('total-vote', function(packet) {
-        try {
-            const totalVote = packet.totalVote;
-            const totalUserCnt = packet.totalCnt;
-            const searchQueries = packet.searchQueries;
-            servman.setAllServerVote( totalVote );
-            servman.setTotalUserCnt( totalUserCnt );
-            servman.setSearchQueries( searchQueries );
-        }
-        catch(e) {
-            console.log(e);
-        }
-    })
-
-    this.on('admin-msg', function(packet) {
-        try {
-            chatMan.BroadcastAdminMsg( servman.io, packet.msg );
-        }catch(e) {
-            console.log(e);
-        }
-    })
-
-    this.on('ban-reload', function(packet) {
-        try {
-            servman.reloadBanList();
-        }catch(e) {
-            console.log(e);
-        }
-    })
-
-    this.on('notice-data', function(packet) {
-        try {
-            servman.updateNotice(packet.noticeData);
-        }catch(e) {
-            console.log(e);
-        }
-    })
-
-    this.on('global-hint', function(packet) {
-        try {
-            servman.onGlobalHint(packet);
-        }catch(e) {
-            console.log(e);
-        }
-    })
-});
-
 
 var VOTEPERTIME = 1000;
 var BANTIME = 6 * 60 * 1000;
@@ -256,7 +161,7 @@ ServerMan.prototype.register = function(socket) {
         servman.removeSocket(this.id);
 
         //  힌트 수정자를 취소 시키기 위한 로직
-        socketToCenterServer.emit('disconnect-user', {nick: client.nick});
+        servman.center.disconnectUser( client.nick );
 
         if( client && client.isLogined() ) {
             if( servman.modifyingUser == client.nick ) {
@@ -402,6 +307,8 @@ ServerMan.prototype.getClient = function(socketid){
 ServerMan.prototype.setIO = function(io, redis) {
     this.io = io;
     this.redis = redis;
+    this.chatMan = chatMan;
+    this.center = new CenterServer(this);
 
     this.isCleanServer = (config.type == 'clean');
 
@@ -537,7 +444,8 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     countForCenter[2] = _counts[2] + _countsSearchFirst[2];
     countForCenter[3] = _counts[3] + _countsSearchFirst[3];
 
-    socketToCenterServer.emit('user-cnt', {cnt: this.socketmap.count(), voteCnts: countForCenter });
+
+    this.center.sendUserCntInfo({cnt: this.socketmap.count(), voteCnts: countForCenter });
     this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, totalCnt: this.totalUserCnt, totalVote: this.totalVote, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
@@ -708,7 +616,7 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
 }
 
 ServerMan.prototype.addSearchQuery = function( query, bCount ) {
-    socketToCenterServer.emit('search-query', { query: query, isCounting: bCount });
+    this.center.sendSearchQuery({ query: query, isCounting: bCount });
 }
 
 ServerMan.prototype.updateNotice = function( noticeData ) {
@@ -1203,7 +1111,7 @@ function onMemo(data) {
             }
             data.id = client.socket.id;
             data.nick = client.nick;
-            socketToCenterServer.emit('global-hint', data);
+            servman.center.socket.emit('global-hint', data);
         }
         else if ( data.type == 'local') {
 
@@ -1260,18 +1168,18 @@ function onGo(data) {
 
         var tCur = new Date();
 
-        if( !servnameConvert.has(data.servidx) ) {
+        if( !servman.center.servnameConvert.has(data.servidx) ) {
             client.socket.emit('go', {ret: -1, msg: '서버 오류'});
             return;
         }
         else {
-            const servRealName = servnameConvert.get(data.servidx);
-            if( !servInfoMan.has(servRealName) ) {
+            const servRealName = servman.center.servnameConvert.get(data.servidx);
+            if( !servman.center.servInfoList.has(servRealName) ) {
                 client.socket.emit('go', {ret: -1, msg: '서버가 죽었어요. 다른 서버로'});
                 return;
             }
 
-            var servinfo = servInfoMan.get(servRealName);
+            var servinfo = servman.center.servInfoList.get(servRealName);
             if( tCur - servinfo.tLastRecv >= 5000 ) {
                 client.socket.emit('go', {ret: -1, msg: '서버가 죽었어요. 다른 서버로'});
                 return;
@@ -1290,7 +1198,7 @@ function onGo(data) {
 }
 
 function isServerLimit() {
-    var servinfo = servInfoMan.get(config.serv_name);
+    var servinfo = servman.center.servInfoList.get(config.serv_name);
     if( !servinfo ) return true;
 
     if( servinfo.cnt >= servinfo.limit ) {
@@ -1308,7 +1216,7 @@ function onServerInfoReload(data) {
         return;
     }
 
-    socketToCenterServer.emit('server-info-reload', {});
+    servman.center.socket.emit('server-info-reload', {});
 }
 
 function onBanReload(data) {
@@ -1319,7 +1227,7 @@ function onBanReload(data) {
         return;
     }
 
-    socketToCenterServer.emit('ban-reload', {});
+    servman.center.socket.emit('ban-reload', {});
 }
 
 function onGetVoteList(packet) {
