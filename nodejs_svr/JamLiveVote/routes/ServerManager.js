@@ -921,6 +921,11 @@ function onSockChat(data) {
             servman.chosung.stop();
             return;
         }
+        else if( client.isAdminMembers() && data.msg == "#freeze") {
+            chatMan.setFreeze();
+            chatMan.Broadcast( servman.io, client, 'chat', '-- 과열 방지를 위해 채팅창을 얼렸습니다 --', false );
+            return;
+        }
 
         if( data.msg == "#quiz" ) {
             if( !config.autoQuiz ) {
@@ -950,6 +955,12 @@ function onSockChat(data) {
                 client.incActivePoint(5);
                 servman.sendServerMsg(client.socket, '+5점 획득!');
             }
+        }
+
+        //  채팅창 얼리기 시에는 메시지를 보내지 않는다.
+        if( chatMan.isFreeze(new Date()) ) {
+            servman.sendServerMsg(client.socket, '채팅창이 얼었습니다. 약 3분간 지속됩니다.');
+            return;
         }
 
         chatMan.Broadcast( servman.io, client, 'chat', data.msg, isBaned );

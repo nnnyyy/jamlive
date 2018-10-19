@@ -1,5 +1,6 @@
 var ChatMan =  function() {
-   this.log = [];
+    this.log = [];
+    this.tFreeze = 0;
 }
 
 ChatMan.prototype.Broadcast = function( io, client, mode, msg, baned, voteidx ) {
@@ -15,6 +16,14 @@ ChatMan.prototype.Notice = function( io, client, msg ) {
 
 ChatMan.prototype.BroadcastAdminMsg = function( io, msg ) {
     io.sockets.in('auth').emit('admin-msg', {msg: msg});
+}
+
+ChatMan.prototype.isFreeze = function(tCur) {
+    return (tCur - this.tFreeze <= 3 * 60 * 1000);
+}
+
+ChatMan.prototype.setFreeze = function() {
+    this.tFreeze = new Date();
 }
 
 module.exports = new ChatMan();
