@@ -123,11 +123,6 @@ var BANTIME = 6 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
 var BANCNT = 4;
 
-var ConnectUserInfo = function() {
-    this.tLast = new Date();
-    this.nCnt = 1;
-}
-
 var CachedSearchData = function() {
     this.searched = new HashMap();
 }
@@ -176,7 +171,6 @@ var ServerMan = function() {
     this.bMemoModifying = false;
     this.nextQuizShowdata = {};
 
-    this.autoQuizForcedOff = false;
     this.voteManager = new VoteMan();
     this.searchManager = new SearchMan();
     this.webSearchMan = new WebSearchEngine(this);
@@ -254,6 +248,7 @@ ServerMan.prototype.register = function(socket) {
     if( !this.addSocket(socket) ) {
         return;
     }
+
     var client = servman.getClient(socket.id);
 
     socket.on('disconnect', function(){
@@ -369,8 +364,7 @@ ServerMan.prototype.addSocket = function(socket) {
                 }catch(e) {
 
                 }
-            } )
-            //chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 입장' );
+            } );
         }
     }catch(e) {
         console.log(`addsocket Error - ${e}`);
@@ -715,17 +709,6 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
 
 ServerMan.prototype.addSearchQuery = function( query, bCount ) {
     socketToCenterServer.emit('search-query', { query: query, isCounting: bCount });
-    /*
-    if( !this.searchQueryMap.get( query ) ) {
-        this.searchQueryMap.set( query, { query: query, cnt: 1, tLast: new Date() });
-    }
-    else {
-        var d = this.searchQueryMap.get( query );
-        if( bCount )
-            d.cnt += 1;
-        d.tLast = new Date();
-    }
-    */
 }
 
 ServerMan.prototype.updateNotice = function( noticeData ) {
@@ -842,9 +825,6 @@ function onSockPermanentBan(data) {
                 });
             } );
         }
-
-        //servman.io.sockets.in('auth').emit('chat', {sockid: '', id: '', nickname: client.nick, msg: '[BAN] ' + toBanClient.nick + ' 님이 영구밴 당하셨습니다', mode: "ban", isBaned: '', admin: client.isAdmin(), isLogin: client.isLogined(), auth: client.auth, ip: client.ip });
-
     }
     catch(e) {
         console.log(`onSockPermanentBan error - ${e}`);
@@ -911,7 +891,6 @@ function onSockSearch(data) {
         const tCur = new Date();
         var client = servman.getClient(this.id);
         if( !client ) return;
-        var socket = client.socket;
         var logined = client.isLogined();
         if( !logined )
         {
@@ -945,8 +924,7 @@ function onSockSearch(data) {
                 servman.webSearchMan.searchNaverAPIs(data.msg, client, data.searchNaverMainAPI);
             }
         }
-        //if( data.searchNaverMain && client.auth >= 4 )
-        //    servman.webSearchMan.searchNaverMain(data.msg, client);
+
         if( data.searchDaum )
             servman.webSearchMan.searchDaum(data.msg, client);
         if( data.searchImage )
@@ -959,7 +937,6 @@ function onSockSearch(data) {
         client.tLastSearch = new Date();
 
         if( data.isBroadcast ) {
-            var nick = client.nick;
             dbhelper.searchKinWordPerfect(data.msg, function(result) {
                 if( result.ret == 0 && result.list.length > 0 ) {
 
@@ -1001,7 +978,6 @@ function onSockChat(data) {
         }
 
         if( client == null ) {
-            //this.disconnect();
             return;
         }
 
@@ -1022,12 +998,10 @@ function onSockChat(data) {
         client.tLastChat = new Date();
 
         if( client.isAdmin() && data.msg == "#quizoff") {
-            servman.autoQuizForcedOff = true;
             chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 off 했습니다.', isBaned );
             return;
         }
         else if( client.isAdmin() && data.msg == "#quizon" ) {
-            servman.autoQuizForcedOff = false;
             chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 on 했습니다.', isBaned );
             return;
         }
@@ -1162,55 +1136,6 @@ function onSockVote(data) {
     }
     catch(e) {
         console.log(`onSockVote - Error ${e}`);
-    }
-}
-
-function onAnalysis(data) {
-    var client = servman.getClient(this.id);
-    if( !client ) return;
-    var socket = client.socket;
-    var logined = socket.handshake.session.username ? true : false;
-    var auth_state = logined ? client.auth : -1;
-
-    if( !client.isAdmin() ) {
-        return;
-    }
-
-    switch(data.step) {
-        case 'a-start':
-        {
-            var ret = quizAnalysis.run();
-            socket.emit('analysis', {step: data.step, ret: ret});
-            break;
-        }
-
-        case 'q-start':
-        {
-            var ret = quizAnalysis.quizStart();
-            socket.emit('analysis', {step: data.step, ret: ret});
-            break;
-        }
-
-        case 'q-end':
-        {
-            var ret = quizAnalysis.quizEnd(data.idx);
-            socket.emit('analysis', {step: data.step, ret: ret});
-            break;
-        }
-
-        case 'a-end':
-        {
-            var ret = quizAnalysis.end();
-            quizAnalysis.result.sort(function(item1, item2) {
-                return item2.collect - item1.collect;
-            })
-
-            if( quizAnalysis.result.length >= 5 ) {
-                quizAnalysis.result = quizAnalysis.result.slice(0, 5);
-            }
-            socket.emit('analysis', {step: data.step, ret: ret, list: quizAnalysis.result});
-            break;
-        }
     }
 }
 
