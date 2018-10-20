@@ -936,8 +936,8 @@ function onSockChat(data) {
                 return;
             }
             if( ( client.isAdmin() || (auth_state && auth_state >= 4) )
-                && !this.chosung.isRunning() && this.autoQuizManager.canMakeQuiz() ) {
-                this.autoQuizManager.makeQuiz(nick, function() {
+                && !servman.chosung.isRunning() && servman.autoQuizManager.canMakeQuiz() ) {
+                servman.autoQuizManager.makeQuiz(nick, function() {
                 });
                 return;
             }
