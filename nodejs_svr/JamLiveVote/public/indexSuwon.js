@@ -259,8 +259,6 @@ function SiteMenu() {
 }
 
 SiteMenu.prototype.init = function() {
-    console.log('~~!!!!~~~');
-
     this.vMenu = new Vue({
         el: '#site-menu',
         data: {
@@ -1463,6 +1461,7 @@ function setSocketEvent( socket ) {
 
     socket.on('update-notice', onUpdateNotice);
     socket.on('global-memo', onGlobalHint);
+    socket.on('update-cnts-by-auth', onUpdateCntsByAuth);
 }
 
 function setKeyEvent() {
@@ -2097,6 +2096,28 @@ function onUpdateNotice(data) {
 
 function onGlobalHint(packet) {
     hintObj.onGlobalHint(packet);
+}
+
+function onUpdateCntsByAuth(packet) {
+    console.log( packet.arr );
+
+    var caption = [];
+    for( var i = 0 ; i < packet.arr.length ; ++i ) {
+        caption.push(i + '레벨');
+    }
+
+    if( G.vStatistics.tabIndex == 5 ) {
+        showBarChart('.auth-chart',caption,[packet.arr], {
+            seriesBarDistance: 10,
+            height: 180,
+            axisX: {
+                offset: 30
+            },
+            axisY: {
+                offset: 30
+            }
+        });
+    }
 }
 
 var animOpacityTimerID = -1;

@@ -523,6 +523,9 @@ ServerMan.prototype.updateLong = function() {
 
     try {
 
+        connListMan.updateCntByAuth();
+        this.io.sockets.emit('update-cnts-by-auth', {arr: connListMan.getCntsByAuth() });
+
         //  오늘의 퀴즈쇼 알림
         if( cur - this.tLastUpdateQuizTimeTable >= 5 * 60 * 1000 ) {
             this.tLastUpdateQuizTimeTable = cur;

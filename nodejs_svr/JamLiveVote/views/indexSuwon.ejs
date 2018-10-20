@@ -349,6 +349,7 @@
                     <div class="tab-btn" :class="{selected: tabIndex == 2 }" @click="onBtnTab(2)">레벨별 경험치</div>
                     <div class="tab-btn" :class="{selected: tabIndex == 3 }" @click="onBtnTab(3)">정답 체크 도구</div>
                     <div class="tab-btn" :class="{selected: tabIndex == 4 }" @click="onBtnTab(4)">각종 순위</div>
+                    <div class="tab-btn" :class="{selected: tabIndex == 5 }" @click="onBtnTab(5)">접속자비율</div>
                 </div>
                 <div class="tab tab0" v-if="tabIndex == 0">
                     <!-- 주의사항 -->
@@ -429,6 +430,9 @@
                             <td>{{ item.ap }}</td>
                         </tr>
                     </table>
+                </div>
+                <div class="tab" v-else-if="tabIndex == 5">
+                    <div class="auth-chart"></div>
                 </div>
             </div>
 
