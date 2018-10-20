@@ -2099,8 +2099,6 @@ function onGlobalHint(packet) {
 }
 
 function onUpdateCntsByAuth(packet) {
-    console.log( packet.arr );
-
     var caption = [];
     for( var i = 0 ; i < packet.arr.length ; ++i ) {
         caption.push(i + '레벨');
