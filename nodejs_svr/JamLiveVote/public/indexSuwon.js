@@ -75,6 +75,18 @@ function init( socket, stringTable ) {
         pager: false
     });
 
+    /*
+    var el = document.querySelector('#machine');
+    var machine = new SlotMachine(el, {
+        active: 0,
+        randomize: function() {
+            return 1;
+        }
+    });
+    */
+
+    machine.shuffle(20);
+
     chatObj.vSearchVoteList.visible = false;
 }
 
