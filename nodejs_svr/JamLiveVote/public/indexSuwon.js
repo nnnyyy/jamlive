@@ -2161,7 +2161,9 @@ function onUpdateCntsByAuth(packet) {
 }
 
 function onOnePick(packet) {
-    G.vOnePick.visible = true;
+    if( packet.step != 3 ) {
+        G.vOnePick.visible = true;
+    }
 
     if( packet.step == 0 ) {
         G.vOnePick.msg = '행운의 주인공이 되고 싶으신 분들은 도전하세요!';
