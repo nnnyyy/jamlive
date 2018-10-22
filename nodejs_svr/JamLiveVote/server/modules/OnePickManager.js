@@ -83,11 +83,16 @@ class OnePickManager {
     }
 
     end() {
-        this.isRunning = false;
-        this.tStart = new Date();
-        this.step = 3;
-        this.broadcastStep();
-        this.init();
+        try {
+            this.servman.chatMan.BroadcastAdminMsg(this.servman.io, `${this.challengers[this.atariIdx].nick}님 당첨 축하합니다~!`);
+            this.isRunning = false;
+            this.tStart = new Date();
+            this.step = 3;
+            this.broadcastStep();
+            this.init();
+        }catch(e) {
+            this.init();
+        }
     }
 
     update(tCur) {
