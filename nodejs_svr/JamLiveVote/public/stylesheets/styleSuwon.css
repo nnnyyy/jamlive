@@ -853,7 +853,10 @@ body {
   z-index: 200000;
 }
 #one-pick-wnd h2 {
-  margin-bottom: 80px;
+  margin-bottom: 10px;
+}
+#one-pick-wnd h3 {
+  margin-bottom: 40px;
 }
 #one-pick-wnd #machine {
   width: 400px;

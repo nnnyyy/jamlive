@@ -47,9 +47,16 @@ class OnePickManager {
                 break;
             }
 
+                //  참여자 수 보여주기
             case 1:{
+                packet.cnt = this.challengers.length;
+                break;
+            }
+
+                //  돌리기
+            case 2:{
                 packet.list = this.challengers;
-                packet.atari = this.atariIdx
+                packet.atari = this.atariIdx;
                 break;
             }
         }
@@ -69,10 +76,16 @@ class OnePickManager {
         this.broadcastStep();
     }
 
+    slotStart() {
+        this.tStart = new Date();
+        this.step = 2;
+        this.broadcastStep();
+    }
+
     end() {
         this.isRunning = false;
         this.tStart = new Date();
-        this.step = 2;
+        this.step = 3;
         this.broadcastStep();
         this.init();
     }
@@ -80,11 +93,15 @@ class OnePickManager {
     update(tCur) {
         if( !this.isRunning ) return;
 
-        if( this.step == 0 && tCur - this.tStart >= 60 * 1000 ) {
+        if( this.step == 0 && tCur - this.tStart >= 20 * 1000 ) {
             this.pick();
         }
 
-        if( this.step == 1 && tCur - this.tStart >= 16 * 1000 ) {
+        if( this.step == 1 && tCur - this.tStart >= 4 * 1000 ) {
+            this.slotStart();
+        }
+
+        if( this.step == 2 && tCur - this.tStart >= 16 * 1000 ) {
             this.end();
         }
     }

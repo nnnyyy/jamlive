@@ -157,13 +157,13 @@ var GlobalValue = function() {
         data: {
             visible: false,
             machineVisible: true,
-            btnChallengeDisabled: false
+            btnChallengeDisabled: false,
+            msg: ''
         },
         methods:{
             onGo: function(shuffleCnt, atari) {
-                console.log(shuffleCnt);
-                console.log(atari);
-                const el = document.querySelector('#machine');
+                var v = this;
+                var el = document.querySelector('#machine');
                 if( !_g.machine ){
                     _g.machine = new SlotMachine(el, {
                         active: 0,
@@ -176,7 +176,12 @@ var GlobalValue = function() {
                 }
 
 
-                _g.machine.shuffle(shuffleCnt);
+                _g.machine.shuffle(shuffleCnt, function() {
+                    v.msg = '당첨되신 분 축하합니다!';
+                    setTimeout(function() {
+                        v.visible = false;
+                    }, 5000);
+                });
             },
             onChallenge: function() {
                 G.socket.emit('one-pick', {type: 'add'});
@@ -2159,10 +2164,17 @@ function onOnePick(packet) {
     G.vOnePick.visible = true;
 
     if( packet.step == 0 ) {
+        G.vOnePick.msg = '행운의 주인공이 되고 싶으신 분들은 도전하세요!';
         G.vOnePick.btnChallengeDisabled = false;
     }
 
+    //  참여자 수 보여주기
     if( packet.step == 1 ) {
+        G.vOnePick.msg = '총 ' + packet.cnt +'명의 도전!';
+    }
+
+    //  돌리기
+    if( packet.step == 2 ) {
         $('#machine').empty();
 
         for( var i = 0 ; i < packet.list.length ; ++i ) {
@@ -2172,8 +2184,8 @@ function onOnePick(packet) {
         G.vOnePick.onGo( 500 / packet.list.length, packet.atari );
     }
 
-    if( packet.step == 2 ) {
-        G.vOnePick.visible = false;
+    if( packet.step == 3 ) {
+        //  G.vOnePick.visible = false;
     }
 }
 
