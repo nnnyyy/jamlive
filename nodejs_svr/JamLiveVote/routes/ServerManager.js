@@ -883,10 +883,6 @@ function onSockSearch(data) {
 
 function onSockChat(data) {
     try {
-        if( data.msg == 'slot') {
-            servman.onePickManager.challenge();
-            return;
-        }
 
         var client = servman.getClient(this.id);
         if( !client ) return;
@@ -917,6 +913,11 @@ function onSockChat(data) {
         }
 
         client.tLastChat = new Date();
+
+        if( client.isAdmin() && data.msg == '#slot') {
+            servman.onePickManager.challenge();
+            return;
+        }
 
         if( client.isAdmin() && data.msg == "#quizoff") {
             chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 off 했습니다.', isBaned );
