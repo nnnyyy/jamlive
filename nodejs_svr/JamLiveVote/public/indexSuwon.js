@@ -75,18 +75,6 @@ function init( socket, stringTable ) {
         pager: false
     });
 
-    /*
-    var el = document.querySelector('#machine');
-    var machine = new SlotMachine(el, {
-        active: 0,
-        randomize: function() {
-            return 1;
-        }
-    });
-    */
-
-    machine.shuffle(20);
-
     chatObj.vSearchVoteList.visible = false;
 }
 
@@ -168,24 +156,31 @@ var GlobalValue = function() {
         el: '#one-pick-wnd',
         data: {
             visible: false,
-            machineVisible: true
+            machineVisible: true,
+            btnChallengeDisabled: false
         },
         methods:{
-            onGo: function(e) {
-                $('#machine').append('<div>1</div>');
-                $('#machine').append('<div>2</div>');
-                $('#machine').append('<div>3</div>');
-
+            onGo: function(shuffleCnt, atari) {
+                console.log(shuffleCnt);
+                console.log(atari);
                 const el = document.querySelector('#machine');
                 if( !_g.machine ){
                     _g.machine = new SlotMachine(el, {
                         active: 0,
-                        delay: 200,
-                        spins: 5
+                        delay: 10000 / shuffleCnt,
+                        spins: 5,
+                        randomize: function() {
+                            return atari;
+                        }
                     });
                 }
 
-                _g.machine.shuffle(20);
+
+                _g.machine.shuffle(shuffleCnt);
+            },
+            onChallenge: function() {
+                G.socket.emit('one-pick', {type: 'add'});
+                this.btnChallengeDisabled = true;
             }
         }
     });
@@ -2163,8 +2158,22 @@ function onUpdateCntsByAuth(packet) {
 function onOnePick(packet) {
     G.vOnePick.visible = true;
 
+    if( packet.step == 0 ) {
+        G.vOnePick.btnChallengeDisabled = false;
+    }
+
     if( packet.step == 1 ) {
-        G.vOnePick.onGo();
+        $('#machine').empty();
+
+        for( var i = 0 ; i < packet.list.length ; ++i ) {
+            $('#machine').append('<div>'+ packet.list[i].nick + '</div>');
+        }
+
+        G.vOnePick.onGo( 500 / packet.list.length, packet.atari );
+    }
+
+    if( packet.step == 2 ) {
+        G.vOnePick.visible = false;
     }
 }
 

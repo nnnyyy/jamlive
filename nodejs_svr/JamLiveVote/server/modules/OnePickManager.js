@@ -48,6 +48,8 @@ class OnePickManager {
             }
 
             case 1:{
+                packet.list = this.challengers;
+                packet.atari = this.atariIdx
                 break;
             }
         }
@@ -57,17 +59,42 @@ class OnePickManager {
 
     pick() {
         const len = this.challengers.length;
+        if( len <= 0 ) {
+            this.end();
+            return;
+        }
         this.atariIdx = getRandomInt(0, len-1);
         this.tStart = new Date();
-        this.step++;
+        this.step = 1;
         this.broadcastStep();
+    }
+
+    end() {
+        this.isRunning = false;
+        this.tStart = new Date();
+        this.step = 2;
+        this.broadcastStep();
+        this.init();
     }
 
     update(tCur) {
         if( !this.isRunning ) return;
 
-        if( this.step == 0 && tCur - this.tStart >= 5 * 1000 ) {
+        if( this.step == 0 && tCur - this.tStart >= 60 * 1000 ) {
             this.pick();
+        }
+
+        if( this.step == 1 && tCur - this.tStart >= 16 * 1000 ) {
+            this.end();
+        }
+    }
+
+    onPacket(client, packet) {
+        try {
+            if( !client ) return;
+            this.add('', client.nick);
+        }catch(e) {
+            console.log(e);
         }
     }
 }

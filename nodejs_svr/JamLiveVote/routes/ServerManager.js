@@ -242,6 +242,7 @@ ServerMan.prototype.register = function(socket) {
 
     socket.on(PS.CLIENT_TO_SERV.SERV_INFO_RELOAD, onServerInfoReload);
     socket.on(PS.CLIENT_TO_SERV.BAN_RELOAD, onBanReload);
+    socket.on('one-pick', function(packet){ servman.onePickManager.onPacket(client, packet) })
 }
 
 
