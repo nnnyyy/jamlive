@@ -17,6 +17,7 @@ const LevelExpTable = require('./modules/LevelExpTable');
 const PS = require('../Common/PacketProtocols');
 const AutoQuizManager = require('../server/modules/AutoQuizManager');
 const CenterServer = require('../server/modules/Center');
+const OnePickManager = require('../server/modules/OnePickManager');
 
 var config = require('../config');
 
@@ -79,6 +80,8 @@ var ServerMan = function() {
     this.voteManager = new VoteMan();
     this.searchManager = new SearchMan();
     this.webSearchMan = new WebSearchEngine(this);
+
+    this.onePickManager = new OnePickManager(this);
 
     this.todayQuizTableList = [];
 
@@ -376,6 +379,7 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     }
 
     this.autoQuizManager.update(cur);
+    this.onePickManager.update(cur);
 
     cur -= cur % VOTEPERTIME;
     cur /= VOTEPERTIME;
@@ -878,6 +882,11 @@ function onSockSearch(data) {
 
 function onSockChat(data) {
     try {
+        if( data.msg == 'slot') {
+            servman.onePickManager.challenge();
+            return;
+        }
+
         var client = servman.getClient(this.id);
         if( !client ) return;
         var socket = client.socket;

@@ -160,6 +160,35 @@ var GlobalValue = function() {
             }
         }
     });
+
+    this.machine = null;
+    var _g = this;
+
+    this.vOnePick = new Vue({
+        el: '#one-pick-wnd',
+        data: {
+            visible: false,
+            machineVisible: true
+        },
+        methods:{
+            onGo: function(e) {
+                $('#machine').append('<div>1</div>');
+                $('#machine').append('<div>2</div>');
+                $('#machine').append('<div>3</div>');
+
+                const el = document.querySelector('#machine');
+                if( !_g.machine ){
+                    _g.machine = new SlotMachine(el, {
+                        active: 0,
+                        delay: 200,
+                        spins: 5
+                    });
+                }
+
+                _g.machine.shuffle(20);
+            }
+        }
+    });
 }
 
 function ChosungGameMan() {
@@ -1474,6 +1503,7 @@ function setSocketEvent( socket ) {
     socket.on('update-notice', onUpdateNotice);
     socket.on('global-memo', onGlobalHint);
     socket.on('update-cnts-by-auth', onUpdateCntsByAuth);
+    socket.on('one-pick', onOnePick);
 }
 
 function setKeyEvent() {
@@ -2127,6 +2157,14 @@ function onUpdateCntsByAuth(packet) {
                 offset: 30
             }
         });
+    }
+}
+
+function onOnePick(packet) {
+    G.vOnePick.visible = true;
+
+    if( packet.step == 1 ) {
+        G.vOnePick.onGo();
     }
 }
 

@@ -8,8 +8,9 @@ function getRandomInt(min, max) {
 }
 
 class OnePickManager {
-    constructor() {
-        init();
+    constructor(sm) {
+        this.servman = sm;
+        this.init();
     }
 
     init() {
@@ -30,6 +31,28 @@ class OnePickManager {
         this.isRunning = true;
         this.step = 0;
         this.tStart = new Date();
+        this.broadcastStep();
+    }
+
+    broadcastStep() {
+        const tCur = new Date();
+        let packet = {
+            step: this.step,
+            elapsedTime: ( tCur - this.tStart )
+        };
+
+        switch(this.step) {
+            case 0: {
+                packet.tTotalWait = 5 * 1000;
+                break;
+            }
+
+            case 1:{
+                break;
+            }
+        }
+
+        this.servman.io.sockets.in('auth').emit('one-pick', packet);
     }
 
     pick() {
@@ -37,13 +60,16 @@ class OnePickManager {
         this.atariIdx = getRandomInt(0, len-1);
         this.tStart = new Date();
         this.step++;
+        this.broadcastStep();
     }
 
     update(tCur) {
         if( !this.isRunning ) return;
 
-        if( this.step == 0 && tCur - this.tStart >= 60 * 1000 ) {
+        if( this.step == 0 && tCur - this.tStart >= 5 * 1000 ) {
             this.pick();
         }
     }
 }
+
+module.exports = OnePickManager;

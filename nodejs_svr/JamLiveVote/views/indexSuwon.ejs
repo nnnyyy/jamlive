@@ -566,6 +566,12 @@
     </div>
 </div>
 <div class="admin_msg"></div>
+<div id="one-pick-wnd" v-show="visible">
+    <h2>퍼프픽 원픽 시뮬레이터</h2>
+    <div id="machine" v-show="machineVisible">
+    </div>
+    <button @click="onGo">원픽 도전</button>
+</div>
 <div class="user-menu">
     <div type="name"><name>왕야옹</name> 님을</div>
     <div type="menu">
