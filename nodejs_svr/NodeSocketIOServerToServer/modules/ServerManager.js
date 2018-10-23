@@ -49,6 +49,7 @@ class ServerManager {
         async.waterfall(
             [
                 async.apply(this.setServerInfo, this),
+                this.setUpdate,
                 this.listen
             ]
             ,
@@ -80,6 +81,14 @@ class ServerManager {
         });
     }
 
+    setUpdate( servman, callback ) {
+        setInterval(function() {
+            servman.update();
+        }, 200);
+
+        callback( null, servman );
+    }
+
     listen( servman, callback ) {
         servman.io.on('connection', function(socket) {
             // Child Server Connected
@@ -91,6 +100,15 @@ class ServerManager {
         });
 
         callback( null );
+    }
+
+    update() {
+        const tCur = new Date();
+
+        this.voteServMap.forEach(function(value, key){
+            const distServ = value;
+            distServ.update(tCur);
+        })
     }
 
     addServer( socket ) {

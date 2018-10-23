@@ -73,6 +73,9 @@ class DistServer {
         this.globalHintMan.sendInitPacket(this);
     }
 
+    update(tCur) {
+    }
+
     sendCount() {
         const server = this;
         this.sendCountIntervalId = setInterval( function() {
