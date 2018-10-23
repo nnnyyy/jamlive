@@ -163,7 +163,8 @@ var GlobalValue = function() {
         methods:{
             onGo: function(shuffleCnt, atari) {
                 var v = this;
-                var el = document.querySelector('#machine');
+                try {
+                    var el = document.querySelector('#machine');
 
                     _g.machine = new SlotMachine(el, {
                         active: 0,
@@ -176,12 +177,15 @@ var GlobalValue = function() {
 
 
 
-                _g.machine.shuffle(shuffleCnt, function() {
-                    v.msg = '당첨되신 분 축하합니다!';
-                    setTimeout(function() {
-                        v.visible = false;
-                    }, 5000);
-                });
+                    _g.machine.shuffle(shuffleCnt, function() {
+                        v.msg = '당첨되신 분 축하합니다!';
+                        setTimeout(function() {
+                            v.visible = false;
+                        }, 5000);
+                    });
+                }catch(e) {
+                    v.visible = false;
+                }
             },
             onChallenge: function() {
                 G.socket.emit('one-pick', {type: 'add'});
@@ -2159,37 +2163,41 @@ function onUpdateCntsByAuth(packet) {
 }
 
 function onOnePick(packet) {
-    if( packet.step != 3 ) {
-        G.vOnePick.visible = true;
-    }
-
-    if( packet.step == 0 ) {
-        $('#machine').empty();
-        G.vOnePick.msg = '행운의 주인공이 되고 싶으신 분들은 도전하세요!';
-        G.vOnePick.btnChallengeDisabled = false;
-    }
-
-    //  참여자 수 보여주기
-    if( packet.step == 1 ) {
-        G.vOnePick.msg = '총 ' + packet.cnt +'명의 도전!';
-        G.vOnePick.btnChallengeDisabled = true;
-    }
-
-    //  돌리기
-    if( packet.step == 2 ) {
-        G.vOnePick.btnChallengeDisabled = true;
-        $('#machine').empty();
-
-        for( var i = 0 ; i < packet.list.length ; ++i ) {
-            $('#machine').append('<div>'+ packet.list[i].nick + '</div>');
+    try {
+        if( packet.step != 3 ) {
+            G.vOnePick.visible = true;
         }
 
-        G.vOnePick.onGo( 500 / packet.list.length, packet.atari );
-    }
+        if( packet.step == 0 ) {
+            $('#machine').empty();
+            G.vOnePick.msg = '행운의 주인공이 되고 싶으신 분들은 도전하세요!';
+            G.vOnePick.btnChallengeDisabled = false;
+        }
 
-    if( packet.step == 3 ) {
-        G.vOnePick.btnChallengeDisabled = true;
-        //  G.vOnePick.visible = false;
+        //  참여자 수 보여주기
+        if( packet.step == 1 ) {
+            G.vOnePick.msg = '총 ' + packet.cnt +'명의 도전!';
+            G.vOnePick.btnChallengeDisabled = true;
+        }
+
+        //  돌리기
+        if( packet.step == 2 ) {
+            G.vOnePick.btnChallengeDisabled = true;
+            $('#machine').empty();
+
+            for( var i = 0 ; i < packet.list.length ; ++i ) {
+                $('#machine').append('<div>'+ packet.list[i].nick + '</div>');
+            }
+
+            G.vOnePick.onGo( 500 / packet.list.length, packet.atari );
+        }
+
+        if( packet.step == 3 ) {
+            G.vOnePick.btnChallengeDisabled = true;
+            //  G.vOnePick.visible = false;
+        }
+    }catch(e) {
+        G.vOnePick.visible = false;
     }
 }
 
