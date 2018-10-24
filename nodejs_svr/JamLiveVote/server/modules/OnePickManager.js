@@ -124,6 +124,15 @@ class OnePickManager {
     }
 
     onPacketCenter( packet ) {
+
+        if( packet.step == 3 ) {
+            const client = this.servman.connMan.getUser( packet.atariNick );
+            if( client ) {
+                client.incActivePoint( packet.point );
+                this.servman.chatMan.BroadcastAdminMsg( this.servman.io, `${packet.point}포인트를 획득하셨습니다! `);
+            }
+        }
+
         this.servman.io.sockets.in('auth').emit('one-pick', packet);
     }
 }

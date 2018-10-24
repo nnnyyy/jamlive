@@ -82,6 +82,7 @@ var ServerMan = function() {
     this.webSearchMan = new WebSearchEngine(this);
 
     this.onePickManager = new OnePickManager(this);
+    this.connMan = connListMan;
 
     this.todayQuizTableList = [];
 

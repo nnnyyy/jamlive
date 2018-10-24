@@ -59,6 +59,16 @@ class OnePickManager {
                 packet.atari = this.atariIdx;
                 break;
             }
+
+            case 3: {
+                packet.atariNick = this.challengers[this.atariIdx].nick;
+                let point = this.challengers.length;
+                if( this.challengers.length >= 100 ) {
+                    point = 100;
+                }
+                packet.point = point;
+                break;
+            }
         }
 
         this.servman.io.sockets.in('auth').emit('one-pick-center', packet);
