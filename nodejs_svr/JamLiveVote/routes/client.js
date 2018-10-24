@@ -14,6 +14,7 @@ var Client = function(servman, socket) {
     this.ip = '';
     this.tLastChat = 0;
     this.tLastSearch = 0;
+    this.tLastLike = 0;
     this.lastVoteIdx = -1;
 }
 
@@ -29,6 +30,12 @@ Client.prototype.getBanCnt = function() {
         console.log(`getBanCnt - ${e}`);
         return 0;
     }
+}
+
+Client.prototype.save = function() {
+    console.log(`${this.getUserId()} data saved`);
+    dbhelper.updateActivePoint( this.getUserId(), this.getActivePoint(), function(ret) {
+    });
 }
 
 Client.prototype.incBanCnt = function() {

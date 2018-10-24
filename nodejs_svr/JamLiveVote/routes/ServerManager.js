@@ -361,7 +361,7 @@ ServerMan.prototype.setIO = function(io, redis) {
     }
 
     setInterval(function() {
-        servman.broadcastVoteInfo();
+        servman.update();
     }, 400);
 
     setInterval(function() {
@@ -373,13 +373,10 @@ ServerMan.prototype.setIO = function(io, redis) {
     }, 1000 * 60 * 30);
 }
 
-ServerMan.prototype.broadcastVoteInfo = function() {
+ServerMan.prototype.update = function() {
     let cur = new Date();
 
-    if( this.chosung.isRunning() ) {
-        this.chosung.update( cur );
-    }
-
+    this.chosung.update( cur );
     this.autoQuizManager.update(cur);
     this.onePickManager.update(cur);
 
@@ -455,6 +452,74 @@ ServerMan.prototype.broadcastVoteInfo = function() {
     this.io.sockets.in('auth').emit('vote_data', {vote_data: { cnt: _counts, totalCnt: this.totalUserCnt, totalVote: this.totalVote, searched_cnt: _countsSearchFirst, users: this.socketmap.count(), bans: this.banUsers.count()}, searchlist: searchlist, slhash: s.hashCode(), kin: KinMan.getList() });
 }
 
+ServerMan.prototype.updateLong = function() {
+    var cur = new Date();
+
+    try {
+
+        connListMan.updateCntByAuth();
+        this.io.sockets.emit('update-cnts-by-auth', {arr: connListMan.getCntsByAuth() });
+
+        //  오늘의 퀴즈쇼 알림
+        if( cur - this.tLastUpdateQuizTimeTable >= 5 * 60 * 1000 ) {
+            this.tLastUpdateQuizTimeTable = cur;
+            dbhelper.getTodayQuizList(function(result) {
+                servman.todayQuizTableList = result.tableList;
+            })
+        }
+
+        //  지식의 바다
+        KinMan.update( cur );
+
+        if( config.autoQuiz ) {
+            //  자동 초성 퀴즈
+            if( this.chosung.isChosungTime(this) ) {
+                this.chosung.start();
+            }
+
+            //  자동 퀴즈쇼 모드
+            if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.autoQuizManager.canMakeQuiz() ) {
+                this.autoQuizManager.makeQuiz('자동', function() {
+                });
+            }
+        }
+
+        this.searchQueryMap.forEach(function(value, key) {
+            if( cur - value.tLast > 12 * 1000 ) {
+                servman.searchQueryMap.delete(key);
+            }
+        })
+
+        this.banUsers.forEach(function(value, key) {
+            if( cur - value > BANTIME) {
+                servman.banUsers.delete(key);
+            }
+        });
+
+        this.searchedByType.forEach(function(cachedSearchData, key) {
+            cachedSearchData.searched.forEach(function(val, key2) {
+                if( cur - val.tLast > SEARCHTIME) {
+                    cachedSearchData.searched.delete(key2);
+                }
+            });
+        })
+    }catch(e) {
+        console.log('checkAllBaned error : ' + e);
+    }
+}
+
+ServerMan.prototype.updateVerySlow = function() {
+    var cur = new Date();
+
+    try {
+        dbhelper.getStatistics(function(result) {
+            servman.rankerList = result.list;
+        });
+    }catch(e) {
+        console.log('updateVerySlow error : ' + e);
+    }
+}
+
 ServerMan.prototype.click = function(idx, isGuest, isHighLevelUser) {
     var cur = new Date();
     cur -= cur % VOTEPERTIME;
@@ -521,74 +586,6 @@ ServerMan.prototype.checkBaned = function( _ip ) {
     }
     else {
         return false;
-    }
-}
-
-ServerMan.prototype.updateLong = function() {
-    var cur = new Date();
-
-    try {
-
-        connListMan.updateCntByAuth();
-        this.io.sockets.emit('update-cnts-by-auth', {arr: connListMan.getCntsByAuth() });
-
-        //  오늘의 퀴즈쇼 알림
-        if( cur - this.tLastUpdateQuizTimeTable >= 5 * 60 * 1000 ) {
-            this.tLastUpdateQuizTimeTable = cur;
-            dbhelper.getTodayQuizList(function(result) {
-                servman.todayQuizTableList = result.tableList;
-            })
-        }
-
-        //  지식의 바다
-        KinMan.update( cur );
-
-        if( config.autoQuiz ) {
-            //  자동 초성 퀴즈
-            if( this.chosung.isChosungTime(this) ) {
-                this.chosung.start();
-            }
-
-            //  자동 퀴즈쇼 모드
-            if( !this.chosung.isRunning() && !this.isLiveQuizTime() && this.autoQuizManager.canMakeQuiz() ) {
-                this.autoQuizManager.makeQuiz('자동', function() {
-                });
-            }
-        }
-
-        this.searchQueryMap.forEach(function(value, key) {
-            if( cur - value.tLast > 12 * 1000 ) {
-                servman.searchQueryMap.delete(key);
-            }
-        })
-
-        this.banUsers.forEach(function(value, key) {
-            if( cur - value > BANTIME) {
-                servman.banUsers.delete(key);
-            }
-        });
-
-        this.searchedByType.forEach(function(cachedSearchData, key) {
-            cachedSearchData.searched.forEach(function(val, key2) {
-                if( cur - val.tLast > SEARCHTIME) {
-                    cachedSearchData.searched.delete(key2);
-                }
-            });
-        })
-    }catch(e) {
-        console.log('checkAllBaned error : ' + e);
-    }
-}
-
-ServerMan.prototype.updateVerySlow = function() {
-    var cur = new Date();
-
-    try {
-        dbhelper.getStatistics(function(result) {
-            servman.rankerList = result.list;
-        });
-    }catch(e) {
-        console.log('updateVerySlow error : ' + e);
     }
 }
 
@@ -773,6 +770,13 @@ function onSockLike(data) {
             servman.sendServerMsg(client.socket, '라이브 퀴즈 시간대가 아니면 칭찬 불가');
             return;
         }
+
+        if( tCur - client.tLastLike <= 20 * 1000 ) {
+            servman.sendServerMsg(client.socket, '아직 칭찬할 수 없습니다.');
+            return;
+        }
+
+        client.tLastLike = tCur;
 
         const msg = [
             `${toLikeClient.nick}님! 당신은 최고에요!`,
@@ -1121,6 +1125,13 @@ ServerMan.prototype.onGlobalHint = function( packet ) {
     }
 };
 
+ServerMan.prototype.saveAll = function() {
+    this.socketmap.forEach(function(client, key) {
+        if( !client ) return;
+        client.save();
+    });
+}
+
 function onMemo(data) {
     try {
         var client = servman.getClient(this.id);
@@ -1276,6 +1287,7 @@ function onGetSearchList(packet) {
 //  프로세스 종료 시 유저 데이터 저장
 process.on('SIGINT', () => {
     console.info('SIGTERM signal received.');
+    //servman.saveAll();
     process.exit();
 });
 
