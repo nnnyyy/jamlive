@@ -217,7 +217,7 @@ ServerMan.prototype.register = function(socket) {
         }
     }
 
-    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList, statistics: servman.rankerList });
+    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList, statistics: servman.rankerList, liker: servman.likerList });
     var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
     var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
     socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })
@@ -335,6 +335,7 @@ ServerMan.prototype.setIO = function(io, redis) {
 
     dbhelper.getStatistics(function(result) {
         servman.rankerList = result.list;
+        servman.likerList = result.list2;
     });
 
     dbhelper.getPermanentBanList(function(ret) {
@@ -514,6 +515,7 @@ ServerMan.prototype.updateVerySlow = function() {
     try {
         dbhelper.getStatistics(function(result) {
             servman.rankerList = result.list;
+            servman.likerList = result.list2;
         });
     }catch(e) {
         console.log('updateVerySlow error : ' + e);

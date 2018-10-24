@@ -106,6 +106,7 @@ var GlobalValue = function() {
             ranker: [
                 {id: 'nnnyyy84', nick: '왕야옹', score: 2000 }
             ],
+            liker: [],
             notice: '',
             calc: [
             ],
@@ -1988,6 +1989,7 @@ function onLoginInfo(data) {
     G.auth = data.auth;
     G.isAdminMembers = data.isAdminMembers;
     G.vStatistics.ranker = data.statistics;
+    G.vStatistics.liker = data.liker;
     siteMenu.vMenu.isAdminMembers = data.isAdminMembers;
     setVisible($('.admin-component'), data.auth >= 50);
     setNickName(data.nick);

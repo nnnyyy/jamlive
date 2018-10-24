@@ -420,8 +420,10 @@
                         <div><button @click="onBtnDeleteRecent">지우기</button> <button @click="onBtnReset">초기화</button> <button @click="onShare">채팅 공유</button></div>
                     </div>
                 </div>
-                <div class="tab" v-else-if="tabIndex == 4">
-                    <table>
+                <div class="tab" v-else-if="tabIndex == 4" style="text-align: center">
+                    <h3>점수 순위</h3>
+
+                    <table style="margin: 0 auto; width: 300px;">
                         <tr>
                             <td>순위</td>
                             <td>닉네임</td>
@@ -431,6 +433,20 @@
                             <td>{{ idx+1 }}</td>
                             <td>{{ item.nick }}</td>
                             <td>{{ item.ap }}</td>
+                        </tr>
+                    </table>
+                    <div style="margin-top: 10px;"></div>
+                    <h3>칭찬 순위</h3>
+                    <table style="margin: 0 auto; width: 300px;">
+                        <tr>
+                            <td>순위</td>
+                            <td>닉네임</td>
+                            <td>횟수</td>
+                        </tr>
+                        <tr v-for="(item,idx) in liker">
+                            <td>{{ idx+1 }}</td>
+                            <td>{{ item.nick }}</td>
+                            <td>{{ item.cnt }}</td>
                         </tr>
                     </table>
                 </div>

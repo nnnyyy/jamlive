@@ -628,7 +628,7 @@ exports.getStatistics = function(cb) {
                 return;
             }
 
-            if( cb ) cb({ret: 0, list: rows[0] });
+            if( cb ) cb({ret: 0, list: rows[0], list2: rows[1] });
         });
     }catch(err) {
         Log.logger.debug('DB Failed - getStatistics');
