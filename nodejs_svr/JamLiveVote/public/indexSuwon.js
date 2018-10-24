@@ -161,14 +161,14 @@ var GlobalValue = function() {
             msg: ''
         },
         methods:{
-            onGo: function(shuffleCnt, atari) {
+            onGo: function(atari) {
                 var v = this;
                 try {
                     var el = document.querySelector('#machine');
 
                     _g.machine = new SlotMachine(el, {
                         active: 0,
-                        delay: 10000 / shuffleCnt,
+                        delay: 300,
                         spins: 5,
                         randomize: function() {
                             return atari;
@@ -177,7 +177,7 @@ var GlobalValue = function() {
 
 
 
-                    _g.machine.shuffle(shuffleCnt, function() {
+                    _g.machine.shuffle(33, function() {
                         v.msg = '당첨되신 분 축하합니다!';
                         setTimeout(function() {
                             v.visible = false;
@@ -2189,7 +2189,7 @@ function onOnePick(packet) {
                 $('#machine').append('<div>'+ packet.list[i].nick + '</div>');
             }
 
-            G.vOnePick.onGo( 500 / packet.list.length, packet.atari );
+            G.vOnePick.onGo( packet.atari );
         }
 
         if( packet.step == 3 ) {
