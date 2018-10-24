@@ -10,6 +10,7 @@ function getRandomInt(min, max) {
 class OnePickManager {
     constructor(sm) {
         this.servman = sm;
+        this.lastAutoHour = -1;
         this.init();
     }
 
@@ -106,7 +107,16 @@ class OnePickManager {
     }
 
     update(tCur) {
-        if( !this.isRunning ) return;
+        if( !this.isRunning ) {
+            if( !this.servman.isLiveQuizTime() ) {
+                if( this.lastAutoHour != tCur.getHours() && tCur.getMinutes() >= 30 ) {
+                    console.log('Auto Run');
+                    this.challenge();
+                    this.lastAutoHour = tCur.getHours();
+                }
+            }
+            return;
+        }
 
         if( this.step == 0 && tCur - this.tStart >= 20 * 1000 ) {
             this.pick();

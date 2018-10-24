@@ -2170,7 +2170,7 @@ function onOnePick(packet) {
 
         if( packet.step == 0 ) {
             $('#machine').empty();
-            G.vOnePick.msg = '행운의 주인공이 되고 싶으신 분들은 도전하세요! 최대 100포인트 지급!';
+            G.vOnePick.msg = '최대 100포인트 지급합니다! 원픽 도전을 누르세요!';
             G.vOnePick.btnChallengeDisabled = false;
         }
 
