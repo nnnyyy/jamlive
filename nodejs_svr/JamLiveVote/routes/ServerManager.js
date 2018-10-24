@@ -1118,7 +1118,7 @@ ServerMan.prototype.onGlobalHint = function( packet ) {
         }
 
     }
-}
+};
 
 function onMemo(data) {
     try {

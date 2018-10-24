@@ -17,6 +17,7 @@ class DistServer {
         this.url = '';
         this.idx = 0;
 
+        const sm = this.servman;
         const distServ = this;
 
         socket.on('user-cnt', function(packet) {
@@ -68,7 +69,9 @@ class DistServer {
             catch(e) {
                 console.log(e);
             }
-        })
+        });
+
+        socket.on('one-pick-game', function(packet) { sm.opm.onPacket(packet); })
 
         this.globalHintMan.sendInitPacket(this);
     }

@@ -61,7 +61,7 @@ class OnePickManager {
             }
         }
 
-        this.servman.io.sockets.in('auth').emit('one-pick', packet);
+        this.servman.io.sockets.in('auth').emit('one-pick-center', packet);
     }
 
     pick() {
@@ -84,7 +84,7 @@ class OnePickManager {
 
     end() {
         try {
-            this.servman.chatMan.BroadcastAdminMsg(this.servman.io, `${this.challengers[this.atariIdx].nick}님 당첨 축하합니다~!`);
+            this.servman.broadcastMsg(`${this.challengers[this.atariIdx].nick}님 당첨 축하합니다~!`);
             this.isRunning = false;
             this.tStart = new Date();
             this.step = 3;
@@ -111,10 +111,17 @@ class OnePickManager {
         }
     }
 
-    onPacket(client, packet) {
+    onPacket(packet) {
         try {
-            if( !client ) return;
-            this.add('', client.nick);
+            switch( packet.subType ) {
+                case 'start':
+                    this.challenge();
+                    break;
+
+                case 'addUser':
+                    this.add('', packet.nick);
+                    break;
+            }
         }catch(e) {
             console.log(e);
         }

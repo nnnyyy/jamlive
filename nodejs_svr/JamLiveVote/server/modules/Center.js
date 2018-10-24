@@ -49,6 +49,7 @@ class Center {
         this.socket.on('ban-reload', function(packet)  { center.onBanReload(this, packet);     });
         this.socket.on('notice-data', function(packet) { center.onNoticeData(this, packet);    });
         this.socket.on('global-hint', function(packet) { center.onGlobalHint(this, packet);    });
+        this.socket.on('one-pick-center', function(packet) { center.onOnePickCenter(this, packet); })
     }
 
     onDisconnect( socket ) {
@@ -126,6 +127,14 @@ class Center {
     onGlobalHint( socket, packet ) {
         try {
             this.servman.onGlobalHint(packet);
+        }catch(e) {
+            console.log(e);
+        }
+    }
+
+    onOnePickCenter( socket, packet ) {
+        try {
+            this.servman.onePickManager.onPacketCenter( packet );
         }catch(e) {
             console.log(e);
         }

@@ -27,11 +27,14 @@ class OnePickManager {
     }
 
     challenge() {
+        this.servman.center.socket.emit('one-pick-game', {subType: 'start'});
+        /*
         if( this.isRunning ) return;
         this.isRunning = true;
         this.step = 0;
         this.tStart = new Date();
         this.broadcastStep();
+        */
     }
 
     broadcastStep() {
@@ -114,10 +117,14 @@ class OnePickManager {
     onPacket(client, packet) {
         try {
             if( !client ) return;
-            this.add('', client.nick);
+            this.servman.center.socket.emit('one-pick-game', {subType: 'addUser', nick: client.nick });
         }catch(e) {
             console.log(e);
         }
+    }
+
+    onPacketCenter( packet ) {
+        this.servman.io.sockets.in('auth').emit('one-pick', packet);
     }
 }
 

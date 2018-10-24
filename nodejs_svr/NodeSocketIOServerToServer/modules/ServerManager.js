@@ -7,6 +7,7 @@ const DistServer = require('./DistServer');
 var dbhelper = require('../dbhelper');
 const async = require('async');
 const GlobalHintMan = require('./GlobalHintMan');
+const OnePickManager = require('../server/modules/OnePickManager');
 
 const Redis = require('ioredis');
 
@@ -17,6 +18,7 @@ class ServerManager {
         this.io = io;
         this.http = http;
         this.redis = new Redis(6379, '127.0.0.1');
+        this.opm = new OnePickManager(this);
 
         this.redis.get('global-notice', (err,info) => {
             try {
@@ -105,6 +107,8 @@ class ServerManager {
     update() {
         const tCur = new Date();
 
+        this.opm.update( tCur );
+
         this.voteServMap.forEach(function(value, key){
             const distServ = value;
             distServ.update(tCur);
@@ -127,6 +131,7 @@ class ServerManager {
                 servman.chServMapByName.set(packet.name, distServInfo );
 
                 if( packet.type == 'vote-server' ) {
+                    this.join('auth');
                     distServInfo.name = packet.name;
                     distServInfo.userlimit = info.limit;
                     distServInfo.url = info.url;
