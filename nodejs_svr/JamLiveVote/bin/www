@@ -44,6 +44,10 @@ process.argv.forEach(function(val, idx, arr) {
       console.log('autoQuiz True');
   }
 
+  if( val == '-debugdb') {
+    config.isDebugDB = true;
+  }
+
   before = val;
 })
 

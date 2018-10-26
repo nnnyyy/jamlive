@@ -7,11 +7,30 @@ var app = require('../app');
 var debug = require('debug')('NxBettingWeb:server');
 var http = require('http');
 
+var config = require('../config');
+
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '4700');
+
+var before = '';
+config.autoQuiz = false;
+process.argv.forEach(function(val, idx, arr) {
+  console.log(idx + ': ' + val);
+  if( before == '-p') {
+    port = val;
+  }
+
+  if( val == '-debugdb') {
+    config.isDebugDB = true;
+    console.log('###debug db mode###');
+  }
+
+  before = val;
+})
+
 app.set('port', port);
 
 /**

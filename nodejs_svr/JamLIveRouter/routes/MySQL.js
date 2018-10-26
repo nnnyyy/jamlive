@@ -5,6 +5,7 @@ var mysql = require('mysql');
 var fs = require('fs');
 configPath = __dirname + '/../config/config.json';
 var parsed = JSON.parse(fs.readFileSync(configPath, 'UTF-8'));
+var config = require('../config');
 
 var _pool;
 var DBMan = {}
@@ -12,7 +13,7 @@ var DBMan = {}
 DBMan.init = function() {
     _pool = mysql.createPool({
         connectionLimit: 10,
-        host: parsed.dbhost,
+        host: config.isDebugDB ? '112.168.225.63' : parsed.dbhost,
         user: parsed.user,
         password: parsed.password,
         database: parsed.database

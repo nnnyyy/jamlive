@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var session = require('express-session');
+const ServerManager = require('./server/modules/ServerManager');
 
 var app = express();
 
@@ -27,6 +28,13 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+
+const servman = new ServerManager();
+
+app.use(function(req, res, next) {
+  req.serverMan = servman;
+  next();
+})
 
 app.use('/', routes);
 
