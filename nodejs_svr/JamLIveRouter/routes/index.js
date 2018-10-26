@@ -19,7 +19,6 @@ router.get('/new', function(req, res, next) {
 });
 
 router.post('/go', function( req, res , next) {
-    console.log('!!');
 
     const servman = req.serverMan;
     const center = servman.center;
