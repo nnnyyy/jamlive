@@ -1,5 +1,5 @@
 {
-  "dbhost": "52.79.205.198",
+  "dbhost": "127.0.0.1",
   "user":"root",
   "password": "s1980819",
   "database": "jamlivequiz",
