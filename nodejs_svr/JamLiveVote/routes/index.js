@@ -24,6 +24,10 @@ router.get('/kin', function(req,res, next) {
   })
 })
 
+router.get('/pixitest', function( req,res, next) {
+  res.render('pixiTest', {});
+})
+
 router.get('/quizSet', function(req,res, next) {
   res.render('quizSettingsMain', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 })
