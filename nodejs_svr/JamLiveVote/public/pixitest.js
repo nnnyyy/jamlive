@@ -1,40 +1,71 @@
 /**
  * Created by nnnyyy on 2018-10-26.
  */
+var G;
 function init() {
     $(document).ready(function() {
-
-
-        var app = new PIXI.Application(800, 600, {backgroundColor : 0x1099bb});
-        document.body.appendChild(app.view);
-
-// create a new Sprite from an image path
-        var setCardsSprites = [];
-        for( var i = 0 ; i < 27 ; ++i ) {
-            var a = i / 9;
-            var b = i / 3 % 3;
-            var c = i % 3;
-            var newSprite = PIXI.Sprite.fromImage('/images/set/s' + a.toString() + b.toString() + c.toString() + '.jpg');
-            setCardsSprites.push(newSprite);
-            newSprite.anchor.set(0.5);
-            newSprite.x = app.screen.width / 9;
-            newSprite.y = app.screen.height / 9 + ( a * 120 );
-            app.stage.addChild(newSprite);
-        }
-
-// center the sprite's anchor point
-
-
-// move the sprite to the center of the screen
-
-// Listen for animate update
-        app.ticker.add(function(delta) {
-            // just for fun, let's rotate mr rabbit a little
-            // delta is 1 if running at 100% performance
-            // creates frame-independent transformation
-           // bunny.rotation += 0.1 * delta;
-        });
-
-
+        G = new Global();
     });
 }
+
+var Global = function() {
+    this.setGameObj = new SetGame();
+    this.setGameObj.init();
+
+    this.vApp = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        methods: {
+            onBtnAction: function() {
+                G.setGameObj.show();
+            }
+        }
+    })
+}
+
+var SetGame = function() {
+    console.log('SetGame Object Created');
+};
+
+SetGame.prototype.init = function() {
+    console.log('initialize start');
+    var sg = this;
+    this.app = new PIXI.Application(400, 400, {backgroundColor : 0x1099bb});
+    $('#game-view').append(this.app.view);
+
+    this.setCardsSprites = new Map();
+    this.active = null;
+    for( var i = 0 ; i < 27 ; ++i ) {
+        var a = Math.floor(i / 9);
+        var b = Math.floor(i / 3) % 3;
+        var c = i % 3;
+        var t = a.toString() + b.toString() + c.toString();
+        var path = '/images/set/s' + t + '.jpg';
+        var newSprite = PIXI.Sprite.fromImage(path);
+        this.setCardsSprites.put(t, newSprite);
+        newSprite.anchor.set(0);
+    }
+    
+
+    this.app.ticker.add(function() {
+        var tCur = new Date();
+        sg.update(tCur);
+    });
+};
+
+SetGame.prototype.update = function( tCur ) {
+    if( this.active ) {
+        this.active.x += 1;
+        console.log('#');
+    }
+}
+
+SetGame.prototype.show = function() {
+    var img = this.setCardsSprites.get('000');
+    img.x = 0;
+    img.y = 0;
+    this.active = img;
+    this.app.stage.addChild(img);
+};

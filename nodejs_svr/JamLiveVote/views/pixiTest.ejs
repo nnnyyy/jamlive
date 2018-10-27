@@ -23,10 +23,15 @@
     <script src="/basic.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.1/pixi.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/pixitest.css' />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
 </head>
 <script src="/socket.io/socket.io.js"></script>
 <body>
-
+<div id="game-view">
+</div>
+<div id="app">
+    <button @click="onBtnAction">액션</button>
+</div>
 </body>
 <script type="text/javascript" src="/pixitest.js"></script>
 <script>

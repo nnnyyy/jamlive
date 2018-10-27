@@ -1753,12 +1753,6 @@ function setBtnEvent() {
     $(document).on('click', '.nick-area .nick', function (e) {
         e.stopPropagation();
         openUserMenu($(this).text(), $(this).attr('sockid'), $(this).text().trim() );
-        /*
-         var name = $(this).text();
-         if( confirm('신고가 모이면 이 아이피는 당분간 투표에 참여할 수 없습니다."' + name + '"를 신고하시겠습니까? ') ) {
-         socket.emit('ban', {sockid: $(this).attr('sockid')});
-         }
-         */
         e.preventDefault();
     });
 
