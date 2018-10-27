@@ -1953,7 +1953,6 @@ function onChat( data ) {
         chatObj.addChat( item );
     }
     else {
-        if( options.isNotShowChat() ) return;
         chatObj.addChat( item );
     }
 }
