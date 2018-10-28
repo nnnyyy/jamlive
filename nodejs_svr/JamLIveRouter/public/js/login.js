@@ -35,7 +35,7 @@ var Global = function(logined) {
                 sendPostSignin({id: this.id, pw: this.pw});
             },
             onBtnBack: function() {
-                window.location.href = '/m/';
+                window.location.href = 'http://databucket.duckdns.org:4700/m/';
             }
         }
     });
@@ -88,7 +88,7 @@ function sendPostSignin(data) {
                 G.vApp.inputDisabled = false;
             }
             else {
-                window.location.href = document.referrer;
+                window.location.href = 'http://databucket.duckdns.org:4700/m/';
             }
         }
     });
