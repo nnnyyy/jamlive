@@ -175,10 +175,11 @@ ServerMan.prototype.register = function(socket) {
                 }
                 //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
                 const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
+                console.log(userinfo);
                 servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
                 } )
 
-                dbhelper.updateActivePoint( this.handshake.session.username, client.getActivePoint(), function(ret) {
+                dbhelper.updateActivePoint( client.socket.handshake.session.username, userinfo.ap, function(ret) {
                     //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
                 });
             }
