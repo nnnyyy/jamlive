@@ -549,7 +549,7 @@ function registerBtnListener(g) {
     })
 
     g.btnLogin.click(function(e) {
-        window.location.href = '/signin';
+        window.location.href = 'http://databucket.duckdns.org:4700/login/';
     })
 
     g.btnLogout.click(function(e) {
