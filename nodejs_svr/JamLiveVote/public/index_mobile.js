@@ -277,6 +277,13 @@ GlobalValue.prototype.onEmoticon = function( _data ) {
 GlobalValue.prototype.onLoginInfo = function(data) {
     global.socketid = data.socket;
     global.isLogin = data.isLogined;
+
+    if( !global.isLogin ) {
+        //  로그인 되어있지 않으면 튕깁니다.
+        window.location.href = 'http://jamlive.net';
+        return;
+    }
+
     global.auth = data.auth;;
 
     setNickName( data.nick );
