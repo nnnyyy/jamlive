@@ -663,6 +663,10 @@
 </body>
 <script type="text/javascript" src="/indexSuwon.js"></script>
 <script>
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
     $(document).ready(function() {
         if( isMobile() ) {
             window.location.href = 'http://jamlive.net';
@@ -681,6 +685,23 @@
 
         CKEDITOR.replace('memo-area');
         var socket = io();
-        init( socket, stringTable );
+        var searchServer = [
+            'http://databucket.duckdns.org:12000/',
+            'http://databucket.duckdns.org:12001/',
+            'http://databucket.duckdns.org:12002/',
+            'http://databucket.duckdns.org:12003/',
+            'http://databucket.duckdns.org:12004/',
+            'http://databucket.duckdns.org:12005/',
+            'http://databucket.duckdns.org:12006/',
+            'http://databucket.duckdns.org:12007/',
+            'http://databucket.duckdns.org:12008/',
+            'http://databucket.duckdns.org:12009/'
+        ];
+
+        var len = searchServer.length;
+        var rnd = getRandomInt(0, len-1);
+        Math.random
+        var socket2 = io(searchServer[rnd]);
+        init( socket, socket2, stringTable );
     });
 </script>

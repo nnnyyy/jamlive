@@ -43,8 +43,9 @@ ConnectStateInfo.prototype.Disconnect = function() {
     }, RETRY_INTERVAL);
 }
 
-function init( socket, stringTable ) {
+function init( socket, searchSocket, stringTable ) {
     G.socket = socket;
+    G.socket2 = searchSocket;
     G.stringTable = stringTable;
     setVisible($('.user-menu'), false);
 
@@ -62,7 +63,7 @@ function init( socket, stringTable ) {
     options.init();
     siteMenu.init();
     chosungGameMan.init();
-    setSocketEvent(socket);
+    setSocketEvent(socket, searchSocket);
     setKeyEvent();
     setBtnEvent();
 
@@ -1464,8 +1465,9 @@ QuizObject.prototype.onQuizRet = function( data ) {
     }, 3000);
 }
 
-function setSocketEvent( socket ) {
+function setSocketEvent( socket, searchSocket ) {
     socket.on('chat', onChat );
+    searchSocket.on('chat', onChat);
     socket.on('admin-msg', onAdminMsg);
     socket.on('memo', hintObj.onMemo );
     socket.on('serv_msg', onServMsg);
@@ -1501,11 +1503,11 @@ function setSocketEvent( socket ) {
     });
 
 
-    socket.on('search-dic', onSearchDic);
-    socket.on('search-naver-main', onSearchNaverMain);
-    socket.on('search-daum', onSearchDaumGoogle);
-    socket.on('search-image', onSearchImage);
-    socket.on('search-naver-api', onSearchNaverAPI);
+    searchSocket.on('search-dic', onSearchDic);
+    searchSocket.on('search-naver-main', onSearchNaverMain);
+    searchSocket.on('search-daum', onSearchDaumGoogle);
+    searchSocket.on('search-image', onSearchImage);
+    searchSocket.on('search-naver-api', onSearchNaverAPI);
 
     socket.on('update-notice', onUpdateNotice);
     socket.on('global-memo', onGlobalHint);
@@ -1571,7 +1573,7 @@ function onGlobalKeyDown(e) {
             return;
         }
 
-        searchWebRoot(G.socket, searchObj.searchtop5queries[idx], false);
+        searchWebRoot(G.socket2, searchObj.searchtop5queries[idx], false);
     }
     else {
         if( code != 27 ) {
@@ -1649,7 +1651,7 @@ function onInputMsgKeyPress(e) {
         if( msg[0] == '/' ) {
             $(this).val('');
             var query = msg.substr(1);
-            searchWebRoot(G.socket, query, true);
+            searchWebRoot(G.socket2, query, true);
             $(this).blur();
             return;
         }
@@ -1751,7 +1753,7 @@ function setBtnEvent() {
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
-        searchWebRoot(G.socket, $(this).text(), false);
+        searchWebRoot(G.socket2, $(this).text(), false);
     });
 
     $(document).on('click', '.nick-area .nick', function (e) {

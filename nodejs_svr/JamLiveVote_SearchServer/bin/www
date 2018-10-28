@@ -1,0 +1,140 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+var app = require('../app');
+var debug = require('debug')('NxBettingWeb:server');
+var http = require('http');
+var fs = require('fs');
+var config = require('../config');
+
+configPath = __dirname + '/../config/config.json';
+var parsed = JSON.parse(fs.readFileSync(configPath, 'UTF-8'));
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '12000');
+
+var before = '';
+config.autoQuiz = false;
+process.argv.forEach(function(val, idx, arr) {
+  console.log(idx + ': ' + val);
+  if( before == '-p') {
+    port = val;
+  }
+
+  if( before =='-name') {
+    config.serv_name = val;
+  }
+
+  if( before =='-mode') {
+    config.mode = val;
+  }
+
+
+  if( before == '-type') {
+    config.type = val;
+  }
+
+  if( val == '-autoquiz') {
+    config.autoQuiz = true;
+      console.log('autoQuiz True');
+  }
+
+  if( val == '-debugdb') {
+    config.isDebugDB = true;
+  }
+
+  before = val;
+})
+
+app.set('port', port);
+
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+var io = require('socket.io')(server,
+    {
+      origins: '*:*',
+      pingInterval: 5000,
+      pingTimeout: 10000,
+      transports: ['websocket','polling']
+    });
+
+var sharedsession = require("express-socket.io-session");
+io.use(sharedsession(app.session));
+
+app.servman.init(io);
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

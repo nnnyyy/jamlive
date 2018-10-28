@@ -31,7 +31,7 @@ var BANCNT = 4;
 
 var CachedSearchData = function() {
     this.searched = new HashMap();
-}
+};
 
 var BanUserInfo = function() {
     this.nCnt = 0;
@@ -228,7 +228,6 @@ ServerMan.prototype.register = function(socket) {
     socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })
     socket.emit(PS.SERV_TO_CLIENT.LOCAL_HINT, {memo_provider: servman.memo_provider , local: localMemoObj });
     socket.emit(PS.SERV_TO_CLIENT.UPDATE_NOTICE, {noticeData: this.noticeData});
-
     socket.emit('next-quiz', { data: servman.nextQuizShowdata });
 
     if( this.chosung.isRunning() ) {
@@ -609,7 +608,7 @@ ServerMan.prototype.getCachedSearchResult = function(sType, query) {
     }
 
     return null;
-}
+};
 
 ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
     var cachedType = this.searchedByType.get(sType);
@@ -626,16 +625,16 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
     }
 
     cachedType.searched.set(query, {data: data, tLast: new Date()});
-}
+};
 
 ServerMan.prototype.addSearchQuery = function( query, bCount ) {
     this.center.sendSearchQuery({ query: query, isCounting: bCount });
-}
+};
 
 ServerMan.prototype.updateNotice = function( noticeData ) {
     this.noticeData = noticeData;
     servman.io.sockets.in('auth').emit('update-notice', {noticeData: noticeData});
-}
+};
 
 function onSockBan(data) {
     try {
