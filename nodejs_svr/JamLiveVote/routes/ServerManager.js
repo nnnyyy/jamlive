@@ -179,9 +179,11 @@ ServerMan.prototype.register = function(socket) {
                 } );
 
                 if( userinfo.ap && userinfo.ap >= 0 ) {
+                    /*
                     dbhelper.updateActivePoint( client.socket.handshake.session.username, userinfo.ap, function(ret) {
                         //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
                     });
+                    */
                 }
             }
         }catch(e) {
@@ -840,7 +842,7 @@ function onSockSearch(data) {
 
         if( data.searchDic )
             servman.webSearchMan.searchDic(data.msg, client);
-        if( client.auth >= 4 ) {
+        if( client.auth >= 5 ) {
             var bSearch = false;
             for( var i = 0 ; i < data.searchNaverMainAPI.length ; ++i ) {
                 if( data.searchNaverMainAPI[i] ) {
