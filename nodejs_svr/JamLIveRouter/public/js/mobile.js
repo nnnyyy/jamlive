@@ -40,7 +40,7 @@ var Global = function(logined) {
                 window.location.href = '/signup/';
             },
             onBtnSignIn: function() {
-                window.location.href = 'http://http://databucket.duckdns.org:4700/login/';
+                window.location.href = 'http://databucket.duckdns.org:4700/login/';
             },
             onBtnSignOut: function() {
                 $.ajax({
