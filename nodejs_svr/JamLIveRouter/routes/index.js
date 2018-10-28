@@ -8,6 +8,9 @@ const Auth = require('./Auth');
 const ioclient = require('socket.io-client');
 
 /* GET home page. */
+router.use(function(req,res,next) {
+    next();
+});
 router.get('/', function(req, res, next) {
   res.render('index');
 });

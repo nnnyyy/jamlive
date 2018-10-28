@@ -9,6 +9,12 @@ class ServerManager {
     constructor() {
         this.center = new Center(this);
     }
+
+    setRedis(redis) {
+        this.redis = redis;
+    }
 }
 
-module.exports = ServerManager;
+const servman = new ServerManager();
+
+module.exports = servman;

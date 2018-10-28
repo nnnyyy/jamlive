@@ -24,14 +24,14 @@ app.set('view engine', 'ejs');
 
 
 var sessionMiddleware = session({
-    secret: 'dhkddPtlr',
+    secret: 'dhkddPtlra',
     resave: true,
     saveUninitialized: false,
     store: new redisStore({
         host: '127.0.0.1',
         port: 6379,
         client: client,
-        prefix: "session-jamlive.net:",
+        prefix: "session-jamlive.net:a",
         db: 0
     })
 });

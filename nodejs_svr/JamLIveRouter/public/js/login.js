@@ -9,6 +9,7 @@ function init(logined) {
 }
 
 var Global = function(logined) {
+
     this.vApp = new Vue({
         el: '#app',
         data: {
@@ -39,6 +40,11 @@ var Global = function(logined) {
             }
         }
     });
+
+    if( logined ) {
+        window.location.href = '/';
+        return;
+    }
 };
 
 function showAdminMsg(msg) {

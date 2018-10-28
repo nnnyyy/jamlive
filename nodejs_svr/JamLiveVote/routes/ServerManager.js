@@ -176,11 +176,13 @@ ServerMan.prototype.register = function(socket) {
                 //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
                 const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
                 servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
-                } )
+                } );
 
-                dbhelper.updateActivePoint( client.socket.handshake.session.username, userinfo.ap, function(ret) {
-                    //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
-                });
+                if( userinfo.ap && userinfo.ap >= 0 ) {
+                    dbhelper.updateActivePoint( client.socket.handshake.session.username, userinfo.ap, function(ret) {
+                        //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
+                    });
+                }
             }
         }catch(e) {
             console.log(e);

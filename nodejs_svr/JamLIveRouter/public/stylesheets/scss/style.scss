@@ -69,10 +69,11 @@ $serverListRoot-width: 340px;
   height: calc(100vh - 80px);
   float: left;
   margin: 0;
+  overflow-y: scroll;
 }
 
 #right-area {
-  width: calc(100vw - #{$serverListRoot-width});
+  width: calc(100vw - #{$serverListRoot-width} - 20px);
   height: calc(100vh - 80px);
   float: left;
   margin: 0;

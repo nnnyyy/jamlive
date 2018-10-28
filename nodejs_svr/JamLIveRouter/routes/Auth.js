@@ -3,6 +3,7 @@
  */
 var dbhelper = require('./dbhelper');
 var async = require('async');
+const ServerManager = require('../server/modules/ServerManager');
 
 exports.login = function(req, res, next) {
     async.waterfall(
@@ -33,7 +34,8 @@ function requestLogin( req, callback ) {
         }
 
         req.session.username = json.id;
-        req.session.userinfo = { usernick: json.nick, auth: json.auth, adminMemberVal: json.adminMemberVal }
+        req.session.userinfo = { usernick: json.nick, auth: json.auth, adminMemberVal: json.adminMemberVal };
+        req.session.userinfo.banCnt = 0;
         //res.json(json.ret);
         callback(null,req);
     })
@@ -57,8 +59,13 @@ function requestActivePoint(req, callback) {
         if( ret.ret == 0 ) {
             //  완료 처리 해줘
             req.session.userinfo.ap = ret.point;
+            if( !req.session.userinfo.ap ) {
+                req.session.userinfo.ap = 0;
+            }
             const userinfo = JSON.stringify(req.session.userinfo);
-            callback(null, req);
+            ServerManager.redis.set(req.session.username, userinfo,  (err, info) => {
+                callback(null, req);
+            });
         }
         else {
             callback(ret.ret);

@@ -59,6 +59,9 @@ function requestActivePoint(req, callback) {
         if( ret.ret == 0 ) {
             //  완료 처리 해줘
             req.session.userinfo.ap = ret.point;
+            if( !req.session.userinfo.ap ) {
+                req.session.userinfo.ap = 0;
+            }
             const userinfo = JSON.stringify(req.session.userinfo);
             ServerManager.redis.set(req.session.username, userinfo,  (err, info) => {
                 callback(null, req);

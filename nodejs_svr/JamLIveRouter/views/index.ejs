@@ -14,6 +14,7 @@
       <script src="/basic.js"></script>
       <link rel='stylesheet' href='/stylesheets/style.css' />
       <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
       <script>
           (adsbygoogle = window.adsbygoogle || []).push({
               google_ad_client: "ca-pub-3598320494828213",
@@ -22,88 +23,7 @@
       </script>
   </head>
   <body>
-  <!-- HTML Design -->
-  <div id ='mainframe'>
-      <div class="center_wnd">
-          <div class="title c_main">라이브 퀴즈 공유기</div>
-          <div class="subtitle c_sub">아래 서버 중에 하나를 선택하세요</div>
-
-          <div class="btn-group">
-              <div class="btn_box btn-serv" servidx=1>서버 1</div>
-              <div class="btn_box btn-serv" servidx=2>서버 2</div>
-              <div class="btn_box btn-serv" servidx=3>서버 3</div>
-              <div class="btn_box btn-serv" servidx=4>서버 4</div>
-          </div>
-
-
-          <div class="btn-group">
-              <div class="btn_box btn-serv" servidx=5>서버 5</div>
-              <div class="btn_box btn-serv" servidx=6>서버 6</div>
-              <div class="btn_box btn-serv" servidx=7>서버 7</div>
-              <div class="btn_box btn-serv" servidx=8>서버 8</div>
-          </div>
-
-          <div class="btn-group-n">
-              <div style="text-align: center;width: 320px; float: left;">
-                  <ins class="kakao_ad_area" style="display:none;width:100%"
-                       data-ad-unit    = "DAN-u7raa8rbgto1"
-                       data-ad-width   = "320"
-                       data-ad-height  = "50"></ins>
-                  <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-              </div>
-              <div style="text-align: center;width: 320px; float: left;">
-                  <ins class="kakao_ad_area" style="display:none;width:100%"
-                       data-ad-unit    = "DAN-t87e91n4i053"
-                       data-ad-width   = "320"
-                       data-ad-height  = "50"></ins>
-                  <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-              </div>
-          </div>
-
-          <div class="btn-group">
-              <div class="btn_box btn-serv" servidx=9>서버 9</div>
-              <div class="btn_box btn-serv" servidx=10>서버 10</div>
-              <div class="btn_box btn-serv" servidx=11>서버 11</div>
-              <div class="btn_box btn-serv" servidx=12>서버 12</div>
-          </div>
-          <div class="btn-group">
-              <div class="btn_box btn-serv" servidx=13>서버 13</div>
-              <div class="btn_box btn-serv" servidx=14>서버 14</div>
-              <div class="btn_box btn-serv" servidx=15>서버 15</div>
-              <div class="btn_box btn-serv" servidx=16>서버 16</div>
-          </div>
-          <div class="btn-group-n2">
-              <div style="text-align: center;width: 320px; margin-right: 13px; float: left">
-                  <ins class="kakao_ad_area" style="display:none;"
-                       data-ad-unit    = "DAN-1hrj7yzlqtc8n"
-                       data-ad-width   = "320"
-                       data-ad-height  = "100"></ins>
-                  <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-              </div>
-              <div style="text-align: center;width: 320px; float: left">
-                  <ins class="kakao_ad_area" style="display:none;"
-                       data-ad-unit    = "DAN-urpo5nnk32w6"
-                       data-ad-width   = "320"
-                       data-ad-height  = "100"></ins>
-                  <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-              </div>
-          </div>
-          <div style="width: 100%;">
-              <div class="btn_box2"><a href="http://quiz.jamlive.net" target="_blank"><div>퀴즈 기출문제 사이트</div></a></div>
-          </div>
-      </div>
-  </div>
-  <div class="v-ads">
-      <ins class="kakao_ad_area" style="display:none;"
-           data-ad-unit    = "DAN-1jydsllt9snqt"
-           data-ad-width   = "160"
-           data-ad-height  = "600"></ins>
-      <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-  </div>
-  <div class="admin_msg"></div>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </body>
-  <script type="text/javascript" src="/js/pc.js"></script>
 <script>
     $(document).ready(function(){
         if( isMobile() ) {
@@ -113,7 +33,6 @@
         else {
             window.location.href = 'http://databucket.duckdns.org:4700/pc/';
         }
-        init();
     });
 </script>
 </html>
