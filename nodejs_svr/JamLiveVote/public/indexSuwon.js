@@ -1017,7 +1017,11 @@ function ChatObject() {
             },
             getMsgStyle: function(item) {
                 if( item.mode != 'vote' ) {
-                    return {};
+                    var style =
+                    {
+                        color: 'black'
+                    };
+                    return style;
                 }
                 else {
                     var style =
