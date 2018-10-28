@@ -11,129 +11,112 @@ $color-sub2-font: #6e6e6e;
 $color-yellow-font: #e9bd25;
 $color-border: #e5e5e5;
 
-
 * {
+  box-sizing: border-box;
   margin : 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li {
+  list-style: none;
 }
 
 html, body {
   height: 100%;
-}
-body {
-  margin-top: 8px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: $main-font-color;
-  background-color: $primary-color;
+  background-color: #fafafa;
 }
 
-a {
-  text-decoration: none;
+#app {
+
 }
 
-#mainframe {
-  width: 100%;
-  height: 100%;
-}
-
-.center_wnd {  ;
-  text-align: center;
-}
-
-.title {
-  font-size: 24px;
-  margin: 10px;
-}
-
-.subtitle {
-  margin-bottom: 10px;
-}
-
-.c_main {
-  color: $main-font-color;
-}
-
-.btn-group {
-  width:800px;
-  height:60px;
-  margin: 0 auto;
-}
-
-.btn-group-n {
-  width:653px;
-  height:60px;
-  margin: 0 auto;
-}
-
-.btn-group-n2 {
-  width:653px;
-  height:110px;
-  margin: 0 auto;
-}
-
-.btn_box {
-  float: left;
-  width: 160px;
-  height: 40px;
-  line-height: 40px;
-  background-color: $main-font-color;
-  color: $primary-color;
-  cursor: pointer;
-  margin: 10px 20px auto;
-}
-
-.btn_box2 {
-  width: 320px;
-  height: 40px;
-  line-height: 40px;
-  background-color: $main-font-color;
-  color: $primary-color;
-  cursor: pointer;
-  margin: 0px auto;
+dt {
+  margin: 12px 10px 4px 10px;
+  font-weight: bold;
   font-size: 20px;
+}
+
+dd {
+  margin: 6px 20px;
+  font-size: 17px;
+}
+
+div {
+}
+
+#top {
+  width: 100%;
+  border-bottom: 2px #fcfcfc solid;
+  height: 80px;
+  background-color: white;
+  text-align: center;
 
   a {
-    text-decoration: none;
-    color: $primary-color;
+    height: inherit;
+  }
+
+  img {
+    height: inherit;
+    margin: 0 auto;
   }
 }
 
-.admin_msg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 90vw;
-  min-height: 120px;
-  margin-left: -45vw;
-  background-color: black;
+$serverListRoot-width: 340px;
+#server-list-root {
+  text-align: center;
+  width: $serverListRoot-width;
+  height: calc(100vh - 80px);
+  float: left;
+  margin: 0;
+}
+
+#right-area {
+  width: calc(100vw - #{$serverListRoot-width});
+  height: calc(100vh - 80px);
+  float: left;
+  margin: 0;
+  padding: 12px;
+  background-color: white;
+}
+
+.btn {
+  width: 160px;
+  height: 36px;
+  margin: 8px 0;
+}
+
+.serv-item {
+  cursor: pointer;
+  margin: 8px 0;
+}
+
+#admin-msg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background-color: #000088;
   color: white;
   text-align: center;
-  line-height: 120px;
-  font-size: 16px;
+  opacity: 0.8;
+  padding: 16px;
+}
+
+.am-enter, .am-leave-to {
   opacity: 0;
-  overflow: hidden;
 }
 
-.opacity {
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
+.am-enter-active .am-leave-active{
+  transition: opacity .5s;
 }
 
-.non_opacity {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -ms-transition: none !important;
-  -o-transition: none !important;
-  transition: none !important;
+#left-ads {
+  width: 180px;
 }
 
-.v-ads {
-  position: absolute;
-  left: 50%;
-  top:20px;
-  margin-left: 410px;
-  width: 160px;
-  height: 700px;
+#article {
+  float: left;
+  width: calc( 100% - 180px );
 }

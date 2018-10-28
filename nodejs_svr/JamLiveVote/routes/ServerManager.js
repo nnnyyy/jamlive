@@ -175,7 +175,6 @@ ServerMan.prototype.register = function(socket) {
                 }
                 //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
                 const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
-                console.log(userinfo);
                 servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
                 } )
 
@@ -190,15 +189,14 @@ ServerMan.prototype.register = function(socket) {
 
     if( client.isLogined() ) {
         client.auth = socket.handshake.session.userinfo.auth;
+        //  서버를 강제로 이동해도 이 그룹에 속하지 않으면 받을 수 없다.
+        socket.join('auth');
     }
 
     if( isServerLimit() && !client.isAdminMembers() ) {
         socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
         return;
     }
-
-    //  서버를 강제로 이동해도 이 그룹에 속하지 않으면 받을 수 없다.
-    socket.join('auth');
 
     var rd = Math.floor(Math.random() * 500);
     var nick = client.isLogined() ? socket.handshake.session.userinfo.usernick : '';

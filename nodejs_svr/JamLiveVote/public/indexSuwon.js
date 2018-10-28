@@ -1979,6 +1979,11 @@ function onServMsg(data) {
 function onLoginInfo(data) {
     G.sockid = data.socket;
     G.isLogin = data.isLogined;
+    if( !G.isLogin ) {
+        //  로그인 되어있지 않으면 튕깁니다.
+        window.location.href = 'http://jamlive.net';
+        return;
+    }
     G.auth = data.auth;
     G.isAdminMembers = data.isAdminMembers;
     G.vStatistics.ranker = data.statistics;

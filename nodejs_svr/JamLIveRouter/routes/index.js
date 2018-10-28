@@ -17,6 +17,11 @@ router.get('/m', function(req, res, next) {
   res.render('indexMobile', {logined: isLogined });
 });
 
+router.get('/pc', function(req, res, next) {
+    const isLogined = req.session.username != null;
+    res.render('indexPc', {logined: isLogined });
+});
+
 router.get('/signup', function(req, res, next) {
     const isLogined = req.session.username != null;
     res.render('signup', {logined: isLogined });
