@@ -161,25 +161,29 @@ ServerMan.prototype.register = function(socket) {
     var client = servman.getClient(socket.id);
 
     socket.on('disconnect', function(){
-        var client = servman.getClient(this.id);
-        servman.removeSocket(this.id);
+        try {
+            var client = servman.getClient(this.id);
+            servman.removeSocket(this.id);
 
-        //  힌트 수정자를 취소 시키기 위한 로직
-        servman.center.disconnectUser( client.nick );
+            //  힌트 수정자를 취소 시키기 위한 로직
+            servman.center.disconnectUser( client.nick );
 
-        if( client && client.isLogined() ) {
-            if( servman.modifyingUser == client.nick ) {
-                servman.modifyingUser = '';
-                servman.bMemoModifying = false;
+            if( client && client.isLogined() ) {
+                if( servman.modifyingUser == client.nick ) {
+                    servman.modifyingUser = '';
+                    servman.bMemoModifying = false;
+                }
+                //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
+                const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
+                servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
+                } )
+
+                dbhelper.updateActivePoint( this.handshake.session.username, client.getActivePoint(), function(ret) {
+                    //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
+                });
             }
-            //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
-            const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
-            servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
-            } )
-
-            dbhelper.updateActivePoint( this.handshake.session.username, client.getActivePoint(), function(ret) {
-                //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
-            });
+        }catch(e) {
+            console.log(e);
         }
     });
 
