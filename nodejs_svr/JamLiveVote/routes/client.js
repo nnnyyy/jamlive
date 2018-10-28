@@ -97,7 +97,7 @@ Client.prototype.isLogined = function() {
 
 Client.prototype.isAbleChat = function() {
     const tCur = new Date();
-    return (tCur - this.tLastChat >= 950);
+    return (tCur - this.tLastChat >= 2500);
 }
 
 Client.prototype.isAdminMembers = function() {

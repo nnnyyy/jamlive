@@ -179,11 +179,9 @@ ServerMan.prototype.register = function(socket) {
                 } );
 
                 if( userinfo.ap && userinfo.ap >= 0 ) {
-                    /*
                     dbhelper.updateActivePoint( client.socket.handshake.session.username, userinfo.ap, function(ret) {
                         //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
                     });
-                    */
                 }
             }
         }catch(e) {
@@ -829,7 +827,10 @@ function onSockSearch(data) {
         }
 
         var tMax = 10000;
-        if( client.auth <= 1 ) tMax = 10000;
+        if( client.auth <= 2 ) {
+            servman.sendServerMsg(client.socket, '(임시)레벨 2 이하는 검색이 불가능합니다.');
+            return;
+        }
         else if( client.auth >= 2 && client.auth < 5 ) tMax = 3000;
         else tMax = 500;
 
