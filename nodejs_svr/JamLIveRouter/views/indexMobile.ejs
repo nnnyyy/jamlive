@@ -15,6 +15,7 @@
       <script src="/basic.js"></script>
       <link rel='stylesheet' href='/stylesheets/styleMobile.css' />
       <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
       <script>
           (adsbygoogle = window.adsbygoogle || []).push({
               google_ad_client: "ca-pub-3598320494828213",
@@ -24,134 +25,76 @@
   </head>
   <body>
   <!-- HTML Design -->
-  <div id ='mainframe'>
-      <div class="center_wnd">
-          <div class="title c_main">라이브 퀴즈 공유기</div>
-          <div class="subtitle c_sub">아래 서버 중에 하나를 선택하세요</div>
-          <div style="text-align: center;width: 320px; margin: 0 auto;">
-              <ins class="kakao_ad_area" style="display:none;"
-                   data-ad-unit    = "DAN-urpo5nnk32w6"
-                   data-ad-width   = "320"
-                   data-ad-height  = "100"></ins>
-              <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-          </div>
-          <div class="btn_box btn-serv" servidx=1>서버 1</div>
-          <div class="btn_box btn-serv" servidx=2>서버 2</div>
-          <div class="btn_box btn-serv" servidx=3>서버 3</div>
-          <div class="btn_box btn-serv" servidx=4>서버 4</div>
-          <div style="text-align: center;width: 320px; margin: 0 auto;">
-              <ins class="kakao_ad_area" style="display:none;"
-                   data-ad-unit    = "DAN-1hrj7yzlqtc8n"
-                   data-ad-width   = "320"
-                   data-ad-height  = "100"></ins>
-              <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-          </div>
-          <div class="btn_box btn-serv" servidx=5>서버 5</div>
-          <div class="btn_box btn-serv" servidx=6>서버 6</div>
-          <div class="btn_box btn-serv" servidx=7>서버 7</div>
-          <div class="btn_box btn-serv" servidx=8>서버 8</div>
-
-          <div style="text-align: center;width: 320px; margin: 0 auto;">
-              <ins class="kakao_ad_area" style="display:none;width:100%"
-                   data-ad-unit    = "DAN-u7raa8rbgto1"
-                   data-ad-width   = "320"
-                   data-ad-height  = "50"></ins>
-              <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-          </div>
-          <div class="btn_box btn-serv" servidx=9>서버 9</div>
-          <div class="btn_box btn-serv" servidx=10>서버 10</div>
-          <div class="btn_box btn-serv" servidx=11>서버 11</div>
-          <div class="btn_box btn-serv" servidx=12>서버 12</div>
-          <div style="text-align: center;width: 320px; margin: 0 auto;">
-              <ins class="kakao_ad_area" style="display:none;width:100%"
-                   data-ad-unit    = "DAN-t87e91n4i053"
-                   data-ad-width   = "320"
-                   data-ad-height  = "50"></ins>
-              <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-          </div>
-          <div class="btn_box btn-serv" servidx=13>서버 13</div>
-          <div class="btn_box btn-serv" servidx=14>서버 14</div>
-          <div class="btn_box btn-serv" servidx=15>서버 15</div>
-          <div class="btn_box btn-serv" servidx=16>서버 16</div>
-          <a href="http://quiz.jamlive.net"><div class="btn_box">퀴즈 기출문제 사이트</div></a>
-          <div style="text-align: center;width: 100%; margin: 0 auto;">
-              <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-              <!-- [입구] 320x100 -->
-              <ins class="adsbygoogle"
-                   style="display:inline-block;width:320px;height:100px"
-                   data-ad-client="ca-pub-3598320494828213"
-                   data-ad-slot="6801120727"></ins>
-              <script>
-                  (adsbygoogle = window.adsbygoogle || []).push({});
-              </script>
-          </div>
+  <div id="app">
+      <div id="top">
+          <a href="/m/"><img src="/images/_logo.png"/></a>
       </div>
+      <div id="menu-btn"></div>
+      <div class="ads">
+          <ins class="kakao_ad_area" style="display:none;width:100%"
+               data-ad-unit    = "DAN-t87e91n4i053"
+               data-ad-width   = "320"
+               data-ad-height  = "50"></ins>
+          <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+      </div>
+      <div>
+          <dl>
+              <dt>공유기?</dt>
+              <dd>모바일 퀴즈쇼를 힘을 합쳐서 푸는 사이트입니다.</dd>
+              <dd><a href="/about">공유기 이용수칙</a></dd>
+          </dl>
+          <dl>
+              <dt>모바일 퀴즈쇼?</dt>
+              <dd>잼라이브, 더퀴즈라이브, 퍼프픽, 라이브팝, 큐피트 등 모바일 플랫폼으로 정해진 시간에 퀴즈를 풀고 상금을 획득하는 앱입니다.</dd>
+              <dd><a href="/quizshow">모바일 퀴즈쇼 종류 및 설명 보기</a></dd>
+          </dl>
+      </div>
+      <div class="ads">
+          <ins class="kakao_ad_area" style="display:none;width:100%"
+               data-ad-unit    = "DAN-rh5ikhi3t46a"
+               data-ad-width   = "320"
+               data-ad-height  = "50"></ins>
+          <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+      </div>
+      <div id="btns-menu">
+          <button @click="onBtnSignUp" v-show="logined==false">회원가입</button>
+          <button @click="onBtnSignIn" v-show="logined==false">로그인</button>
+          <button @click="onBtnSignOut" v-show="logined==true">로그아웃</button>
+      </div>
+      <div>
+          <dl>
+              <dt>서버 목록</dt>
+              <dd v-if='logined==false'>로그인 후에 서버 리스트가 나옵니다</dd>
+              <dd v-else>
+                  <ul id="server-list">
+                      <li v-for="item in servers">
+                          <div class="serv-item" @click="onBtnGo(item.idx, $event)">{{item.name}}</div>
+                      </li>
+                  </ul>
+              </dd>
+          </dl>
+      </div>
+      <div class="ads">
+          <ins class="kakao_ad_area" style="display:none;width:100%"
+               data-ad-unit    = "DAN-u7raa8rbgto1"
+               data-ad-width   = "320"
+               data-ad-height  = "50"></ins>
+          <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+      </div>
+      <div>
+          <dl>
+              <dt>문의 및 건의</dt>
+              <dd>E-mail : nnnyyy@nate.com</dd>
+          </dl>
+      </div>
+      <transition name="am">
+          <div v-show="adminShow" id="admin-msg" v-text="adminMsg"></div>
+      </transition>
   </div>
-  <div class="admin_msg"></div>
   </body>
-    <script>
-        var animOpacityTimerID = -1;
-        function showAdminMsg(msg) {
-            var obj = $('.admin_msg');
-            setVisible(obj, true);
-            if( animOpacityTimerID != -1 ) {
-                clearTimeout(animOpacityTimerID);
-                animOpacityTimerID = -1;
-                obj.removeClass('opacity');
-                obj.addClass('non_opacity');
-            }
-            obj.addClass('opacity');
-            obj.removeClass('non_opacity');
-            obj.html(msg);
-            obj.css('opacity', '0.95');
-            animOpacityTimerID = setTimeout(function() {
-                setVisible(obj, false);
-                //$('.admin_msg').css('opacity', '0');
-            }, 1500);
-
-        }
-
-        function setVisible(elem, visible) {
-            elem.css('display', visible ? 'inline-block' : 'none');
-        }
-
-        function setVisibleBlock(elem, visible) {
-            elem.css('display', visible ? 'block' : 'none');
-        }
-
-        function getVisible(elem) {
-            if( elem.css('display') === 'none' ) return false;
-
-            return true;
-        }
-
-        $(document).ready(function(){
-            var obj = $('.admin_msg');
-            setVisible(obj, false);
-
-            $('.btn-serv').each(function(idx) {
-                var servidx = $(this).attr('servidx');
-                $(this).click(function(e) {
-                    e.stopPropagation();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'json',
-                        data: JSON.stringify({
-                            servidx: servidx
-                        }),
-                        contentType: 'application/json',
-                        url: '/go',
-                        success: function(data) {
-                            if( data.ret == 0 ) {
-                                window.location.href = data.url;
-                            }
-                            else {
-                                showAdminMsg(data.msg);
-                            }
-                        }
-                    });
-                })
-            });
-        });
-    </script>
+  <script src="/js/mobile.js"></script>
+<script>
+    var logined = <%-logined%>;
+    init(logined);
+</script>
 </html>

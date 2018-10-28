@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JAM LIVE ( 잼라이브 ) 정답 공유기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 퀴즈 문제의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="/basic.js"></script>
+    <link rel='stylesheet' href='/stylesheets/styleMobile.css' />
+    <link rel='stylesheet' href='/stylesheets/quizshow.css' />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-3598320494828213",
+            enable_page_level_ads: true
+        });
+    </script>
+</head>
+<body>
+<!-- HTML Design -->
+<div id="app">
+    <div id="top">
+        <a href="/m/"><img src="/images/_logo.png"/></a>
+    </div>
+    <div>
+        <table id="tb-list" style="width: 90%; margin: 0 10px;">
+            <tr>
+                <td @click="onTab(1)">잼라이브</td>
+                <td @click="onTab(2)">더퀴즈라이브</td>
+                <td @click="onTab(3)">라이브팝</td>
+                <td @click="onTab(4)">퍼프픽</td>
+            </tr>
+            <tr>
+                <td @click="onTab(5)">땡기지</td>
+                <td @click="onTab(6)">큐피트</td>
+                <td @click="onTab(7)">헐퀴</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div id="info">
+        <div v-if="tab==1">
+            <h2>잼라이브</h2>
+            <dl>
+                <dt>회사</dt>
+                <dd>Snow</dd>
+                <dt>공식사이트</dt>
+                <dd><a href="https://jamlive.tv" target="_blank">https://jamlive.tv</a></dd>
+                <dt>퀴즈시간</dt>
+                <dd>평일 : 밤 9시</dd>
+                <dd>주말 : 낮 2시, 밤 9시</dd>
+                <dt>특징</dt>
+                <dd>리포터, 아나운서, 쇼핑몰호스트 등의 깔끔한 진행</dd>
+                <dd>가장 많은 기본 상금</dd>
+                <dd>최소 출금액 5,000원</dd>
+                <dd>고액 상금의 특집이 많다</dd>
+            </dl>
+        </div>
+        <div v-else-if="tab==2">
+            <h2>더퀴즈라이브</h2>
+            <dl>
+                <dt>회사</dt>
+                <dd>캐시슬라이드</dd>
+                <dt>공식사이트</dt>
+                <dd><a href="https://thequiz.live" target="_blank">https://thequiz.live</a></dd>
+                <dt>퀴즈시간</dt>
+                <dd>평일 : 밤 9시 30분</dd>
+                <dd>주말 : 밤 9시 30분</dd>
+                <dt>특징</dt>
+                <dd>기상캐스터, 뮤지컬 배우, 성우 등의 진행자</dd>
+                <dd>상금이 짜다</dd>
+                <dd>최소 출금액 50,000원</dd>
+                <dd>상금으로 다른 상품을 바꿀 수 있다</dd>
+            </dl>
+        </div>
+        <div v-else-if="tab==3">
+            <h2>라이브팝</h2>
+            <dl>
+                <dt>회사</dt>
+                <dd>라이브팝</dd>
+                <dt>공식사이트</dt>
+                <dd><a href="https://www.facebook.com/livepopkr" target="_blank">https://www.facebook.com/livepopkr</a></dd>
+                <dt>퀴즈시간</dt>
+                <dd>주말 : 낮 2시 30분</dd>
+                <dt>특징</dt>
+                <dd>게임 전문 퀴즈쇼!</dd>
+                <dd>계속 베타테스트 중</dd>
+                <dd>최소 출금액 50,000원</dd>
+            </dl>
+        </div>
+        <div v-else-if="tab==4">
+            <h2>퍼프픽</h2>
+        </div>
+        <div v-else-if="tab==5">
+            <h2>땡기지</h2>
+        </div>
+        <div v-else-if="tab==6">
+            <h2>큐피트</h2>
+        </div>
+        <div v-else-if="tab==7">
+            <h2>헐퀴</h2>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/quizshow.js"></script>
+<script>
+    init();
+</script>
+</html>

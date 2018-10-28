@@ -32,6 +32,22 @@ var SetGame = function() {
 SetGame.prototype.init = function() {
     console.log('initialize start');
     var sg = this;
+
+    this.pos = [
+        { x: 0, y: 0 },
+        { x: 100, y: 0 },
+        { x: 200, y: 0 },
+        { x: 0, y: 100 },
+        { x: 100, y: 100 },
+        { x: 200, y: 100 },
+        { x: 0, y: 200 },
+        { x: 100, y: 200 },
+        { x: 200, y: 200 },
+        { x: 0, y: 300 },
+        { x: 100, y: 300 },
+        { x: 200, y: 300 }
+    ];
+
     this.app = new PIXI.Application(400, 400, {backgroundColor : 0x1099bb});
     $('#game-view').append(this.app.view);
 
@@ -56,16 +72,16 @@ SetGame.prototype.init = function() {
 };
 
 SetGame.prototype.update = function( tCur ) {
-    if( this.active ) {
-        this.active.x += 1;
-        console.log('#');
-    }
 }
 
 SetGame.prototype.show = function() {
-    var img = this.setCardsSprites.get('000');
-    img.x = 0;
-    img.y = 0;
-    this.active = img;
-    this.app.stage.addChild(img);
+    var i = 0;
+    for (var value of this.setCardsSprites.values()) {
+        var img = value;
+        console.log(img);
+        img.x = this.pos[i%12].x;
+        img.y = this.pos[i%12].y;
+        i++;
+        this.app.stage.addChild(img);
+    }
 };

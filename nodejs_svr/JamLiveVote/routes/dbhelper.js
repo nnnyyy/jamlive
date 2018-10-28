@@ -494,7 +494,7 @@ exports.getBanCnt = function( id, cb ) {
         Log.logger.debug('DB Failed - getBanCnt');
         cb({ret: -1});
     }
-}
+};
 
 exports.insertBanUser = function( id, cb ) {
     try {

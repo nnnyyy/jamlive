@@ -1,0 +1,14 @@
+#tb-list {
+  text-align: center; }
+  #tb-list tr {
+    height: 30px; }
+  #tb-list td {
+    height: 30px; }
+  #tb-list td:nth-child(2n) {
+    background-color: #c0c0c0; }
+
+#info {
+  text-align: center;
+  margin: 12px; }
+
+/*# sourceMappingURL=quizshow.css.map */

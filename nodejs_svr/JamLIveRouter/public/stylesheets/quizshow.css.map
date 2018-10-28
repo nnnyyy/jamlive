@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,QAAS;EACP,UAAU,EAAE,MAAM;EAClB,WAAG;IACD,MAAM,EAAE,IAAI;EAEd,WAAG;IACD,MAAM,EAAE,IAAI;EAGd,yBAAiB;IACf,gBAAgB,EAAE,OAAO;;AAI7B,KAAM;EACJ,UAAU,EAAE,MAAM;EAClB,MAAM,EAAE,IAAI",
+"sources": ["scss/quizshow.scss"],
+"names": [],
+"file": "quizshow.css"
+}

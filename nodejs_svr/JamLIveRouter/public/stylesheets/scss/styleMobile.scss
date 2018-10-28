@@ -13,87 +13,124 @@ $color-border: #e5e5e5;
 
 
 * {
+  box-sizing: border-box;
   margin : 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
 }
 
 html, body {
   height: 100%;
-}
-body {
-  margin-top: 8px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: $main-font-color;
-  background-color: $primary-color;
+  background-color: #fafafa;
 }
 
-a {
-  text-decoration: none;
+#app {
+
 }
 
-#mainframe {
+dt {
+  margin: 4px 10px;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+dd {
+  margin: 6px 20px;
+  font-size: 14px;
+}
+
+div {
+}
+
+#top {
   width: 100%;
-  height: 100%;
+  border-bottom: 2px #fcfcfc solid;
+  height: 40px;
+  background-color: white;
+  text-align: center;
+
+  a {
+    height: inherit;
+  }
+
+  img {
+    height: inherit;
+    margin: 0 auto;
+  }
 }
 
-.center_wnd {
+#menu-btn {
   position: absolute;
   top: 0;
-  left: 0;
-  margin-top: 13px;
-  text-align: center;
-}
-
-.title {
-  font-size: 24px;
-  margin: 10px;
-}
-
-.subtitle {
-  margin-bottom: 10px;
-}
-
-.c_main {
-  color: $main-font-color;
-}
-
-.btn_box {
-  width: 320px;
+  width: 40px;
   height: 40px;
-  line-height: 40px;
-  background-color: $main-font-color;
-  color: $primary-color;
-  cursor: pointer;
-  margin: 10px 20px auto;
+  background-color: green;
 }
 
-.admin_msg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 90vw;
-  min-height: 120px;
-  margin-left: -45vw;
-  background-color: black;
+//  ?? ??? ????, ???, ???? ??
+#btns-menu {
+  text-align: center;
+  button {
+    width: 80%;
+    height: 36px;
+    margin: 4px 0;
+    background-color: #fcfcfc;
+  }
+}
+
+#server-list {
+  li {
+    text-align: center;
+    margin: 0 4px;
+    width: 20%;
+    height: 30px;
+    float: left;
+  }
+
+  li:nth-child(4n + 1) {
+    clear: left;
+  }
+
+  .serv-item:nth-child(2n) {
+    background-color: #dddddd;
+  }
+}
+
+#admin-msg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background-color: #000088;
   color: white;
   text-align: center;
-  line-height: 120px;
-  font-size: 16px;
+  opacity: 0.8;
+  padding: 16px;
+}
+
+.am-enter, .am-leave-to {
   opacity: 0;
-  overflow: hidden;
 }
 
-.opacity {
-  -webkit-transition: all 0.3s ease-in-out;
-  -moz-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
+.am-enter-active .am-leave-active{
+  transition: opacity .5s;
 }
 
-.non_opacity {
-  -webkit-transition: none !important;
-  -moz-transition: none !important;
-  -ms-transition: none !important;
-  -o-transition: none !important;
-  transition: none !important;
+#tb-sign-up {
+  margin: 0 auto;
+  width: 90%;
+  text-align: center;
+
+  td {
+    padding: 4px;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+  }
 }

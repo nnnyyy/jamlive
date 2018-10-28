@@ -46,6 +46,7 @@ class Center {
     }
 
     onConnect() {
+        console.log('connect to center server!');
         const center = this;
         this.socket.emit('serv-info', { type: "route-server", name: config.serv_name });
         this.socket.on('disconnect', function()        { center.onDisconnect(this);            });

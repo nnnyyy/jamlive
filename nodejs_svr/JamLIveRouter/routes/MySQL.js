@@ -16,7 +16,8 @@ DBMan.init = function() {
         host: config.isDebugDB ? '112.168.225.63' : parsed.dbhost,
         user: parsed.user,
         password: parsed.password,
-        database: parsed.database
+        database: parsed.database,
+        multipleStatements: true
     });
 
 }

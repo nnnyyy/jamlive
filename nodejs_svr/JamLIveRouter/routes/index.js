@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const HashMap = require('hashmap');
 var config = require('../config');
+const dbhelper = require('./dbhelper');
+const Auth = require('./Auth');
 
 const ioclient = require('socket.io-client');
 
@@ -11,12 +13,31 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/m', function(req, res, next) {
-  res.render('indexMobile');
+    const isLogined = req.session.username != null;
+  res.render('indexMobile', {logined: isLogined });
 });
 
-router.get('/new', function(req, res, next) {
-  res.render('index');
+router.get('/signup', function(req, res, next) {
+    const isLogined = req.session.username != null;
+    res.render('signup', {logined: isLogined });
 });
+
+router.get('/login', function(req,res,next) {
+    const isLogined = req.session.username != null;
+    res.render('login', {logined: isLogined });
+});
+
+router.get('/about', function( req, res, next) {
+    res.render('about');
+});
+
+router.get('/quizshow', function( req, res, next) {
+    res.render('quizshow');
+});
+
+router.post('/signup_req', Auth.signup );
+router.post('/login', Auth.login );
+router.post('/logout', Auth.logout );
 
 router.post('/go', function( req, res , next) {
 

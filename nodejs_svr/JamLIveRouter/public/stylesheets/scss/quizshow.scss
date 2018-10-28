@@ -1,0 +1,18 @@
+#tb-list {
+  text-align: center;
+  tr {
+    height: 30px;
+  }
+  td {
+    height: 30px;
+  }
+
+  td:nth-child(2n) {
+    background-color: #c0c0c0;
+  }
+}
+
+#info {
+  text-align: center;
+  margin: 12px;
+}

@@ -1,85 +1,74 @@
 /**
  * Created by nnnyy on 2018-04-13.
  */
-var Log = require('./Log');
 var dbpool = require('./MySQL').init();
 
-exports.getQuizDateList = function(cb) {
+exports.signup = function(id, pw, nick, cb) {
     try {
-        dbpool.query("select sn, quiz_date from quiz_date_list order by quiz_date", function(err, rows) {
+        dbpool.query("CALL signup(?,?,?, @ret); select @ret;", [id, pw, nick] , function(err, rows) {
             if(err) {
-                cb({ret: -1});
+                console.log(err);
+                cb({ret: -99});
                 return;
             }
-            var data = [];
-            for( var i  = 0; i < rows.length ; ++i ) {
-                var d = rows[i];
-                data.push({sn: d.sn, quiz_date: d.quiz_date});
-            }
-            cb({ret:0, list: data});
-        });
-    }catch(err) {
-        Log.logger.debug('DB Failed - getQuizDateList');
-        cb({ret: -1});
-    }
-}
 
-exports.getQuizList = function(sn, cb) {
-    try {
-        dbpool.query("select * from quiz where date_sn = " + sn + ' order by quiz_idx', function(err, rows) {
-            if(err) {
-                cb({ret: -1});
-                return;
-            }
-            var data = [];
-            for( var i  = 0; i < rows.length ; ++i ) {
-                var d = rows[i];
-                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
-            }
-            cb({ret:0, quizlist: data});
+            var ret = rows[rows.length - 1][0]['@ret'];
+            cb({ret: ret});
         });
     }catch(err) {
-        Log.logger.debug('DB Failed - getQuizDateList');
-        cb({ret: -1});
+        cb({ret: -99});
     }
-}
+};
 
-exports.getRandomQuizList = function( cb ) {
+exports.login = function(id, pw, ip, cb) {
     try {
-        dbpool.query("select * from quiz where quiz_idx >= 4 order by rand() limit 0,12", function(err, rows) {
+        dbpool.query("CALL login(?,?,?, @ret); select @ret;", [id, pw, ip] , function(err, rows) {
             if(err) {
-                cb({ret: -1});
+                console.log('error : ' + err);
+                cb({ret: -99});
                 return;
             }
-            var data = [];
-            for( var i  = 0; i < rows.length ; ++i ) {
-                var d = rows[i];
-                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
-            }
-            cb({ret:0, quizlist: data});
-        });
-    }catch(err) {
-        Log.logger.debug('DB Failed - getQuizDateList');
-        cb({ret: -1});
-    }
-}
 
-exports.getRandomQuiz = function( cb ) {
-    try {
-        dbpool.query("select * from quiz where quiz_idx >= 4 order by rand() limit 0,1", function(err, rows) {
-            if(err) {
-                cb({ret: -1});
-                return;
-            }
-            var data = [];
-            for( var i  = 0; i < rows.length ; ++i ) {
-                var d = rows[i];
-                data.push({idx: d.quiz_idx, question: d.question ,answer: [d.answer1, d.answer2, d.answer3], collect: d.collect_idx});
-            }
-            cb({ret:0, quizdata: data[0]});
+            var ret = rows[rows.length - 1][0]['@ret'];
+            var data = rows[0][0];
+            cb({id: data.id, nick: data.nick, auth: data.auth_state, adminMemberVal: data.adminMemberVal, ret: ret});
         });
     }catch(err) {
-        Log.logger.debug('DB Failed - getQuizDateList');
+        cb({ret: -99});
+    }
+};
+
+exports.getBanCnt = function( id, cb ) {
+    try {
+        dbpool.query("CALL getBanCnt( ? )", [id], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            cb({ret: 0, cnt: rows[0][0].cnt });
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getBanCnt');
         cb({ret: -1});
     }
-}
+};
+
+exports.getActivePoint = function( id, cb ) {
+    try {
+        dbpool.query("CALL getActivePoint( ?, @point ); select @point;", [id], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                cb({ret: -99});
+                return;
+            }
+
+            var point = rows[rows.length - 1][0]['@point'];
+            cb({ret: 0, point: point});
+        });
+    }catch(err) {
+        Log.logger.debug('DB Failed - getActivePoint');
+        cb({ret: -1});
+    }
+};
