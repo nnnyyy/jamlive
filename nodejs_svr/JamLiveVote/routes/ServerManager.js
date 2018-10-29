@@ -24,6 +24,8 @@ var config = require('../config');
 const connectedListMan = require('./modules/ConnectedListMan');
 const connListMan = new connectedListMan();
 
+var async = require('async');
+
 var VOTEPERTIME = 1000;
 var BANTIME = 6 * 60 * 1000;
 var SEARCHTIME = 8 * 1000;
@@ -146,146 +148,192 @@ ServerMan.prototype.updateInfo = function( socket, client ) {
     try {
         if( !socket || !client ) return;
 
-        socket.emit(PS.SERV_TO_CLIENT.UPDATE_INFO, { ap: client.getActivePoint(), auth: client.auth })
+        socket.emit(PS.SERV_TO_CLIENT.UPDATE_INFO, { ap: client.ap, auth: client.auth })
     }
     catch(e) {
         console.log('update info error');
     }
 }
 
-ServerMan.prototype.register = function(socket) {
-    if( !this.addSocket(socket) ) {
-        return;
-    }
-
-    var client = servman.getClient(socket.id);
-
-    socket.on('disconnect', function(){
-        try {
-            var client = servman.getClient(this.id);
-            servman.removeSocket(this.id);
-
-            //  힌트 수정자를 취소 시키기 위한 로직
-            servman.center.disconnectUser( client.nick );
-
-            if( client && client.isLogined() ) {
-                if( servman.modifyingUser == client.nick ) {
-                    servman.modifyingUser = '';
-                    servman.bMemoModifying = false;
-                }
-                //  DB에 바로 업데이트하는 건 별로니, 나중에는 큐로 쌓고 처리하자
-                const userinfo = JSON.stringify(client.socket.handshake.session.userinfo);
-                servman.redis.set(client.socket.handshake.session.username, userinfo,  (err, info) => {
-                } );
-
-                if( userinfo.ap && userinfo.ap >= 0 ) {
-                    dbhelper.updateActivePoint( client.socket.handshake.session.username, userinfo.ap, function(ret) {
-                        //console.log(`${client.nick} - updateActivePoint ret ${ret}`);
-                    });
-                }
-            }
-        }catch(e) {
-            console.log(e);
-        }
-    });
-
-    if( client.isLogined() ) {
-        client.auth = socket.handshake.session.userinfo.auth;
-        //  서버를 강제로 이동해도 이 그룹에 속하지 않으면 받을 수 없다.
-        socket.join('auth');
-    }
-
-    if( isServerLimit() && !client.isAdminMembers() ) {
-        socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
-        return;
-    }
-
-    var rd = Math.floor(Math.random() * 500);
-    var nick = client.isLogined() ? socket.handshake.session.userinfo.usernick : '';
-    if( !client.isLogined() ){
-        nick = '손님' + rd;
-    }
-
-    client.nick = nick;
-
-    connListMan.addUser(client);
-    connListMan.updateListToClient(client);
-
-    if( client.isLogined() ) {
-        while( LevelExpTable.isAbleLevelUp(client.auth, client.getActivePoint() ) ) {
-            client.auth += 1;
-            client.getUserInfo().auth += 1;
-            dbhelper.updateAuth( client.getUserId(), client.auth, function( result ) {
-                servman.sendServerMsg(client.socket, `레벨 업!!`);
-                servman.updateInfo(client.socket, client );
-            } );
-        }
-    }
-
-    socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList, statistics: servman.rankerList, liker: servman.likerList });
-    var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
-    var MemoObj = { hint: this.globalHint.hint, provider: this.globalHint.provider }
-    socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })
-    socket.emit(PS.SERV_TO_CLIENT.LOCAL_HINT, {memo_provider: servman.memo_provider , local: localMemoObj });
-    socket.emit(PS.SERV_TO_CLIENT.UPDATE_NOTICE, {noticeData: this.noticeData});
-    socket.emit('next-quiz', { data: servman.nextQuizShowdata });
-
-    if( this.chosung.isRunning() ) {
-        this.chosung.sendState(socket);
-    }
-
-    socket.on(PS.CLIENT_TO_SERV.VOTE, onSockVote);
-    socket.on(PS.CLIENT_TO_SERV.CHAT, onSockChat);
-    socket.on(PS.CLIENT_TO_SERV.SEARCH, onSockSearch);
-    socket.on(PS.CLIENT_TO_SERV.BAN, onSockBan);
-    socket.on(PS.CLIENT_TO_SERV.PERMANENT_BAN, onSockPermanentBan);
-    socket.on(PS.CLIENT_TO_SERV.LIKE, onSockLike);
-    socket.on(PS.CLIENT_TO_SERV.LOCAL_HINT, onMemo);
-    socket.on(PS.CLIENT_TO_SERV.SELECT_SERVER, onGo);
-    socket.on(PS.CLIENT_TO_SERV.GET_VOTE_LIST, onGetVoteList);
-    socket.on(PS.CLIENT_TO_SERV.GET_SEARCH_LIST, onGetSearchList);
-
-    socket.on(PS.CLIENT_TO_SERV.SERV_INFO_RELOAD, onServerInfoReload);
-    socket.on(PS.CLIENT_TO_SERV.BAN_RELOAD, onBanReload);
-    socket.on('one-pick', function(packet){ servman.onePickManager.onPacket(client, packet) })
-}
-
-
-ServerMan.prototype.addSocket = function(socket) {
+ServerMan.prototype.checkEnterCondition = function(socket, callback ) {
     try {
         let ip = socket.handshake.address.substr(7);
         if( socket.handshake.headers['x-real-ip'] != null ) {
             ip = socket.handshake.headers['x-real-ip'];
         }
 
-        if( this.permanentBanList.get(ip) || this.permanentBanList.get(socket.handshake.session.username)) {
-            socket.emit('reconn-server', {reason: 'baned', logined: true, url: 'jamlive.net'});
-            return false;
+        if( !socket.handshake.session.username ) {
+            socket.emit('reconn-server', {reason: 'limit', logined: false, url: 'jamlive.net'});
+            callback(-11);
+            return;
         }
 
-        const client = new Client(this, socket);
+        if( servman.permanentBanList.get(ip) || servman.permanentBanList.get(socket.handshake.session.username)) {
+            socket.emit('reconn-server', {reason: 'baned', logined: true, url: 'jamlive.net'});
+            callback(-1);
+        }
+
+        callback(null, socket, ip);
+
+    }catch(e) {
+        console.log(e);
+        callback(-99);
+    }
+};
+
+ServerMan.prototype.getInfoFromDB = function(socket, ip, callback) {
+    try {
+        const userID = socket.handshake.session.username;
+        dbhelper.getActivePoint(userID, function(result) {
+            if( result.ret != 0 ) {
+                callback(-2);
+                return;
+            }
+
+            callback(null, socket, ip, result.point);
+        });
+    }catch(e) {
+        console.log(e);
+        callback(-99);
+    }
+}
+
+ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
+    try {
+        const client = new Client(servman, socket);
+        console.log('createUser', ip, ap);
         client.ip = ip;
-        this.socketmap.set(socket.id, client);
+        client.ap = ap;
+        client.nick = socket.handshake.session.userinfo.usernick;
+        servman.socketmap.set(socket.id, client);
+
+        connListMan.addUser(client);
+        connListMan.updateListToClient(client);
 
         if( client.isLogined() ) {
-            this.redis.get(client.socket.handshake.session.username, (err, info) => {
-                try {
-                    if( !err ) {
-                        const parsedInfo = JSON.parse(info);
-                        client.socket.handshake.session.userinfo = parsedInfo;
-                        client.socket.emit('ap', {ap: parsedInfo.ap});
-                    }
-                }catch(e) {
-
-                }
-            } );
+            client.auth = socket.handshake.session.userinfo.auth;
+            //  서버를 강제로 이동해도 이 그룹에 속하지 않으면 받을 수 없다.
+            socket.join('auth');
         }
-    }catch(e) {
-        console.log(`addsocket Error - ${e}`);
-        return false;
-    }
+        else {
+            callback(-3);
+        }
 
-    return true;
+        if( client.isLogined() ) {
+            while( LevelExpTable.isAbleLevelUp(client.auth, client.getActivePoint() ) ) {
+                client.auth += 1;
+                client.getUserInfo().auth += 1;
+                dbhelper.updateAuth( client.getUserId(), client.auth, function( result ) {
+                    servman.sendServerMsg(client.socket, `레벨 업!!`);
+                    servman.updateInfo(client.socket, client );
+                } );
+            }
+        }
+
+        if( isServerLimit() && !client.isAdminMembers() ) {
+            socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
+            callback(-4);
+            return;
+        }
+
+        callback(null, client);
+    }catch(e) {
+        console.log(e);
+        callback(-99);
+    }
+}
+
+ServerMan.prototype.setSocketListener = function(client, callback) {
+    try {
+        var socket = client.socket;
+        socket.on('disconnect', function(){
+            try {
+                var client = servman.getClient(this.id);
+                servman.removeSocket(this.id);
+
+                //  힌트 수정자를 취소 시키기 위한 로직
+                servman.center.disconnectUser( client.nick );
+
+                if( client && client.isLogined() ) {
+                    if( servman.modifyingUser == client.nick ) {
+                        servman.modifyingUser = '';
+                        servman.bMemoModifying = false;
+                    }
+
+                    console.log('disconnect', client.ap);
+
+                    if( client.ap && client.ap >= 0 ) {
+                        dbhelper.updateActivePoint( client.socket.handshake.session.username, client.ap, function(ret) {
+                            if( ret.ret != 0 ) {
+                                console.log('updateActivePoint Error');
+                            }
+                        });
+                    }
+                }
+            }catch(e) {
+                console.log(e);
+            }
+        });
+
+
+        socket.emit(PS.SERV_TO_CLIENT.LOGIN_INFO, {socket: socket.id, isLogined: client.isLogined(), isAdminMembers: client.isAdminMembers() , auth: client.auth, nick: client.nick, quizTable: servman.todayQuizTableList, statistics: servman.rankerList, liker: servman.likerList });
+        var localMemoObj = { hint: servman.memo, provider: servman.memo_provider }
+        var MemoObj = { hint: servman.globalHint.hint, provider: servman.globalHint.provider }
+        socket.emit(PS.SERV_TO_CLIENT.GLOBAL_HINT, { mode: 'set', global: MemoObj })
+        socket.emit(PS.SERV_TO_CLIENT.LOCAL_HINT, {memo_provider: servman.memo_provider , local: localMemoObj });
+        socket.emit(PS.SERV_TO_CLIENT.UPDATE_NOTICE, {noticeData: servman.noticeData});
+        socket.emit('next-quiz', { data: servman.nextQuizShowdata });
+        servman.updateInfo(socket, client );
+
+        if( servman.chosung.isRunning() ) {
+            servman.chosung.sendState(socket);
+        }
+
+
+        socket.on(PS.CLIENT_TO_SERV.VOTE, onSockVote);
+        socket.on(PS.CLIENT_TO_SERV.CHAT, onSockChat);
+        socket.on(PS.CLIENT_TO_SERV.SEARCH, onSockSearch);
+        socket.on(PS.CLIENT_TO_SERV.BAN, onSockBan);
+        socket.on(PS.CLIENT_TO_SERV.PERMANENT_BAN, onSockPermanentBan);
+        socket.on(PS.CLIENT_TO_SERV.LIKE, onSockLike);
+        socket.on(PS.CLIENT_TO_SERV.LOCAL_HINT, onMemo);
+        socket.on(PS.CLIENT_TO_SERV.SELECT_SERVER, onGo);
+        socket.on(PS.CLIENT_TO_SERV.GET_VOTE_LIST, onGetVoteList);
+        socket.on(PS.CLIENT_TO_SERV.GET_SEARCH_LIST, onGetSearchList);
+
+        socket.on(PS.CLIENT_TO_SERV.SERV_INFO_RELOAD, onServerInfoReload);
+        socket.on(PS.CLIENT_TO_SERV.BAN_RELOAD, onBanReload);
+        socket.on('one-pick', function(packet){ servman.onePickManager.onPacket(client, packet) })
+
+        callback(null, client);
+    }catch(e) {
+        console.log(e);
+        callback(-99);
+    }
+}
+
+ServerMan.prototype.register = function(socket) {
+
+    try {
+        async.waterfall(        [
+                async.apply(this.checkEnterCondition, socket),
+                this.getInfoFromDB,
+                this.createUser,
+                this.setSocketListener
+            ]
+            ,
+            function(err){
+                if( err == null ) {
+                }
+                else {
+                    // Error
+                    socket.disconnect();
+                }
+            });
+
+    }catch(e) {
+        console.log(e);
+    }
 }
 
 ServerMan.prototype.removeSocket = function(socketid) {
@@ -900,6 +948,8 @@ function onSockChat(data) {
 
         var client = servman.getClient(this.id);
         if( !client ) return;
+
+        client.incActivePoint(20);
         var socket = client.socket;
 
         var mode = 'chat';

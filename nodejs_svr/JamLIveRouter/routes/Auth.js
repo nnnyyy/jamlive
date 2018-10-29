@@ -10,7 +10,6 @@ exports.login = function(req, res, next) {
         [
             async.apply(requestLogin, req),
             requestBanCnt,
-            requestActivePoint,
             requestGetItemList
         ]
         ,
@@ -34,9 +33,8 @@ function requestLogin( req, callback ) {
         }
 
         req.session.username = json.id;
-        req.session.userinfo = { usernick: json.nick, auth: json.auth, adminMemberVal: json.adminMemberVal };
+        req.session.userinfo = { usernick: json.nick, auth: json.auth, adminMemberVal: json.adminMemberVal, ap: json.ap };
         req.session.userinfo.banCnt = 0;
-        //res.json(json.ret);
         callback(null,req);
     })
 }
@@ -47,25 +45,6 @@ function requestBanCnt(req, callback) {
             //  완료 처리 해줘
             req.session.userinfo.banCnt = ret.cnt;
             callback(null, req);
-        }
-        else {
-            callback(ret.ret);
-        }
-    })
-}
-
-function requestActivePoint(req, callback) {
-    dbhelper.getActivePoint( req.session.username, function(ret) {
-        if( ret.ret == 0 ) {
-            //  완료 처리 해줘
-            req.session.userinfo.ap = ret.point;
-            if( !req.session.userinfo.ap ) {
-                req.session.userinfo.ap = 0;
-            }
-            const userinfo = JSON.stringify(req.session.userinfo);
-            ServerManager.redis.set(req.session.username, userinfo,  (err, info) => {
-                callback(null, req);
-            });
         }
         else {
             callback(ret.ret);

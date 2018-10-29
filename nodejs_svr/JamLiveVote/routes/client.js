@@ -112,27 +112,17 @@ Client.prototype.isAdminMembers = function() {
 
 Client.prototype.incActivePoint = function( point ) {
     if( !this.isLogined() ) return;
-
-    this.socket.handshake.session.userinfo.ap += point;
-
-    const tCur = new Date();
-
-    if( tCur - this.tLastSaved >= 10 * 60 * 1000 ) {
-        this.tLastSaved = tCur;
-        const userinfo = JSON.stringify(this.socket.handshake.session.userinfo);
-        this.servman.redis.set(this.getUserId(), userinfo,  (err, info) => {
-        } );
-    }
+    this.ap += point;
 
     this.servman.updateInfo(this.socket, this );
 
-    if( this.socket.handshake.session.userinfo.ap <= 0 ) {
-        this.socket.handshake.session.userinfo.ap = 0;
+    if( this.ap <= 0 ) {
+        this.ap = 0;
     }
 
     const client = this;
 
-    if( LevelExpTable.isAbleLevelUp(this.auth, this.socket.handshake.session.userinfo.ap) ) {
+    if( LevelExpTable.isAbleLevelUp(this.auth, this.ap) ) {
         this.auth++;
         this.socket.handshake.session.userinfo.auth++;
         dbhelper.updateAuth( this.socket.handshake.session.username, this.auth, function( result ) {

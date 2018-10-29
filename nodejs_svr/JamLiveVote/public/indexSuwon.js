@@ -37,7 +37,7 @@ ConnectStateInfo.prototype.Disconnect = function() {
         if( !connectStateInfo.isConnected ) {
             $.get('/ping', function(data){
                 connectStateInfo.isConnected = true;
-                window.location.href = unescape(window.location.pathname);
+                window.location.href = 'http://jamlive.net';
             })
         }
     }, RETRY_INTERVAL);

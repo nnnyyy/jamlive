@@ -31,7 +31,8 @@ exports.login = function(id, pw, ip, cb) {
 
             var ret = rows[rows.length - 1][0]['@ret'];
             var data = rows[0][0];
-            cb({id: data.id, nick: data.nick, auth: data.auth_state, adminMemberVal: data.adminMemberVal, ret: ret});
+            var apData = rows[1];
+            cb({id: data.id, nick: data.nick, auth: data.auth_state, adminMemberVal: data.adminMemberVal, ap: apData, ret: ret});
         });
     }catch(err) {
         cb({ret: -99});
