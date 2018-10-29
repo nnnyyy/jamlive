@@ -62,6 +62,7 @@
       </div>
       <div id="right-area">
           <div id="article">
+              <h3>서버 제한 접속자 수는 현재 <span v-text="totalUserCnt">0</span>명 입니다.</h3>
               <dl>
                   <dt>
                       [공지사항]
@@ -111,6 +112,7 @@
   <script type="text/javascript" src="/js/pc.js"></script>
 <script>
     var logined = <%-logined%>;
-    init(logined);
+    var totalUserLimit = <%- totalLimitUser %>;
+    init(logined,totalUserLimit);
 </script>
 </html>

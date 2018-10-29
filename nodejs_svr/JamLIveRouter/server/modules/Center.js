@@ -18,6 +18,7 @@ class Center {
         }
 
         this.servInfoList = new HashMap();
+        this.totalLimitUser = 99999;
         this.servnameConvert = new HashMap();
         this.servnameConvert.set('1', 'Server1');
         this.servnameConvert.set('2', 'Server2');
@@ -63,6 +64,8 @@ class Center {
             for( var i = 0 ; i < data.length ; ++i ) {
                 this.servInfoList.set(data[i].name, {cnt: data[i].cnt, limit: data[i].limit, url: data[i].url, tLastRecv: new Date()});
             }
+
+            this.totalLimitUser = packet.totalLimit;
         }
         catch(e) {
             console.log(e);

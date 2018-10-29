@@ -83,7 +83,7 @@ class DistServer {
         const server = this;
         this.sendCountIntervalId = setInterval( function() {
             var info = server.servman.getVoteServerCntInfo();
-            server.socket.emit('user-cnt', {data: info });
+            server.socket.emit('user-cnt', {data: info, totalLimit: 7000 });
         }, 1000);
     }
 

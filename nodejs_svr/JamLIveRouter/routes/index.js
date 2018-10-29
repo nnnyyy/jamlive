@@ -22,7 +22,8 @@ router.get('/m', function(req, res, next) {
 
 router.get('/pc', function(req, res, next) {
     const isLogined = req.session.username != null;
-    res.render('indexPc', {logined: isLogined });
+    const totalLimitUser = req.serverMan.center.totalLimitUser;
+    res.render('indexPc', {logined: isLogined, totalLimitUser: totalLimitUser });
 });
 
 router.get('/signup', function(req, res, next) {
