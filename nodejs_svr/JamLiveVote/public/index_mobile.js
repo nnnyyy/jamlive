@@ -85,6 +85,19 @@ var GlobalValue = function() {
         data: {
             totalCnt: 0,
             curCnt: 0
+        },
+        methods: {
+            onBtnSettings: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                global.vSettings.visible = true;
+            },
+            onBtnLogin: function(e) {
+                window.location.href = 'http://databucket.duckdns.org:4700/login/';
+            },
+            onBtnLogout: function(e) {
+                logout();
+            }
         }
     });
 
@@ -94,7 +107,7 @@ var GlobalValue = function() {
     this.idInterval = new Date();
     this.quizData =  null;
 
-}
+};
 
 GlobalValue.prototype.init = function(socket) {
     this.socket = socket;
@@ -562,18 +575,6 @@ function registerBtnListener(g) {
             //  투표 버튼
             vote(g.socket, $(this).attr('value'));
         })
-    })
-
-    g.btnLogin.click(function(e) {
-        window.location.href = 'http://databucket.duckdns.org:4700/login/';
-    })
-
-    g.btnLogout.click(function(e) {
-        logout();
-    })
-
-    g.btnSettings.click(function(e) {
-        g.vSettings.visible = true;
     });
 
     g.btnCloseSettings.click(function(e) {

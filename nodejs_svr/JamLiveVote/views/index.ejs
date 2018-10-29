@@ -77,11 +77,11 @@
 <div id="fix-btn-area">
     <div v-text="totalCnt" class="cnt">0명</div>
     <div v-text="curCnt" class="cnt">0명</div>
-    <div type="btn" id="btn-settings"><img src="/images/btn_settings.png"/></div>
+    <div type="btn" id="btn-settings" @click="onBtnSettings"><img src="/images/btn_settings.png"/></div>
     <% if( !username ) {%>
-    <div type="btn" id="btn-login"><img src="/images/btn_login.png"/></div>
+    <div type="btn" id="btn-login" @click="onBtnLogin"><img src="/images/btn_login.png"/></div>
     <%}else {%>
-    <div type="btn" id="btn-logout"><img src="/images/btn_logout.png"/></div>
+    <div type="btn" id="btn-logout" @click="onBtnLogout"><img src="/images/btn_logout.png"/></div>
     <%}%>
 </div>
 <div id="settings" v-show="visible">
