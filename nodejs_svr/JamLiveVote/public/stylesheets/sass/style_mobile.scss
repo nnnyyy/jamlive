@@ -48,12 +48,18 @@ div#bottom-ads {
 $top-title-height: 20px;
 $top-title-margin: 4px;
 
+#logo {
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
+  height: 20px;
+}
+
 div#top-title {
   height: $top-title-height;
   width: 100%;
   line-height: $top-title-height;
   font-size: $font-title-size;
-  font-weight: bold;
   margin-left: 10px;
   margin-top: $top-title-margin;
   margin-bottom: $top-title-margin;
@@ -63,7 +69,7 @@ $vote-btn-height: 80px;
 
 div#chat-area {
   width: 100%;
-  height: calc(100vh - 150px - #{$graph-height} - #{$top-title-height} - #{$top-title-margin} - #{$top-title-margin} - #{$vote-btn-height} - 50px );
+  height: calc(100vh - 150px - #{$graph-height} - #{$top-title-height} - #{$top-title-margin} - #{$top-title-margin} - #{$vote-btn-height} - 50px - 20px );
   font-size: $font-chat-size;
 
   $margin: 8px;
@@ -78,7 +84,7 @@ div#chat-area {
     border: 2px solid gray;
     padding: $padding;
     width: calc(100% - #{$margin} - #{$margin});
-    height: calc(100% - #{$margin} - #{$margin} - 30px );
+    height: calc(100% - #{$margin} - #{$margin} - 30px - 15px );
     background-color: white;
     color: $primary-color;
 
@@ -123,7 +129,7 @@ div#chat-area {
   #ip-msg {
     float: left;
     width: 90%;
-    height: 15px;
+    height: 30px;
     margin-left: 8px;
   }
 

@@ -580,7 +580,7 @@ function registerSocketListener(g) {
     g.socket.on('vote_data', g.onProcessVoteData);
     g.socket.on('emoticon', g.onEmoticon);
     g.socket.on('loginInfo', g.onLoginInfo);
-    g.socket.on('ap', g.onAP);
+    g.socket.on('update-info', g.onAP);
     g.socket.on('serv_msg', g.onServMsg);
     g.socket.on('quiz', g.onQuiz);
     g.socket.on('quizret', g.onQuizRet);

@@ -346,10 +346,6 @@ ServerMan.prototype.removeSocket = function(socketid) {
 
         connListMan.removeUser(client);
         this.socketmap.delete(socketid);
-
-        if( client.isLogined() ) {
-            //chatMan.Notice( servman.io, client, socket.handshake.session.usernick + '님의 퇴장' );
-        }
     }
     catch(e) {
         console.log(`removeSocket Error - ${e}`);

@@ -35,7 +35,8 @@
 <body>
 <!-- HTML Design -->
 <div id="root">
-<div id="top-title">라이브 퀴즈 공유기 <span v-show="name_visible">- <span v-text="name">왕야옹</span><span v-show="ap_visible">(<span v-text="ap">0</span> 점)</span></span></div>
+    <div id="logo">라이브 퀴즈 공유기</div>
+<div id="top-title"><%- servname %> : <span v-show="name_visible"><span v-text="name">왕야옹</span><span v-show="ap_visible">(<span v-text="ap">0</span> 점)</span></span></div>
 <div id="top-ads">
     <ins class="kakao_ad_area" style="display:none;width:100%"
          data-ad-unit    = "DAN-t87e91n4i053"
@@ -55,17 +56,17 @@
          data-ad-height  = "100"></ins>
     <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
 </div>
+<div id="chat-area">
+    <ul class="chat-ui">
+    </ul>
+    <input type="text" id="ip-msg"/>
+</div>
 <div id="bottom-ads">
     <ins class="kakao_ad_area" style="display:none;width:100%"
          data-ad-unit    = "DAN-rh5ikhi3t46a"
          data-ad-width   = "320"
          data-ad-height  = "50"></ins>
     <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
-</div>
-<div id="chat-area">
-    <ul class="chat-ui">
-    </ul>
-    <input type="text" id="ip-msg"/>
 </div>
 <div id="vote-btn-area">
     <div type="vote-btn" value="0">1번</div>
