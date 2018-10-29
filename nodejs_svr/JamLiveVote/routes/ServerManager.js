@@ -261,8 +261,6 @@ ServerMan.prototype.setSocketListener = function(client, callback) {
                         servman.bMemoModifying = false;
                     }
 
-                    console.log('disconnect', client.ap);
-
                     if( client.ap && client.ap >= 0 ) {
                         dbhelper.updateActivePoint( client.socket.handshake.session.username, client.ap, function(ret) {
                             if( ret.ret != 0 ) {
