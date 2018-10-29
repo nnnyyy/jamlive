@@ -168,6 +168,12 @@ div#fix-btn-area {
   color: $primary-color;
   text-align: center;
 
+  .cnt {
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+  }
+
   div[type="conn-cnt"] {
     font-size: 12px;
     height: 25px;

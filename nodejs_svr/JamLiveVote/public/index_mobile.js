@@ -78,7 +78,15 @@ var GlobalValue = function() {
             ap: 0,
             ap_visible: false
         }
-    })
+    });
+
+    this.vFixBtnArea = new Vue({
+        el: '#fix-btn-area',
+        data: {
+            totalCnt: 0,
+            curCnt: 0
+        }
+    });
 
     this.animOpacityTimerID = -1;
 
@@ -161,7 +169,8 @@ function onAdminMsg(data) {
 GlobalValue.prototype.onProcessVoteData = function( data ) {
     var votedata = data.vote_data;
     var users = votedata.users;
-    $('[type="conn-cnt"]').text(users + '명');
+    global.vFixBtnArea.curCnt = users;
+    global.vFixBtnArea.totalCnt = votedata.totalCnt;
     //$('vote_except').text(votedata.bans);
 
     var total = [0,0,0,0];

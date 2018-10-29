@@ -106,6 +106,10 @@ div#fix-btn-area {
   height: 145px;
   color: #1b3440;
   text-align: center; }
+  div#fix-btn-area .cnt {
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px; }
   div#fix-btn-area div[type="conn-cnt"] {
     font-size: 12px;
     height: 25px;
