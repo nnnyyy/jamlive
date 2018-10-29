@@ -62,7 +62,7 @@
       </div>
       <div id="right-area">
           <div id="article">
-              <h3>서버 제한 접속자 수는 현재 <span v-text="totalUserCnt">0</span>명 입니다.</h3>
+              <h3>서버 제한 접속자 수는 현재 <span class="alert" v-text="totalUserCnt">0</span>명 입니다.</h3>
               <dl>
                   <dt>
                       [공지사항]
@@ -81,16 +81,38 @@
                   </dd>
 
                   <dt>
+                      관련 사이트
+                  </dt>
+                  <dd>
+                      공식 네이버 카페 : <a href="https://cafe.naver.com/livequizshare" target="_blank">라이브 퀴즈 공유기(라퀴공)</a>
+                  </dd>
+
+                  <dt>
                       기본 이용 방법
                   </dt>
                   <dd>
                       <button class="btn" @click="onBtnAbout">보러가기</button>
+                  </dd>
+                  <dd class="alert">
+                      이용 방법을 준수하지 않으면 '영구밴' 처리가 되오니 사용법을 꼭 준수 해 주시길 부탁드립니다.
                   </dd>
                   <dt>
                       퀴즈쇼 종류별 설명
                   </dt>
                   <dd>
                       <button class="btn" @click="onBtnQuizShow">보러가기</button>
+                  </dd>
+                  <dd>
+                      계속해서 추가 중입니다..
+                  </dd>
+                  <dt>
+                      문의
+                  </dt>
+                  <dd>
+                      개발자 : 왕야옹
+                  </dd>
+                  <dd>
+                      E-mail : nnnyyy@nate.com
                   </dd>
               </dl>
           </div>

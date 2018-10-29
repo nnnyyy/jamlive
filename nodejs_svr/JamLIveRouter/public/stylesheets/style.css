@@ -12,7 +12,7 @@ html, body {
   background-color: #fafafa; }
 
 dt {
-  margin: 12px 10px 4px 10px;
+  margin: 26px 10px 4px 10px;
   font-weight: bold;
   font-size: 20px; }
 
@@ -81,5 +81,9 @@ dd {
 #article {
   float: left;
   width: calc( 100% - 180px ); }
+
+.alert {
+  color: #ff2a00;
+  font-weight: bold; }
 
 /*# sourceMappingURL=style.css.map */
