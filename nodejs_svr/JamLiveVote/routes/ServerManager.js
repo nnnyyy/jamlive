@@ -201,7 +201,6 @@ ServerMan.prototype.getInfoFromDB = function(socket, ip, callback) {
 ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
     try {
         const client = new Client(servman, socket);
-        console.log('createUser', ip, ap);
         client.ip = ip;
         client.ap = ap;
         client.nick = socket.handshake.session.userinfo.usernick;
@@ -949,7 +948,6 @@ function onSockChat(data) {
         var client = servman.getClient(this.id);
         if( !client ) return;
 
-        client.incActivePoint(20);
         var socket = client.socket;
 
         var mode = 'chat';
