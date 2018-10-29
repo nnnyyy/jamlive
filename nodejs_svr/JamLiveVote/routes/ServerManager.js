@@ -204,6 +204,13 @@ ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
         client.ip = ip;
         client.ap = ap;
         client.nick = socket.handshake.session.userinfo.usernick;
+
+        if( isServerLimit() && !client.isAdminMembers() ) {
+            socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
+            callback(-4);
+            return;
+        }
+
         servman.socketmap.set(socket.id, client);
 
         connListMan.addUser(client);
@@ -229,11 +236,6 @@ ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
             }
         }
 
-        if( isServerLimit() && !client.isAdminMembers() ) {
-            socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
-            callback(-4);
-            return;
-        }
 
         callback(null, client);
     }catch(e) {
