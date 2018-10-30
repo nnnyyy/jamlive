@@ -110,7 +110,7 @@ var GlobalValue = function() {
             btnMsg: '',
             word: '',
             btnStyle: {
-                width: '150px',
+                width: '80%',
                 height: '40px',
                 fontSize: '20px',
                 margin: '30px'
