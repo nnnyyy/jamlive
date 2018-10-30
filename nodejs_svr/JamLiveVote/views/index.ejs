@@ -106,6 +106,13 @@
     <div class="q_q">보기3</div>
     <div><time>0</time></div>
 </div>
+<div id="realtime-search-rank-wnd" :class="{show: show, hide: hide }">
+    <div>
+        <h2 style='margin-top: 10px;' v-text="msg"></h2>
+        <button :style="btnStyle" v-text="btnMsg" @click="onBtnSearch(word, $event)"></button>
+        <div style='margin-top: 10px; font-size:18px;'>창이 뜨면 한번더 검색을 눌러주세요!</div>
+    </div>
+</div>
 </body>
 <script type="text/javascript" src="/index_mobile.js"></script>
 <script>

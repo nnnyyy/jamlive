@@ -101,6 +101,40 @@ var GlobalValue = function() {
         }
     });
 
+    this.vRealtimeSearchRankWnd = new Vue({
+        el: '#realtime-search-rank-wnd',
+        data: {
+            show: false,
+            hide: false,
+            msg: '',
+            btnMsg: '',
+            word: '',
+            btnStyle: {
+                width: '150px',
+                height: '40px',
+                fontSize: '20px',
+                margin: '30px'
+            }
+        },
+        methods: {
+            onShow: function(e) {
+                var v = this;
+                this.show = true;
+                this.hide = false;
+                setTimeout(function() {
+                    v.show = false;
+                    v.hide = true;
+                }, 20000);
+            },
+            onBtnSearch: function(word, e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var url = 'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=' + word;
+                window.open(url,'_blank');
+            }
+        }
+    });
+
     this.animOpacityTimerID = -1;
 
     this.quizWnd = $('.quiz_wnd');
@@ -607,6 +641,13 @@ function registerSocketListener(g) {
         }
         return;
     });
+
+    g.socket.on('rsr', function(packet) {
+        g.vRealtimeSearchRankWnd.msg = packet.msg;
+        g.vRealtimeSearchRankWnd.btnMsg = packet.btnMsg;
+        g.vRealtimeSearchRankWnd.word = packet.word;
+        g.vRealtimeSearchRankWnd.onShow();
+    })
 }
 
 function registerKeyListener(g) {
