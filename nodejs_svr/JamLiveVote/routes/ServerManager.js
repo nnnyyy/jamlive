@@ -679,6 +679,10 @@ ServerMan.prototype.updateNotice = function( noticeData ) {
     servman.io.sockets.in('auth').emit('update-notice', {noticeData: noticeData});
 };
 
+ServerMan.prototype.broadcastAllClients = function( protocol, packet ) {
+    servman.io.sockets.in('auth').emit(protocol, packet);
+}
+
 function onSockBan(data) {
     try {
         var tCur = new Date();

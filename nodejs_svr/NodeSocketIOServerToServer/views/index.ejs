@@ -38,7 +38,19 @@
             <input type="text" id="ip-msg"/>
             <button @click="onBtnSendAdminMsg">보내기</button>
         </div>
-
+        <div>
+            <div class="sub">클릭 이벤트 설정</div>
+            <table>
+                <tr>
+                    <td>메시지</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrMsg"/></td>
+                </tr>
+                <tr>
+                    <td>버튼 메시지</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrBtnMsg"/></td>
+                </tr>
+                <tr><td>검색어</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrWord"/></td></tr>
+                <tr><td colspan="2"><button @click="onBtnSendRSR">보내기</button></td></tr>
+            </table>
+        </div>
         <div>
             <div class="sub">닉으로 밴하기</div>
             <input type="text" id="ip-ban-nick"/>
@@ -72,7 +84,6 @@
 <script>
     $(document).ready(function() {
         init();
-
         G.app.logined = <%- isLogined %>;
         G.app.isAccessable = <%- isAcessable %>;
         var servItems = [];

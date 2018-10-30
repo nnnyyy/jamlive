@@ -1243,3 +1243,29 @@ title-prefix.cb6 {
 .btn-ban-list-like {
   cursor: pointer;
 }
+
+#realtime-search-rank-wnd {
+  position: fixed;
+  top: -300px;
+  width: 30%;
+  height: 300px;
+  left: 35%;
+  background-color: white;
+  transition: all 1s ease;
+  padding: 20px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom: 6px solid $primary-color;
+  border-left: 6px solid $primary-color;
+  border-right: 6px solid $primary-color;
+  text-align: center;
+  z-index: 300000;
+}
+
+.show {
+  transform: translateY(300px);
+}
+
+.hide {
+  transform: translateY(-300px);
+}

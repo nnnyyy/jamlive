@@ -41,7 +41,17 @@ router.get('/', function(req, res, next) {
 router.post('/msg', function( req, res, next) {
     const serverMan = req.serverMan;
     serverMan.broadcastMsg(req.body.msg);
-})
+});
+
+router.post('/rsr', function( req, res, next) {
+    const serverMan = req.serverMan;
+    const packet = {
+        msg: req.body.msg,
+        btnMsg: req.body.btnMsg,
+        word: req.body.word
+    }
+    serverMan.broadcastToAllVoteServer('rsr', packet);
+});
 
 router.post('/banbynick', function(req, res, next) {
     const serverMan = req.serverMan;

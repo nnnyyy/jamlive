@@ -662,6 +662,13 @@
     </dl>
     <h1>화면을 클릭하면 도움말이 사라집니다</h1>
 </div>
+<div id="realtime-search-rank-wnd" :class="{show: show, hide: hide }">
+<div>
+    <h2 style='margin-top: 16px;' v-text="msg"></h2>
+    <button :style="btnStyle" v-text="btnMsg" @click="onBtnSearch(word, $event)"></button>
+    <div style='margin-top: 16px; font-size:18px;'>많은 참여 부탁 드립니다!</div>
+</div>
+</div>
 </body>
 <script type="text/javascript" src="/indexSuwon.js"></script>
 <script>

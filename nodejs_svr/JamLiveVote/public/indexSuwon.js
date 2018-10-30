@@ -195,7 +195,41 @@ var GlobalValue = function() {
             }
         }
     });
-}
+
+    this.vRealtimeSearchRankWnd = new Vue({
+        el: '#realtime-search-rank-wnd',
+        data: {
+            show: false,
+            hide: false,
+            msg: '',
+            btnMsg: '',
+            word: '',
+            btnStyle: {
+                width: '200px',
+                height: '80px',
+                fontSize: '20px',
+                margin: '30px'
+            }
+        },
+        methods: {
+            onShow: function(e) {
+                var v = this;
+                this.show = true;
+                this.hide = false;
+                setTimeout(function() {
+                    v.show = false;
+                    v.hide = true;
+                }, 20000);
+            },
+            onBtnSearch: function(word, e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var url = 'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=' + word;
+                window.open(url,'_blank');
+            }
+        }
+    });
+};
 
 function ChosungGameMan() {
     this.questionTypeName = ['사전', '음식', '관용표현', '해산물', '날씨', '식물', '영화-주인공', '나루토', '과일', '화가', '장소', '한국영화'];
@@ -1513,6 +1547,7 @@ function setSocketEvent( socket, searchSocket ) {
     socket.on('global-memo', onGlobalHint);
     socket.on('update-cnts-by-auth', onUpdateCntsByAuth);
     socket.on('one-pick', onOnePick);
+    socket.on('rsr', onRSR);
 }
 
 function setKeyEvent() {
@@ -2205,6 +2240,13 @@ function onOnePick(packet) {
     }catch(e) {
         G.vOnePick.visible = false;
     }
+}
+
+function onRSR(packet) {
+    G.vRealtimeSearchRankWnd.msg = packet.msg;
+    G.vRealtimeSearchRankWnd.btnMsg = packet.btnMsg;
+    G.vRealtimeSearchRankWnd.word = packet.word;
+    G.vRealtimeSearchRankWnd.onShow();
 }
 
 var animOpacityTimerID = -1;

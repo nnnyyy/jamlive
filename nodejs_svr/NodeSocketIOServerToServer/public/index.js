@@ -28,10 +28,23 @@ function initVueObject() {
         data: {
             logined: false,
             isAccessable: false,
+            rsrMsg: '',
+            rsrBtnMsg: '',
+            rsrWord: '',
             servers: [
             ]
         },
         methods: {
+            onBtnSendRSR: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var packet = {
+                    msg: this.rsrMsg,
+                    btnMsg: this.rsrBtnMsg,
+                    word: this.rsrWord
+                };
+                ajaxHelper.postJson('/rsr', packet, null);
+            },
             onBtnSendAdminMsg: function(e) {
                 e.preventDefault();
                 e.stopPropagation();

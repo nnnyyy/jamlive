@@ -247,7 +247,14 @@ class ServerManager {
         this.voteServMap.forEach(function(value, key){
             const distServer = value;
             distServer.sendMsg( msg );
-        })
+        });
+    }
+
+    broadcastToAllVoteServer(protocol, packet) {
+        this.voteServMap.forEach(function(value, key){
+            const distServer = value;
+            distServer.sendPacket(protocol, packet);
+        });
     }
 
     reloadServInfo() {
