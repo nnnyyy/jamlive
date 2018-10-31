@@ -210,11 +210,23 @@ class ServerManager {
         return data;
     }
 
-    getTotalVoteData() {
+    getServType( idx ) {
+        if( idx >=1 && idx <= 12 ) {
+            return 'common';
+        }
+        else {
+            return 'qfeat';
+        }
+    }
+
+    getTotalVoteData( type ) {
+        const sm = this;
         let voteTotal = [0,0,0,0];
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
-            if( servinfo.usercnt >= 200 && servinfo.idx != 16 /* 16서버 제외*/ ) {
+            if( servinfo.usercnt >= 200
+            && ( sm.getServType(servinfo.idx) == type )
+            ) {
                 voteTotal[0] += servinfo.voteCnts[0];
                 voteTotal[1] += servinfo.voteCnts[1];
                 voteTotal[2] += servinfo.voteCnts[2];

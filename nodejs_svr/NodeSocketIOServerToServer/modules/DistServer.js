@@ -97,8 +97,9 @@ class DistServer {
 
     sendVoteData() {
         const server = this;
+        const type = server.servman.getServType(server.idx);
         this.sendVoteDataIntervalId = setInterval( function() {
-            var totalVote = server.servman.getTotalVoteData();
+            var totalVote = server.servman.getTotalVoteData(type);
             var totalCnt = server.servman.getTotalUserCnt();
             var searchQueryList = server.servman.getSearchQueries();
             server.socket.emit('total-vote', {totalCnt: totalCnt, totalVote: totalVote, searchQueries: searchQueryList });
