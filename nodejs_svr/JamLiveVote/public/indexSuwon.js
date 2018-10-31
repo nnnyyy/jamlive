@@ -1198,7 +1198,7 @@ VoteObject.prototype.onVoteData = function(data) {
     }
 
     if( options.isShowAllServerVote() ) {
-        for( var i = 0 ; i < 3 ; ++i ) {
+        for( var i = 0 ; i < votedata.totalVote.length ; ++i ) {
             total[i] += votedata.totalVote[i];
         }
     }

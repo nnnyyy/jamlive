@@ -224,16 +224,15 @@ class ServerManager {
         let voteTotal = [0,0,0,0];
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
-            if(  ( sm.getServType(servinfo.idx) == type )
+            if( servinfo.usercnt >= 100
+            && ( sm.getServType(servinfo.idx) == type )
             ) {
                 voteTotal[0] += servinfo.voteCnts[0];
                 voteTotal[1] += servinfo.voteCnts[1];
                 voteTotal[2] += servinfo.voteCnts[2];
                 voteTotal[3] += servinfo.voteCnts[3];
             }
-        });
-
-        console.log( type, voteTotal );
+        })
 
         return voteTotal;
     }
