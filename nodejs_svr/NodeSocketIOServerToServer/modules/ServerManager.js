@@ -224,7 +224,7 @@ class ServerManager {
         let voteTotal = [0,0,0,0];
         this.voteServMap.forEach(function(value, key){
             const servinfo = value;
-            if( servinfo.usercnt >= 200
+            if( servinfo.usercnt >= 1
             && ( sm.getServType(servinfo.idx) == type )
             ) {
                 voteTotal[0] += servinfo.voteCnts[0];
