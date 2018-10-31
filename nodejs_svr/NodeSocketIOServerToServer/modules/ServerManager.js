@@ -226,6 +226,7 @@ class ServerManager {
             const servinfo = value;
             if(  ( sm.getServType(servinfo.idx) == type )
             ) {
+                console.log( type, sm.getServType(servinfo.idx), servinfo.usercnt );
                 voteTotal[0] += servinfo.voteCnts[0];
                 voteTotal[1] += servinfo.voteCnts[1];
                 voteTotal[2] += servinfo.voteCnts[2];
