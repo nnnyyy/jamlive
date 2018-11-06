@@ -11,6 +11,9 @@ $color-sub2-font: #6e6e6e;
 $color-yellow-font: #e9bd25;
 $color-border: #e5e5e5;
 
+$c-logo-blue1: #3e58a7;
+$c-logo-blue2: #1e2a5d;
+
 * {
   box-sizing: border-box;
   margin : 0;
@@ -32,14 +35,16 @@ html, body {
 }
 
 dt {
-  margin: 26px 10px 4px 10px;
+  margin: 10px 10px 4px 10px;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
+  color: $c-logo-blue1;
 }
 
 dd {
   margin: 6px 20px;
   font-size: 17px;
+  color: $c-logo-blue2;
 }
 
 div {
@@ -69,7 +74,8 @@ $serverListRoot-width: 340px;
   height: calc(100vh - 80px);
   float: left;
   margin: 0;
-  overflow-y: scroll;
+  overflow-y: auto;
+  background-color: #fcfcfc;
 }
 
 #right-area {
@@ -78,18 +84,52 @@ $serverListRoot-width: 340px;
   float: left;
   margin: 0;
   padding: 12px;
-  background-color: white;
+  background-color: #fcfcfc;
+
+  .notice {
+    color: $c-logo-blue1;
+  }
+
+  .menu {
+    position: relative;
+    top: 80px;
+    min-width: 500px;
+    width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    li {
+      font-size: 15px;
+      width: 25%;
+      float: left;
+    }
+  }
 }
 
 .btn {
   width: 160px;
   height: 36px;
-  margin: 8px 0;
+  margin: 4px 0;
+  -moz-box-shadow:inset 0px 39px 0px -24px $c-logo-blue1;
+  -webkit-box-shadow:inset 0px 39px 0px -24px $c-logo-blue1;
+  box-shadow:inset 0px 39px 0px -24px $c-logo-blue1;
+  background-color:$c-logo-blue1;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  border-radius:4px;
+  border:1px solid #ffffff;
+  display:inline-block;
+  cursor:pointer;
+  color:#ffffff;
+  font-family:Arial;
+  font-size:15px;
+  padding:6px 15px;
+  text-decoration:none;
+  text-shadow:0px 2px 0px $c-logo-blue2;
 }
 
 .serv-item {
   cursor: pointer;
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 #admin-msg {
@@ -113,16 +153,37 @@ $serverListRoot-width: 340px;
   transition: opacity .5s;
 }
 
-#left-ads {
-  width: 180px;
-}
-
 #article {
   float: left;
-  width: calc( 100% - 180px );
+  width: 100%;
 }
 
 .alert {
   color: #ff2a00;
   font-weight: bold;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+} /* this targets the default scrollbar (compulsory) */
+
+::-webkit-scrollbar-track {
+  background-color: #e4e6e8;
+} /* the new scrollbar will have a flat appearance with the set background color */
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+} /* this will style the thumb, ignoring the track */
+
+::-webkit-scrollbar-button {
+  background-color: #777777;
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+
+::-webkit-scrollbar-corner {
+  background-color: black;
+} /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
+
+.ads {
+  text-align: left;
+  margin: 8px;
 }

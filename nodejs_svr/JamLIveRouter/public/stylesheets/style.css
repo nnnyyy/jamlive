@@ -1,36 +1,47 @@
 * {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   margin: 0;
   padding: 0;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 li {
-  list-style: none; }
+  list-style: none;
+}
 
 html, body {
   height: 100%;
-  background-color: #fafafa; }
+  background-color: #fafafa;
+}
 
 dt {
-  margin: 26px 10px 4px 10px;
+  margin: 10px 10px 4px 10px;
   font-weight: bold;
-  font-size: 20px; }
+  font-size: 18px;
+  color: #3e58a7;
+}
 
 dd {
   margin: 6px 20px;
-  font-size: 17px; }
+  font-size: 17px;
+  color: #1e2a5d;
+}
 
 #top {
   width: 100%;
   border-bottom: 2px #fcfcfc solid;
   height: 80px;
   background-color: white;
-  text-align: center; }
-  #top a {
-    height: inherit; }
-  #top img {
-    height: inherit;
-    margin: 0 auto; }
+  text-align: center;
+}
+#top a {
+  height: inherit;
+}
+#top img {
+  height: inherit;
+  margin: 0 auto;
+}
 
 #server-list-root {
   text-align: center;
@@ -38,7 +49,9 @@ dd {
   height: calc(100vh - 80px);
   float: left;
   margin: 0;
-  overflow-y: scroll; }
+  overflow-y: auto;
+  background-color: #fcfcfc;
+}
 
 #right-area {
   width: calc(100vw - 340px - 20px);
@@ -46,16 +59,48 @@ dd {
   float: left;
   margin: 0;
   padding: 12px;
-  background-color: white; }
+  background-color: #fcfcfc;
+}
+#right-area .notice {
+  color: #3e58a7;
+}
+#right-area .menu {
+  position: relative;
+  top: 80px;
+  min-width: 500px;
+  width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+#right-area .menu li {
+  font-size: 15px;
+  width: 25%;
+  float: left;
+}
 
 .btn {
   width: 160px;
   height: 36px;
-  margin: 8px 0; }
+  margin: 4px 0;
+  -webkit-box-shadow: inset 0px 39px 0px -24px #3e58a7;
+  box-shadow: inset 0px 39px 0px -24px #3e58a7;
+  background-color: #3e58a7;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Arial;
+  font-size: 15px;
+  padding: 6px 15px;
+  text-decoration: none;
+  text-shadow: 0px 2px 0px #1e2a5d;
+}
 
 .serv-item {
   cursor: pointer;
-  margin: 8px 0; }
+  margin: 4px 0;
+}
 
 #admin-msg {
   position: fixed;
@@ -67,23 +112,56 @@ dd {
   color: white;
   text-align: center;
   opacity: 0.8;
-  padding: 16px; }
+  padding: 16px;
+}
 
 .am-enter, .am-leave-to {
-  opacity: 0; }
+  opacity: 0;
+}
 
 .am-enter-active .am-leave-active {
-  transition: opacity .5s; }
-
-#left-ads {
-  width: 180px; }
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
 
 #article {
   float: left;
-  width: calc( 100% - 180px ); }
+  width: 100%;
+}
 
 .alert {
   color: #ff2a00;
-  font-weight: bold; }
+  font-weight: bold;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* this targets the default scrollbar (compulsory) */
+::-webkit-scrollbar-track {
+  background-color: #e4e6e8;
+}
+
+/* the new scrollbar will have a flat appearance with the set background color */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* this will style the thumb, ignoring the track */
+::-webkit-scrollbar-button {
+  background-color: #777777;
+}
+
+/* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+::-webkit-scrollbar-corner {
+  background-color: black;
+}
+
+/* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
+.ads {
+  text-align: left;
+  margin: 8px;
+}
 
 /*# sourceMappingURL=style.css.map */
