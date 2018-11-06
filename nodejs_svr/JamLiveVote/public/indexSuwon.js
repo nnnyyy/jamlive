@@ -43,9 +43,9 @@ ConnectStateInfo.prototype.Disconnect = function() {
     }, RETRY_INTERVAL);
 }
 
-function init( socket, searchSocket, stringTable ) {
+function init( socket, stringTable ) {
     G.socket = socket;
-    G.socket2 = searchSocket;
+    //G.socket2 = searchSocket;
     G.stringTable = stringTable;
     setVisible($('.user-menu'), false);
 
@@ -63,7 +63,7 @@ function init( socket, searchSocket, stringTable ) {
     options.init();
     siteMenu.init();
     chosungGameMan.init();
-    setSocketEvent(socket, searchSocket);
+    setSocketEvent(socket);
     setKeyEvent();
     setBtnEvent();
 
@@ -1501,7 +1501,6 @@ QuizObject.prototype.onQuizRet = function( data ) {
 
 function setSocketEvent( socket, searchSocket ) {
     socket.on('chat', onChat );
-    searchSocket.on('chat', onChat);
     socket.on('admin-msg', onAdminMsg);
     socket.on('memo', hintObj.onMemo );
     socket.on('serv_msg', onServMsg);
@@ -1535,13 +1534,6 @@ function setSocketEvent( socket, searchSocket ) {
         }
         return;
     });
-
-
-    searchSocket.on('search-dic', onSearchDic);
-    searchSocket.on('search-naver-main', onSearchNaverMain);
-    searchSocket.on('search-daum', onSearchDaumGoogle);
-    searchSocket.on('search-image', onSearchImage);
-    searchSocket.on('search-naver-api', onSearchNaverAPI);
 
     socket.on('update-notice', onUpdateNotice);
     socket.on('global-memo', onGlobalHint);
@@ -1608,7 +1600,7 @@ function onGlobalKeyDown(e) {
             return;
         }
 
-        searchWebRoot(G.socket2, searchObj.searchtop5queries[idx], false);
+        searchWebRoot(G.socket, G.socket2, searchObj.searchtop5queries[idx], false);
     }
     else {
         if( code != 27 ) {
@@ -1686,7 +1678,7 @@ function onInputMsgKeyPress(e) {
         if( msg[0] == '/' ) {
             $(this).val('');
             var query = msg.substr(1);
-            searchWebRoot(G.socket2, query, true);
+            searchWebRoot(G.socket, G.socket2, query, true);
             $(this).blur();
             return;
         }
@@ -1788,7 +1780,7 @@ function setBtnEvent() {
 
     $(document).on('click', '.btn-search-ret-rank', function(e) {
         e.stopPropagation();
-        searchWebRoot(G.socket2, $(this).text(), false);
+        searchWebRoot(G.socket, G.socket2, $(this).text(), false);
     });
 
     $(document).on('click', '.nick-area .nick', function (e) {
@@ -2035,6 +2027,74 @@ function onLoginInfo(data) {
     options.setShowMemberVoteOnly();
     options.setShowHighLevelVoteOnly();
     options.setSearchOptions();
+
+    var searchServer = [
+        'http://databucket.duckdns.org:12000/',
+        'http://databucket.duckdns.org:12001/',
+        'http://databucket.duckdns.org:12002/',
+        'http://databucket.duckdns.org:12003/',
+        'http://databucket.duckdns.org:12004/',
+        'http://databucket.duckdns.org:12005/',
+        'http://databucket.duckdns.org:12006/',
+        'http://databucket.duckdns.org:12007/',
+        'http://databucket.duckdns.org:12008/',
+        'http://databucket.duckdns.org:12009/',
+        'http://databucket.duckdns.org:12010/',
+        'http://databucket.duckdns.org:12011/',
+        'http://databucket.duckdns.org:12012/',
+        'http://databucket.duckdns.org:12013/',
+        'http://databucket.duckdns.org:12014/',
+        'http://databucket.duckdns.org:12015/',
+        'http://databucket.duckdns.org:12016/',
+        'http://databucket.duckdns.org:12017/',
+        'http://databucket.duckdns.org:12018/',
+        'http://databucket.duckdns.org:12019/'
+    ];
+
+    var item = {
+        mode: 'chat',
+        auth: data.auth,
+        isBaned: false,
+        sockid: '',
+        ip: '',
+        nick: '검색서버',
+        msg: '',
+        isAdmin: false,
+        vote: -1
+    }
+
+    var len = searchServer.length;
+    if( G.auth < 4 ) {
+        var rnd = getRandomInt(0, 9);
+        item.msg = rnd + '번 검색서버에 접속 시도';
+        chatObj.addChat( item );
+        G.socket2 = io(searchServer[rnd]);
+    }
+    else if( G.auth >= 4 && G.isAdminMembers <= 0 ){
+        var rnd = getRandomInt(10, 17);
+        item.msg = rnd + '번 검색서버에 접속 시도';
+        chatObj.addChat( item );
+        G.socket2 = io(searchServer[rnd]);
+    }
+    else {
+        var rnd = getRandomInt(18, 19);
+        item.msg = rnd + '번 검색서버에 접속 시도';
+        chatObj.addChat( item );
+        G.socket2 = io(searchServer[rnd]);
+    }
+
+    G.socket2.on('connect', function() {
+        var item2 = $.extend({}, item);
+        item2.msg = '검색 서버 접속 완료';
+        chatObj.addChat( item2 );
+    })
+
+    G.socket2.on('chat', onChat);
+    G.socket2.on('search-dic', onSearchDic);
+    G.socket2.on('search-naver-main', onSearchNaverMain);
+    G.socket2.on('search-daum', onSearchDaumGoogle);
+    G.socket2.on('search-image', onSearchImage);
+    G.socket2.on('search-naver-api', onSearchNaverAPI);
 
     showNextQuizTimeLeft(data.quizTable);
 }
@@ -2351,7 +2411,7 @@ function stopVideo() {
     //$('#video-player')[0].contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
 }
 
-function searchWebRoot( socket, query, isBroadcast ) {
+function searchWebRoot( socketOrigin, socket, query, isBroadcast ) {
     stopVideo();
     searchObj.vSearchAreaCenter.kinHtml = '';
 
@@ -2465,6 +2525,7 @@ function searchWebRoot( socket, query, isBroadcast ) {
         $('#sd_ads').css('display','inline-block');
     }
     else {
+        socketOrigin.emit('search', json);
         socket.emit('search', json);
     }
 }

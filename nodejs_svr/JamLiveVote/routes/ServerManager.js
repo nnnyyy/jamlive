@@ -873,11 +873,7 @@ function onSockSearch(data) {
         }
 
         var tMax = 10000;
-        if( client.auth <= 2 ) {
-            servman.sendServerMsg(client.socket, '(임시)레벨 2 이하는 검색이 불가능합니다.');
-            return;
-        }
-        else if( client.auth >= 2 && client.auth < 5 ) tMax = 3000;
+        if( client.auth >= 2 && client.auth < 5 ) tMax = 3000;
         else tMax = 500;
 
         if( tCur - client.tLastSearch < tMax ) {
@@ -886,30 +882,6 @@ function onSockSearch(data) {
         }
 
         servman.searchManager.search(client, data.msg);
-
-        if( data.searchDic )
-            servman.webSearchMan.searchDic(data.msg, client);
-        if( client.auth >= 5 ) {
-            var bSearch = false;
-            for( var i = 0 ; i < data.searchNaverMainAPI.length ; ++i ) {
-                if( data.searchNaverMainAPI[i] ) {
-                    bSearch = true;
-                    break;
-                }
-            }
-            if( bSearch ) {
-                servman.webSearchMan.searchNaverAPIs(data.msg, client, data.searchNaverMainAPI);
-            }
-        }
-
-        if( data.searchDaum )
-            servman.webSearchMan.searchDaum(data.msg, client);
-        if( data.searchImage )
-            servman.webSearchMan.searchImage(data.msg, client);
-
-        if( client.auth < 1 && servman.isLiveQuizTime() ) {
-            client.incActivePoint( 6 );
-        }
 
         client.tLastSearch = new Date();
 
