@@ -60,6 +60,7 @@ dd {
   margin: 0;
   padding: 12px;
   background-color: #fcfcfc;
+  overflow-y: auto;
 }
 #right-area .notice {
   color: #3e58a7;

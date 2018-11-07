@@ -85,6 +85,7 @@ $serverListRoot-width: 340px;
   margin: 0;
   padding: 12px;
   background-color: #fcfcfc;
+  overflow-y: auto;
 
   .notice {
     color: $c-logo-blue1;
