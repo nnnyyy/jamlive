@@ -137,7 +137,6 @@ function sendPostSignup(data) {
         url: '/signup_req',
         success: function(ret) {
             if( ret.ret != 0 ) {
-                console.log(ret.ret);
                 showErrorMsg(ret.ret);
 
                 var inputs = [$('#ip_id'), $('#ip_pw'), $('#ip_pwre'), $('#ip_nick')];

@@ -20,6 +20,23 @@ exports.signup = function(id, pw, nick, cb) {
     }
 };
 
+exports.changepw = function( id, bpw, pw, cb ) {
+    try {
+        dbpool.query("CALL changepw(?, ?,?,@ret); select @ret;", [id, bpw, pw] , function(err, rows) {
+            if(err) {
+                console.log(err);
+                cb({ret: -99});
+                return;
+            }
+
+            var ret = rows[rows.length - 1][0]['@ret'];
+            cb({ret: ret});
+        });
+    }catch(err) {
+        cb({ret: -99});
+    }
+};
+
 exports.login = function(id, pw, ip, cb) {
     try {
         dbpool.query("CALL login(?,?,?, @ret); select @ret;", [id, pw, ip] , function(err, rows) {

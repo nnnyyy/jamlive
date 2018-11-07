@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-6569150656822543",
+            enable_page_level_ads: true
+        });
+    </script>
+
+    <title>JAM LIVE ( 잼라이브 ) 정답 공유기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="JAM LIVE ( 잼라이브 ) 퀴즈 문제의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="/basic.js"></script>
+    <link rel='stylesheet' href='/stylesheets/styleMobile.css' />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+</head>
+<body>
+<!-- HTML Design -->
+<div id="app">
+    <div id="top">
+        <a href="/m/"><img src="/images/_logo.png"/></a>
+    </div>
+    <h2 style="text-align: center;margin: 8px;">비밀번호 변경</h2>
+    <div class="ads">
+        <ins class="kakao_ad_area" style="display:none;width:100%"
+             data-ad-unit    = "DAN-t87e91n4i053"
+             data-ad-width   = "320"
+             data-ad-height  = "50"></ins>
+        <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+    </div>
+    <div>
+        <table id="tb-change-pw">
+            <tr>
+                <td>기존 비밀번호</td>
+                <td><input type="password" v-model="beforepw" :disabled="inputDisabled"/></td>
+            </tr>
+            <tr>
+                <td>바꿀 비밀번호</td>
+                <td><input type="password" v-model="pw" :disabled="inputDisabled"/></td>
+            </tr>
+            <tr>
+                <td>재입력</td>
+                <td><input type="password" v-model="pwre" :disabled="inputDisabled"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button style="width:100%; height: 40px;" @click="onBtnChangePw">변경</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="ads">
+        <ins class="kakao_ad_area" style="display:none;width:100%"
+             data-ad-unit    = "DAN-rh5ikhi3t46a"
+             data-ad-width   = "320"
+             data-ad-height  = "50"></ins>
+        <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+    </div>
+    <div class="ads">
+        <ins class="kakao_ad_area" style="display:none;width:100%"
+             data-ad-unit    = "DAN-u7raa8rbgto1"
+             data-ad-width   = "320"
+             data-ad-height  = "50"></ins>
+        <script type="text/javascript" src="//t1.daumcdn.net/adfit/static/ad.min.js" async></script>
+    </div>
+    <transition name="am">
+        <div v-show="adminShow" id="admin-msg" v-text="adminMsg"></div>
+    </transition>
+</div>
+</body>
+<script src="/js/changepw.js"></script>
+<script>
+    var logined = <%-logined%>;
+    init(logined);
+</script>
+</html>

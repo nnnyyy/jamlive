@@ -36,6 +36,11 @@ router.get('/login', function(req,res,next) {
     res.render('login', {logined: isLogined });
 });
 
+router.get('/changepw', function(req,res,next) {
+    const isLogined = req.session.username != null;
+    res.render('changepw', {logined: isLogined });
+});
+
 router.get('/about', function( req, res, next) {
     res.render('about');
 });
@@ -47,6 +52,7 @@ router.get('/quizshow', function( req, res, next) {
 router.post('/signup_req', Auth.signup );
 router.post('/login', Auth.login );
 router.post('/logout', Auth.logout );
+router.post('/changepw', Auth.changepw );
 
 router.post('/go', function( req, res , next) {
 

@@ -1,61 +1,76 @@
 * {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+}
 
 li {
-  list-style: none; }
+  list-style: none;
+}
 
 html, body {
   height: 100%;
-  background-color: #fafafa; }
+  background-color: #fafafa;
+}
 
 dt {
   margin: 4px 10px;
   font-weight: bold;
-  font-size: 17px; }
+  font-size: 17px;
+}
 
 dd {
   margin: 6px 20px;
-  font-size: 14px; }
+  font-size: 14px;
+}
 
 #top {
   width: 100%;
   border-bottom: 2px #fcfcfc solid;
   height: 40px;
   background-color: white;
-  text-align: center; }
-  #top a {
-    height: inherit; }
-  #top img {
-    height: inherit;
-    margin: 0 auto; }
+  text-align: center;
+}
+#top a {
+  height: inherit;
+}
+#top img {
+  height: inherit;
+  margin: 0 auto;
+}
 
 #menu-btn {
   position: absolute;
   top: 0;
   width: 40px;
   height: 40px;
-  background-color: green; }
+  background-color: green;
+}
 
 #btns-menu {
-  text-align: center; }
-  #btns-menu button {
-    width: 80%;
-    height: 36px;
-    margin: 4px 0;
-    background-color: #fcfcfc; }
+  text-align: center;
+}
+#btns-menu button {
+  width: 80%;
+  height: 36px;
+  margin: 4px 0;
+  background-color: #fcfcfc;
+}
 
 #server-list li {
   text-align: center;
   margin: 0 4px;
   width: 20%;
   height: 30px;
-  float: left; }
+  float: left;
+}
 #server-list li:nth-child(4n + 1) {
-  clear: left; }
+  clear: left;
+}
 #server-list .serv-item:nth-child(2n) {
-  background-color: #dddddd; }
+  background-color: #dddddd;
+}
 
 #admin-msg {
   position: fixed;
@@ -67,22 +82,29 @@ dd {
   color: white;
   text-align: center;
   opacity: 0.8;
-  padding: 16px; }
+  padding: 16px;
+}
 
 .am-enter, .am-leave-to {
-  opacity: 0; }
+  opacity: 0;
+}
 
 .am-enter-active .am-leave-active {
-  transition: opacity .5s; }
+  -webkit-transition: opacity .5s;
+  transition: opacity .5s;
+}
 
-#tb-sign-up {
+#tb-sign-up, #tb-change-pw {
   margin: 0 auto;
   width: 90%;
-  text-align: center; }
-  #tb-sign-up td {
-    padding: 4px; }
-  #tb-sign-up input {
-    width: 100%;
-    height: 40px; }
+  text-align: center;
+}
+#tb-sign-up td, #tb-change-pw td {
+  padding: 4px;
+}
+#tb-sign-up input, #tb-change-pw input {
+  width: 100%;
+  height: 40px;
+}
 
 /*# sourceMappingURL=styleMobile.css.map */

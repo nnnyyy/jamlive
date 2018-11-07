@@ -69,5 +69,11 @@ exports.signup = function( req, res, next) {
     }
     dbhelper.signup(req.body.id, req.body.pw, req.body.nick, function(json) {
         res.json(json);
-    })
+    });
+}
+
+exports.changepw = function( req, res, next ) {
+    dbhelper.changepw(req.session.username, req.body.bpw, req.body.pw, function(json) {
+        res.json(json);
+    });
 }
