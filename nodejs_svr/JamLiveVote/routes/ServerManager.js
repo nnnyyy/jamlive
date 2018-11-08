@@ -3,6 +3,7 @@
  */
 var HashMap = require('hashmap');
 var Client = require('./client');
+const Log = require('./Log');
 require('./StringFunction');
 var dbhelper = require('./dbhelper');
 var quizAnalysis = require('./quizAnalysis');
@@ -176,8 +177,7 @@ ServerMan.prototype.checkEnterCondition = function(socket, callback ) {
         callback(null, socket, ip);
 
     }catch(e) {
-        console.log(e);
-        callback(-99);
+        Log.logger.debug(`checkEnterCondition - ${e}`);
     }
 };
 
@@ -193,8 +193,7 @@ ServerMan.prototype.getInfoFromDB = function(socket, ip, callback) {
             callback(null, socket, ip, result.point);
         });
     }catch(e) {
-        console.log(e);
-        callback(-99);
+        Log.logger.debug(`getInfoFromDB - ${e}`);
     }
 }
 
@@ -239,8 +238,7 @@ ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
 
         callback(null, client);
     }catch(e) {
-        console.log(e);
-        callback(-99);
+        Log.logger.debug(`createUser - ${e}`);
     }
 }
 
@@ -1112,7 +1110,6 @@ ServerMan.prototype.onGlobalHint = function( packet ) {
         {
             const client = servman.getClient(packet.id);
             if( !client ) {
-                console.log(`not found user : ${packet.id}`);
                 return;
             }
 

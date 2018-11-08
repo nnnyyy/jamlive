@@ -14,8 +14,10 @@ const redisStore = require('connect-redis')(session);
 const client = redis.createClient();
 
 const i18n = require('./i18n');
+const compression = require('compression')
 
 var app = express();
+app.use(compression());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
