@@ -9,7 +9,7 @@ const QMain = require('./modules/QMain');
 var dbhelper = require('./dbhelper');
 
 /* GET home page. */
-router.use( Log.logging );
+//router.use( Log.logging );
 router.get('/', function(req, res, next) {
   res.render('index', {servname: config.serv_name, username: req.session.username, userinfo: req.session.userinfo});
 });

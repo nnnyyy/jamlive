@@ -204,6 +204,8 @@ ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
         client.ap = ap;
         client.nick = socket.handshake.session.userinfo.usernick;
 
+        Log.logger.info('connect', client.nick, ip, ap);
+
         if( isServerLimit() && !client.isAdminMembers() ) {
             socket.emit('reconn-server', {reason: 'limit', url: 'jamlive.net'});
             callback(-4);
@@ -234,7 +236,6 @@ ServerMan.prototype.createUser = function(socket, ip, ap, callback) {
                 } );
             }
         }
-
 
         callback(null, client);
     }catch(e) {
@@ -300,7 +301,7 @@ ServerMan.prototype.setSocketListener = function(client, callback) {
 
         socket.on(PS.CLIENT_TO_SERV.SERV_INFO_RELOAD, onServerInfoReload);
         socket.on(PS.CLIENT_TO_SERV.BAN_RELOAD, onBanReload);
-        socket.on('one-pick', function(packet){ servman.onePickManager.onPacket(client, packet) })
+        socket.on('one-pick', function(packet){ servman.onePickManager.onPacket(client, packet) });
 
         callback(null, client);
     }catch(e) {
