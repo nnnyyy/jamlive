@@ -3,6 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
+const Auth = require('./Auth');
 
 router.get('/', function(req, res, next) {
     const serverMan = req.serverMan;
@@ -37,6 +38,8 @@ router.get('/', function(req, res, next) {
         }
     });
 })
+
+router.post('/login', Auth.login );
 
 router.post('/msg', function( req, res, next) {
     const serverMan = req.serverMan;

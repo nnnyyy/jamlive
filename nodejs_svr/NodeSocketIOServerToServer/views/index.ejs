@@ -30,9 +30,9 @@
     <link rel='stylesheet' href='/scss/style.css' />
 </head>
 <body>
-<div id="root">
+<div id="app">
+    <div id="top">라이브 퀴즈 공유기 관리자 페이지</div>
     <div v-if="logined == true && isAccessable == true">
-        <h1>관리자 페이지</h1>
         <div>
             <div class="sub">전체 서버 메시지</div>
             <input type="text" id="ip-msg"/>
@@ -66,7 +66,13 @@
         </div>
     </div>
     <div v-else-if="logined == false">
-        로그인을 하고 다시 찾아주세요^^
+        <div id="login-form">
+            <label>아이디</label>
+            <input type="text" v-model="ip_id">
+            <label>비밀번호</label>
+            <input type="password" v-model="ip_pw" @keyup.13="onBtnLogin">
+            <button @click="onBtnLogin">로그인</button>
+        </div>
     </div>
     <div v-else>
         권한이 없습니다.

@@ -1,8 +1,10 @@
 @import "common.scss";
 
-#root {
+$c-back-blue: #e6f7ff;
+$c-logo-blue1: #3e58a7;
+$c-logo-blue2: #1e2a5d;
 
-  margin: 20px;
+#app {
 
   .sub {
     margin: 10px 0;
@@ -15,11 +17,6 @@
 
   input#ip-ban-nick {
     width: 200px;
-  }
-
-  button {
-    width: 100px;
-    height: 30px;
   }
 
   #servers {
@@ -41,6 +38,60 @@
     li:nth-child(4n + 1) {
 
     }
+  }
+}
+
+#top {
+  $top-height: 36px;
+  height: $top-height;
+  line-height: $top-height;
+  text-align: center;
+  $box-shadow: inset 0 8px 40px $c-logo-blue1;
+
+  box-shadow:$box-shadow;
+  -moz-box-shadow:$box-shadow;
+  -webkit-box-shadow: $box-shadow;
+
+  text-shadow:1px 1px 3px black;
+
+  background-color: $c-logo-blue2;
+  color: white;
+  font-size: 15px;
+}
+
+#login-form {
+  position: relative;
+  left: calc( 50% - 150px );
+  width: 300px;
+  height: 600px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+
+  input {
+    width: 80%;
+    margin: 0 auto;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    padding: 0 1em 0;
+    background-color: $c-back-blue;
+    border: solid 1px $c-logo-blue2;
+    border-radius: 4px;
+    height: 30px;
+  }
+
+  button {
+    display: block; margin: 20px auto;
+    background-color: $c-back-blue; border: none; border-radius: 4px;
+    box-sizing: border-box; box-shadow: none;
+    width: 60%; height: 35px;
+    color: $c-logo-blue2; font-weight: 600; font-family: inherit;
+  }
+
+  label {
+    display: block;
+    margin: 6px 0 12px;
   }
 }
 

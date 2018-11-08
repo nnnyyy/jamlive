@@ -24,7 +24,7 @@ function init() {
 
 function initVueObject() {
     G.app = new Vue({
-        el:'#root',
+        el:'#app',
         data: {
             logined: false,
             isAccessable: false,
@@ -32,7 +32,9 @@ function initVueObject() {
             rsrBtnMsg: '',
             rsrWord: '',
             servers: [
-            ]
+            ],
+            ip_id: '',
+            ip_pw:''
         },
         methods: {
             onBtnSendRSR: function(e) {
@@ -70,6 +72,26 @@ function initVueObject() {
                 var packet = { name: server.name, limit: server.limit };
                 ajaxHelper.postJson('/setServerLimit', packet , function(result) {
                     v.showSetServerLimitMsg(result.ret);
+                });
+            },
+            onBtnLogin: function(e) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({
+                        id: this.ip_id,
+                        pw: this.ip_pw
+                    }),
+                    contentType: 'application/json',
+                    url: '/login',
+                    success: function(ret) {
+                        if( ret != 0 ) {
+                            alert('!');
+                        }
+                        else {
+                            window.location.href = '/';
+                        }
+                    }
                 });
             },
             showPermanentMsg(ret) {
