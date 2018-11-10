@@ -53,7 +53,7 @@ process.argv.forEach(function(val, idx, arr) {
 
 app.set('port', port);
 
-
+console.log(port);
 /**
  * Create HTTP server.
  */

@@ -5,11 +5,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 const routes = require('./routes/index');
-const session = require('express-session');
-const redis = require('redis');
-const redisStore = require('connect-redis')(session);
-const client = redis.createClient();
+const RedisMan = require('./server/modules/RedisManager');
+const rm = new RedisMan();
 let servman = require('./server/modules/ServerManager');
+servman.rm = rm;
 
 var app = express();
 
@@ -22,28 +21,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var sessionMiddleware = session({
-    secret: 'dhkddPtlra',
-    resave: true,
-    saveUninitialized: false,
-    store: new redisStore({
-        host: '127.0.0.1',
-        port: 6379,
-        client: client,
-        prefix: "session-jamlive.net:a",
-        db: 0
-    })
-});
-app.session = sessionMiddleware;
+app.session = rm.sessionMiddleware;
 app.servman = servman;
-app.redis = client;
+app.redis = rm.client;
 
 app.use(function(req,res, next) {
-    req.redis = client;
+    req.redis = rm.client;
     next();
 })
 
-app.use(sessionMiddleware);
+app.use(rm.sessionMiddleware);
 
 app.use('/', routes);
 

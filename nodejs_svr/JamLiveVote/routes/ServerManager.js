@@ -669,7 +669,7 @@ ServerMan.prototype.setCachedSearchResult = function(sType, query, data) {
     cachedType.searched.set(query, {data: data, tLast: new Date()});
 };
 
-ServerMan.prototype.addSearchQuery = function( query, bCount ) {
+ ServerMan.prototype.addSearchQuery = function( query, bCount ) {
     this.center.sendSearchQuery({ query: query, isCounting: bCount });
 };
 
