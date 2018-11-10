@@ -162,7 +162,7 @@ class WebSearchEngine {
         })
         .then(function(obj) {
             if( obj[2].searched ) { obj[2].hdata = obj[2].desc; }
-            return checkCachedWord(obj[0], 'hdic', obj[2]);
+            return checkCachedWord(obj[0], 'edic', obj[2]);
         })
         .then(function(obj) {
             if( obj[2].searched ) { obj[2].edata = obj[2].desc; }
