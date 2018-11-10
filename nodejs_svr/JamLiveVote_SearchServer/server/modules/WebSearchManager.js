@@ -457,7 +457,6 @@ class WebSearchEngine {
                                 var data = JSON.parse(body).items;
                                 if( isArray(data) && data.length > 0 ) {
                                     data = data.slice(0,8);
-                                    console.log(data);
 
                                     setCachedWord(wse, 'image', query, JSON.stringify({data: data}))
                                     .then(function() {
