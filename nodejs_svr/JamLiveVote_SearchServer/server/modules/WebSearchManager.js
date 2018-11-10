@@ -436,7 +436,6 @@ class WebSearchEngine {
 
         checkCachedWord(wse, 'image', {query: query, searched: false, data: ''})
         .then(function(obj) {
-            console.log(obj[2]);
             if (obj[2].searched) {
                 client.socket.emit(PROTOCOL, obj[2].desc);
             }
