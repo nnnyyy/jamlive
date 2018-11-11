@@ -192,6 +192,9 @@ var GlobalValue = function() {
             onChallenge: function() {
                 G.socket.emit('one-pick', {type: 'add'});
                 this.btnChallengeDisabled = true;
+            },
+            onChallengeCancel: function() {
+                this.visible = false;
             }
         }
     });
