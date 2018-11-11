@@ -245,6 +245,8 @@
                         <dd>비밀번호 변경</dd>
                         <dd v-show="isAdminMembers" @click="onBtnAdminMode" :style="btnStyle" class="admin">관리자 모드</dd>
                         <dd v-show="isAdminMembers" @click="onBtnSetQuizMode" :style="btnStyle" class="admin">기출문제 수정 모드</dd>
+                        <dd v-show="isAdminMembers" :style="btnStyle" class="admin"><button @click="onBtnQuizOn">자동 퀴즈 On</button> <button @click="onBtnQuizOff">자동 퀴즈 Off</button></dd>
+                        <dd v-show="isAdminMembers" :style="btnStyle" class="admin"><button @click="onBtnChosungOff">초성 퀴즈 Off</button></dd>
                         <%}%>
                     </dl>
                 </li>

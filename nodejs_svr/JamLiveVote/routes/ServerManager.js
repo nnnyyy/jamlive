@@ -952,19 +952,21 @@ function onSockChat(data) {
             return;
         }
 
-        if( client.isAdmin() && data.msg == "#quizoff") {
+        if( client.isAdminMembers() && data.msg == "#quizoff") {
+            servman.autoQuizManager.setForcedStop(true);
             chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 off 했습니다.', isBaned );
             return;
         }
-        else if( client.isAdmin() && data.msg == "#quizon" ) {
+        else if( client.isAdminMembers() && data.msg == "#quizon" ) {
+            servman.autoQuizManager.setForcedStop(false);
             chatMan.Broadcast( servman.io, client, 'chat', '자동퀴즈모드를 on 했습니다.', isBaned );
             return;
         }
-        else if( client.isAdmin() && data.msg == "#chosung") {
+        else if( client.isAdminMembers() && data.msg == "#chosung") {
             servman.chosung.start();
             return;
         }
-        else if( client.isAdmin() && data.msg == "#chosungoff" ) {
+        else if( client.isAdminMembers() && data.msg == "#chosungoff" ) {
             servman.chosung.stop();
             return;
         }
@@ -1005,8 +1007,10 @@ function onSockChat(data) {
         }
 
         //  채팅창 얼리기 시에는 메시지를 보내지 않는다.
-        if( chatMan.isFreeze(new Date()) ) {
-            servman.sendServerMsg(client.socket, '채팅창이 얼었습니다. 약 3분간 지속됩니다.');
+        const tCur = new Date();
+        if( !client.isAdminMembers() && chatMan.isFreeze(tCur) ) {
+            const tRemain = chatMan.isFreeze(tCur) / 1000;
+            servman.sendServerMsg(client.socket, `채팅창이 얼었습니다. ${tRemain}초 후에 풀립니다.`);
             return;
         }
 
@@ -1066,9 +1070,9 @@ function onSockVote(data) {
             if( servman.isLiveQuizTime() && client.auth < 2 ) {
                 client.incActivePoint( 4 );
                 var msgLowLevel = `[투표] ${number}번`;
-                chatMan.Broadcast(servman.io, client, 'vote', msgLowLevel, false, -1 );
                 client.lastVoteIdx =  data.idx;
                 client.tLastClick = new Date();
+                chatMan.Broadcast(servman.io, client, 'vote', msgLowLevel, false, -1 );
                 return;
             }
             servman.voteManager.vote(client, data.idx);

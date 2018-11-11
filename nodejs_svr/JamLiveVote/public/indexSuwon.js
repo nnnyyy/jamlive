@@ -403,6 +403,21 @@ SiteMenu.prototype.init = function() {
                 e.preventDefault();
                 e.stopPropagation();
                 window.open('/quizSet/','_blank');
+            },
+            onBtnQuizOn: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                G.socket.emit('chat', {nickname: '', msg: '#quizon', isvote: false, mode: 'chat' });
+            },
+            onBtnQuizOff: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                G.socket.emit('chat', {nickname: '', msg: '#quizoff', isvote: false, mode: 'chat' });
+            },
+            onBtnChosungOff: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                G.socket.emit('chat', {nickname: '', msg: '#chosungoff', isvote: false, mode: 'chat' });
             }
         }
     });
@@ -2063,24 +2078,29 @@ function onLoginInfo(data) {
         vote: -1
     }
 
-    var len = searchServer.length;
-    if( G.auth < 4 ) {
-        var rnd = getRandomInt(0, 9);
-        item.msg = rnd + '번 검색서버에 접속 시도';
-        chatObj.addChat( item );
-        G.socket2 = io(searchServer[rnd]);
-    }
-    else if( G.auth >= 4 && G.isAdminMembers <= 0 ){
-        var rnd = getRandomInt(10, 17);
-        item.msg = rnd + '번 검색서버에 접속 시도';
-        chatObj.addChat( item );
-        G.socket2 = io(searchServer[rnd]);
+    if( true ) {
+        G.socket2 = io('http://127.0.0.1:12000/');
     }
     else {
-        var rnd = getRandomInt(18, 19);
-        item.msg = rnd + '번 검색서버에 접속 시도';
-        chatObj.addChat( item );
-        G.socket2 = io(searchServer[rnd]);
+        var len = searchServer.length;
+        if( G.auth < 4 ) {
+            var rnd = getRandomInt(0, 9);
+            item.msg = rnd + '번 검색서버에 접속 시도';
+            chatObj.addChat( item );
+            G.socket2 = io(searchServer[rnd]);
+        }
+        else if( G.auth >= 4 && G.isAdminMembers <= 0 ){
+            var rnd = getRandomInt(10, 17);
+            item.msg = rnd + '번 검색서버에 접속 시도';
+            chatObj.addChat( item );
+            G.socket2 = io(searchServer[rnd]);
+        }
+        else {
+            var rnd = getRandomInt(18, 19);
+            item.msg = rnd + '번 검색서버에 접속 시도';
+            chatObj.addChat( item );
+            G.socket2 = io(searchServer[rnd]);
+        }
     }
 
     G.socket2.on('connect', function() {
@@ -2833,7 +2853,8 @@ function setSearchRetImage(items, first, where) {
         div += image;
     }
 
-    getSearchArea(where).articles.push({title:'', desc: div, except: true});
+    console.log(div);
+    getSearchArea(where).articles.push({title:'이미지 검색', desc: div, except: true});
 
     clearTimeout(searchObj.timerID);
     searchObj.timerID = setTimeout(function() {

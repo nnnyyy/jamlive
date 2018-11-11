@@ -18,6 +18,7 @@ class AutoQuizManager {
         this.tQuizStart = 0;
         this.tQuizEnd = 0;
         this.mVoteClient = new Map();
+        this.bForcedStop = false;
     }
 
     makeQuiz( providerNick, callback ) {
@@ -96,11 +97,15 @@ class AutoQuizManager {
     }
 
     canMakeQuiz() {
-        return !this.isRunning;
+        return !this.bForcedStop && !this.isRunning;
     }
 
     isVote() {
         return this.isRunning && this.tQuizStart != 0;
+    }
+
+    setForcedStop(bForced) {
+        this.bForcedStop = bForced;
     }
 
     vote( client, idx ) {
