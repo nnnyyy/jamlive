@@ -421,6 +421,11 @@ SiteMenu.prototype.init = function() {
                 e.preventDefault();
                 e.stopPropagation();
                 G.socket.emit('chat', {nickname: '', msg: '#chosungoff', isvote: false, mode: 'chat' });
+            },
+            onFreezingChat: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                G.socket.emit('chat', {nickname: '', msg: '#freeze', isvote: false, mode: 'chat' });
             }
         }
     });

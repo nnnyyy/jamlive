@@ -247,6 +247,7 @@
                         <dd v-show="isAdminMembers" @click="onBtnSetQuizMode" :style="btnStyle" class="admin">기출문제 수정 모드</dd>
                         <dd v-show="isAdminMembers" :style="btnStyle" class="admin"><button @click="onBtnQuizOn">자동 퀴즈 On</button> <button @click="onBtnQuizOff">자동 퀴즈 Off</button></dd>
                         <dd v-show="isAdminMembers" :style="btnStyle" class="admin"><button @click="onBtnChosungOff">초성 퀴즈 Off</button></dd>
+                        <dd v-show="isAdminMembers" :style="btnStyle" class="admin"><button @click="onFreezingChat">채팅창 얼리기</button></dd>
                         <%}%>
                     </dl>
                 </li>
