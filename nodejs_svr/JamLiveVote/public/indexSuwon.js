@@ -2086,7 +2086,7 @@ function onLoginInfo(data) {
         vote: -1
     }
 
-    if( true ) {
+    if( false ) {
         G.socket2 = io('http://127.0.0.1:12000/');
     }
     else {
