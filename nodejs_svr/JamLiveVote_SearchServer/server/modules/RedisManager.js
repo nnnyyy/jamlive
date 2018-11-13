@@ -9,6 +9,7 @@ const redisStore = require('connect-redis')(session);
 class RedisManager {
     constructor() {
         this.client = redis.createClient();
+
         this.sessionMiddleware = session({
             secret: 'dhkddPtlra',
             resave: true,
@@ -16,9 +17,16 @@ class RedisManager {
             store: new redisStore({
                 host: '127.0.0.1',
                 port: 6379,
-                client: this.client,
+                client: client,
                 prefix: "session-jamlive.net:a",
-                db: 0
+                db: 0,
+                cookie:?{
+                    path:?'/',
+                    domain:?'.jamlive.net',
+                    expires:?new?Date(Date.now()?+?3600000),
+                    maxAge:?3600000
+                }
+
             })
         });
     }

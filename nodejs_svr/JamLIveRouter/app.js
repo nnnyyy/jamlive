@@ -28,7 +28,14 @@ var sessionMiddleware = session({
         port: 6379,
         client: client,
         prefix: "session-jamlive.net:a",
-        db: 0
+        db: 0,
+        cookie: {
+            path: '/',
+            domain: '.jamlive.net',
+            expires: new Date(Date.now() + 3600000),
+            maxAge: 3600000
+        }
+
     })
 });
 
