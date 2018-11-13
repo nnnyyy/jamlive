@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(i18n);
 var sessionMiddleware = session({
     secret: 'dhkddPtlra',
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     store: new redisStore({
         host: '127.0.0.1',

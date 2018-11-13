@@ -12,7 +12,7 @@ class RedisManager {
 
         this.sessionMiddleware = session({
             secret: 'dhkddPtlra',
-            resave: true,
+            resave: false,
             saveUninitialized: false,
             store: new redisStore({
                 host: '127.0.0.1',
