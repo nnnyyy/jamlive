@@ -17,7 +17,7 @@ class RedisManager {
             store: new redisStore({
                 host: '127.0.0.1',
                 port: 6379,
-                client: client,
+                client: this.client,
                 prefix: "session-jamlive.net:a",
                 db: 0
             })
