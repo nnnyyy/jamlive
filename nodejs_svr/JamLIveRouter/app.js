@@ -29,7 +29,11 @@ var sessionMiddleware = session({
         client: client,
         prefix: "session-jamlive.net:a",
         db: 0
-    })
+    }),
+    cookie: {
+        path: '/',
+        domain: '.jamlive.net'
+    }
 });
 
 ServerManager.setRedis(client);

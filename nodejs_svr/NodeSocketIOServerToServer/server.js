@@ -33,7 +33,11 @@ var sessionMiddleware = session({
         client: client,
         prefix: "session-jamlive.net:a",
         db: 0
-    })
+    }),
+    cookie: {
+        path: '/',
+        domain: '.jamlive.net'
+    }
 });
 
 app.use(bodyParser.json());
