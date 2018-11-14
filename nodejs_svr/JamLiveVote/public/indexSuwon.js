@@ -2099,19 +2099,19 @@ function onLoginInfo(data) {
             var rnd = getRandomInt(0, 9);
             item.msg = rnd + '번 검색서버에 접속 시도';
             chatObj.addChat( item );
-            G.socket2 = io("http://search.jamlive.net");
+            G.socket2 = io("http://search1.jamlive.net");
         }
         else if( G.auth >= 4 && G.isAdminMembers <= 0 ){
             var rnd = getRandomInt(10, 17);
             item.msg = rnd + '번 검색서버에 접속 시도';
             chatObj.addChat( item );
-            G.socket2 = io("http://search.jamlive.net");
+            G.socket2 = io("http://search1.jamlive.net");
         }
         else {
             var rnd = getRandomInt(18, 19);
             item.msg = rnd + '번 검색서버에 접속 시도';
             chatObj.addChat( item );
-            G.socket2 = io("http://search.jamlive.net");
+            G.socket2 = io("http://search1.jamlive.net");
         }
     }
 
