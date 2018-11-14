@@ -82,7 +82,7 @@ router.post('/go', function( req, res , next) {
       res.json({ret: -1, msg: '서버에 사용자가 많습니다. 다른서버로'});
       return;
     }
-      res.json({ret: 0, url: servinfo.url});
+      res.json({ret: 0, url: `http://server${req.body.servidx}.jamlive.net`});
     }
 });
 
