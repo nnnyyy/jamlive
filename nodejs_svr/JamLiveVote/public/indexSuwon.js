@@ -1577,6 +1577,7 @@ function onGlobalKeyDown(e) {
     if( chatObj.chatInputNameElem.is(':focus') ) return;
     if( chatObj.chatInputMsgElem.is(':focus') ) return;
     if( hintObj.modifyTextArea.is(':focus')) return;
+    if( hintObj.vHintRoot.isModify ) return;
     //if( $('#ip-search-user-name').is(':focus') ) return;
 
     // 새로고침
