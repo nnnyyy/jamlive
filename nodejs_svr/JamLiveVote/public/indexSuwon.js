@@ -2053,27 +2053,29 @@ function onLoginInfo(data) {
     options.setShowHighLevelVoteOnly();
     options.setSearchOptions();
 
+    var prefix_search_server = 'http://jamlive.net';
+
     var searchServer = [
-        'http://databucket.duckdns.org:12000/',
-        'http://databucket.duckdns.org:12001/',
-        'http://databucket.duckdns.org:12002/',
-        'http://databucket.duckdns.org:12003/',
-        'http://databucket.duckdns.org:12004/',
-        'http://databucket.duckdns.org:12005/',
-        'http://databucket.duckdns.org:12006/',
-        'http://databucket.duckdns.org:12007/',
-        'http://databucket.duckdns.org:12008/',
-        'http://databucket.duckdns.org:12009/',
-        'http://databucket.duckdns.org:12010/',
-        'http://databucket.duckdns.org:12011/',
-        'http://databucket.duckdns.org:12012/',
-        'http://databucket.duckdns.org:12013/',
-        'http://databucket.duckdns.org:12014/',
-        'http://databucket.duckdns.org:12015/',
-        'http://databucket.duckdns.org:12016/',
-        'http://databucket.duckdns.org:12017/',
-        'http://databucket.duckdns.org:12018/',
-        'http://databucket.duckdns.org:12019/'
+        prefix_search_server + ':12000/',
+        prefix_search_server + ':12001/',
+        prefix_search_server + ':12002/',
+        prefix_search_server + ':12003/',
+        prefix_search_server + ':12004/',
+        prefix_search_server + ':12005/',
+        prefix_search_server + ':12006/',
+        prefix_search_server + ':12007/',
+        prefix_search_server + ':12008/',
+        prefix_search_server + ':12009/',
+        prefix_search_server + ':12010/',
+        prefix_search_server + ':12011/',
+        prefix_search_server + ':12012/',
+        prefix_search_server + ':12013/',
+        prefix_search_server + ':12014/',
+        prefix_search_server + ':12015/',
+        prefix_search_server + ':12016/',
+        prefix_search_server + ':12017/',
+        prefix_search_server + ':12018/',
+        prefix_search_server + ':12019/'
     ];
 
     var item = {

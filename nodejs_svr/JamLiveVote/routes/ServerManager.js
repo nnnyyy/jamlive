@@ -1258,7 +1258,7 @@ function onGo(data) {
                 return;
             }
 
-            client.socket.emit('go', {ret: 0, url: servinfo.url});
+            client.socket.emit('go', {ret: 0, url: `http://server${data.servidx}.jamlive.net`});
         }
     }catch(e) {
         console.log(e);
