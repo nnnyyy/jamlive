@@ -31,17 +31,22 @@
 </head>
 <body>
 <div id="app">
-    <% include ./top %>
+    <% include ../top %>
     <div v-if="logined == true && isAccessable == true">
-        <% include ./topMenu %>
-        <div>
+        <% include ../topMenu %>
+        <div style="text-align: center;">
             <div class="sub">전체 서버 메시지</div>
+            <div class="sub desc">전체 서버에 메시지를 뿌립니다.</div>
             <input type="text" id="ip-msg"/>
             <button @click="onBtnSendAdminMsg">보내기</button>
         </div>
-        <div>
+
+
+
+        <div style="text-align: center">
             <div class="sub">클릭 이벤트 설정</div>
-            <table>
+            <div class="desc">네이버 검색 결과로 이동하는 클릭 이벤트를 설정합니다.</div>
+            <table style="margin: 0 auto;">
                 <tr>
                     <td>메시지</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrMsg"/></td>
                 </tr>
@@ -51,19 +56,6 @@
                 <tr><td>검색어</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrWord"/></td></tr>
                 <tr><td colspan="2"><button @click="onBtnSendRSR">보내기</button></td></tr>
             </table>
-        </div>
-        <div>
-            <div class="sub">닉으로 밴하기</div>
-            <input type="text" id="ip-ban-nick"/>
-            <button @click="onBtnPermanentBanBynick">밴하기</button>
-        </div>
-        <div>
-            <div class="sub">서버 제한</div>
-            <ul id="servers" v-for="item in servers">
-                <li>
-                    {{item.name}} 제한: <input class="user" type="text" v-model="item.limit">명 <button @click="onBtnSetServerLimit(item,$event)">설정</button>
-                </li>
-            </ul>
         </div>
     </div>
     <div v-else-if="logined == false">
@@ -79,13 +71,6 @@
         권한이 없습니다.
     </div>
 </div>
-<div id="notice-root" style="width: 600px;">
-    <div class="sub">서버 전체 공지사항</div>
-    <textarea id ='notice-area' class="notice-area"></textarea>
-    <button id="btn-update-notice">
-        공지 업데이트
-    </button>
-</div>
 </body>
 <script type="text/javascript" src="/index.js"></script>
 <script>
@@ -95,11 +80,11 @@
         G.app.isAccessable = <%- isAcessable %>;
         var servItems = [];
         <% for( var i = 0 ; i < servers.length ; ++i ) {%>
-            var item = {};
-            item.name = '<%- servers[i].name %>';
-            item.idx = <%- servers[i].idx %>;
-            item.limit = '<%- servers[i].limit %>';
-            servItems.push(item);
+        var item = {};
+        item.name = '<%- servers[i].name %>';
+        item.idx = <%- servers[i].idx %>;
+        item.limit = '<%- servers[i].limit %>';
+        servItems.push(item);
         <%}%>
 
         servItems.sort(function(item1, item2) {
@@ -107,26 +92,6 @@
         });
 
         G.app.servers = servItems;
-
-        if( G.app.logined && G.app.isAccessable ) {
-            $('#notice-root').css('display', 'block');
-            CKEDITOR.replace('notice-area');
-            <% if(notice) { %>
-            var notice = <%- JSON.stringify(notice) %>;
-            CKEDITOR.instances['notice-area'].setData(notice);
-            <% }%>
-
-            $('#btn-update-notice').click(function(e) {
-                var notice = CKEDITOR.instances['notice-area'].getData();
-                //modifiedHint = modifiedHint.replace(/(?:\r\n|\r|\n)/g, '<br>');
-                //G.socket.emit('memo', {memo: modifiedHint });
-                ajaxHelper.postJson('/update-notice', { notice: notice }, function(ret) {
-                    alert(ret.ret);
-                });
-            })
-        }else {
-            $('#notice-root').css('display', 'none');
-        }
     });
 </script>
 </html>

@@ -5,9 +5,17 @@ $c-logo-blue1: #3e58a7;
 $c-logo-blue2: #1e2a5d;
 
 #app {
+  overflow-x: hidden;
 
   .sub {
-    margin: 10px 0;
+    margin: 20px 0 10px 0;
+    font-weight: 600;
+  }
+
+  .desc {
+    color: #999999;
+    font-size: 14px;
+    margin: 10px 0 5px 0;
   }
 
   input#ip-msg, input#ip-ban-nick {
@@ -57,6 +65,21 @@ $c-logo-blue2: #1e2a5d;
   background-color: $c-logo-blue2;
   color: white;
   font-size: 15px;
+}
+
+#top-menu {
+  width: 100%;
+
+  #top-menu-inner {
+    width: 600px;
+    margin: 0 auto;
+
+    ul li {
+      text-align: center;
+      width: 25%;
+      float: left;
+    }
+  }
 }
 
 #login-form {
@@ -115,4 +138,11 @@ $c-logo-blue2: #1e2a5d;
 
 .ip-w-long {
   width: 460px;
+}
+
+.line {
+  width: 300px;
+  height: 20px;
+  border-bottom: 3px dotted $c-logo-blue1;
+  margin: 0 auto;
 }

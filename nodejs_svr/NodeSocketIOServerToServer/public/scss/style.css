@@ -3,14 +3,24 @@
   padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 li {
   list-style: none;
 }
 
+#app {
+  overflow-x: hidden;
+}
 #app .sub {
-  margin: 10px 0;
+  margin: 20px 0 10px 0;
+  font-weight: 600;
+}
+#app .desc {
+  color: #999999;
+  font-size: 14px;
+  margin: 10px 0 5px 0;
 }
 #app input#ip-msg, #app input#ip-ban-nick {
   width: 600px;
@@ -43,6 +53,19 @@ li {
   background-color: #1e2a5d;
   color: white;
   font-size: 15px;
+}
+
+#top-menu {
+  width: 100%;
+}
+#top-menu #top-menu-inner {
+  width: 600px;
+  margin: 0 auto;
+}
+#top-menu #top-menu-inner ul li {
+  text-align: center;
+  width: 25%;
+  float: left;
 }
 
 #login-form {
@@ -105,6 +128,13 @@ li {
 
 .ip-w-long {
   width: 460px;
+}
+
+.line {
+  width: 300px;
+  height: 20px;
+  border-bottom: 3px dotted #3e58a7;
+  margin: 0 auto;
 }
 
 /*# sourceMappingURL=style.css.map */

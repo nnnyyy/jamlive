@@ -5,7 +5,7 @@ var express = require('express');
 var router = express.Router();
 const Auth = require('./Auth');
 
-router.get('/', function(req, res, next) {
+router.use(function(req,res, next) {
     const serverMan = req.serverMan;
     let isAccessApprove = false;
     let isLogined = req.session.username != null;
@@ -20,24 +20,36 @@ router.get('/', function(req, res, next) {
 
     }
 
+    req.loginInfo = { isAcessable: isAccessApprove, isLogined: isLogined, servers: serverMan.servinfo.values() };
+    next();
+});
+
+router.get('/', function(req, res, next) {
+    const serverMan = req.serverMan;
+
     serverMan.redis.get('global-notice', (err,info) => {
         if( !err ) {
             let parsedInfo = JSON.parse(info);
             if( !parsedInfo ) {
                 parsedInfo = {notice: ''};
             }
+            req.loginInfo.notice = parsedInfo.notice;
 
-            parsedInfo.isLogined = isLogined;
-            parsedInfo.isAcessable = isAccessApprove;
-            parsedInfo.servers = serverMan.servinfo.values();
-
-            res.render('index', parsedInfo);
+            res.render('index', req.loginInfo );
         }
         else {
             res.json({ret: 'error'});
         }
     });
-})
+});
+
+router.get('/msg', function(req,res,next) {
+    try {
+        res.render('menu/serverMsg', req.loginInfo );
+    }catch(e) {
+
+    }
+});
 
 router.post('/login', Auth.login );
 
