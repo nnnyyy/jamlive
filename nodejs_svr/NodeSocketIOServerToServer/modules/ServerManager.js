@@ -351,6 +351,10 @@ class ServerManager {
         var hours = cur.getHours();
         return !( (hours >= 23 || hours < 12 ) || (hours >= 15 && hours < 18 ) );
     }
+
+    FreezeChat( req, res ) {
+        broadcastToAllVoteServer('freeze', {});
+    }
 }
 
 module.exports = ServerManager;

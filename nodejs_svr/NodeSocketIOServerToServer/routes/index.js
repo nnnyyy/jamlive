@@ -80,7 +80,9 @@ router.post('/setServerLimit', function(req,res, next) {
         return;
     }
     serverMan.setServerLimit(req.body.name, req.body.limit, res);
-})
+});
+
+router.post('/freezechat', function(req,res,next) { req.serverMan.FreezeChat(req,res); });
 
 router.post('/update-notice', function(req, res, next) {
     const serverMan = req.serverMan;

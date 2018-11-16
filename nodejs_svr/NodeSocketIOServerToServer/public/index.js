@@ -74,6 +74,12 @@ function initVueObject() {
                     v.showSetServerLimitMsg(result.ret);
                 });
             },
+            onBtnFreezeChat: function(e) {
+                var packet = {};
+                ajaxHelper.postJson('/freezechat', packet , function(result) {
+
+                });
+            },
             onBtnLogin: function(e) {
                 $.ajax({
                     type: 'POST',

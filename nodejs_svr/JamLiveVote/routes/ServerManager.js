@@ -682,6 +682,8 @@ ServerMan.prototype.broadcastAllClients = function( protocol, packet ) {
     servman.io.sockets.in('auth').emit(protocol, packet);
 }
 
+
+
 function onSockBan(data) {
     try {
         var tCur = new Date();

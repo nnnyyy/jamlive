@@ -51,6 +51,7 @@ class Center {
         this.socket.on('global-hint', function(packet) { center.onGlobalHint(this, packet);    });
         this.socket.on('one-pick-center', function(packet) { center.onOnePickCenter(this, packet); })
         this.socket.on('rsr', function(packet)          { center.onRSR(this, packet); });
+        this.socket.on('freeze', function(packet)          { center.onFreeze(this, packet); });
     }
 
     onDisconnect( socket ) {
@@ -145,6 +146,15 @@ class Center {
     onRSR( socket, packet ) {
         try {
             this.servman.broadcastAllClients( 'rsr', packet );
+        }catch(e) {
+            console.log(e);
+        }
+    }
+
+    onFreeze( socket, packet ) {
+        try {
+            this.servman.chatMan.setFreeze();
+            this.servman.chatMan.BroadcastAdminMsg( this.servman.io, '과열 방지를 위해 채팅창을 얼렸습니다.' );
         }catch(e) {
             console.log(e);
         }
