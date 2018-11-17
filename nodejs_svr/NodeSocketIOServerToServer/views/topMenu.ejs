@@ -1,10 +1,11 @@
 <div id="top-menu">
     <div id="top-menu-inner">
         <ul>
-            <li>서버 설정</li>
-            <li>전체 메시지</li>
-            <li>밴</li>
-            <li>운영 툴 사용 로그</li>
+            <li @click="onBtnMenu(4)">공지사항</li>
+            <li @click="onBtnMenu(0)">서버 설정</li>
+            <li @click="onBtnMenu(1)">전체 메시지</li>
+            <li @click="onBtnMenu(2)">밴</li>
+            <li @click="onBtnMenu(3)">운영 툴 사용 로그</li>
         </ul>
     </div>
 </div>

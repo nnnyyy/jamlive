@@ -51,6 +51,20 @@ router.get('/msg', function(req,res,next) {
     }
 });
 
+router.get('/status', function(req,res,next) {
+    try {
+        res.render('menu/serverStatus', req.loginInfo );
+    }catch(e) {
+    }
+});
+
+router.get('/ban', function(req,res,next) {
+    try {
+        res.render('menu/serverBan', req.loginInfo );
+    }catch(e) {
+    }
+});
+
 router.post('/login', Auth.login );
 
 router.post('/msg', function( req, res, next) {

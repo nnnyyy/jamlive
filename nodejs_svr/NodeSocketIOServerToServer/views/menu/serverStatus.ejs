@@ -35,30 +35,12 @@
     <div v-if="logined == true && isAccessable == true">
         <% include ../topMenu %>
         <div style="text-align: center;">
-            <div class="sub">전체 서버 메시지</div>
-            <div class="sub desc">전체 서버에 메시지를 뿌립니다.</div>
-            <input type="text" id="ip-msg"/><br/>
-            <button class="btn-basic" @click="onBtnSendAdminMsg">보내기</button>
-        </div>
-
-        <div style="text-align: center">
-            <div class="sub">클릭 이벤트 설정</div>
-            <div class="desc">네이버 검색 결과로 이동하는 클릭 이벤트를 설정합니다.</div>
-            <table style="margin: 0 auto;">
-                <tr>
-                    <td>메시지</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrMsg"/></td>
-                </tr>
-                <tr>
-                    <td>버튼 메시지</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrBtnMsg"/></td>
-                </tr>
-                <tr><td>검색어</td><td><input type="text" class="ip-default ip-w-long" v-model="rsrWord"/></td></tr>
-                <tr><td colspan="2"><button class="btn-basic" @click="onBtnSendRSR">보내기</button></td></tr>
-            </table>
-        </div>
-        <div style="text-align: center;">
-            <div class="sub">채팅창 얼리기</div>
-            <div class="desc">서버에 과부하 조짐이 보이면 클릭 해 줍니다.</div>
-            <button class="btn-basic" @click="onBtnFreezeChat">실행</button>
+            <div class="sub">서버 제한</div>
+            <ul id="servers" v-for="item in servers">
+                <li>
+                    {{item.name}} 제한: <input class="user" type="text" v-model="item.limit">명 <button class="btn-basic" @click="onBtnSetServerLimit(item,$event)">설정</button>
+                </li>
+            </ul>
         </div>
     </div>
     <div v-else-if="logined == false">

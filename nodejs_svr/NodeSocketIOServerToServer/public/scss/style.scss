@@ -71,13 +71,16 @@ $c-logo-blue2: #1e2a5d;
   width: 100%;
 
   #top-menu-inner {
-    width: 600px;
+    width: 800px;
+    height: 40px;
+    line-height: 40px;
     margin: 0 auto;
 
     ul li {
       text-align: center;
-      width: 25%;
+      width: 20%;
       float: left;
+      cursor: pointer;
     }
   }
 }
