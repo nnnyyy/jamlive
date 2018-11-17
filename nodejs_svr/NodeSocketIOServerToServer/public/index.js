@@ -40,8 +40,8 @@ function initVueObject() {
             onBtnMenu: function(idx) {
                 switch(idx) {
                     case -1: window.location.href = '/'; break;
-                    case 0: window.location.href = '/msg'; break;
-                    case 1: window.location.href = '/status'; break;
+                    case 0: window.location.href = '/status'; break;
+                    case 1: window.location.href = '/msg'; break;
                     case 2: window.location.href = '/ban'; break;
                     case 4: window.location.href = '/'; break;
                 }
