@@ -353,7 +353,7 @@ class ServerManager {
     }
 
     FreezeChat( req, res ) {
-        broadcastToAllVoteServer('freeze', {});
+        this.broadcastToAllVoteServer('freeze', {});
     }
 }
 
