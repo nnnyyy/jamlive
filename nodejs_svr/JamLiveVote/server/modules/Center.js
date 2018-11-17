@@ -62,6 +62,8 @@ class Center {
         socket.off('notice-data');
         socket.off('global-hint');
         socket.off('one-pick-center');
+        socket.off('rsr');
+        socket.off('freeze');
         console.log('disconnect from center');
     }
 
