@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122840650-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-122840650-1');
+    </script>
+
+    <title>공유기 관리자 페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" charset="utf-8" />
+    <meta name="description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트"/>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="라이브 퀴즈쇼 정답 공유기">
+    <meta property="og:description" content="라이브 퀴즈쇼(잼라이브, 더퀴즈라이브, 라이브팟, 페이큐)의 정답을 서로 공유하여 당첨률을 높이기 위해 제작 된 사이트">
+    <meta property="og:image" content="http://jamlive.net/images/main_icon.png">
+    <meta property="og:url" content="http://jamlive.net">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="//cdn.ckeditor.com/4.10.0/full/ckeditor.js"></script>
+    <link rel='stylesheet' href='/scss/style.css' />
+</head>
+<body>
+<div id="app">
+    <% include ../top %>
+    <div v-if="logined == true && isAccessable == true">
+        <% include ../topMenu %>
+        <div style="text-align: center;">
+            <table class="tbl-admin-log">
+                <tr>
+                    <td>시간</td>
+                    <td>액션</td>
+                    <td>상세액션</td>
+                    <td>닉네임</td>
+                </tr>
+                <template v-for="item in adminlogs">
+                    <tr>
+                        <td>{{ item.regdate }}</td>
+                        <td>{{ item.act }}</td>
+                        <td>{{ item.contents }}</td>
+                        <td>{{ item.nick }}</td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+    </div>
+    <div v-else-if="logined == false">
+        <% include ../loginForm %>
+    </div>
+    <div v-else>
+        권한이 없습니다.
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="/index.js"></script>
+<script>
+    $(document).ready(function() {
+        init();
+        G.app.logined = <%- isLogined %>;
+        G.app.isAccessable = <%- isAcessable %>;
+        console.log('<%- adminLogList.length %>');
+        <%
+         for( var i = 0 ; i < adminLogList.length ; ++i ) {
+         %>
+                   console.log('<%- adminLogList[i].nick %>');
+        <%
+         }
+         %>;
+
+    });
+</script>
+</html>

@@ -34,7 +34,10 @@ function initVueObject() {
             servers: [
             ],
             ip_id: '',
-            ip_pw:''
+            ip_pw:'',
+            adminlogs: [
+                { regdate: '2018-01-20', act: '밴', contents: '누가 누구를 어쩌구 저쩌구', nick: '냥냥이' }
+            ]
         },
         methods: {
             onBtnMenu: function(idx) {
@@ -43,6 +46,7 @@ function initVueObject() {
                     case 0: window.location.href = '/status'; break;
                     case 1: window.location.href = '/msg'; break;
                     case 2: window.location.href = '/ban'; break;
+                    case 3: window.location.href = '/adminlog'; break;
                     case 4: window.location.href = '/'; break;
                 }
             },

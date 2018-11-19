@@ -404,6 +404,10 @@ class ServerManager {
                 return pmAdminCmdLog(adminId,adnimNick,'채팅창 얼리기',``);
             });
     }
+
+    getAdminCmdLog(cb) {
+        dbhelper.getAdminCmdLog(cb);
+    }
 }
 
 module.exports = ServerManager;

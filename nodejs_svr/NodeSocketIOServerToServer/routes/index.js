@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 const Auth = require('./Auth');
+const Promise = require('promise');
 
 router.use(function(req,res, next) {
     const serverMan = req.serverMan;
@@ -65,6 +66,21 @@ router.get('/ban', function(req,res,next) {
     }
 });
 
+router.get('/adminlog', function(req, res, next) {
+    try {
+        new Promise(function(resolve, reject) {
+            req.serverMan.getAdminCmdLog(function(result) {
+                if( result.ret == 0 )
+                    resolve(result.list);
+            });
+        }).then(function(list) {
+            req.loginInfo.adminLogList = list;
+            res.render('menu/serverAdminLog', req.loginInfo );
+        });
+    }catch(e) {
+    }
+});
+
 router.post('/login', Auth.login );
 
 router.post('/msg', function( req, res, next) {
@@ -112,6 +128,6 @@ router.post('/update-notice', function(req, res, next) {
             res.json({ret: -1, err: err })
         }
     } );
-})
+});
 
 module.exports = router;

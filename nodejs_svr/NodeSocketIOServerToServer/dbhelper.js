@@ -128,3 +128,22 @@ exports.addAdminCmdLog = function( id, nick, act, contents, cb ) {
         if( cb ) cb({ret: -1});
     }
 }
+
+exports.getAdminCmdLog = function(cb) {
+    try {
+        dbpool.query("CALL getAdminLog()", function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            const list = rows[0];
+
+            if( cb ) cb({ret: 0, list: list });
+        });
+    }catch(err) {
+        //Log.logger.debug('DB Failed - updatePermanentBanByIp');
+        if( cb ) cb({ret: -1});
+    }
+}
