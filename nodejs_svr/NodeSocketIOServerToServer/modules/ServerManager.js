@@ -22,7 +22,6 @@ function pmPermanentBanByNick( sm, nick ) {
 
 function pmAdminCmdLog(id, nick, act, contents) {
     return new Promise(function(resolve, reject) {
-        console.log(id,nick,act, contents);
         dbhelper.addAdminCmdLog(id, nick, act, contents, function(result) {
             resolve(result);
         });
@@ -273,11 +272,20 @@ class ServerManager {
         return searchlist;
     }
 
-    broadcastMsg( msg ) {
-        this.voteServMap.forEach(function(value, key){
-            const distServer = value;
-            distServer.sendMsg( msg );
-        });
+    broadcastMsg( adminid, adminUserInfo, msg ) {
+        const sm = this;
+        new Promise(function(resolve, reject) {
+
+            sm.voteServMap.forEach(function(value, key){
+                const distServer = value;
+                distServer.sendMsg( msg );
+            });
+
+            resolve();
+
+        }).then(function() {
+                return pmAdminCmdLog(adminid,adminUserInfo.usernick,'메시지',`${msg}`);
+            });
     }
 
     broadcastToAllVoteServer(protocol, packet) {

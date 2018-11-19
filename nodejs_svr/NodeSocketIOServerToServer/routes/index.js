@@ -69,7 +69,7 @@ router.post('/login', Auth.login );
 
 router.post('/msg', function( req, res, next) {
     const serverMan = req.serverMan;
-    serverMan.broadcastMsg(req.body.msg);
+    serverMan.broadcastMsg(req.session.username, req.session.userinfo, req.body.msg);
 });
 
 router.post('/rsr', function( req, res, next) {
