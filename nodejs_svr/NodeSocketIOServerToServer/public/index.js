@@ -86,7 +86,7 @@ function initVueObject() {
             onBtnFreezeChat: function(e) {
                 var packet = {};
                 ajaxHelper.postJson('/freezechat', packet , function(result) {
-
+                    alert('채팅창을 얼렸습니다.');
                 });
             },
             onBtnLogin: function(e) {

@@ -8,8 +8,26 @@ var dbhelper = require('../dbhelper');
 const async = require('async');
 const GlobalHintMan = require('./GlobalHintMan');
 const OnePickManager = require('../server/modules/OnePickManager');
+const Promise = require('promise');
 
 const Redis = require('ioredis');
+
+function pmPermanentBanByNick( sm, nick ) {
+    return new Promise(function(resolve, reject) {
+        dbhelper.updatePermanentBanByNick(nick, function(result) {
+            resolve([sm, result]);
+        });
+    });
+}
+
+function pmAdminCmdLog(id, nick, act, contents) {
+    return new Promise(function(resolve, reject) {
+        console.log(id,nick,act, contents);
+        dbhelper.addAdminCmdLog(id, nick, act, contents, function(result) {
+            resolve(result);
+        });
+    });
+}
 
 class ServerManager {
     constructor(io, http) {
@@ -316,27 +334,38 @@ class ServerManager {
         }
     }
 
-    permanentBanByNick(nick, res) {
-        const servman = this;
-        dbhelper.updatePermanentBanByNick(nick, function(result) {
-            if( result.ret == 0 )
-                servman.banReload();
+    permanentBanByNick(adminid, adminUserInfo, nick, res) {
+        pmPermanentBanByNick(this, nick)
+        .then(function(o) {
+                const sm = o[0];
+                const result = o[1];
 
-            res.json(result);
-        });
+                if( result.ret == 0 )
+                    sm.banReload();
+                res.json(result);
+
+                return pmAdminCmdLog(adminid,adminUserInfo.usernick,'닉 밴',`${nick}`);
+        })
     }
 
-    setServerLimit(name, limit, res) {
+    setServerLimit(adminid, adminUserInfo, name, limit, res) {
         const sm = this;
-        dbhelper.updateServerLimit(name, limit, function(result) {
-            var serv = sm.servinfo.get(name);
-            serv.limit = limit;
-            let distServ = sm.chServMapByName.get(name);
-            if( distServ ) {
-                distServ.userlimit = limit;
-            }
-            res.json(result);
+        new Promise(function(resolve, reject) {
+            dbhelper.updateServerLimit(name, limit, function(result) {
+                var serv = sm.servinfo.get(name);
+                serv.limit = limit;
+                let distServ = sm.chServMapByName.get(name);
+                if( distServ ) {
+                    distServ.userlimit = limit;
+                }
+                resolve(result);
+            })
         })
+        .then(function(result) {
+                res.json(result);
+                return pmAdminCmdLog(adminid,adminUserInfo.usernick,'서버 인원 설정',`name: ${name}, limit: ${limit}`);
+        });
+
     }
 
     broadcastUpdateNotice( noticeData ) {
@@ -353,7 +382,19 @@ class ServerManager {
     }
 
     FreezeChat( req, res ) {
-        this.broadcastToAllVoteServer('freeze', {});
+        const adminId = req.session.username;
+        const adnimNick = req.session.userinfo.usernick;
+        const sm = this;
+
+        new Promise(function(resolve, reject) {
+            sm.broadcastToAllVoteServer('freeze', {} );
+
+            resolve();
+        })
+        .then(function() {
+                res.json({ret:0});
+                return pmAdminCmdLog(adminId,adnimNick,'채팅창 얼리기',``);
+            });
     }
 }
 

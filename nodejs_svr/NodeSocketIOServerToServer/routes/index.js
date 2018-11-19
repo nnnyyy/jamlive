@@ -84,7 +84,7 @@ router.post('/rsr', function( req, res, next) {
 
 router.post('/banbynick', function(req, res, next) {
     const serverMan = req.serverMan;
-    serverMan.permanentBanByNick(req.body.nick, res);
+    serverMan.permanentBanByNick( req.session.username, req.session.userinfo, req.body.nick, res);
 })
 
 router.post('/setServerLimit', function(req,res, next) {
@@ -93,10 +93,12 @@ router.post('/setServerLimit', function(req,res, next) {
         res.json({ret: -1});
         return;
     }
-    serverMan.setServerLimit(req.body.name, req.body.limit, res);
+    serverMan.setServerLimit(req.session.username, req.session.userinfo, req.body.name, req.body.limit, res);
 });
 
-router.post('/freezechat', function(req,res,next) { req.serverMan.FreezeChat(req,res); });
+router.post('/freezechat', function(req,res,next) {
+    req.serverMan.FreezeChat(req,res);
+});
 
 router.post('/update-notice', function(req, res, next) {
     const serverMan = req.serverMan;

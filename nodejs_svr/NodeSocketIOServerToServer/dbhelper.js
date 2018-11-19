@@ -111,3 +111,20 @@ exports.updatePermanentBanByIp = function( ip, cb ) {
         if( cb ) cb({ret: -1});
     }
 }
+
+exports.addAdminCmdLog = function( id, nick, act, contents, cb ) {
+    try {
+        dbpool.query("CALL addAdminLog( ?, ?, ?, ? )", [id, nick, act, contents], function(err, rows) {
+            if(err) {
+                console.log('error : ' + err);
+                if( cb ) cb({ret: -99});
+                return;
+            }
+
+            if( cb ) cb({ret: 0 });
+        });
+    }catch(err) {
+        //Log.logger.debug('DB Failed - updatePermanentBanByIp');
+        if( cb ) cb({ret: -1});
+    }
+}
