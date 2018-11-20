@@ -67,14 +67,24 @@
         init();
         G.app.logined = <%- isLogined %>;
         G.app.isAccessable = <%- isAcessable %>;
-        console.log('<%- adminLogList.length %>');
+
+        var adminItems = [];
+
         <%
          for( var i = 0 ; i < adminLogList.length ; ++i ) {
          %>
-                   console.log('<%- adminLogList[i].nick %>');
+        //{ regdate: '2018-01-20', act: '밴', contents: '누가 누구를 어쩌구 저쩌구', nick: '냥냥이' }
+        var item = {};
+        item.nick = '<%- adminLogList[i].nick %>';
+        item.regdate = '<%- adminLogList[i].regdate %>';
+        item.act = '<%- adminLogList[i].act %>';
+        item.contents = '<%- adminLogList[i].contents %>';
+        adminItems.push(item);
         <%
          }
          %>;
+
+        G.app.adminlogs = adminItems;
 
     });
 </script>
