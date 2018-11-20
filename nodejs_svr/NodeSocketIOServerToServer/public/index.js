@@ -130,6 +130,13 @@ function initVueObject() {
                 }
 
                 alert(msg);
+            },
+            onBtnPrevPage() {
+                if( this.page <= 1 ) return;
+                window.location.href = '/adminlog/' + ( this.page - 1 );
+            },
+            onBtnNextPage() {
+                window.location.href = '/adminlog/' + ( this.page + 1 );
             }
         }
     });

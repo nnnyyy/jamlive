@@ -405,8 +405,8 @@ class ServerManager {
             });
     }
 
-    getAdminCmdLog(cb) {
-        dbhelper.getAdminCmdLog(cb);
+    getAdminCmdLog(page, cb) {
+        dbhelper.getAdminCmdLog(page, cb);
     }
 }
 

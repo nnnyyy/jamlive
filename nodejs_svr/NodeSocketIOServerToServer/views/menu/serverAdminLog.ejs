@@ -51,6 +51,9 @@
                     </tr>
                 </template>
             </table>
+            <div style="margin-top: 10px;">
+                <button class="btn-basic" @click="onBtnPrevPage">이전</button> <button class="btn-basic" @click="onBtnNextPage">다음</button>
+            </div>
         </div>
     </div>
     <div v-else-if="logined == false">
@@ -65,8 +68,10 @@
 <script>
     $(document).ready(function() {
         init();
+
         G.app.logined = <%- isLogined %>;
         G.app.isAccessable = <%- isAcessable %>;
+        G.app.page = <%- adminLogCurPage %>;
 
         var adminItems = [];
 

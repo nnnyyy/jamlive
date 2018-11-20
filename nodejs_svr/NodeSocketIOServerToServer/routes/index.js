@@ -66,16 +66,20 @@ router.get('/ban', function(req,res,next) {
     }
 });
 
-router.get('/adminlog', function(req, res, next) {
+router.get('/adminlog', function(req,res,next) {
+    res.redirect('/adminlog/1');
+});
+router.get('/adminlog/:page', function(req, res, next) {
     try {
         new Promise(function(resolve, reject) {
-            req.serverMan.getAdminCmdLog(function(result) {
+            req.serverMan.getAdminCmdLog(req.params.page, function(result) {
                 if( result.ret == 0 )
                     resolve(result.list);
             });
         }).then(function(list) {
-            req.loginInfo.adminLogList = list;
-            res.render('menu/serverAdminLog', req.loginInfo );
+                req.loginInfo.adminLogList = list;
+                req.loginInfo.adminLogCurPage = req.params.page;
+                res.render('menu/serverAdminLog', req.loginInfo );
         });
     }catch(e) {
     }

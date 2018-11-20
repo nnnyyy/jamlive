@@ -129,9 +129,9 @@ exports.addAdminCmdLog = function( id, nick, act, contents, cb ) {
     }
 }
 
-exports.getAdminCmdLog = function(cb) {
+exports.getAdminCmdLog = function(page, cb) {
     try {
-        dbpool.query("CALL getAdminLog()", function(err, rows) {
+        dbpool.query("CALL getAdminLog(?)", [page], function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 if( cb ) cb({ret: -99});
