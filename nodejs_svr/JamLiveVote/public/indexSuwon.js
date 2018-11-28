@@ -587,9 +587,9 @@ Options.prototype.init = function() {
         options.vSettings.search.dicHan,
         options.vSettings.search.naverEncyc,
         options.vSettings.search.naverWeb,
-        options.vSettings.search.naverNews,
-        options.vSettings.search.naverKin,
-        options.vSettings.search.naverBlog
+        options.vSettings.search.naverNews
+        //options.vSettings.search.naverKin,
+        //options.vSettings.search.naverBlog
     ]
 
     for( var i = 0 ; i < searchOptionList.length ; ++i ) {
@@ -805,9 +805,9 @@ Options.prototype.setSearchOptions = function() {
     var searchOptionList = [
         options.vSettings.search.naverEncyc,
         options.vSettings.search.naverWeb,
-        options.vSettings.search.naverNews,
-        options.vSettings.search.naverKin,
-        options.vSettings.search.naverBlog
+        options.vSettings.search.naverNews
+        //options.vSettings.search.naverKin,
+        //options.vSettings.search.naverBlog
     ]
 
     if( G.auth < 4 ) {
@@ -2238,9 +2238,9 @@ function onSearchNaverAPI(packet) {
     var typeEnableList = [
         {enabled: options.vSettings.search.naverEncyc.checked, where: options.vSettings.search.naverEncyc.where, first: true },
         {enabled: options.vSettings.search.naverWeb.checked, where: options.vSettings.search.naverWeb.where, first: false },
-        {enabled: options.vSettings.search.naverNews.checked, where: options.vSettings.search.naverNews.where, first: false },
-        {enabled: options.vSettings.search.naverKin.checked, where: options.vSettings.search.naverKin.where, first: false },
-        {enabled: options.vSettings.search.naverBlog.checked, where: options.vSettings.search.naverBlog.where, first: false }
+        {enabled: options.vSettings.search.naverNews.checked, where: options.vSettings.search.naverNews.where, first: false }
+        //{enabled: options.vSettings.search.naverKin.checked, where: options.vSettings.search.naverKin.where, first: false },
+        //{enabled: options.vSettings.search.naverBlog.checked, where: options.vSettings.search.naverBlog.where, first: false }
     ];
 
     if( !typeEnableList[type].enabled ) return;
@@ -2502,9 +2502,9 @@ function searchWebRoot( socketOrigin, socket, query, isBroadcast ) {
         searchNaverMainAPI: [
             options.vSettings.search.naverEncyc.checked,
             options.vSettings.search.naverWeb.checked,
-            options.vSettings.search.naverNews.checked,
-            options.vSettings.search.naverKin.checked,
-            options.vSettings.search.naverBlog.checked
+            options.vSettings.search.naverNews.checked
+            //options.vSettings.search.naverKin.checked,
+            //options.vSettings.search.naverBlog.checked
         ],
         searchImage: options.vSettings.search.naverImage.checked,
         searchDaum: options.vSettings.search.daum.checked
