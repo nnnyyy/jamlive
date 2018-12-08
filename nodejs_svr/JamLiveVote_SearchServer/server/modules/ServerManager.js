@@ -28,11 +28,10 @@ class ServerManager {
                     return;
                 }
 
-
                 const newUser = new User(socket);
-                sm.users.set(newUser.userinfo.usernick, newUser);
+                sm.users.set(newUser.userinfo.nick, newUser);
                 socket.on('search', function(packet){ sm.searchEngine.onSearch(newUser, packet) });
-                socket.on('disconnect', function(){ sm.onDisconnect(newUser.userinfo.usernick); })
+                socket.on('disconnect', function(){ sm.onDisconnect(newUser.userinfo.nick); })
             }catch(e) {
                 console.log(e);
             }

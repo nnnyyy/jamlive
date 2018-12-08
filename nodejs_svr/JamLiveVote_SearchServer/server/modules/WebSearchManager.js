@@ -54,7 +54,7 @@ class WebSearchEngine {
         try {
             if( packet.searchDic )
                 this.searchDic(packet.msg, user);
-            if( user.userinfo.auth >= 4 ) {
+            if( user.userinfo.level >= 4 ) {
                 var bSearch = false;
                 for( var i = 0 ; i < packet.searchNaverMainAPI.length ; ++i ) {
                     if( packet.searchNaverMainAPI[i] ) {

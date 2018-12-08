@@ -7,11 +7,11 @@
 class User {
     constructor(socket) {
         this.socket = socket;
-        this.userinfo = socket.handshake.session.userinfo;
+        this.userinfo = socket.handshake.session.userdata;
     }
 
     static isLoginUser(socket) {
-        return socket.handshake.session.username != null;
+        return socket.handshake.session.userdata != null;
     }
 }
 
