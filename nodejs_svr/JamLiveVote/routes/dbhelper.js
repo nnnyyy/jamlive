@@ -150,7 +150,7 @@ exports.getActivePoint = function( id, cb ) {
 
 exports.updateActivePoint = function( id, ap, cb ) {
     try {
-        dbpool.query("CALL updateActivePoint( ?, ? );", [id, ap], function(err, rows) {
+        dbpool.query("CALL incActivePoint( ?, ? );", [id, ap], function(err, rows) {
             if(err) {
                 console.log('error : ' + err);
                 cb({ret: -99});

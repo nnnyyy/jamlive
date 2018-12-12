@@ -149,7 +149,7 @@ ServerMan.prototype.updateInfo = function( socket, client ) {
     try {
         if( !socket || !client ) return;
 
-        socket.emit(PS.SERV_TO_CLIENT.UPDATE_INFO, { ap: client.ap, auth: client.auth })
+        socket.emit(PS.SERV_TO_CLIENT.UPDATE_INFO, { ap: client.ap + client.incAp, auth: client.auth })
     }
     catch(e) {
         console.log('update info error');
@@ -260,8 +260,8 @@ ServerMan.prototype.setSocketListener = function(client, callback) {
                         servman.bMemoModifying = false;
                     }
 
-                    if( client.ap && client.ap >= 0 ) {
-                        dbhelper.updateActivePoint( client.socket.handshake.session.username, client.ap, function(ret) {
+                    if( client.ap && client.incAp != 0 ) {
+                        dbhelper.updateActivePoint( client.socket.handshake.session.username, client.incAp, function(ret) {
                             if( ret.ret != 0 ) {
                                 console.log('updateActivePoint Error');
                             }

@@ -16,6 +16,7 @@ var Client = function(servman, socket) {
     this.tLastSearch = 0;
     this.tLastLike = 0;
     this.lastVoteIdx = -1;
+    this.incAp = 0;
 }
 
 Client.prototype.getBanCnt = function() {
@@ -112,17 +113,17 @@ Client.prototype.isAdminMembers = function() {
 
 Client.prototype.incActivePoint = function( point ) {
     if( !this.isLogined() ) return;
-    this.ap += point;
+    this.incAp += point;
 
     this.servman.updateInfo(this.socket, this );
 
-    if( this.ap <= 0 ) {
-        this.ap = 0;
+    if( this.incAp <= 0 ) {
+        this.incAp = 0;
     }
 
     const client = this;
 
-    if( LevelExpTable.isAbleLevelUp(this.auth, this.ap) ) {
+    if( LevelExpTable.isAbleLevelUp(this.auth, this.ap + this.incAp) ) {
         this.auth++;
         this.socket.handshake.session.userinfo.auth++;
         dbhelper.updateAuth( this.socket.handshake.session.username, this.auth, function( result ) {
