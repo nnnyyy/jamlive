@@ -231,8 +231,11 @@ class ServerManager {
         if( idx >=1 && idx <= 12 ) {
             return 'common';
         }
-        else {
+        else if( idx >= 13 && idx < 15 ) {
             return 'qfeat';
+        }
+        else {
+            return 'etc';
         }
     }
 
